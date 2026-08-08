@@ -3,7 +3,8 @@
     "allow": [
       "Bash(npm --version)",
       "Bash(npm add *)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "WebSearch"
     ],
     "additionalDirectories": [
       "C:\\Users\\xavie"
