@@ -1,0 +1,23 @@
+{
+  "name": "@allons-y/psy-scripts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "pdf-to-markdown": "node scripts/pdf-to-markdown.ts",
+    "docx-to-markdown": "node scripts/docx-to-markdown.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": "24.14.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "@opendocsg/pdf2md": "^0.2.7",
+    "fast-xml-parser": "^5.10.1",
+    "jszip": "^3.10.1"
+  }
+}

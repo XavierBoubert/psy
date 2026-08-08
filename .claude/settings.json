@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(npm add *)",
+      "Bash(npx tsc *)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\xavie"
+    ]
+  }
+}
