@@ -2,7 +2,27 @@
 
 ## Objectif principal
 
-Créer un psychologue virtuel sur mesure pour Xavier : établir son diagnostic à partir de ses ressources (`ressources/xavier/`) et des références cliniques (`ressources/spécialisées/`), puis concevoir une thérapie complète et des outils adaptés à son profil.
+Créer un **psychologue/psychiatre virtuel basé sur Claude, spécifiquement conçu pour Xavier** — un dispositif complet, pas un chatbot :
+
+1. **Expertise** — une compétence clinique supérieure à celle d'un psy français généraliste sur le profil exact de Xavier (TSA niveau 1, agoraphobie, phobie sang-injection-accident, TAG, aphantasie, camouflage, shutdowns).
+2. **Suivi** — un accompagnement psychologique et psychiatrique continu, **en complément du Dr Isorni et jamais en substitution** (aucun conseil de modification de traitement ; protocole de crise câblé, 3114).
+3. **Thérapies** — un programme thérapeutique structuré, outillé par des applications sur mesure (EMDR à stimulations bilatérales, tension appliquée, exposition graduée, etc.).
+4. **Hygiène de vie** — un programme d'activité physique, d'alimentation, de sommeil et de récupération adapté à ses contraintes.
+5. **Présence** — **Kokoro (心)**, un visage numérique sur Android, en surimpression permanente, pour un suivi en temps réel.
+
+**Phase 1 (terminée)** : diagnostic établi à partir de `ressources/xavier/` et `ressources/spécialisées/` → `ressources/xavier/Rapport psychiatrique et psychologique.md` (v2.0), document de référence du profil.
+**Phase 2 (en cours)** : conception et construction du dispositif → voir `PLAN.md` à la racine.
+
+### Contraintes de conception non négociables (issues du rapport v2.0)
+
+- **Aphantasie** → aucune technique de visualisation ; verbal, corporel, exposition in vivo uniquement.
+- **Shutdowns** → toute interface doit rester utilisable sans parler ni écrire.
+- **Empathie cognitive déficitaire** → communication explicite, littérale, sans sous-entendu ni attente implicite.
+- **Camouflage = moteur de l'anxiété** → zéro exigence de performance sociale, zéro jugement.
+- **Réduire les charges, pas « motiver »** → pas de gamification culpabilisante ni de streaks punitifs.
+- **Hypersensibilités (4 canaux)** → UI sobre : pas de son surprise, pas de flash, pas d'animation brusque.
+- **Rigidité / routines** → la prévisibilité est une fonctionnalité : aucun changement d'interface non annoncé.
+- **Deux mécanismes de crise distincts** → panique (exposition/respiration) ≠ vasovagal (tension appliquée) ; ne jamais les confondre.
 
 Compétences (skills) : `ay-typescript` (patterns de typage), `ay-functional` (immutabilité, composition), `ay-refactor` (méthodologie de refactoring), `ay-api` (design REST / interfaces), `ay-12factor` (services déployables), `/ay-teach [topic]` (apprentissage structuré).
 
@@ -14,6 +34,7 @@ Toujours communiquer avec l'utilisateur en français.
 
 | Répertoire | Objet |
 |-----------|---------|
+| `PLAN.md` (racine) | **Plan de conception du dispositif** (v1.0, brainstorming clos en 7 tours) : 5 axes + axe transversal sécurité/éthique, contraintes de conception, architecture à trois surfaces, feuille de route en 7 étapes, journal des décisions |
 | `ressources/originales/` | Documents source bruts (ex. PDF) |
 | `ressources/spécialisées/` | Documents convertis, utilisés comme entrées pour Claude |
 | `ressources/xavier/` | Ressources du profil de Xavier (celui qui prompt), utilisées pour établir son diagnostic et créer un psychologue adapté à lui |
@@ -49,7 +70,8 @@ Le dossier `ressources/xavier/` contient les ressources propres au profil de Xav
 | `Echelle-syndrome-Asperger.md` | Réponses au questionnaire Échelle du syndrome d'Asperger (selon Attwood), rempli par la mère de Xavier — réponses cochées uniquement |
 | `Inventaire-du-stress.md` | Réponses à l'Inventaire du stress (The Groden Center Inc.) avec récapitulatif des scores par catégorie — réponses cochées uniquement |
 | `Question-aux-parents.md` | Réponses de la mère de Xavier à un questionnaire sur les antécédents familiaux, la grossesse, le développement et l'enfance |
-| `Rapport psychiatrique et psychologique.md` | Rapport de synthèse complet généré par Claude (v2.0, 08/08/2026) à partir de toutes les ressources ci-dessus + compléments anamnestiques directs de Xavier + DSM-5 + littérature en ligne : fiche patient détaillée, chronologie 1986-2026, anamnèse, re-cotation indépendante AQ (39/50) et EQ (9/80), analyse critérielle DSM-5 (TSA niveau 1 confirmé ; agoraphobie avec attaques de panique attendues ; phobie sang-injection-accident avec syncopes vasovagales fortement probable ; TAG probable ; trouble panique écarté), aphantasie et shutdowns intégrés au profil, confirmation du diagnostic d'Emeline Saley, 18 enseignements et recommandations. Sert de document de référence du profil de Xavier |
+| `Biopsie hépatique - Dr Bouarioua.md` | Résultats de la biopsie hépatique de juillet 2026 (courriel de la Dr Leila Bouarioua, hépato-gastro-entérologue, versé au dossier le 08/08/2026) : **stéatose hépatique liée au surpoids, sans fibrose**, aucune surveillance particulière, perte de poids impérative ; traitement psychotrope non imputable. Inclut l'analyse d'articulation avec le dossier psychiatrique — apport alimentaire doublé et **absence de perception de la satiété** (élément clinique nouveau), hypothèse du **déficit intéroceptif** comme extension corporelle de l'alexithymie, et la règle de conception « signal interne absent → structure externe ». À intégrer au rapport en v2.1 (liste des points en fin de fichier) |
+| `Rapport psychiatrique et psychologique.md` | **Document de référence du profil de Xavier.** Rapport de synthèse complet généré par Claude (**v2.1, 08/08/2026**) à partir de toutes les ressources ci-dessus + compléments anamnestiques directs de Xavier + DSM-5 + littérature en ligne : fiche patient détaillée, chronologie 1986-2026, anamnèse, re-cotation indépendante AQ (39/50) et EQ (9/80), analyse critérielle DSM-5 (TSA niveau 1 confirmé ; agoraphobie avec attaques de panique attendues ; phobie sang-injection-accident avec syncopes vasovagales fortement probable ; TAG probable ; trouble panique écarté), aphantasie et shutdowns intégrés au profil, confirmation du diagnostic d'Emeline Saley, **22 enseignements** et recommandations.<br>**v2.1** ajoute le versant somatique : stéatose hépatique (MASLD) sans fibrose confirmée par biopsie, obésité de classe II (IMC 35,1), **§6.5 conduite alimentaire et déficit intéroceptif**, hyperphagie boulimique non retenue (BES à passer), **4e hypothèse SAOS** au différentiel de la distractibilité (à éliminer avant le DIVA-5), **§10.7 versant somatique** (alimentation et activité physique requalifiées en prescription médicale), et la règle de conception **« signal interne absent → structure externe »** (§9.19) |
 
 Les questionnaires notés « réponses cochées uniquement » ont été convertis manuellement (lecture visuelle des pages du PDF source, `pdf-to-markdown` étant incapable de détecter les cases cochées en couleur) : seule la réponse retenue est conservée, les autres choix possibles ont été omis.
 
@@ -62,6 +84,7 @@ Exécuter depuis le répertoire racine (`npm run <name> -- <args>`). Les argumen
 |--------|-------------|
 | `pdf-to-markdown` | Convertit un fichier PDF en Markdown. Usage : `npm run pdf-to-markdown -- <source.pdf> <destination.md>` |
 | `docx-to-markdown` | Convertit un fichier DOCX en Markdown. Usage : `npm run docx-to-markdown -- <source.docx> <destination.md>` |
+| `markdown-to-pdf` | Convertit un fichier Markdown en PDF (rendu via Puppeteer/Chromium headless). Usage : `npm run markdown-to-pdf -- <source.md> <destination.pdf>` |
 
 ## Contraintes
 

@@ -6,6 +6,7 @@
   "scripts": {
     "pdf-to-markdown": "node scripts/pdf-to-markdown.ts",
     "docx-to-markdown": "node scripts/docx-to-markdown.ts",
+    "markdown-to-pdf": "node scripts/markdown-to-pdf.ts",
     "typecheck": "tsc --noEmit"
   },
   "engines": {
@@ -18,6 +19,8 @@
   "dependencies": {
     "@opendocsg/pdf2md": "^0.2.7",
     "fast-xml-parser": "^5.10.1",
-    "jszip": "^3.10.1"
+    "jszip": "^3.10.1",
+    "marked": "^18.0.9",
+    "puppeteer": "^25.5.0"
   }
 }

@@ -4,7 +4,11 @@
       "Bash(npm --version)",
       "Bash(npm add *)",
       "Bash(npx tsc *)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(npm install *)",
+      "Bash(node -e \"const {execSync}=require\\('child_process'\\);\")",
+      "Bash(node -e ' *)",
+      "Bash(npm run *)"
     ],
     "additionalDirectories": [
       "C:\\Users\\xavie"
