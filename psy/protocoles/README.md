@@ -17,19 +17,20 @@ Une fiche = un fichier. Elle contient, dans cet ordre : **quand l'utiliser** · 
 | ✅ [`activite-physique-sans-impact.md`](activite-physique-sans-impact.md) | NASH + agoraphobie — domicile, sans impact, 5 paliers de 5 à 20 min, deux variantes matériel | 1 |
 | ✅ [`panique-13-symptomes.md`](panique-13-symptomes.md) | Psychoéducation — les 13 symptômes du DSM-5, dont la **dépersonnalisation (n° 11)**, et le **piège du symptôme n° 8** (« impression d'évanouissement » ≠ syncope vasovagale) | 4 *(avancée)* |
 | ✅ [`jour-de-vol.md`](jour-de-vol.md) | **Kit vol du 07/09/2026** — séquence écrite de la journée, kit sensoriel, protocole shutdown minimal avec Chourouk, conduite en cas de panique en vol, statut des chantiers pendant le séjour | 4 *(avancée)* |
+| ✅ [`crise-escalade.md`](crise-escalade.md) | 🔴 **Protocole de crise câblé, non contournable** — **3114**, triage en 3 questions fermées (**sécurité avant mécanisme**), les 3 niveaux veille/alerte/crise, ⭐ le **114 par SMS** (seule voie d'urgence utilisable en shutdown), numéros de substitution pour la Tunisie | 3 |
+| ✅ [`tension-appliquee.md`](tension-appliquee.md) | Phobie sang-injection-accident — 4 paliers d'acquisition **à froid**, ⭐ **déclenchement sur repères externes et au chronomètre** (et non sur prodromes), phrase écrite d'avance pour le soignant. Corpus : [`corpus/tension-appliquee/`](../corpus/tension-appliquee/README.md) | 3 |
 
-**Trois écarts assumés par rapport au rapport**, tous consignés dans les fiches :
+**Quatre écarts assumés par rapport au rapport et à la littérature**, tous consignés dans les fiches :
 1. Les critères de passage du §10.8 (« confortable plusieurs jours de suite ») ont été **convertis en critères observables** — « confortable » est un ressenti, donc contraire à la règle R6 du schéma du dossier.
 2. Un **palier intermédiaire** a été inséré entre « assis éveillé » et « sieste » : le saut était trop grand chez quelqu'un qui cote l'enfermement 5/5.
 3. *(v2.4)* Une **règle d'entrée dans l'échelle** a été ajoutée : Xavier porte déjà le masque par intermittence, le faire repartir de « masque tenu à la main » serait absurde. On entre **un palier sous le plus haut déjà atteint**, mesuré sur le télésuivi et non sur un souvenir.
+4. ⭐ *(Étape 3)* **Le protocole d'Öst déclenche sur prodromes** — pâleur, sueur froide, nausée. C'est un **signal interne**, et le déficit intéroceptif est confirmé. Remplacé par un **déclenchement sur repères externes, au chronomètre** : franchir la porte, s'asseoir, voir le plateau. **Quatrième instance de la règle §9.19.**
 
 ## À écrire
 
 | Protocole | Cible | Étape |
 |---|---|---|
-| **Tension appliquée (Öst)** | Phobie sang-injection-accident — cycles de 10-15 s, **à acquérir à froid** | 3 |
-| **Protocole shutdown** | Négocié à froid avec Chourouk : mot-code, retrait sensoriel court, reprise différée | 3 |
-| **Protocole de crise** | 3114, escalade, non contournable | 3 |
+| **Protocole shutdown — version complète** | Le minimal existe (`jour-de-vol.md` §4, mot-code convenu le 09/08/2026). Restent la **fiche explicative pour Chourouk** et le **bouton Android** | 3 / 5 |
 | **Exposition graduée transports** | Agoraphobie — paliers écrits, in vivo. ⚠️ **Non construit** : le vol du 07/09 se fait avec le kit vol, qui n'en est pas un substitut | 4 |
 
 ## Note de séquençage

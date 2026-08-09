@@ -6,7 +6,7 @@ Sources sur lesquelles le dispositif appuie ses affirmations. Règle : **toute a
 
 | Priorité | Corpus | Pourquoi celui-ci | État |
 |---|---|---|---|
-| **1** | **Protocole de tension appliquée (Öst)**, complet | Le plus rentable immédiatement : court, validé, enseignable en 1-2 séances, et à acquérir **à froid** — aucun geste médical n'est programmé, c'est la fenêtre idéale | ⏸️ |
+| **1** | **Protocole de tension appliquée (Öst)**, complet | Le plus rentable immédiatement : court, validé, enseignable en 1-2 séances, et à acquérir **à froid** — aucun geste médical n'est programmé, c'est la fenêtre idéale | ✅ **[`tension-appliquee/`](tension-appliquee/README.md)** — versé le 09/08/2026 → fiche [`protocoles/tension-appliquee.md`](../protocoles/tension-appliquee.md) |
 | **2** | **TCC alimentaire + intéroception** | ⭐ C'est le corpus où l'avantage sur un psy généraliste est le plus net : le croisement **TSA × conduite alimentaire × déficit intéroceptif** est peu diffusé en pratique française. Inclut la **BES**. | ⏸️ |
 | **3** | **TCC de l'agoraphobie — exposition graduée** | Cible la plus ancienne (23 ans). ⭐ **Sert deux fois** : la désensibilisation à la PPC *est* une exposition graduée (rapport §10.8). Paliers écrits, **in vivo uniquement** (aphantasie). | ⏸️ |
 | **4** | **Recommandations HAS** — TSA adulte, troubles anxieux | Standard de soin français. Surtout utile pour argumenter auprès des professionnels et pour les dossiers MDPH. | ⏸️ |

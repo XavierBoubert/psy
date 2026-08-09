@@ -1,7 +1,7 @@
 # État courant
 
 **Statut :** document **vivant** — réécrit à chaque clôture de séance. Contrepartie variable de `profil.md` (permanent).
-**Dernière mise à jour :** 09/08/2026 *(v1.5 — ouverture de l'Étape 2)* · **Prochaine révision :** à la première séance de fond.
+**Dernière mise à jour :** 09/08/2026 *(v1.6 — ouverture des Étapes 2 et 3)* · **Prochaine révision :** à la première séance de fond.
 
 > **Comment lire ce document.** `profil.md` dit *qui est Xavier*. Celui-ci dit *où on en est*. Les deux se chargent ensemble, jamais l'un sans l'autre.
 
@@ -11,7 +11,7 @@
 
 | | |
 |---|---|
-| **Étape du PLAN** | ✅ Étape 0 close → 🔴 **Étape 1 — Axe D, ouverte** (protocoles écrits, exécution suspendue à des démarches réelles) → ⏱️ **Étape 2 — Instrumentation du suivi, ouverte le 09/08/2026** (instruments versés dans [`corpus/echelles/`](../corpus/echelles/README.md), check-in quotidien à démarrer) |
+| **Étape du PLAN** | ✅ Étape 0 close → 🔴 **Étape 1 — Axe D, ouverte** (protocoles écrits, exécution suspendue à des démarches réelles) → ⏱️ **Étape 2 — Instrumentation du suivi, ouverte le 09/08/2026** (instruments versés dans [`corpus/echelles/`](../corpus/echelles/README.md), check-in quotidien à démarrer) → 🔴 **Étape 3 — Outils de crise, ouverte le 09/08/2026** : [`protocoles/crise-escalade.md`](../protocoles/crise-escalade.md) et [`protocoles/tension-appliquee.md`](../protocoles/tension-appliquee.md) écrits ; reste l'app de guidage (Étape 5) et **la décision de démarrer le palier 1 de la tension appliquée** |
 | **Cible thérapeutique n° 1** | 🔴 **Reprise de la PPC par désensibilisation** — SAOS sévère **insuffisamment traité** depuis ~7 mois (usage très irrégulier) → protocole écrit : [`protocoles/ppc-desensibilisation.md`](../protocoles/ppc-desensibilisation.md) |
 | **Cible n° 2** | Alimentation à structure externe — cible 7-10 % → **99-102,3 kg** → [`protocoles/alimentation-structure-externe.md`](../protocoles/alimentation-structure-externe.md) |
 | **Cible n° 3** | Activité physique — domicile, **sans impact**, format court et invariable → [`protocoles/activite-physique-sans-impact.md`](../protocoles/activite-physique-sans-impact.md) |
@@ -103,6 +103,8 @@ Le brouillon d'email existe déjà : `ressources/xavier/20260808 Email au Dr Iso
 | 7 | **Surveillance hépatologique** à clarifier avec la Dr Bouarioua : contrôle non invasif à distance (biologie ± élastométrie) ? | Moyenne |
 | 8 | Bilan métabolique complet (HbA1c, lipides, tension) | Moyenne |
 | 9 | ✈️ **Ordonnance pour le séjour** (> 3 semaines, départ le 07/09) — quantité, bagage cabine, justificatif si besoin | 🔴 **la consultation tombe 4 jours avant le départ** |
+| 12 | 🆘 **Le 114 (urgences par SMS) est-il utilisable en shutdown ?** Il est officiellement destiné aux personnes sourdes, malentendantes, aphasiques ou dysphasiques. Un shutdown est une perte **transitoire** de la parole. **Tous les autres numéros d'urgence exigent de parler** — c'est-à-dire qu'ils sont inaccessibles au moment précis où ils serviraient. Question à trancher **avant** d'en avoir besoin | 🔴 **sécurité** |
+| 13 | 💪 **Tension appliquée et tension artérielle** — la technique (contraction musculaire par salves de 15 s) élève transitoirement la TA. Obésité de classe II + vigilance tensionnelle déjà notée sous venlafaxine : y a-t-il une réserve ? *(Acquisition à froid, aucun geste médical programmé.)* | Haute — **avant de démarrer le palier 1** |
 | 11 | 📄 **Demander l'échelle BES** (Binge Eating Scale, version française de Brunault et al. 2016) — instrument de dépistage non librement diffusé, dont il dispose en routine. Il conditionne le départage **hyperphagie boulimique / déficit intéroceptif**, donc le choix du traitement du chantier alimentaire. *(Alternative : la Dr Bouarioua, le dépistage faisant partie du bilan standard d'une NASH.)* | Moyenne — **une demande, pas une question clinique** |
 | 10 | ✈️ **Alprazolam pour le vol** — Xavier a indiqué le 09/08/2026 qu'il compte en prendre. La molécule est **déjà prescrite « si besoin »** : l'employer n'est pas une modification de traitement. ⚠️ **Mais le point de vigilance benzodiazépine / SAOS sévère (question 1) n'a jamais été instruit**, et il porte précisément sur ce médicament-là. **Élément nouveau à donner au prescripteur : la PPC part en Tunisie** et sera donc utilisée pendant le séjour. **Arbitrage au Dr Isorni le 03/09 — le dispositif ne se prononce pas.** | 🔴 |
 
@@ -140,6 +142,7 @@ Le brouillon d'email existe déjà : `ressources/xavier/20260808 Email au Dr Iso
 | 08/08/2026 | **PLAN.md v1.0** — brainstorming clos en 7 tours. |
 | 09/08/2026 | **Étape 0 en place** : dossier, schéma, fiche de profil, skills `psy-seance` et `psy-journal`. |
 | 09/08/2026 | **Étape 1 ouverte** : les trois protocoles de l'Axe D sont écrits (PPC, alimentation, activité physique). Les paliers, les critères de passage et les critères d'arrêt existent désormais par écrit — c'est ce qui manquait pour que le chantier soit exécutable. **Rien n'a encore été appliqué.** |
+| 09/08/2026 | 🔴 **Étape 3 ouverte — le protocole de crise existe enfin comme fiche** (`protocoles/crise-escalade.md`) : triage en 3 questions fermées, **sécurité avant mécanisme**, 3 niveaux d'escalade. ⭐ **Trou structurel identifié : tous les numéros d'urgence français exigent de parler**, alors que le shutdown coupe le canal verbal — trois voies sans parole versées, dont le **114 par SMS** (question 12 au Dr Isorni). ✈️ Ces numéros **ne fonctionnent pas depuis la Tunisie** : substituts à préparer avant le 07/09. **Tension appliquée** écrite (`protocoles/tension-appliquee.md`) + corpus priorité n° 1 versé — ⭐ **déclenchement sur repères externes et au chronomètre**, le protocole d'Öst supposant une intéroception intacte. **Rien n'a encore été appliqué** : le palier 1 est une décision de Xavier. |
 | 09/08/2026 | ⏱️ **Étape 2 ouverte — les instruments de mesure existent enfin** (`psy/corpus/echelles/`). VVIQ, TAS-20, CAT-Q, GAD-7/PHQ-9 versés complets ; BES bloqué faute d'instrument, **remplacé par une grille comportementale de 5 questions** immédiatement utilisable. Plan de passation daté sur les 4 séances restantes avant le 03/09. **Rien n'a encore été passé** — la première passation (VVIQ) est prévue aujourd'hui. |
 | 09/08/2026 | 🔴 **Consultation Roisman du 04/05/2026 versée au dossier → rapport v2.4.** Trois corrections de fait : la PPC est **très irrégulièrement utilisée** et non inutilisée ; le pneumologue **sait** et a déjà ajusté (humidificateur, 6-12 cm H₂O, EPR 2, prise en charge renouvelée) ; ⭐ **IAH résiduel < 6/h** — l'appareil est efficace sur ses propres nuits. Ce qui n'a jamais été fait, c'est le **protocole comportemental** : la réponse à l'intolérance a été « je remotive le patient ». |
 
@@ -167,6 +170,7 @@ Nourrisson né en 2026 (nuits fragmentées, charge sensorielle maximale **au dom
 
 | Version | Date | Modification |
 |---|---|---|
+| 1.6 | 09/08/2026 | **Étape 3 ouverte.** Protocole de crise et tension appliquée écrits ; questions 12 (114 par SMS en shutdown) et 13 (tension appliquée et TA) ajoutées au Dr Isorni. |
 | 1.5 | 09/08/2026 | **Étape 2 ouverte.** Instruments versés dans `corpus/echelles/` ; §6 réécrit avec le plan de passation daté et les deux règles de sécurité (item 9 du PHQ-9, réserve SAOS sur le PHQ-9) ; question 11 ajoutée au Dr Isorni (obtenir le BES). |
 | 1.4 | 09/08/2026 | **Trois décisions de Xavier** : mot-code shutdown = **« shutdown »**, convenu avec Chourouk ; **la PPC part en Tunisie** ; alprazolam prévu pour le vol → question 10 au Dr Isorni. |
 | 1.3 | 09/08/2026 | **Échéances datées** : consultation Dr Isorni le **03/09 à 12h30**, départ en Tunisie le **07/09**. Pause des chantiers pendant le séjour décidée à l'avance ; brief à écrire au week-end du 29-30/08 ; check-in quotidien à démarrer immédiatement. |
