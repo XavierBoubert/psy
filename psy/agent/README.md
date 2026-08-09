@@ -14,7 +14,11 @@
 | `psy-bilan` | Passation et cotation des échelles (VVIQ, TAS-20, CAT-Q, BES, GAD-7, PHQ-9, DIVA-5) | `.claude/skills/psy-bilan/` | ✅ v1 |
 | `psy-brief-isorni` | Brief d'une page avant chaque consultation | `.claude/skills/psy-brief-isorni/` | ✅ v1 |
 | `psy-hygiene` | Versant somatique (PPC, alimentation, activité) — **vérifie les paliers en comptant le journal** | `.claude/skills/psy-hygiene/` | ✅ v1 |
-| `psy-superviseur` | Contre-expertise — challenge les conclusions, détecte l'effet miroir | — | ⏸️ non planifié |
+| `psy-superviseur` | **Contre-expertise du dispositif** — 7 contrôles (source circulaire, fait périmé, invariant non câblé, dérive R6, effet miroir, autorité fabriquée, prolifération) → `psy/agent/supervisions/` | `.claude/skills/psy-superviseur/` | ✅ v1 |
+
+> ⚠️ **`psy-superviseur` supervise Claude, pas Xavier.** Le risque qu'il traite est structurel : **presque toutes les sources de ce dossier sont écrites par l'instance qui les consomme.** Les seules sources primaires sont l'évaluation Saley, le certificat Isorni, les questionnaires bruts, les courriers Roisman, la biopsie et le DSM-5 ; tout le reste est dérivé. Il **n'écrit pas dans `psy/dossier/`** — une supervision porte sur le dispositif, pas sur le patient.
+>
+> **Première passe : [`supervisions/2026-08-09-supervision.md`](supervisions/2026-08-09-supervision.md)** — 4 constats, dont un bloquant trouvé dans `psy-seance` lui-même.
 
 > 🔴 **`psy-crise` porte la seule exception au premier invariant.** Tous les skills chargent `profil.md` + `etat.md` avant d'agir ; en crise, **les numéros s'affichent avant la lecture du dossier**. Lire deux fiches prend du temps, et le temps est ce qui manque. L'exception est écrite dans le skill, elle ne se déduit pas.
 >
