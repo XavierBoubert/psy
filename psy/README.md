@@ -29,7 +29,7 @@ Implémentation du plan de conception `PLAN.md` (racine). **Étape 0 — socle m
 | Savoir où on en est aujourd'hui | `dossier/etat.md` |
 | Écrire ou lire une donnée du dossier | `dossier/SCHEMA.md` *(normatif)* |
 | Appliquer un protocole en cours | `protocoles/ppc-desensibilisation.md` *(cible n° 1)* · `protocoles/alimentation-structure-externe.md` · `protocoles/activite-physique-sans-impact.md` |
-| Trancher un point clinique | `../ressources/xavier/Rapport psychiatrique et psychologique.md` *(v2.3, fait foi)* |
+| Trancher un point clinique | `../ressources/xavier/Rapport psychiatrique et psychologique.md` *(**v2.4**, fait foi)* |
 | Comprendre une décision de conception | `../PLAN.md` |
 
 `profil.md` et `etat.md` se chargent **ensemble**, jamais l'un sans l'autre : le premier dit *qui est Xavier*, le second *où on en est*.

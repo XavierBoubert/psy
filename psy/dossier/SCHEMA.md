@@ -109,7 +109,7 @@ Les champs actifs sont déclarés dans `etat.md` § « Campagne en cours ». Au 
 
 | Champ | Type | Justification |
 |---|---|---|
-| `ppc_minutes` | entier ≥ 0 | ⭐ **SAOS sévère non traité — le fait le plus important du dossier** (rapport §6.6). Donnée **objective, issue du télésuivi de l'appareil**, pas d'une auto-évaluation : c'est exactement l'instrument qu'appelle un déficit intéroceptif (§10.8). |
+| `ppc_minutes` | entier ≥ 0 | ⭐ **SAOS sévère insuffisamment traité — le fait le plus important du dossier** (rapport §6.6). Donnée **objective, issue du télésuivi de l'appareil**, pas d'une auto-évaluation : c'est exactement l'instrument qu'appelle un déficit intéroceptif (§10.8). |
 | `repas_servis_une_fois` | entier 0-4 | Structure externe alimentaire : quantité décidée **avant**, servie une fois, pas de resservage (§10.7.b). On compte les repas **conformes à la structure**, jamais les calories. |
 | `activite_minutes` | entier ≥ 0 | Prescription médicale, pas hygiène de vie (§10.7.c). Sans impact, domicile. |
 | `poids_kg` | nombre \| null | Hebdomadaire, pas quotidien. `null` les autres jours. Cible : 7-10 % → 99-102,3 kg (§9.22). |

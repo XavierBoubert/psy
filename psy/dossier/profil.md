@@ -1,10 +1,10 @@
 # Fiche de profil — Xavier BOUBERT
 
 **Statut :** contexte **permanent**, rechargé au début de chaque séance, chaque check-in, chaque brief.
-**Version :** 1.0 — 09/08/2026 · **Source unique :** `ressources/xavier/Rapport psychiatrique et psychologique.md` (v2.3)
+**Version :** 1.1 — 09/08/2026 · **Source unique :** `ressources/xavier/Rapport psychiatrique et psychologique.md` (**v2.4**)
 **Contrepartie variable :** `etat.md` — ce qui change (traitement, poids, chantier en cours, questions ouvertes).
 
-> **Ce que cette fiche est.** La version opérationnelle du rapport v2.3 (670 lignes) : ce qu'il faut avoir en tête *avant* de parler, pas ce qu'on va chercher quand on hésite.
+> **Ce que cette fiche est.** La version opérationnelle du rapport v2.4 : ce qu'il faut avoir en tête *avant* de parler, pas ce qu'on va chercher quand on hésite.
 > **Ce qu'elle n'est pas.** Un résumé du rapport. Les démonstrations, les critères DSM-5 et les références sont dans le rapport ; en cas de doute clinique, c'est **lui** qui fait foi, pas cette fiche. Les renvois `§x.y` pointent vers lui.
 
 ---
@@ -23,7 +23,7 @@ Diagnostiqué **TSA à 38 ans**, après vingt ans traités comme « un problème
 |---|---|---|
 | **TSA sans déficit intellectuel ni altération du langage, niveau 1** (F84.0) | Confirmé (Kias 2023 · Saley 2024 · **Isorni 21/11/2024**) | AQ 39/50 (sous-échelles sociales 10/10 et 9/10). Le socle de tout le reste. |
 | **Agoraphobie, attaques de panique attendues** (F40.00) | Confirmé | 23 ans d'évolution. 4 situations sur 5 : transports, foules, lieux clos, magasins. |
-| 🔴 **SAOS SÉVÈRE** (G47.33) — IAH 35/h | **Confirmé 19/01/2026 · PPC prescrite, NON UTILISÉE** | **Le fait le plus important du dossier.** Non traité. 61 micro-éveils/h, sommeil paradoxal à 7,2 %, Épworth 14, ISI 20. |
+| 🔴 **SAOS SÉVÈRE** (G47.33) — IAH 35/h | **Confirmé 19/01/2026 · PPC prescrite, utilisation TRÈS IRRÉGULIÈRE** | **Le fait le plus important du dossier.** **Insuffisamment traité** — pas « non traité ». 61 micro-éveils/h, sommeil paradoxal à 7,2 %, Épworth 14, ISI 20. ⭐ **IAH résiduel < 6/h sous appareil** (04/05/2026) : ça marche quand c'est porté. Intolérance documentée : **fuites au masque, toux sèche**. |
 | **Stéato-hépatite non alcoolique (NASH), sans fibrose** (K75.81) | Confirmée par biopsie 15/06/2026 | Perte de poids = **traitement de première ligne**, pas hygiène de vie. Cible 7-10 % (7,7-11 kg). |
 | **Obésité de classe II** (E66) — 1,77 m / ≈110 kg / IMC 35,1 | Confirmée | 104 kg (10/2025) → 110 kg (08/2026) : **+6 kg en 9 mois**. |
 | **Phobie sang-injection-accident** (F40.23x) | Fortement probable — à confirmer par le Dr Isorni | 3 syncopes, toutes en contexte de soins. |
@@ -46,7 +46,7 @@ Diagnostiqué **TSA à 38 ans**, après vingt ans traités comme « un problème
 | **Où** | Transports, foules, lieux clos, situations sociales | **Contexte médical uniquement** : aiguille, cathéter, collyre, geste invasif | Conflit, sur-sollicitation (souvent avec Chourouk) |
 | **Physiologie** | Sympathique — le cœur accélère, la tension **monte** | Parasympathique — réponse diphasique, puis la tension **chute** | Surcharge : le canal verbal se coupe |
 | **Perte de connaissance** | **Pratiquement jamais** — 20 ans de crises sans une seule syncope | **Oui** — les 3 syncopes documentées | Non |
-| **Parade** | Exposition graduée, respiration, psychoéducation des 13 symptômes | ⭐ **TENSION APPLIQUÉE** (Öst) — contracter bras/jambes/tronc par salves de 10-15 s dès les prodromes, allongé si possible | **Mot-code**, retrait sensoriel court, reprise différée. **Jamais insister.** |
+| **Parade** | Exposition graduée, respiration, psychoéducation des 13 symptômes | ⭐ **TENSION APPLIQUÉE** (Öst) — contracter bras/jambes/tronc par salves de 10-15 s dès les prodromes, allongé si possible | **Mot-code « shutdown »** *(convenu avec Chourouk le 09/08/2026)*, retrait sensoriel court, reprise différée. **Jamais insister.** |
 | **Erreur à ne pas commettre** | Le traiter comme un trouble panique (écarté) | Lui appliquer une parade de panique : la respiration lente **abaisse** encore la tension | Interpréter le silence comme du rejet, ou dire « réponds-moi » |
 
 **Ce qu'il faut savoir dire à Xavier, calmement, quand il confond les deux premiers :** sa phrase « les crises d'angoisse me font m'évanouir maintenant » fusionne deux circuits distincts. Les crises des transports ne l'ont jamais fait tomber en vingt ans. Les syncopes sont arrivées à trois reprises, toutes devant un geste médical. Ce ne sont pas les mêmes crises.
@@ -93,7 +93,7 @@ Trois fois dans ce dossier, une prescription valide en population générale a �
 |---|---|---|
 | Imagerie mentale (aphantasie) | « Imaginez un lieu sûr », exposition en imagination | Verbal, corporel, exposition in vivo |
 | Perception de la satiété (déficit intéroceptif) | « Écoutez votre satiété », « arrêtez quand vous n'avez plus faim » | **Structure externe** : quantités décidées *avant*, servies une fois, horaires fixes |
-| Tolérance sensorielle (hypersensibilité + claustrophobie 5/5) | « Portez le masque toute la nuit » | **Exposition graduée** — désensibilisation à la PPC, paliers écrits (§10.8) |
+| Tolérance sensorielle (hypersensibilité + claustrophobie 5/5) | « Portez le masque toute la nuit », puis « **je remotive le patient** » (Dr Roisman, 04/05/2026) | **Exposition graduée** — désensibilisation à la PPC, paliers écrits (§10.8) |
 
 > **Règle générale, applicable à toute intervention future :** quand un signal interne manque, on ne le remplace pas par de la volonté — on le remplace par une **structure externe explicite**.
 >
@@ -147,12 +147,12 @@ Trois fois dans ce dossier, une prescription valide en population générale a �
 |---|---|---|
 | **Dr Jean-Baptiste ISORNI** — psychiatre, Versailles | Suivi mensuel ininterrompu depuis 2024. **Prescripteur.** | **Ignorait le SAOS sévère** jusqu'au 08/08/2026. |
 | **Dr Célia FOURNIER** — généraliste, Guyancourt | Destinataire des courriers de spécialistes → **pivot naturel de la coordination** | Reçoit tout, ne redistribue pas. |
-| **Dr Gabriel ROISMAN** — pneumologue-somnologue | SAOS, prescription PPC | **Ignore que la PPC n'est pas utilisée.** |
+| **Dr Gabriel ROISMAN** — pneumologue-somnologue | SAOS, prescription PPC, **suivi (04/05/2026)** | **Sait** que l'usage est très irrégulier — il l'a documenté et a ajusté les réglages. Ses deux courriers sont partis au seul Dr Fournier. |
 | **Dr Leila BOUARIOUA** — hépato-gastro-entérologue | NASH, biopsie, suivi hépatique | Surveillance à distance à clarifier. |
 | Dr Naïma TALHI — anatomopathologie | Compte-rendu histologique | — |
 | Dr Mohamed EL JARRARI — radiologue | Geste de biopsie | — |
 
-> ⭐ **Six médecins, aucun ne dispose de l'ensemble.** Ce n'est la faute de personne : chaque courrier a été adressé à un destinataire pertinent. Le coût est mesurable — **sept mois de SAOS sévère non traité**, et des symptômes attribués à des causes psychiatriques pendant qu'une cause somatique traitable courait en parallèle.
+> ⭐ **Six médecins, aucun ne dispose de l'ensemble.** Ce n'est la faute de personne : chaque courrier a été adressé à un destinataire pertinent. Le coût est mesurable — **sept mois de SAOS sévère insuffisamment traité**, et des symptômes attribués à des causes psychiatriques pendant qu'une cause somatique traitable courait en parallèle. **Les deux courriers du Dr Roisman (19/01 et 04/05/2026) sont partis au seul Dr Fournier** : ce n'est pas un accident isolé, c'est le régime permanent.
 >
 > **Conséquence directe : rassembler les pièces éparses est en soi un acte clinique, et c'est précisément ce qu'aucun praticien n'a le temps de faire. C'est une fonction du dispositif, pas un effet de bord** (§9.21).
 
@@ -184,4 +184,5 @@ Expertise technique d'exception, jamais mise en cause · **entrepreneuriat réus
 
 | Version | Date | Modification |
 |---|---|---|
+| 1.1 | 09/08/2026 | Rapport **v2.4** : PPC « non utilisée » → **très irrégulièrement utilisée** ; SAOS **insuffisamment traité** et non « non traité » ; **IAH résiduel < 6/h** ajouté ; le Dr Roisman **sait** depuis le 04/05/2026. |
 | 1.0 | 09/08/2026 | Création — Étape 0 du PLAN, à partir du rapport v2.3. |

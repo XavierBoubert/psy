@@ -2,7 +2,7 @@
 
 **Statut :** fiche actionnable — v1.0 (09/08/2026) · **Étape 1 du PLAN**
 **Cible dossier :** `alimentation-structure` · **Champs journal :** `campagne.repas_servis_une_fois`, `campagne.poids_kg`
-**Source clinique :** rapport v2.3 §6.5 (conduite alimentaire et déficit intéroceptif), **§10.7** (versant somatique), §9.19 (règle centrale).
+**Source clinique :** rapport v2.4 §6.5 (conduite alimentaire et déficit intéroceptif), **§10.7** (versant somatique), §9.19 (règle centrale).
 
 > **Ce que cette fiche est.** Un **dispositif de décision**, pas un régime. Elle dit *quand* et *combien* se décident, et *qui décide* — pas quoi manger.
 > **Ce qu'elle n'est pas.** Une prescription diététique. Le contenu nutritionnel relève de la Dr Bouarioua et d'un diététicien (point à porter au brief, §7).
@@ -15,7 +15,7 @@ Xavier ne perçoit pas la satiété. **Toute consigne qui demande de s'appuyer s
 
 > **La régulation doit donc être déplacée hors du corps :** la quantité est décidée **avant** le repas, par quelqu'un qui n'a pas faim, et le repas ne consiste plus qu'à exécuter une décision déjà prise.
 
-**Le SAOS aggrave exactement cette fonction-là.** La privation de sommeil dérègle ghréline et leptine — appétit majoré, satiété diminuée. Les deux mécanismes convergent sur le même signal. Fait mesuré : **104 kg (10/2025) → 110 kg (08/2026)**, +6 kg pendant la période de SAOS non traité. Ce chantier et celui de la PPC se renforcent mutuellement.
+**Le SAOS aggrave exactement cette fonction-là.** La privation de sommeil dérègle ghréline et leptine — appétit majoré, satiété diminuée. Les deux mécanismes convergent sur le même signal. Fait mesuré : **104 kg (10/2025) → 110 kg (08/2026)**, +6 kg pendant la période de SAOS insuffisamment traité. Ce chantier et celui de la PPC se renforcent mutuellement.
 
 **Corollaire à énoncer clairement quand le sujet vient :** un échec antérieur de perte de poids ne documente aucun manque de volonté. Il documente une consigne inadaptée au profil.
 

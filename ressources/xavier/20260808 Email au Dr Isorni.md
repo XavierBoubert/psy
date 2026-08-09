@@ -10,7 +10,7 @@
 
 Deux informations manquent et **doivent** être renseignées par Xavier — elles sont signalées par `[…]` dans le texte :
 
-1. ~~L'observance de la PPC~~ → **RÉPONDU le 08/08/2026 : la PPC n'est pas utilisée** (difficultés d'adaptation). Le paragraphe correspondant de l'email a été rédigé en conséquence — il reste à vérifier qu'il correspond bien à ce que Xavier veut dire, et à préciser le cas échéant depuis quand exactement et ce qui a été essayé (type de masque, durée des essais).
+1. ~~L'observance de la PPC~~ → **RÉPONDU, puis CORRIGÉ le 09/08/2026** après versement du compte rendu du Dr Roisman du 04/05/2026 : la PPC n'est pas *inutilisée*, elle est **utilisée de façon très irrégulière**. Le pneumologue l'a documenté, a modifié les réglages (humidificateur, 6-12 cm H₂O, EPR 2) et **a renouvelé la prise en charge**. ⭐ **IAH résiduel < 6/h sous appareil.** Le paragraphe de l'email a été réécrit en conséquence. Reste à préciser, si Xavier le souhaite : le nombre de nuits réellement utilisées (relevé de télésuivi) et les modèles de masque déjà essayés.
 2. **La date du prochain rendez-vous**, pour caler la formule d'introduction.
 
 ---
@@ -35,10 +35,12 @@ Polysomnographie du 29/10/2025, conclusion du Dr Gabriel Roisman (pneumologue, c
 - Échelle de somnolence d'Epworth : **14** — index de sévérité de l'insomnie : **20**
 - Également noté : des mouvements périodiques des jambes (31/h pendant le sommeil, dont 15/h réveillants), dans un contexte d'impatiences
 - Une PPC m'a été prescrite le 19/01/2026.
+- **J'ai revu le Dr Roisman le 04/05/2026** — courrier de nouveau adressé au seul Dr Fournier. Il y note une **utilisation très irrégulière de la PPC**, une mauvaise tolérance avec **fuites au masque et toux sèche**, et il a modifié le traitement : mise en place d'un **humidificateur**, pression ramenée à **6-12 cm H₂O**, activation de la fonction **EPR niveau 2**, prise en charge renouvelée.
+- **Point important : sous appareil, mon IAH résiduel est inférieur à 6/h** (contre 35/h sans). Quand je le porte, ça marche.
 
-Je dois vous dire honnêtement où j'en suis : **je n'utilise pas la PPC.** J'ai beaucoup de mal à m'y adapter et je n'ai pas réussi à la garder. Mon apnée du sommeil sévère n'est donc pas traitée à ce jour, sept mois après le diagnostic.
+Je dois vous dire honnêtement où j'en suis : **je n'utilise la PPC que de façon très irrégulière**, et cela n'a pas changé depuis mai. Mon apnée du sommeil sévère est donc **insuffisamment traitée** à ce jour, sept mois après le diagnostic.
 
-Je compte réessayer. En y réfléchissant, je me demande si mes difficultés ne tiennent pas en partie à mon profil : je supporte mal les contacts sur le visage, je suis très sensible au bruit, et j'ai une peur marquée des espaces clos — ce qui fait beaucoup de raisons de mal tolérer un masque serré relié à une machine. J'ai lu qu'il existait des méthodes d'adaptation progressive, et que le type de masque comptait beaucoup (le modèle narinaire touchant moins le visage que le masque nasal). J'aimerais reprendre cela sérieusement, avec le Dr Roisman et le prestataire.
+Je compte reprendre sérieusement. En y réfléchissant, je me demande si mes difficultés ne tiennent pas en partie à mon profil : je supporte mal les contacts sur le visage, je suis très sensible au bruit, et j'ai une peur marquée des espaces clos — ce qui fait beaucoup de raisons de mal tolérer un masque serré relié à une machine. J'ai lu qu'il existait des **méthodes d'adaptation progressive** — une désensibilisation par paliers, proche de ce qu'on fait en exposition graduée —, et que le type de masque comptait beaucoup (le modèle narinaire touchant moins le visage que le masque nasal). Je vais reprendre contact avec le Dr Roisman et le prestataire, notamment pour faire préciser **si mes fuites viennent du masque ou de la bouche** — je crois comprendre que la réponse change le matériel à essayer.
 
 ## 2. Une stéato-hépatite non alcoolique (NASH)
 
@@ -130,8 +132,8 @@ SAOS sévère (IAH 35, 61 micro-éveils/h)
 ## Ce que ces documents changent au dossier
 
 1. **La cible de perte de poids est déjà révisée à 7-10 %** (7,7 à 11 kg) du fait de la NASH — pas 5 %.
-2. **Le SAOS n'est plus une hypothèse à explorer** : il est diagnostiqué, sévère, et traité (ou pas — d'où la question de l'observance).
-3. **Un problème de coordination apparaît clairement.** Six médecins interviennent au dossier — Dr Isorni (psychiatre), Dr Fournier (généraliste), Dr Roisman (pneumologue), Dr Bouarioua (hépato-gastro), Dr El Jarrari (radiologue, préleveur), Dr Talhi (anatomopathologiste) — et aucun ne semble disposer de l'ensemble. Le pneumologue mentionne « Asperger, contexte anxiodépressif » et le traitement par paroxétine, donc il savait ; rien n'indique que le psychiatre ait su pour le SAOS. **Cet email a autant pour fonction de faire circuler l'information que de poser des questions.**
+2. **Le SAOS n'est plus une hypothèse à explorer** : il est diagnostiqué, sévère, et **insuffisamment traité** — l'appareil est efficace (IAH résiduel < 6/h) mais trop peu porté.
+3. **Un problème de coordination apparaît clairement.** Six médecins interviennent au dossier — Dr Isorni (psychiatre), Dr Fournier (généraliste), Dr Roisman (pneumologue), Dr Bouarioua (hépato-gastro), Dr El Jarrari (radiologue, préleveur), Dr Talhi (anatomopathologiste) — et aucun ne semble disposer de l'ensemble. Le pneumologue mentionne « Asperger, contexte anxiodépressif » et le traitement par paroxétine, donc il savait ; rien n'indique que le psychiatre ait su pour le SAOS. **Ses deux courriers — 19/01 et 04/05/2026 — sont partis au seul Dr Fournier :** ce n'est pas un oubli isolé, c'est le fonctionnement par défaut. **Cet email a autant pour fonction de faire circuler l'information que de poser des questions.**
 4. **Deux échelles objectivant une souffrance sont absentes du dossier psychiatrique** : Epworth 14 (somnolence diurne excessive) et ISI 20 (insomnie modérée à sévère). L'échelle de Beck à 7 (dépression minimale) est en revanche rassurante et mérite d'être signalée telle quelle.
 
 ## À faire ensuite

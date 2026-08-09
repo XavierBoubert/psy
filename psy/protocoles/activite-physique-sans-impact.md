@@ -2,10 +2,10 @@
 
 **Statut :** fiche actionnable — v1.0 (09/08/2026) · **Étape 1 du PLAN**
 **Cible dossier :** `alimentation-structure` *(même chantier somatique)* · **Champ journal :** `campagne.activite_minutes`
-**Source clinique :** rapport v2.3 **§10.7.c**, §9.13 (ne pas gamifier), §9.19 (structure externe).
+**Source clinique :** rapport v2.4 **§10.7.c**, §9.13 (ne pas gamifier), §9.19 (structure externe).
 
 > **Ce que cette fiche est.** Un programme **écrit à l'avance, invariable et court**, conçu autour de trois contraintes simultanées : agoraphobie, 110 kg, et profil TSA.
-> **Ce qu'elle n'est pas.** Un programme sportif de performance, ni une prescription médicale. **Avant le palier 1, un feu vert médical est demandé au Dr Fournier** — obésité de classe II, SAOS sévère non traité, venlafaxine en titration : ce n'est pas une formalité.
+> **Ce qu'elle n'est pas.** Un programme sportif de performance, ni une prescription médicale. **Avant le palier 1, un feu vert médical est demandé au Dr Fournier** — obésité de classe II, SAOS sévère insuffisamment traité, venlafaxine en titration : ce n'est pas une formalité.
 
 ---
 
