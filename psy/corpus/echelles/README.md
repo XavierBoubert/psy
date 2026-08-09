@@ -23,7 +23,7 @@ La règle **R6** du schéma du dossier interdit de coter des ressentis : *« on 
 **Deux règles qui en découlent, non négociables :**
 
 1. **Aucun score d'échelle n'entre dans le journal quotidien.** Le journal reste comportemental (`SCHEMA.md` §3.1). Les échelles vivent dans `mesures/`, et nulle part ailleurs.
-2. ⭐ **Chez Xavier, un score bas sur une échelle introspective ne prouve rien.** L'alexithymie et le déficit intéroceptif sont précisément une **difficulté à répondre à ce type de question**. Un score qui minimise (peu d'anxiété déclarée, peu de perte de contrôle alimentaire déclarée) peut refléter le déficit de perception, pas l'absence du phénomène. **Un score élevé est informatif ; un score bas ne clôt aucune question à lui seul.** Cette réserve est écrite dans chaque fiche et doit être reportée dans le brief au Dr Isorni.
+2. ⭐ **Chez Xavier, un score bas sur une échelle introspective ne prouve rien.** *(⚠️ **Une exception documentée : le BES**, dont la psychométrie dit l'inverse — VPN 97,4 %, VPP 37,5 %. Cf. [`bes.md`](bes.md) §2.2 : les deux considérations se croisent au lieu de s'annuler, et c'est la grille comportementale qui départage.)* L'alexithymie et le déficit intéroceptif sont précisément une **difficulté à répondre à ce type de question**. Un score qui minimise (peu d'anxiété déclarée, peu de perte de contrôle alimentaire déclarée) peut refléter le déficit de perception, pas l'absence du phénomène. **Un score élevé est informatif ; un score bas ne clôt aucune question à lui seul.** Cette réserve est écrite dans chaque fiche et doit être reportée dans le brief au Dr Isorni.
 
 ---
 
@@ -34,7 +34,7 @@ La règle **R6** du schéma du dossier interdit de coter des ressentis : *« on 
 | **VVIQ** | `vviq` | 5 min | ✅ [`vviq.md`](vviq.md) | 🔴 **Haute — conditionne quelles techniques sont utilisables** |
 | **TAS-20** | `tas20` | 10 min | ✅ [`tas-20.md`](tas-20.md) | Haute |
 | **CAT-Q** | `catq` | 15 min | ✅ [`cat-q.md`](cat-q.md) | Haute |
-| **BES** | `bes` | 10 min | ⚠️ **partiel** — cotation et seuils oui, **items non reproductibles librement** → [`bes.md`](bes.md) | Haute *(chantier alimentaire)* |
+| **BES** | `bes` | 10 min | ✅ **16 items, version française validée** (Brunault 2016) → [`bes.md`](bes.md) | Haute *(chantier alimentaire)* — 🔴 **lire le §2 avant** : l'item XVI mesure le déficit intéroceptif, et le seuil a une VPP de 37,5 % |
 | **GAD-7 / PHQ-9** | `gad7` / `phq9` | 5 min | ✅ [`gad-7-phq-9.md`](gad-7-phq-9.md) | Routine mensuelle — **baseline avant le 03/09** |
 | **MAIA-2** | `maia` | 10 min | ✅ **37 items** *(traduction locale)* + grille comportementale → [`maia.md`](maia.md) | Haute — ⭐ **adosse la règle §9.19**, la plus citée du dispositif. 🔴 **Lire le §3 avant de la passer** : trois items posent problème sur ce profil |
 | DIVA-5 | `diva5` | 60 min | ⏸️ non versé | 🔴 **bloqué** — après traitement effectif du SAOS, jamais avant |
@@ -51,7 +51,7 @@ La règle **R6** du schéma du dossier interdit de coter des ressentis : *« on 
 | **16/08** | **TAS-20** (10 min) | « Le chaînon manquant du dossier » (§9.2). Détermine si le travail de nommage émotionnel est une cible à part entière. |
 | **22-23/08** | **CAT-Q** (15 min) + **GAD-7 / PHQ-9** (5 min) | Le CAT-Q chiffre le moteur principal de l'anxiété. Le GAD-7/PHQ-9 fournit la **baseline chiffrée du brief** — passés à 2 semaines de la reprise de la venlafaxine, ils datent le point de départ de la titration. |
 | **29-30/08** | **aucune** | Cette séance écrit le **brief Dr Isorni**. On n'ajoute pas de passation à une séance déjà pleine. |
-| ⏸️ | **BES** | Dès que l'instrument est obtenu (cf. `bes.md`). En attendant, la **grille comportementale** de `bes.md` §4 est utilisable immédiatement et ne dépend d'aucune source externe. |
+| **16/08** | **BES** *(ajouté)* | ✅ Instrument obtenu le 09/08. Il rejoint la TAS-20 et le MAIA-2 — **les trois relèvent du même axe** (identifier ses états internes : émotions, corps, faim) et le chantier alimentaire attend leur réponse. ⚠️ **Plafond de 20 min à surveiller** : TAS-20 (10) + BES (10) = 20. **Le MAIA-2 bascule au 22-23/08** si la séance déborde. |
 
 **Trois règles de passation :**
 - **Une échelle n'est jamais la cible d'une séance.** Elle s'ajoute à la cible du jour et se note dans `mesures_passees` du compte-rendu.
@@ -78,6 +78,7 @@ La rubrique « ce qu'elle ne dit pas » est obligatoire (convention de `corpus/R
 
 | Version | Date | Modification |
 |---|---|---|
+| 1.3 | 09/08/2026 | ✅ **BES obtenu et versé complet** — 16 items de la version française validée (Brunault et al. 2016, *L'Encéphale*), récupérés par Xavier à l'archive ouverte HAL. **Le corpus n'a plus aucun instrument manquant hors DIVA-5.** 🔴 **Réserve majeure, invisible tant que les items manquaient : l'item XVI mesure littéralement le déficit intéroceptif** — l'échelle censée départager hyperphagie boulimique et déficit intéroceptif **compte le second dans le score du premier**. ⚠️ **Première exception documentée à la règle §1.2 du corpus** : pour le BES, le score **bas** est le fiable (VPN 97,4 %) et le score **haut** le faible (VPP 37,5 %). Plan de passation : BES ajouté au 16/08, MAIA-2 bascule au 22-23/08 si le plafond de 20 min est atteint. |
 | 1.2 | 09/08/2026 | ✅ **MAIA-2 versé complet** — 37 items récupérés à la source ouverte (PLoS ONE 2018, CC-BY), traduits localement, 9 items inversés, 8 sous-échelles. 🔴 **Trois items signalés avant passation** (§3) : le **28** est le « lieu sûr » sous un autre nom — inopérant sur aphantasie **désormais mesurée** ; le **18** mesurerait du camouflage ; le **24** est le plus informatif du dossier. ⚠️ **Limite majeure : aucun des 37 items ne porte sur la faim ou la satiété** — le signal précisément en cause. La grille comportementale passe **avec** le MAIA, pas à la place. **BES** : §1 réécrit — l'instrument n'est **sous licence d'aucun éditeur**, il n'y a rien à acheter ; cinq voies d'obtention classées par coût réel, la première étant l'**archive ouverte HAL**. |
 | 1.1 | 09/08/2026 | ✅ **VVIQ passé — 18/80, aphantasie objectivée** (`mesures/2026-08-09-vviq.json`), première passation du dossier. **MAIA ajouté** sur arbitrage de Xavier (supervision A4). |
 | 1.0 | 09/08/2026 | Création — ouverture de l'Étape 2. VVIQ, TAS-20, CAT-Q, GAD-7/PHQ-9 versés ; BES partiel. |

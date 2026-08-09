@@ -76,7 +76,7 @@ Toujours communiquer avec l'utilisateur en français.
 | `psy-bilan` | Passation et cotation d'une échelle → `psy/dossier/mesures/` — items lus dans `psy/corpus/echelles/`, **jamais restitués de mémoire** ; item 9 du PHQ-9 câblé sur le protocole de crise | ✅ |
 | `psy-brief-isorni` | Brief d'une page avant consultation → `psy/dossier/briefs/`, `transmis: false` — chiffres calculés depuis le journal, réserves obligatoires, **aucune proposition pharmacologique** | ✅ |
 | `psy-hygiene` | Versant somatique (PPC, alimentation, activité) — ⭐ **le passage de palier se compte dans le journal, il ne se demande pas** | ✅ |
-| `psy-superviseur` | Contre-expertise — anti-effet-miroir | ⏸️ non planifié |
+| `psy-superviseur` | **Contre-expertise du dispositif** — supervise **Claude, pas Xavier** : sources circulaires, faits périmés, invariants déclarés non câblés, dérive R6, effet miroir, autorité fabriquée, prolifération → `psy/agent/supervisions/` (hors `dossier/`) | ✅ |
 
 **Invariants de tout skill du dispositif** : charger `profil.md` + `etat.md` avant d'agir · **non-substitution** (aucun conseil de modification de traitement, jamais, même sous forme interrogative — ça part au brief Dr Isorni) · **protocole de crise câblé** (3114, non contournable) · aucune visualisation · utilisable sans parler ni écrire · zéro streak ni compteur de régularité · annoncer avant de faire.
 
@@ -92,6 +92,7 @@ Le dossier `ressources/spécialisées/` contient les documents convertis (au for
 | `DSM-5_TSA.md` | Extrait du DSM-5 : trouble du spectre de l'autisme |
 | `DSM-5_TDAH.md` | Extrait du DSM-5 : déficit de l'attention/hyperactivité |
 | `DSM-5_Anxio-depressif.md` | Extrait du DSM-5 : troubles dépressifs et troubles anxieux (incl. trouble anxieux généralisé) |
+| `Encéphale-postprintHAL-2016-Version francaise Binge Eating Scale.md` | **Brunault et al. (2016), *L'Encéphale* 42(5), 426-433** — validation française de la **Binge Eating Scale** (postprint HAL, accès ouvert). ⭐ **L'Annexe 1 contient les 16 items de la version française validée**, avec leurs énoncés pondérés et la clé de cotation. Source de `psy/corpus/echelles/bes.md`. Porte aussi les données psychométriques du seuil ≥ 18 : sensibilité 75 %, spécificité 88,4 %, **VPP 37,5 %**, **VPN 97,4 %** |
 
 ## Ressources originales
 
