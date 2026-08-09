@@ -10,12 +10,21 @@
 
 **Les 16 items du BES ne sont pas reproduits ici.** Chaque item est un groupe de 3 ou 4 énoncés pondérés dont la formulation exacte porte toute la cotation ; **une restitution approximative produirait un score faux et faussement rassurant** — exactement le résultat le plus dangereux dans ce dossier. Les recherches du 09/08/2026 n'ont pas permis d'obtenir l'instrument intégral en source fiable et librement diffusable.
 
-**Ce qu'il faut faire pour le débloquer** — une seule de ces voies suffit :
-1. **Le demander au Dr Isorni** à la consultation du **03/09** (question à ajouter au brief) — un psychiatre y a accès en routine ;
-2. le demander à la **Dr Bouarioua** (hépato-gastro-entérologue), le dépistage de l'hyperphagie faisant partie du bilan standard d'une NASH ;
-3. récupérer l'article de **Brunault et al. (2016)**, qui contient la version française validée en annexe.
+> ⭐ **Il n'y a rien à acheter.** Le BES n'est **pas un instrument sous licence commerciale** : il n'est distribué par aucun éditeur de tests (contrairement au BDI, à la WAIS ou à la MMPI). C'est une échelle publiée dans un article de revue, libre d'usage en clinique et en recherche. **Le problème n'est pas le prix, c'est l'accès au texte** — la version française validée est parue dans une revue payante, et le PDF n'a pas pu être récupéré automatiquement.
 
-Une fois obtenu : PDF dans `ressources/originales/`, conversion via `npm run pdf-to-markdown`, items versés dans cette fiche.
+**Ce qu'il faut faire pour le débloquer** — les voies sont classées par coût réel, la première est gratuite et prend cinq minutes :
+
+| # | Voie | Détail |
+|---|---|---|
+| **1** ⭐ | **L'archive ouverte HAL** — [hal.science/hal-01379543](https://hal.science/hal-01379543) | Dépôt libre de **Brunault, P., Gaillard, P., Machet, L. *et al.* (2016).** *Validation de la version française de la Binge Eating Scale.* **L'Encéphale, 42(5), 426-433.** ⚠️ **À ouvrir dans un navigateur** : le site bloque les récupérations automatisées (protection anti-robot), pas les humains. **Si le PDF y est déposé en texte intégral, l'annexe contient les 16 items en français validé.** |
+| **2** | **Écrire à l'auteur** — **Pr Paul Brunault**, CHRU de Tours / Université de Tours | Les auteurs d'échelles envoient leur instrument sur simple demande, c'est l'usage. Délai : quelques jours. |
+| **3** | **ResearchGate** — « Request full-text » sur l'article | Même mécanisme, en un clic. |
+| **4** | **Le demander au Dr Isorni** le **03/09** — déjà inscrit comme **question 11** du brief | Un psychiatre y a accès en routine. ⚠️ **Mais c'est la voie la plus lente** : elle consomme du temps d'un créneau déjà surchargé, pour un document qu'un site web peut fournir aujourd'hui. |
+| **5** | La **Dr Bouarioua** | Le dépistage de l'hyperphagie fait partie du bilan standard d'une NASH. |
+
+**Une fois obtenu :** PDF dans `ressources/originales/`, conversion via `npm run pdf-to-markdown`, items versés dans cette fiche.
+
+> 📌 **Conséquence sur le brief :** si la voie 1 ou 2 aboutit avant le 03/09, **retirer la question 11 du brief.** Un créneau de consultation qui doit couvrir un SAOS sévère, une NASH, une ordonnance de voyage et six questions pharmacologiques n'a pas à être dépensé pour un document téléchargeable.
 
 > ⚠️ **Ce blocage ne bloque pas le chantier alimentaire.** La grille du §4 est utilisable immédiatement, ne dépend d'aucune source externe, et est **mieux adaptée au profil** que le BES lui-même.
 

@@ -36,7 +36,7 @@ La règle **R6** du schéma du dossier interdit de coter des ressentis : *« on 
 | **CAT-Q** | `catq` | 15 min | ✅ [`cat-q.md`](cat-q.md) | Haute |
 | **BES** | `bes` | 10 min | ⚠️ **partiel** — cotation et seuils oui, **items non reproductibles librement** → [`bes.md`](bes.md) | Haute *(chantier alimentaire)* |
 | **GAD-7 / PHQ-9** | `gad7` / `phq9` | 5 min | ✅ [`gad-7-phq-9.md`](gad-7-phq-9.md) | Routine mensuelle — **baseline avant le 03/09** |
-| **MAIA** | `maia` | 10 min | ⚠️ **partiel** — items non obtenus ; **grille comportementale de 5 questions** → [`maia.md`](maia.md) §5 | Haute — ⭐ **adosse la règle §9.19, la plus citée du dispositif et la seule sans mesure** |
+| **MAIA-2** | `maia` | 10 min | ✅ **37 items** *(traduction locale)* + grille comportementale → [`maia.md`](maia.md) | Haute — ⭐ **adosse la règle §9.19**, la plus citée du dispositif. 🔴 **Lire le §3 avant de la passer** : trois items posent problème sur ce profil |
 | DIVA-5 | `diva5` | 60 min | ⏸️ non versé | 🔴 **bloqué** — après traitement effectif du SAOS, jamais avant |
 
 ---
@@ -78,5 +78,6 @@ La rubrique « ce qu'elle ne dit pas » est obligatoire (convention de `corpus/R
 
 | Version | Date | Modification |
 |---|---|---|
-| 1.1 | 09/08/2026 | ✅ **VVIQ passé — 18/80, aphantasie objectivée** (`mesures/2026-08-09-vviq.json`), première passation du dossier. **MAIA ajouté** sur arbitrage de Xavier (supervision A4) : items non obtenus, **grille comportementale de substitution versée**. ⭐ **Deuxième instrument de suite dont les items manquent et qui est remplacé par du comportemental** — ce n'est plus un contretemps, c'est un motif : les instruments introspectifs sont à la fois les plus durs à obtenir et les moins adaptés à ce profil. |
+| 1.2 | 09/08/2026 | ✅ **MAIA-2 versé complet** — 37 items récupérés à la source ouverte (PLoS ONE 2018, CC-BY), traduits localement, 9 items inversés, 8 sous-échelles. 🔴 **Trois items signalés avant passation** (§3) : le **28** est le « lieu sûr » sous un autre nom — inopérant sur aphantasie **désormais mesurée** ; le **18** mesurerait du camouflage ; le **24** est le plus informatif du dossier. ⚠️ **Limite majeure : aucun des 37 items ne porte sur la faim ou la satiété** — le signal précisément en cause. La grille comportementale passe **avec** le MAIA, pas à la place. **BES** : §1 réécrit — l'instrument n'est **sous licence d'aucun éditeur**, il n'y a rien à acheter ; cinq voies d'obtention classées par coût réel, la première étant l'**archive ouverte HAL**. |
+| 1.1 | 09/08/2026 | ✅ **VVIQ passé — 18/80, aphantasie objectivée** (`mesures/2026-08-09-vviq.json`), première passation du dossier. **MAIA ajouté** sur arbitrage de Xavier (supervision A4). |
 | 1.0 | 09/08/2026 | Création — ouverture de l'Étape 2. VVIQ, TAS-20, CAT-Q, GAD-7/PHQ-9 versés ; BES partiel. |
