@@ -1,7 +1,7 @@
 # État courant
 
 **Statut :** document **vivant** — réécrit à chaque clôture de séance. Contrepartie variable de `profil.md` (permanent).
-**Dernière mise à jour :** 09/08/2026 · **Prochaine révision :** à la première séance de fond.
+**Dernière mise à jour :** 09/08/2026 *(v1.1 — ouverture de l'Étape 1)* · **Prochaine révision :** à la première séance de fond.
 
 > **Comment lire ce document.** `profil.md` dit *qui est Xavier*. Celui-ci dit *où on en est*. Les deux se chargent ensemble, jamais l'un sans l'autre.
 
@@ -11,11 +11,13 @@
 
 | | |
 |---|---|
-| **Étape du PLAN** | Étape 0 — socle minimal *(en cours d'achèvement)* → Étape 1 — Axe D 🔴 |
-| **Cible thérapeutique n° 1** | 🔴 **Reprise de la PPC par désensibilisation** (exposition graduée, §10.8) — SAOS sévère non traité depuis ~7 mois |
-| **Cible n° 2** | Alimentation à structure externe — cible 7-10 % → **99-102,3 kg** |
-| **Cible n° 3** | Activité physique — domicile, **sans impact**, format court et invariable |
-| **Palier en cours** | Aucun — les paliers PPC et alimentaires restent à écrire |
+| **Étape du PLAN** | ✅ Étape 0 close → 🔴 **Étape 1 — Axe D, ouverte le 09/08/2026** |
+| **Cible thérapeutique n° 1** | 🔴 **Reprise de la PPC par désensibilisation** — SAOS sévère non traité depuis ~7 mois → protocole écrit : [`protocoles/ppc-desensibilisation.md`](../protocoles/ppc-desensibilisation.md) |
+| **Cible n° 2** | Alimentation à structure externe — cible 7-10 % → **99-102,3 kg** → [`protocoles/alimentation-structure-externe.md`](../protocoles/alimentation-structure-externe.md) |
+| **Cible n° 3** | Activité physique — domicile, **sans impact**, format court et invariable → [`protocoles/activite-physique-sans-impact.md`](../protocoles/activite-physique-sans-impact.md) |
+| **Palier en cours** | **PPC : palier 0 (logistique)** — où est la machine, contact Link Sommeil, interface narinaire, réglages, conditions de prise en charge, information du Dr Roisman.<br>Alimentation et activité physique : **palier 0** également. Aucun palier d'exposition n'a démarré. |
+
+> **Ordre imposé entre les trois chantiers : un changement à la fois** (intolérance au changement, §6.1 B2). La logistique PPC (palier 0) ne demande aucun changement d'habitude et peut donc courir **en parallèle** des paliers 0 alimentation et activité. À partir du palier 1, **un seul chantier progresse à la fois** — la PPC d'abord.
 
 **Pourquoi la PPC passe devant.** Elle est le seul levier qui agit simultanément sur quatre choses : la fatigue et l'attention, le poids (la privation de sommeil dérègle ghréline et leptine — donc **aggrave un déficit de satiété déjà présent**), le foie (l'hypoxie intermittente aggrave la NASH indépendamment de l'IMC), et l'humeur. Aucune autre cible n'a ce rendement. Et tant que 61 micro-éveils par heure fragmentent chaque nuit, **aucune évaluation attentionnelle ni du critère C du TAG n'est interprétable**.
 
@@ -102,6 +104,7 @@ Le brouillon d'email existe déjà : `ressources/xavier/20260808 Email au Dr Iso
 | 08/08/2026 | Rapport porté en **v2.3** : le SAOS sévère passe d'hypothèse à **diagnostic constitué et non traité**. |
 | 08/08/2026 | **PLAN.md v1.0** — brainstorming clos en 7 tours. |
 | 09/08/2026 | **Étape 0 en place** : dossier, schéma, fiche de profil, skills `psy-seance` et `psy-journal`. |
+| 09/08/2026 | **Étape 1 ouverte** : les trois protocoles de l'Axe D sont écrits (PPC, alimentation, activité physique). Les paliers, les critères de passage et les critères d'arrêt existent désormais par écrit — c'est ce qui manquait pour que le chantier soit exécutable. **Rien n'a encore été appliqué.** |
 
 ---
 
@@ -125,4 +128,5 @@ Nourrisson né en 2026 (nuits fragmentées, charge sensorielle maximale **au dom
 
 | Version | Date | Modification |
 |---|---|---|
+| 1.1 | 09/08/2026 | Ouverture de l'**Étape 1** : les trois cibles pointent vers leur protocole écrit ; palier 0 déclaré sur les trois ; règle « un chantier à la fois à partir du palier 1 » posée. |
 | 1.0 | 09/08/2026 | Création — Étape 0 du PLAN. |

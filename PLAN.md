@@ -1,8 +1,10 @@
 # PLAN — Psychologue/Psychiatre virtuel pour Xavier
 
-**Statut :** brainstorming clos — feuille de route arrêtée (v1.0 — 08/08/2026)
-**Méthode :** document vivant, enrichi au fil des questions/réponses entre Xavier et Claude (7 tours).
-**Base de référence :** `ressources/xavier/Rapport psychiatrique et psychologique.md` (v2.0) + `ressources/xavier/Biopsie hépatique - Dr Bouarioua.md`
+**Statut :** brainstorming clos — feuille de route arrêtée (v1.1 — 09/08/2026). **Étape 0 close · Étape 1 ouverte** (§7)
+**Méthode :** document vivant, enrichi au fil des questions/réponses entre Xavier et Claude (7 tours), puis au fil de la réalisation.
+**Base de référence :** `ressources/xavier/Rapport psychiatrique et psychologique.md` (**v2.3**) + `ressources/xavier/Biopsie hépatique.md` + `ressources/xavier/20260119 Gabriel ROISMAN Conclusion Polysomnographie.md`
+
+> ⚠️ **Ce document a été écrit avant la v2.3 du rapport.** Les sections §4.4 (cible ≥ 5 %, ≈ 5,5 kg) et **§4.5** (le SAOS y figure encore comme une *hypothèse à dépister*) sont **périmées** : la cible est **7-10 % → 99-102,3 kg** et le SAOS est un **diagnostic sévère constitué et non traité**. Elles sont conservées telles quelles — le plan est un journal de conception, pas un document courant. **Ce qui fait foi au quotidien : `psy/dossier/etat.md` et le rapport v2.3.** Seule la feuille de route (§7) est tenue à jour.
 
 ---
 
@@ -440,13 +442,21 @@ Séquençage retenu : **Axe A minimal, puis Axe D à fond** (§tour 5). Le foie 
 
 ⚠️ **Arbitrage assumé, à garder visible :** le dossier est versionné sur GitHub, ce qui contredit partiellement le §6 (« rien ne part vers un tiers »). Décision de Xavier du 09/08/2026, motivée par la traçabilité et la sauvegarde ; conditions et porte de sortie (chiffrement `git-crypt`/`age`) documentées dans `psy/SYNCHRO.md` §2.
 
-### Étape 1 — Axe D, prescription médicale 🔴
+### Étape 1 — Axe D, prescription médicale 🔴 *(ouverte le 09/08/2026 — protocoles écrits)*
+
+> ⚠️ **Étape révisée le 09/08/2026.** Sa rédaction initiale datait du rapport v2.0 : elle demandait un *dépistage* du SAOS (depuis lors **diagnostiqué sévère et non traité**) et visait −5,5 kg (cible **révisée à 7,7-11 kg** en v2.2, l'histologie montrant une NASH et non une stéatose simple). Deux conséquences : **la PPC devient la cible n° 1 de l'étape**, et l'objectif pondéral est corrigé.
+
 - [x] ~~Poids, taille, IMC~~ → **1,77 m · 110 kg · IMC 35,1** (08/08/2026)
-- [ ] **Programme alimentaire à structure externe** : quantités décidées avant le repas, servies une fois, horaires fixes, zéro jugement calorique — **objectif de première marche : −5,5 kg → 104,5 kg**
-- [ ] **Programme d'activité physique** : domicile, **sans impact** (vélo/rameur/renforcement), format court, quotidien, invariable, progression écrite à l'avance
-- [ ] **Dépister la perte de contrôle alimentaire** (échelle **BES**) → départage hyperphagie boulimique / déficit intéroceptif
-- [ ] Recueillir : historique pondéral, compte-rendu anatomopathologique, bilan hépatique de départ, bilan métabolique (HbA1c, lipides, tension)
-- [ ] ⚠️ **Demander un dépistage du SAOS** (polygraphie ventilatoire nocturne) — §4.5
+- [x] ~~Demander un dépistage du SAOS~~ → **sans objet : SAOS sévère diagnostiqué le 19/01/2026** (IAH 35/h), PPC prescrite et non utilisée
+- [x] 🔴 **Protocole de reprise de la PPC par désensibilisation** → `psy/protocoles/ppc-desensibilisation.md` — palier 0 logistique + 6 paliers d'exposition, critères de passage comportementaux, matériel et réglages à exiger
+- [x] **Programme alimentaire à structure externe** → `psy/protocoles/alimentation-structure-externe.md` — quantités décidées avant le repas, servies une fois, horaires fixes, rotation stable, zéro jugement calorique — **cible : −7,7 à −11 kg → 99-102,3 kg** (7-10 %, NASH sans fibrose)
+- [x] **Programme d'activité physique** → `psy/protocoles/activite-physique-sans-impact.md` — domicile, sans impact, 5 paliers de 5 à 20 min, deux variantes matériel, feu vert médical préalable
+- [ ] **Exécuter le palier 0 de la PPC** : localiser la machine, contacter Link Sommeil, obtenir une interface **narinaire**, clarifier les conditions de prise en charge, **informer le Dr Roisman de la non-observance**
+- [ ] **Dépister la perte de contrôle alimentaire** (échelle **BES**) → départage hyperphagie boulimique / déficit intéroceptif *(instrument à verser dans `psy/corpus/echelles/` ; passation à l'Étape 2)*
+- [ ] Recueillir : historique pondéral, bilan hépatique de départ, bilan métabolique (HbA1c, lipides, tension), **feu vert médical** pour l'activité physique
+- [ ] **Envoyer l'email au Dr Isorni** (`ressources/xavier/20260808 Email au Dr Isorni.md`, rédigé, non envoyé) — c'est lui qui débloque les questions pharmacologiques du chantier
+
+> ⭐ **Ce que l'écriture des protocoles a produit et qui n'était pas prévu :** le rapport §10.8 posait « confortable plusieurs jours de suite » comme critère de passage des paliers PPC. **« Confortable » est un ressenti** — c'est-à-dire précisément ce que la règle R6 du schéma du dossier interdit de coter chez quelqu'un d'alexithymique avec déficit intéroceptif. Les critères ont donc été convertis en **comptages comportementaux** (« 3 jours consécutifs où le minuteur est allé au bout sans retrait »), et un **palier intermédiaire** a été inséré entre « assis éveillé » et « sieste ». C'est la première fois que le socle de l'Étape 0 corrige une recommandation du rapport : le dispositif commence à fonctionner comme un dispositif, pas comme un classeur.
 
 ### Étape 2 — Instrumentation du suivi *(Axe B)*
 - [ ] Check-in quotidien (d'abord en web/Claude Code, migré sur Android à l'étape 5)
@@ -485,6 +495,7 @@ Séquençage retenu : **Axe A minimal, puis Axe D à fond** (§tour 5). Le foie 
 
 | Date | Décisions prises |
 |---|---|
+| **09/08/2026** | 🔴 **Étape 1 ouverte — les trois protocoles de l'Axe D sont écrits** : `ppc-desensibilisation.md`, `alimentation-structure-externe.md`, `activite-physique-sans-impact.md`. ⚠️ **L'Étape 1 du plan a dû être révisée avant d'être exécutée** : sa rédaction datait de la v2.0 du rapport et demandait encore un *dépistage* du SAOS (diagnostiqué depuis) avec une cible de −5,5 kg (portée à **−7,7/−11 kg** en v2.2). **La PPC devient la cible n° 1 de l'étape.** ⭐ **Premier cas où le socle corrige le rapport** : le critère de passage des paliers PPC du §10.8 (« confortable plusieurs jours de suite ») viole la règle R6 — « confortable » est un ressenti. Converti en comptage comportemental, plus un **palier intermédiaire ajouté** (allongé éveillé) entre « assis » et « sieste », le saut étant trop grand à 5/5 de peur des lieux clos. ✅ **Règle de séquençage posée** : les paliers 0 (logistique, sans changement d'habitude) peuvent courir en parallèle ; à partir du palier 1, **un seul chantier progresse à la fois**. ✅ **Deux points de méthode assumés** : la BES interroge des ressentis (tension avec R6) — on la passe quand même, mais un score bas ne clôt pas la question à lui seul ; l'intensité d'effort est repérée par le **test de la phrase** (comportemental) et non par une échelle d'effort perçu. |
 | **09/08/2026** | ✅ **Étape 0 exécutée — le socle existe.** Arborescence `psy/`, **schéma du dossier** (`psy/dossier/SCHEMA.md`, normatif) + 5 gabarits, **fiche de profil condensée** (`profil.md`) **et état courant** (`etat.md`) — la distinction permanent/courant est nouvelle et remplace la « fiche unique » prévue —, skills **`psy-seance`** et **`psy-journal`** dans `.claude/skills/`. ⭐ **Décision de conception structurante : on cote des comportements observables, pas des ressentis** (règle R6) — le journal compte des shutdowns, des retraits sensoriels, des renoncements et des activités investies ; **aucune échelle introspective**, parce que demander « note ton anxiété sur 10 » à quelqu'un d'alexithymique avec déficit intéroceptif est la même erreur que « écoute ta satiété ». ✅ **Données** : dossier **versionné dans le dépôt privé** (traçabilité clinique) — arbitrage assumé qui contredit partiellement le §6, conditions et porte de sortie documentées ; **Syncthing P2P** retenu pour le transport PC↔Android, installation à l'Étape 5. ⚠️ **Correction au plan** : les skills vont dans `.claude/skills/`, pas dans `psy/agent/` (Claude Code ne les découvre que là). |
 | 08/08/2026 | **Tour 1 de questions.** ✅ Ordre de construction : **Axe A (cerveau clinique) d'abord**. ✅ Architecture : **hybride Claude Code (PC) + app Android**, synchronisés par le dossier. ✅ Données : **locales, repo privé + synchro chiffrée PC↔téléphone**. ✅ Posture : **directe, littérale, clinique**, avec droit de contredire. Identification du levier décisif face à un psy humain : **l'absence de coût de camouflage** (§1.1). |
 | 08/08/2026 | 🔴 **SAOS SÉVÈRE NON TRAITÉ — le fait le plus important du dossier à ce jour.** Polysomnographie du Dr Roisman versée : **IAH 35/h, 61 micro-éveils/h, SP 7,2 %, Épworth 14, ISI 20, MPJ 31/h**. Diagnostiqué le **19/01/2026**, PPC prescrite — **non utilisée**. Jamais transmis au psychiatre (courrier adressé à la généraliste). → Rapport **v2.3** : §6.6 et §10.8 créées, §6.3/§9.17/§9.21 révisés, §9.23 ajouté. **Trois conséquences pour le dispositif :** (1) l'Axe D gagne un levier majeur — la privation de sommeil dérègle ghréline/leptine, donc le SAOS **aggrave le déficit de satiété déjà présent** : boucle SAOS→poids→SAOS documentée par +6 kg en 9 mois ; (2) **l'exposition graduée devient l'outil n° 1** — la désensibilisation à la PPC *est* une exposition graduée, donc le même outil sert au masque et aux transports ; (3) **la coordination inter-praticiens devient une fonction du dispositif** — six médecins, aucune vue d'ensemble. Email au Dr Isorni rédigé (`20260808 Email au Dr Isorni.md`). |

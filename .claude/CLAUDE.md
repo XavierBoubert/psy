@@ -11,7 +11,9 @@ Créer un **psychologue/psychiatre virtuel basé sur Claude, spécifiquement con
 5. **Présence** — **Kokoro (心)**, un visage numérique sur Android, en surimpression permanente, pour un suivi en temps réel.
 
 **Phase 1 (terminée)** : diagnostic établi à partir de `ressources/xavier/` et `ressources/spécialisées/` → `ressources/xavier/Rapport psychiatrique et psychologique.md` (**v2.3**), document de référence du profil.
-**Phase 2 (en cours)** : conception et construction du dispositif → `PLAN.md` (plan) et `psy/` (réalisation). **Étape 0 — socle minimal : en place depuis le 09/08/2026.**
+**Phase 2 (en cours)** : conception et construction du dispositif → `PLAN.md` (plan) et `psy/` (réalisation). **Étape 0 — socle minimal : close (09/08/2026). Étape 1 — Axe D (prescription médicale) : ouverte, les trois protocoles sont écrits dans `psy/protocoles/`.**
+
+> **Chantier n° 1 en cours : la reprise de la PPC par désensibilisation** (SAOS sévère non traité). Fiche : `psy/protocoles/ppc-desensibilisation.md`. Les deux autres — alimentation à structure externe, activité physique sans impact — sont écrites et démarrent après. **À partir du palier 1, un seul chantier progresse à la fois.**
 
 > **Avant toute intervention clinique** (séance, check-in, brief, protocole, outil), charger **`psy/dossier/profil.md`** (contexte permanent) **et `psy/dossier/etat.md`** (état courant), ensemble et jamais l'un sans l'autre. En cas de doute clinique, la source qui fait foi est le rapport v2.3, pas la fiche.
 > **Avant d'écrire quoi que ce soit dans `psy/dossier/`**, lire **`psy/dossier/SCHEMA.md`** — il est normatif ; aucune surface n'a le droit d'inventer un format.

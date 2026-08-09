@@ -1,6 +1,6 @@
 # `psy/` — le dispositif
 
-Implémentation du plan de conception `PLAN.md` (racine). **Étape 0 — socle minimal : en place au 09/08/2026.**
+Implémentation du plan de conception `PLAN.md` (racine). **Étape 0 — socle minimal : close. Étape 1 — Axe D : ouverte au 09/08/2026, protocoles écrits.**
 
 ---
 
@@ -11,7 +11,7 @@ Implémentation du plan de conception `PLAN.md` (racine). **Étape 0 — socle m
 | **`dossier/`** ⭐ | **Mémoire longitudinale — source de vérité unique.** Lue et écrite par les trois surfaces. | ✅ schéma + profil + état |
 | `agent/` | Rôles Claude Code. **Les skills vivent dans `.claude/skills/`** — cf. `agent/README.md` | ✅ `psy-seance`, `psy-journal` |
 | `corpus/` | Référentiels cliniques indexés | ⏸️ 4 corpus prioritaires à récupérer |
-| `protocoles/` | Protocoles thérapeutiques opérationnels (fiches actionnables) | ⏸️ Étape 3 |
+| `protocoles/` | Protocoles thérapeutiques opérationnels (fiches actionnables) | ✅ 3 fiches — **PPC**, alimentation, activité physique |
 | `web/` | Outils de séance desktop — TypeScript strict | ⏸️ Étape 3-4 |
 | `android/` | Kokoro (心) — compagnon permanent, Kotlin + Compose | ⏸️ Étape 5 |
 | `SYNCHRO.md` | Décisions de synchronisation et de sécurité des données | ✅ |
@@ -28,6 +28,7 @@ Implémentation du plan de conception `PLAN.md` (racine). **Étape 0 — socle m
 | Savoir qui est Xavier avant de lui parler | `dossier/profil.md` |
 | Savoir où on en est aujourd'hui | `dossier/etat.md` |
 | Écrire ou lire une donnée du dossier | `dossier/SCHEMA.md` *(normatif)* |
+| Appliquer un protocole en cours | `protocoles/ppc-desensibilisation.md` *(cible n° 1)* · `protocoles/alimentation-structure-externe.md` · `protocoles/activite-physique-sans-impact.md` |
 | Trancher un point clinique | `../ressources/xavier/Rapport psychiatrique et psychologique.md` *(v2.3, fait foi)* |
 | Comprendre une décision de conception | `../PLAN.md` |
 
