@@ -72,7 +72,11 @@ Toujours communiquer avec l'utilisateur en français.
 |---|---|---|
 | `psy-seance` | Séance de fond hebdomadaire — ouverture / travail (une seule cible) / clôture obligatoire / compte-rendu dans `psy/dossier/seances/` | ✅ |
 | `psy-journal` | Check-in quotidien — 7 questions fermées, < 2 min, aucune saisie de texte obligatoire → `psy/dossier/journal/AAAA-MM-JJ.json` | ✅ |
-| `psy-crise`, `psy-bilan`, `psy-brief-isorni`, `psy-hygiene`, `psy-superviseur` | Rôles restants | ⏸️ cf. `psy/agent/README.md` |
+| `psy-crise` | **Triage de crise** — sécurité avant mécanisme, panique / vasovagal / shutdown, escalade 3114 et voies sans parole. ⭐ **Seule exception au chargement de contexte : les numéros s'affichent avant la lecture du dossier** | ✅ |
+| `psy-bilan` | Passation et cotation d'une échelle → `psy/dossier/mesures/` — items lus dans `psy/corpus/echelles/`, **jamais restitués de mémoire** ; item 9 du PHQ-9 câblé sur le protocole de crise | ✅ |
+| `psy-brief-isorni` | Brief d'une page avant consultation → `psy/dossier/briefs/`, `transmis: false` — chiffres calculés depuis le journal, réserves obligatoires, **aucune proposition pharmacologique** | ✅ |
+| `psy-hygiene` | Versant somatique (PPC, alimentation, activité) — ⭐ **le passage de palier se compte dans le journal, il ne se demande pas** | ✅ |
+| `psy-superviseur` | Contre-expertise — anti-effet-miroir | ⏸️ non planifié |
 
 **Invariants de tout skill du dispositif** : charger `profil.md` + `etat.md` avant d'agir · **non-substitution** (aucun conseil de modification de traitement, jamais, même sous forme interrogative — ça part au brief Dr Isorni) · **protocole de crise câblé** (3114, non contournable) · aucune visualisation · utilisable sans parler ni écrire · zéro streak ni compteur de régularité · annoncer avant de faire.
 

@@ -14,7 +14,7 @@ Implémentation du plan de conception `PLAN.md` (racine).
 | Répertoire | Rôle | État |
 |---|---|---|
 | **`dossier/`** ⭐ | **Mémoire longitudinale — source de vérité unique.** Lue et écrite par les trois surfaces. | ✅ schéma + profil + état |
-| `agent/` | Rôles Claude Code. **Les skills vivent dans `.claude/skills/`** — cf. `agent/README.md` | ✅ `psy-seance`, `psy-journal` |
+| `agent/` | Rôles Claude Code. **Les skills vivent dans `.claude/skills/`** — cf. `agent/README.md` | ✅ `psy-seance`, `psy-journal`, `psy-crise`, `psy-bilan`, `psy-brief-isorni`, `psy-hygiene` · ⏸️ `psy-superviseur` |
 | `corpus/` | Référentiels cliniques indexés | ✅ **échelles** (VVIQ, TAS-20, CAT-Q, GAD-7/PHQ-9 ; BES partiel) + **tension appliquée** (corpus n° 1) · ⏸️ 3 corpus prioritaires restants |
 | `protocoles/` | Protocoles thérapeutiques opérationnels (fiches actionnables) | ✅ 7 fiches — **crise/escalade**, **PPC**, tension appliquée, alimentation, activité physique, panique, jour de vol |
 | `web/` | Outils de séance desktop — TypeScript strict | ⏸️ aucun outil écrit — le premier attendu est l'app de guidage de la tension appliquée (Étape 3) |
