@@ -1,0 +1,16 @@
+{
+  "date": "2026-08-09",
+  "echelle": "vviq",
+  "version": "VVIQ-16-Zeman",
+  "score": 18,
+  "score_max": 80,
+  "seuil": {
+    "valeur": 32,
+    "sens": "en_dessous",
+    "interpretation": "aphantasie"
+  },
+  "sous_scores": null,
+  "reponses": [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+  "passation": "claude-code",
+  "notes": "Première passation du dossier. Score 18/80, plancher de l'instrument = 16 : sous le seuil d'aphantasie (32) de 14 points. 14 items sur 16 cotés 1 (aucune image). Les deux seuls items cotés 2 sont l'item 7 (orage, éclairs) et l'item 16 (vent fort sur les arbres et le lac, vagues) — les deux items les plus explicitement dynamiques de l'instrument. Observation factuelle, non interprétée ici : le VVIQ ne mesure que l'imagerie VISUELLE et ne teste ni l'imagerie motrice, ni auditive, ni spatiale (fiche vviq.md §5). Aucune norme française validée : seuils issus de la littérature anglophone (Zeman et al., 2015), à mentionner si le chiffre est transmis à un praticien. Passation conduite sans relance et sans consigne d'effort, conformément au piège de passation signalé en fiche §2."
+}
