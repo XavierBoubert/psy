@@ -10,10 +10,13 @@ Créer un **psychologue/psychiatre virtuel basé sur Claude, spécifiquement con
 4. **Hygiène de vie** — un programme d'activité physique, d'alimentation, de sommeil et de récupération adapté à ses contraintes.
 5. **Présence** — **Kokoro (心)**, un visage numérique sur Android, en surimpression permanente, pour un suivi en temps réel.
 
-**Phase 1 (terminée)** : diagnostic établi à partir de `ressources/xavier/` et `ressources/spécialisées/` → `ressources/xavier/Rapport psychiatrique et psychologique.md` (v2.0), document de référence du profil.
-**Phase 2 (en cours)** : conception et construction du dispositif → voir `PLAN.md` à la racine.
+**Phase 1 (terminée)** : diagnostic établi à partir de `ressources/xavier/` et `ressources/spécialisées/` → `ressources/xavier/Rapport psychiatrique et psychologique.md` (**v2.3**), document de référence du profil.
+**Phase 2 (en cours)** : conception et construction du dispositif → `PLAN.md` (plan) et `psy/` (réalisation). **Étape 0 — socle minimal : en place depuis le 09/08/2026.**
 
-### Contraintes de conception non négociables (issues du rapport v2.0)
+> **Avant toute intervention clinique** (séance, check-in, brief, protocole, outil), charger **`psy/dossier/profil.md`** (contexte permanent) **et `psy/dossier/etat.md`** (état courant), ensemble et jamais l'un sans l'autre. En cas de doute clinique, la source qui fait foi est le rapport v2.3, pas la fiche.
+> **Avant d'écrire quoi que ce soit dans `psy/dossier/`**, lire **`psy/dossier/SCHEMA.md`** — il est normatif ; aucune surface n'a le droit d'inventer un format.
+
+### Contraintes de conception non négociables (issues du rapport v2.3)
 
 - **Aphantasie** → aucune technique de visualisation ; verbal, corporel, exposition in vivo uniquement.
 - **Shutdowns** → toute interface doit rester utilisable sans parler ni écrire.
@@ -22,9 +25,20 @@ Créer un **psychologue/psychiatre virtuel basé sur Claude, spécifiquement con
 - **Réduire les charges, pas « motiver »** → pas de gamification culpabilisante ni de streaks punitifs.
 - **Hypersensibilités (4 canaux)** → UI sobre : pas de son surprise, pas de flash, pas d'animation brusque.
 - **Rigidité / routines** → la prévisibilité est une fonctionnalité : aucun changement d'interface non annoncé.
-- **Deux mécanismes de crise distincts** → panique (exposition/respiration) ≠ vasovagal (tension appliquée) ; ne jamais les confondre.
+- **Deux mécanismes de crise distincts** → panique (exposition/respiration) ≠ vasovagal (tension appliquée) ; ne jamais les confondre. *(Un troisième, le shutdown, a sa propre parade : mot-code, retrait, reprise différée.)*
+- ⭐ **Signal interne absent → structure externe** (règle centrale, §9.19) → ne jamais demander à Xavier de s'appuyer sur une perception qui lui manque (satiété, fatigue, tension, émotion). Trois échecs documentés — « imaginez un lieu sûr », « écoutez votre satiété », « portez le masque toute la nuit » — relevaient de la conception, pas de la volonté.
+- ⭐ **On cote des comportements observables, pas des ressentis** (règle R6 du schéma du dossier) → jamais « note ton anxiété sur 10 » ; toujours une ancre comportementale (« à combien de choses as-tu renoncé ? »).
+- **Poser les questions sur les états internes explicitement et de façon fermée** (§9.20) → l'absence de plainte n'est pas une absence de problème.
 
 Compétences (skills) : `ay-typescript` (patterns de typage), `ay-functional` (immutabilité, composition), `ay-refactor` (méthodologie de refactoring), `ay-api` (design REST / interfaces), `ay-12factor` (services déployables), `/ay-teach [topic]` (apprentissage structuré).
+
+### Données de santé — arbitrage acté (09/08/2026)
+
+Le dossier médical et la mémoire longitudinale sont **versionnés dans le dépôt privé `github.com/XavierBoubert/psy`** ; le transport PC↔téléphone passera par **Syncthing P2P** (aucun serveur tiers ne stocke). Décision de Xavier en connaissance de cause : elle assouplit sciemment la règle « rien ne part vers un tiers » du PLAN §6, en échange de la traçabilité clinique et de la sauvegarde hors-machine.
+
+- **Conditions** : dépôt privé · 2FA + clé SSH · aucun fork, collaborateur ni GitHub Action ayant accès au contenu.
+- **Hors GitHub et hors appels à Claude, aucune donnée ne part vers un tiers** — pas de cloud santé, pas de service d'analyse externe, pas de télémétrie. Ne jamais proposer d'en ajouter.
+- **Porte de sortie** si l'arbitrage est révisé : `git-crypt` / `age` sur `psy/dossier/` et `ressources/xavier/`. Détail : `psy/SYNCHRO.md` §2.
 
 ## Langue
 
@@ -35,10 +49,28 @@ Toujours communiquer avec l'utilisateur en français.
 | Répertoire | Objet |
 |-----------|---------|
 | `PLAN.md` (racine) | **Plan de conception du dispositif** (v1.0, brainstorming clos en 7 tours) : 5 axes + axe transversal sécurité/éthique, contraintes de conception, architecture à trois surfaces, feuille de route en 7 étapes, journal des décisions |
+| **`psy/`** | **Le dispositif lui-même** (réalisation du PLAN). Carte d'entrée : `psy/README.md` |
+| **`psy/dossier/`** ⭐ | **Mémoire longitudinale — source de vérité unique**, lue et écrite par les trois surfaces. Contient `SCHEMA.md` (**normatif**), `profil.md` (permanent), `etat.md` (courant), `gabarits/`, et les répertoires `journal/` `seances/` `crises/` `mesures/` `briefs/` |
+| `psy/agent/` | Note d'aiguillage + table des rôles. **Les skills vivent dans `.claude/skills/psy-*`** — Claude Code ne les découvre que là |
+| `psy/corpus/` | Référentiels cliniques indexés (4 corpus prioritaires à récupérer) |
+| `psy/protocoles/` | Protocoles thérapeutiques opérationnels — fiches actionnables |
+| `psy/web/` | Outils de séance desktop — TypeScript strict *(⏸️ Étape 3-4)* |
+| `psy/android/` | Kokoro (心) — compagnon permanent, Kotlin + Compose *(⏸️ Étape 5)* |
+| `psy/SYNCHRO.md` | Synchronisation et sécurité des données : dépôt privé (historique) + Syncthing P2P (transport PC↔Android) |
 | `ressources/originales/` | Documents source bruts (ex. PDF) |
 | `ressources/spécialisées/` | Documents convertis, utilisés comme entrées pour Claude |
 | `ressources/xavier/` | Ressources du profil de Xavier (celui qui prompt), utilisées pour établir son diagnostic et créer un psychologue adapté à lui |
 | `scripts/` | Scripts Node.js/TypeScript autonomes (exécutés directement via le support TypeScript natif de Node, sans étape de build) |
+
+## Skills du dispositif
+
+| Skill | Rôle | État |
+|---|---|---|
+| `psy-seance` | Séance de fond hebdomadaire — ouverture / travail (une seule cible) / clôture obligatoire / compte-rendu dans `psy/dossier/seances/` | ✅ |
+| `psy-journal` | Check-in quotidien — 7 questions fermées, < 2 min, aucune saisie de texte obligatoire → `psy/dossier/journal/AAAA-MM-JJ.json` | ✅ |
+| `psy-crise`, `psy-bilan`, `psy-brief-isorni`, `psy-hygiene`, `psy-superviseur` | Rôles restants | ⏸️ cf. `psy/agent/README.md` |
+
+**Invariants de tout skill du dispositif** : charger `profil.md` + `etat.md` avant d'agir · **non-substitution** (aucun conseil de modification de traitement, jamais, même sous forme interrogative — ça part au brief Dr Isorni) · **protocole de crise câblé** (3114, non contournable) · aucune visualisation · utilisable sans parler ni écrire · zéro streak ni compteur de régularité · annoncer avant de faire.
 
 ## Ressources spécialisées
 

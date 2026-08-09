@@ -1,0 +1,12 @@
+{
+  "horodatage": "AAAA-MM-JJTHH:MM:SS+02:00",
+  "type": "indetermine",
+  "contexte": "autre",
+  "declencheur": null,
+  "duree_minutes": null,
+  "parade_utilisee": "aucune",
+  "parade_efficace": null,
+  "perte_de_connaissance": false,
+  "source": "claude-code",
+  "notes": null
+}

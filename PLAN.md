@@ -52,17 +52,20 @@ Ce n'est pas « avoir lu plus de livres » — c'est structurel, et six leviers 
 
 ### 1.2 Architecture retenue
 
-**Trois surfaces, un seul dossier.** Données **locales + synchro chiffrée**.
+**Trois surfaces, un seul dossier.** Données **locales, versionnées dans le dépôt privé, transportées par Syncthing P2P** (arbitrage du 09/08/2026 — cf. §6 et `psy/SYNCHRO.md`).
 
 ```
 psy/
-  agent/          skills Claude Code — un rôle = un skill
+  agent/          note d'aiguillage — les skills vivent dans .claude/skills/psy-*
   dossier/        mémoire longitudinale (SOURCE DE VÉRITÉ, Markdown + JSON)
   corpus/         référentiels cliniques indexés
   protocoles/     protocoles thérapeutiques opérationnels (fiches actionnables)
   web/            outils de séance desktop — TypeScript strict (règles projet)
   android/        app compagnon — Kotlin natif + Compose
+  SYNCHRO.md      décisions de synchronisation et de sécurité des données
 ```
+
+*(Correction apportée à la réalisation, 09/08/2026 : Claude Code ne découvre les skills d'un projet que dans `.claude/skills/<nom>/SKILL.md`. Les placer dans `psy/agent/` les aurait rendus invisibles. `psy/agent/README.md` ne conserve que la table des rôles et les invariants communs.)*
 
 Le **dossier** est la pièce maîtresse : source de vérité unique, lue et écrite par les trois surfaces, synchronisée avec le téléphone. C'est lui qui rend le suivi longitudinal possible.
 
@@ -399,7 +402,11 @@ Le choix du muet est cliniquement solide, pas seulement esthétique : une voix q
 
 - **Non-substitution** : le dispositif complète le Dr Isorni, ne le remplace pas. Jamais de conseil de modification de traitement.
 - **Protocole de crise** : idéation suicidaire → escalade immédiate, **3114** affiché, contact d'urgence.
-- **Données de santé** : ✅ locales, repo privé + synchro chiffrée PC↔téléphone. Rien ne part vers un tiers hors appels à Claude.
+- **Données de santé** : ✅ **dossier versionné dans le dépôt privé `github.com/XavierBoubert/psy`** (arbitrage de Xavier, 09/08/2026) **+ Syncthing P2P** pour le transport PC↔téléphone (chiffré TLS, aucun serveur tiers ne stocke). Détail, conditions et porte de sortie : `psy/SYNCHRO.md`.
+  > ⚠️ **Cette décision assouplit sciemment la règle « rien ne part vers un tiers ».** GitHub est un tiers, et il héberge un dossier médical complet. Arbitrage rendu en connaissance de cause, motivé par la traçabilité clinique (le git log est l'audit) et la sauvegarde hors-machine — `ressources/xavier/` y était de toute façon versionné depuis l'origine du projet.
+  > **Conditions attachées** : dépôt privé (à revérifier périodiquement) · 2FA + clé SSH · aucun fork, aucun collaborateur, aucune GitHub Action ayant accès au contenu.
+  > **Porte de sortie si l'arbitrage est révisé** : chiffrement au repos (`git-crypt` ou `age`) sur `psy/dossier/` et `ressources/xavier/` — contrepartie : Claude Code ne lit plus rien sans déverrouillage, et chaque surface doit gérer la clé.
+  > **Ce qui reste vrai sans réserve** : hors GitHub et hors appels à Claude, **aucune donnée ne part vers un tiers** — pas de cloud santé, pas de service d'analyse, pas de télémétrie. Syncthing est du pair-à-pair : il ne dépose rien sur un serveur.
 - **Effet miroir** : un psy virtuel toujours d'accord serait nocif. Le dispositif doit pouvoir contredire Xavier — d'où le rôle `psy-superviseur` (§1.3).
 
 ### 6.1 Tiers dans la boucle
@@ -419,12 +426,19 @@ Le choix du muet est cliniquement solide, pas seulement esthétique : une voix q
 
 Séquençage retenu : **Axe A minimal, puis Axe D à fond** (§tour 5). Le foie n'attend pas, mais on évite de piloter à l'aveugle.
 
-### Étape 0 — Socle minimal *(Axe A)*
-- [ ] Créer l'arborescence `psy/` (agent, dossier, corpus, protocoles, web, android)
-- [ ] **Schéma du dossier** : format de la mémoire longitudinale (journal, séances, mesures, crises) — c'est la pièce dont tout dépend
-- [ ] **Fiche de profil condensée** : le contexte permanent rechargé à chaque séance (le rapport v2.0 fait 416 lignes, il faut sa version opérationnelle)
-- [ ] Skills `psy-seance` et `psy-journal`
-- [ ] Synchro chiffrée PC↔téléphone (Syncthing ou dépôt privé)
+### Étape 0 — Socle minimal *(Axe A)* ✅ **en place — 09/08/2026**
+- [x] Créer l'arborescence `psy/` (agent, dossier, corpus, protocoles, web, android) → `psy/README.md` + un README par surface
+- [x] **Schéma du dossier** : format de la mémoire longitudinale → **`psy/dossier/SCHEMA.md`** (normatif) + 5 gabarits dans `psy/dossier/gabarits/`
+- [x] **Fiche de profil condensée** → **`psy/dossier/profil.md`** (permanent) **+ `psy/dossier/etat.md`** (courant). *Le rapport fait désormais 670 lignes en v2.3 ; la fiche en tient 12 sections opérationnelles.*
+- [x] Skills `psy-seance` et `psy-journal` → **`.claude/skills/psy-*/SKILL.md`** *(et non `psy/agent/` : Claude Code ne découvre les skills que là — cf. `psy/agent/README.md`)*
+- [x] Synchro chiffrée PC↔téléphone → **décision arrêtée** dans `psy/SYNCHRO.md` : **dépôt privé** (historique) **+ Syncthing P2P** (transport PC↔Android). ⏸️ *Installation reportée à l'Étape 5 : il n'y a pas encore d'app avec laquelle synchroniser.*
+
+**Trois décisions de conception prises à cette étape, qui contraignent toute la suite :**
+1. ⭐ **On cote des comportements observables, pas des ressentis** (règle R6 du schéma). Alexithymie + déficit intéroceptif : « note ton anxiété sur 10 » demande d'utiliser une fonction déficitaire — c'est la même erreur que « écoute ta satiété ». D'où un journal qui compte des shutdowns, des retraits sensoriels et des renoncements, et **aucune échelle introspective**.
+2. **Un fichier par événement, append-only** (R1, R2). Contrainte Syncthing autant que principe de dossier clinique : deux appareils qui écrivent dans un même fichier produisent un conflit ; un fichier par événement le rend structurellement impossible.
+3. **Le format suit l'auteur** (R3) : ce que Claude écrit est du Markdown + frontmatter, ce qu'une app écrit est du JSON. Pas de conversion, pas de format bâtard.
+
+⚠️ **Arbitrage assumé, à garder visible :** le dossier est versionné sur GitHub, ce qui contredit partiellement le §6 (« rien ne part vers un tiers »). Décision de Xavier du 09/08/2026, motivée par la traçabilité et la sauvegarde ; conditions et porte de sortie (chiffrement `git-crypt`/`age`) documentées dans `psy/SYNCHRO.md` §2.
 
 ### Étape 1 — Axe D, prescription médicale 🔴
 - [x] ~~Poids, taille, IMC~~ → **1,77 m · 110 kg · IMC 35,1** (08/08/2026)
@@ -471,7 +485,7 @@ Séquençage retenu : **Axe A minimal, puis Axe D à fond** (§tour 5). Le foie 
 
 | Date | Décisions prises |
 |---|---|
-| 08/08/2026 | Création du plan. Périmètre en 5 axes + 1 axe transversal. Faisabilité Android confirmée. |
+| **09/08/2026** | ✅ **Étape 0 exécutée — le socle existe.** Arborescence `psy/`, **schéma du dossier** (`psy/dossier/SCHEMA.md`, normatif) + 5 gabarits, **fiche de profil condensée** (`profil.md`) **et état courant** (`etat.md`) — la distinction permanent/courant est nouvelle et remplace la « fiche unique » prévue —, skills **`psy-seance`** et **`psy-journal`** dans `.claude/skills/`. ⭐ **Décision de conception structurante : on cote des comportements observables, pas des ressentis** (règle R6) — le journal compte des shutdowns, des retraits sensoriels, des renoncements et des activités investies ; **aucune échelle introspective**, parce que demander « note ton anxiété sur 10 » à quelqu'un d'alexithymique avec déficit intéroceptif est la même erreur que « écoute ta satiété ». ✅ **Données** : dossier **versionné dans le dépôt privé** (traçabilité clinique) — arbitrage assumé qui contredit partiellement le §6, conditions et porte de sortie documentées ; **Syncthing P2P** retenu pour le transport PC↔Android, installation à l'Étape 5. ⚠️ **Correction au plan** : les skills vont dans `.claude/skills/`, pas dans `psy/agent/` (Claude Code ne les découvre que là). |
 | 08/08/2026 | **Tour 1 de questions.** ✅ Ordre de construction : **Axe A (cerveau clinique) d'abord**. ✅ Architecture : **hybride Claude Code (PC) + app Android**, synchronisés par le dossier. ✅ Données : **locales, repo privé + synchro chiffrée PC↔téléphone**. ✅ Posture : **directe, littérale, clinique**, avec droit de contredire. Identification du levier décisif face à un psy humain : **l'absence de coût de camouflage** (§1.1). |
 | 08/08/2026 | 🔴 **SAOS SÉVÈRE NON TRAITÉ — le fait le plus important du dossier à ce jour.** Polysomnographie du Dr Roisman versée : **IAH 35/h, 61 micro-éveils/h, SP 7,2 %, Épworth 14, ISI 20, MPJ 31/h**. Diagnostiqué le **19/01/2026**, PPC prescrite — **non utilisée**. Jamais transmis au psychiatre (courrier adressé à la généraliste). → Rapport **v2.3** : §6.6 et §10.8 créées, §6.3/§9.17/§9.21 révisés, §9.23 ajouté. **Trois conséquences pour le dispositif :** (1) l'Axe D gagne un levier majeur — la privation de sommeil dérègle ghréline/leptine, donc le SAOS **aggrave le déficit de satiété déjà présent** : boucle SAOS→poids→SAOS documentée par +6 kg en 9 mois ; (2) **l'exposition graduée devient l'outil n° 1** — la désensibilisation à la PPC *est* une exposition graduée, donc le même outil sert au masque et aux transports ; (3) **la coordination inter-praticiens devient une fonction du dispositif** — six médecins, aucune vue d'ensemble. Email au Dr Isorni rédigé (`20260808 Email au Dr Isorni.md`). |
 | 08/08/2026 | **Rapport passé en v2.1 + sourçage bibliographique vérifié.** 11 sections du rapport touchées ; §6.5 (conduite alimentaire et déficit intéroceptif) et §10.7 (versant somatique) créées ; enseignements 19 à 22 ajoutés. Recherches en ligne effectuées → **correction d'une imprécision** : la fourchette « 3-5 % » ne vaut que pour les MASLD de **poids normal** ; en obésité, la cible EASL-EASD-EASO 2024 est **≥ 5 %** (le chiffre final, 104,5 kg, est inchangé). Toutes les références v2.1 disposent désormais de liens vérifiés. |

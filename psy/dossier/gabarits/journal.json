@@ -1,0 +1,20 @@
+{
+  "date": "AAAA-MM-JJ",
+  "source": "claude-code",
+  "noyau": {
+    "shutdowns": null,
+    "exposition_sociale": null,
+    "retrait_sensoriel": null,
+    "renoncements": null,
+    "activites_investies": null,
+    "sommeil_heures": null,
+    "missions_actives": null
+  },
+  "campagne": {
+    "ppc_minutes": null,
+    "repas_servis_une_fois": null,
+    "activite_minutes": null,
+    "poids_kg": null
+  },
+  "notes": null
+}

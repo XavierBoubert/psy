@@ -1,0 +1,16 @@
+{
+  "date": "AAAA-MM-JJ",
+  "echelle": "vviq",
+  "version": null,
+  "score": null,
+  "score_max": null,
+  "seuil": {
+    "valeur": null,
+    "sens": "en_dessous",
+    "interpretation": null
+  },
+  "sous_scores": null,
+  "reponses": [],
+  "passation": "claude-code",
+  "notes": null
+}

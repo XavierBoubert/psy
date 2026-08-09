@@ -1,0 +1,26 @@
+# `protocoles/` — fiches actionnables
+
+Différence avec `corpus/` : le corpus est la **littérature**, le protocole est la **fiche qu'on applique**, déjà adaptée au profil de Xavier. Un protocole se lit en séance ou en crise, pas avant.
+
+## Format imposé
+
+Une fiche = un fichier. Elle contient, dans cet ordre : **quand l'utiliser** · **quand ne PAS l'utiliser** · les **paliers écrits à l'avance** avec leur critère de passage · les **critères d'arrêt** · ce qui se trace au dossier.
+
+**Aucune fiche ne contient d'étape de visualisation** (aphantasie). Aucune ne demande de s'appuyer sur un signal interne (satiété, tension, fatigue) : structure externe, toujours.
+
+## À écrire
+
+| Protocole | Cible | Étape |
+|---|---|---|
+| **Désensibilisation à la PPC** | 🔴 SAOS sévère non traité. Exposition graduée, 5 paliers, matériel exigé explicitement (interface **narinaire**, rampe de pression, humidificateur, éloignement de la machine). Base rédigée : rapport §10.8 | 1 |
+| **Structure externe alimentaire** | NASH — quantités décidées avant, servies une fois, horaires fixes, rotation stable | 1 |
+| **Activité physique sans impact à domicile** | NASH + agoraphobie — format court, quotidien, invariable, progression écrite à l'avance | 1 |
+| **Tension appliquée (Öst)** | Phobie sang-injection-accident — cycles de 10-15 s, **à acquérir à froid** | 3 |
+| **Protocole shutdown** | Négocié à froid avec Chourouk : mot-code, retrait sensoriel court, reprise différée | 3 |
+| **Protocole de crise** | 3114, escalade, non contournable | 3 |
+| **Exposition graduée transports** | Agoraphobie — paliers écrits, in vivo | 4 |
+| **Psychoéducation des 13 symptômes** | Attaque de panique, dont la dépersonnalisation/déréalisation (symptôme n° 11) | 4 |
+
+## Note de séquençage
+
+Les protocoles « désensibilisation PPC » et « exposition graduée transports » sont **le même outil**. C'est le principal gain de la révision v2.3 du rapport : Xavier n'a pas une nouvelle méthode à apprendre pour son masque — il a besoin qu'on lui applique celle qu'on allait appliquer à ses transports.
