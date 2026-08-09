@@ -11,7 +11,7 @@ Créer un **psychologue/psychiatre virtuel basé sur Claude, spécifiquement con
 5. **Présence** — **Kokoro (心)**, un visage numérique sur Android, en surimpression permanente, pour un suivi en temps réel.
 
 **Phase 1 (terminée)** : diagnostic établi à partir de `ressources/xavier/` et `ressources/spécialisées/` → `ressources/xavier/Rapport psychiatrique et psychologique.md` (**v2.4**), document de référence du profil.
-**Phase 2 (en cours)** : conception et construction du dispositif → `PLAN.md` (plan) et `psy/` (réalisation). **Étape 0 — socle minimal : close (09/08/2026). Étape 1 — Axe D (prescription médicale) : ouverte, les trois protocoles sont écrits dans `psy/protocoles/`.**
+**Phase 2 (en cours)** : conception et construction du dispositif → `PLAN.md` (plan) et `psy/` (réalisation). **Étape 0 — socle minimal : close (09/08/2026). Étape 1 — Axe D (prescription médicale) : ouverte, les trois protocoles sont écrits dans `psy/protocoles/`. Étape 2 — instrumentation du suivi : ouverte (09/08/2026), les instruments de mesure sont versés dans `psy/corpus/echelles/`, le check-in quotidien démarre.**
 
 > **Chantier n° 1 en cours : la reprise de la PPC par désensibilisation** (SAOS sévère **insuffisamment traité** — usage très irrégulier, IAH résiduel < 6/h sous appareil). Fiche : `psy/protocoles/ppc-desensibilisation.md`. Les deux autres — alimentation à structure externe, activité physique sans impact — sont écrites et démarrent après. **À partir du palier 1, un seul chantier progresse à la fois.**
 >
@@ -56,7 +56,7 @@ Toujours communiquer avec l'utilisateur en français.
 | **`psy/`** | **Le dispositif lui-même** (réalisation du PLAN). Carte d'entrée : `psy/README.md` |
 | **`psy/dossier/`** ⭐ | **Mémoire longitudinale — source de vérité unique**, lue et écrite par les trois surfaces. Contient `SCHEMA.md` (**normatif**), `profil.md` (permanent), `etat.md` (courant), `gabarits/`, et les répertoires `journal/` `seances/` `crises/` `mesures/` `briefs/` |
 | `psy/agent/` | Note d'aiguillage + table des rôles. **Les skills vivent dans `.claude/skills/psy-*`** — Claude Code ne les découvre que là |
-| `psy/corpus/` | Référentiels cliniques indexés (4 corpus prioritaires à récupérer) |
+| `psy/corpus/` | Référentiels cliniques indexés. **`corpus/echelles/` ⭐ — instruments de mesure : VVIQ, TAS-20, CAT-Q, GAD-7/PHQ-9 (complets), BES (partiel + grille comportementale de substitution).** Les 4 corpus thérapeutiques prioritaires restent à récupérer |
 | `psy/protocoles/` | Protocoles thérapeutiques opérationnels — fiches actionnables |
 | `psy/web/` | Outils de séance desktop — TypeScript strict *(⏸️ Étape 3-4)* |
 | `psy/android/` | Kokoro (心) — compagnon permanent, Kotlin + Compose *(⏸️ Étape 5)* |

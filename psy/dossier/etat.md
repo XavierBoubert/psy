@@ -1,7 +1,7 @@
 # État courant
 
 **Statut :** document **vivant** — réécrit à chaque clôture de séance. Contrepartie variable de `profil.md` (permanent).
-**Dernière mise à jour :** 09/08/2026 *(v1.1 — ouverture de l'Étape 1)* · **Prochaine révision :** à la première séance de fond.
+**Dernière mise à jour :** 09/08/2026 *(v1.5 — ouverture de l'Étape 2)* · **Prochaine révision :** à la première séance de fond.
 
 > **Comment lire ce document.** `profil.md` dit *qui est Xavier*. Celui-ci dit *où on en est*. Les deux se chargent ensemble, jamais l'un sans l'autre.
 
@@ -11,7 +11,7 @@
 
 | | |
 |---|---|
-| **Étape du PLAN** | ✅ Étape 0 close → 🔴 **Étape 1 — Axe D, ouverte le 09/08/2026** |
+| **Étape du PLAN** | ✅ Étape 0 close → 🔴 **Étape 1 — Axe D, ouverte** (protocoles écrits, exécution suspendue à des démarches réelles) → ⏱️ **Étape 2 — Instrumentation du suivi, ouverte le 09/08/2026** (instruments versés dans [`corpus/echelles/`](../corpus/echelles/README.md), check-in quotidien à démarrer) |
 | **Cible thérapeutique n° 1** | 🔴 **Reprise de la PPC par désensibilisation** — SAOS sévère **insuffisamment traité** depuis ~7 mois (usage très irrégulier) → protocole écrit : [`protocoles/ppc-desensibilisation.md`](../protocoles/ppc-desensibilisation.md) |
 | **Cible n° 2** | Alimentation à structure externe — cible 7-10 % → **99-102,3 kg** → [`protocoles/alimentation-structure-externe.md`](../protocoles/alimentation-structure-externe.md) |
 | **Cible n° 3** | Activité physique — domicile, **sans impact**, format court et invariable → [`protocoles/activite-physique-sans-impact.md`](../protocoles/activite-physique-sans-impact.md) |
@@ -103,6 +103,7 @@ Le brouillon d'email existe déjà : `ressources/xavier/20260808 Email au Dr Iso
 | 7 | **Surveillance hépatologique** à clarifier avec la Dr Bouarioua : contrôle non invasif à distance (biologie ± élastométrie) ? | Moyenne |
 | 8 | Bilan métabolique complet (HbA1c, lipides, tension) | Moyenne |
 | 9 | ✈️ **Ordonnance pour le séjour** (> 3 semaines, départ le 07/09) — quantité, bagage cabine, justificatif si besoin | 🔴 **la consultation tombe 4 jours avant le départ** |
+| 11 | 📄 **Demander l'échelle BES** (Binge Eating Scale, version française de Brunault et al. 2016) — instrument de dépistage non librement diffusé, dont il dispose en routine. Il conditionne le départage **hyperphagie boulimique / déficit intéroceptif**, donc le choix du traitement du chantier alimentaire. *(Alternative : la Dr Bouarioua, le dépistage faisant partie du bilan standard d'une NASH.)* | Moyenne — **une demande, pas une question clinique** |
 | 10 | ✈️ **Alprazolam pour le vol** — Xavier a indiqué le 09/08/2026 qu'il compte en prendre. La molécule est **déjà prescrite « si besoin »** : l'employer n'est pas une modification de traitement. ⚠️ **Mais le point de vigilance benzodiazépine / SAOS sévère (question 1) n'a jamais été instruit**, et il porte précisément sur ce médicament-là. **Élément nouveau à donner au prescripteur : la PPC part en Tunisie** et sera donc utilisée pendant le séjour. **Arbitrage au Dr Isorni le 03/09 — le dispositif ne se prononce pas.** | 🔴 |
 
 **Ordre imposé :** DIVA-5 **après** traitement effectif du SAOS, jamais avant. Un psychostimulant prescrit sur un SAOS non traité masque le trouble au lieu de le corriger.
@@ -111,14 +112,22 @@ Le brouillon d'email existe déjà : `ressources/xavier/20260808 Email au Dr Iso
 
 ## 6. Échelles à passer — aucune administrée à ce jour
 
-| Échelle | Objet | Durée | Priorité |
-|---|---|---|---|
-| **VVIQ** | Objectiver l'aphantasie — **conditionne quelles techniques sont utilisables** | 5 min | Haute |
-| **BES** | Éliminer formellement une hyperphagie boulimique — deux traitements différents en jeu | 10 min | Haute *(chantier alimentaire)* |
-| **TAS-20** | Alexithymie — « le chaînon manquant du dossier » | 10 min | Haute |
-| **CAT-Q** | Intensité du camouflage | 15 min | Haute |
-| GAD-7 / PHQ-9 | Anxiété, dépression — routine mensuelle | 5 min | À mettre en routine |
-| DIVA-5 | TDAH adulte | 60 min | ⏸️ **bloqué** — après traitement du SAOS |
+**Les instruments sont désormais disponibles** : [`psy/corpus/echelles/`](../corpus/echelles/README.md) *(versé le 09/08/2026)*. Chaque fiche porte items, cotation, seuils et limites. **Une passation = un fichier `mesures/AAAA-MM-JJ-<echelle>.json`, réponses item par item conservées.**
+
+| Échelle | Objet | Durée | Instrument | Séance prévue |
+|---|---|---|---|---|
+| **VVIQ** | Objectiver l'aphantasie — **conditionne quelles techniques sont utilisables** | 5 min | ✅ [`vviq.md`](../corpus/echelles/vviq.md) | **09/08** |
+| **TAS-20** | Alexithymie — « le chaînon manquant du dossier » | 10 min | ✅ [`tas-20.md`](../corpus/echelles/tas-20.md) | 16/08 |
+| **CAT-Q** | Intensité du camouflage | 15 min | ✅ [`cat-q.md`](../corpus/echelles/cat-q.md) | 22-23/08 |
+| **GAD-7 / PHQ-9** | Anxiété, dépression — **baseline chiffrée du brief**, à 2 semaines de la reprise de la venlafaxine | 5 min | ✅ [`gad-7-phq-9.md`](../corpus/echelles/gad-7-phq-9.md) | 22-23/08 |
+| **BES** | Éliminer formellement une hyperphagie boulimique — deux traitements différents en jeu | 10 min | ⚠️ **partiel** — items non obtenus ; **grille comportementale de substitution disponible** → [`bes.md`](../corpus/echelles/bes.md) §4 | Grille : 16/08 · BES formel : dès obtention |
+| DIVA-5 | TDAH adulte | 60 min | ⏸️ non versé | 🔴 **bloqué** — après traitement du SAOS |
+
+**Séance du 29-30/08 : aucune échelle.** Elle écrit le brief. Plafond : 20 min d'échelles par séance ; une échelle n'est jamais la cible d'une séance.
+
+> 🔴 **Deux règles de sécurité câblées.** (1) **PHQ-9 item 9** (idéation suicidaire) se pose **en dernier** ; toute réponse ≥ 1 **interrompt la passation** et déclenche le protocole de crise — **3114**, contact d'urgence, Dr Isorni, 15 si urgence vitale. Le fichier `mesures/` s'écrit après. (2) ⭐ **Le PHQ-9 n'est pas interprétable comme une mesure de l'humeur en l'état** : quatre de ses items (sommeil, fatigue, concentration, ralentissement) sont directement produits par le SAOS insuffisamment traité. **La réserve part au brief avec le chiffre**, jamais le chiffre seul.
+>
+> ⭐ **Rappel valable pour toutes ces échelles : un score élevé est informatif, un score bas ne clôt aucune question.** Elles demandent d'introspecter — précisément la fonction déficitaire. En cas de discordance entre un score et le journal quotidien, **c'est le journal qui prime** (`corpus/echelles/README.md` §1).
 
 ---
 
@@ -131,6 +140,7 @@ Le brouillon d'email existe déjà : `ressources/xavier/20260808 Email au Dr Iso
 | 08/08/2026 | **PLAN.md v1.0** — brainstorming clos en 7 tours. |
 | 09/08/2026 | **Étape 0 en place** : dossier, schéma, fiche de profil, skills `psy-seance` et `psy-journal`. |
 | 09/08/2026 | **Étape 1 ouverte** : les trois protocoles de l'Axe D sont écrits (PPC, alimentation, activité physique). Les paliers, les critères de passage et les critères d'arrêt existent désormais par écrit — c'est ce qui manquait pour que le chantier soit exécutable. **Rien n'a encore été appliqué.** |
+| 09/08/2026 | ⏱️ **Étape 2 ouverte — les instruments de mesure existent enfin** (`psy/corpus/echelles/`). VVIQ, TAS-20, CAT-Q, GAD-7/PHQ-9 versés complets ; BES bloqué faute d'instrument, **remplacé par une grille comportementale de 5 questions** immédiatement utilisable. Plan de passation daté sur les 4 séances restantes avant le 03/09. **Rien n'a encore été passé** — la première passation (VVIQ) est prévue aujourd'hui. |
 | 09/08/2026 | 🔴 **Consultation Roisman du 04/05/2026 versée au dossier → rapport v2.4.** Trois corrections de fait : la PPC est **très irrégulièrement utilisée** et non inutilisée ; le pneumologue **sait** et a déjà ajusté (humidificateur, 6-12 cm H₂O, EPR 2, prise en charge renouvelée) ; ⭐ **IAH résiduel < 6/h** — l'appareil est efficace sur ses propres nuits. Ce qui n'a jamais été fait, c'est le **protocole comportemental** : la réponse à l'intolérance a été « je remotive le patient ». |
 
 ---
@@ -157,6 +167,7 @@ Nourrisson né en 2026 (nuits fragmentées, charge sensorielle maximale **au dom
 
 | Version | Date | Modification |
 |---|---|---|
+| 1.5 | 09/08/2026 | **Étape 2 ouverte.** Instruments versés dans `corpus/echelles/` ; §6 réécrit avec le plan de passation daté et les deux règles de sécurité (item 9 du PHQ-9, réserve SAOS sur le PHQ-9) ; question 11 ajoutée au Dr Isorni (obtenir le BES). |
 | 1.4 | 09/08/2026 | **Trois décisions de Xavier** : mot-code shutdown = **« shutdown »**, convenu avec Chourouk ; **la PPC part en Tunisie** ; alprazolam prévu pour le vol → question 10 au Dr Isorni. |
 | 1.3 | 09/08/2026 | **Échéances datées** : consultation Dr Isorni le **03/09 à 12h30**, départ en Tunisie le **07/09**. Pause des chantiers pendant le séjour décidée à l'avance ; brief à écrire au week-end du 29-30/08 ; check-in quotidien à démarrer immédiatement. |
 | 1.2 | 09/08/2026 | **Rapport v2.4** intégré : observance PPC, réglages du 04/05/2026, IAH résiduel < 6/h, question n° 4 corrigée. |

@@ -15,6 +15,7 @@ Sources sur lesquelles le dispositif appuie ses affirmations. Règle : **toute a
 
 | Source | Emplacement |
 |---|---|
+| ⭐ **Échelles et instruments de mesure** — VVIQ, TAS-20, CAT-Q, GAD-7/PHQ-9 (items, cotation, seuils, limites) + BES partiel | **[`echelles/`](echelles/README.md)** — versé le 09/08/2026, Étape 2 |
 | DSM-5 intégral + extraits TSA / TDAH / anxio-dépressif | `ressources/spécialisées/` |
 | Littérature citée au rapport (camouflage, alexithymie, aphantasie, shutdowns, burnout autistique, intéroception, MASLD/NASH, SAOS) | `ressources/xavier/Rapport psychiatrique et psychologique.md` §11 — liens vérifiés |
 
