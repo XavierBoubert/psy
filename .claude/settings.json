@@ -12,7 +12,8 @@
       "Edit(/.claude/skills/psy-seance/**)",
       "Edit(/.claude/skills/psy-journal/**)",
       "Bash(git -C /c/p/psy diff --stat)",
-      "Bash(git -C /c/p/psy diff .claude/settings.json)"
+      "Bash(git -C /c/p/psy diff .claude/settings.json)",
+      "mcp__claude_ai_Gmail__create_draft"
     ],
     "additionalDirectories": [
       "C:\\Users\\xavie"

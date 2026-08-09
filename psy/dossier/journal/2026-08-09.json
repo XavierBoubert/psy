@@ -1,0 +1,20 @@
+{
+  "date": "2026-08-09",
+  "source": "claude-code",
+  "noyau": {
+    "shutdowns": 5,
+    "exposition_sociale": 2,
+    "retrait_sensoriel": 3,
+    "renoncements": 2,
+    "activites_investies": 3,
+    "sommeil_heures": 6.5,
+    "missions_actives": 3
+  },
+  "campagne": {
+    "ppc_minutes": 0,
+    "repas_servis_une_fois": 0,
+    "activite_minutes": 0,
+    "poids_kg": null
+  },
+  "notes": null
+}
