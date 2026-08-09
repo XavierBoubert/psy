@@ -492,8 +492,8 @@ Séquençage retenu : **Axe A minimal, puis Axe D à fond** (§tour 5). Le foie 
 - [x] Corpus + protocole **tension appliquée (Öst)**, à acquérir **à froid** → `psy/corpus/tension-appliquee/` + `psy/protocoles/tension-appliquee.md` — 4 paliers d'acquisition, ⭐ **déclenchement sur repères externes et au chronomètre** au lieu des prodromes (le protocole d'origine suppose une intéroception intacte), phrase écrite d'avance pour le soignant
 - [x] **Protocole de crise câblé (3114, escalade)** → `psy/protocoles/crise-escalade.md` — triage en 3 questions fermées, **sécurité avant mécanisme**, les 3 niveaux veille/alerte/crise, ⭐ **le 114 par SMS** et les numéros de substitution pour le séjour en Tunisie
 - [x] **Skill `psy-crise`** → `.claude/skills/psy-crise/` (09/08/2026) — exécute `crise-escalade.md` sans le résumer. ⭐ **Il porte la seule exception au premier invariant du dispositif : les numéros s'affichent AVANT le chargement de `profil.md` et `etat.md`.** Un contexte chargé n'a jamais aidé personne pendant les trente premières secondes d'une crise. Ajoute un **mode sans parole** opérationnel : bascule sur des choix numérotés (« 1 = ça va · 2 = ça ne va pas · 3 = j'ai besoin d'aide maintenant »), parce qu'**un chiffre est produisible en shutdown, une phrase non**
-- [ ] App tension appliquée — guidage des cycles de contraction, utilisable en salle d'examen
-- [x] **Protocole shutdown négocié à froid avec Chourouk — fait le 09/08/2026. Mot-code : « shutdown ».** *(Version minimale, dans `psy/protocoles/jour-de-vol.md` §4.)* Restent : le **bouton** Android (Étape 5) et la **fiche explicative** pour Chourouk
+- [→] ~~App tension appliquée~~ → **déplacée en Étape 5 (Android)** le 09/08/2026, arbitrage de Xavier sur le constat 3 de la supervision. §1.2.1 est catégorique : elle sert **en salle d'examen**, pas au bureau, et doit être accessible **en un geste depuis l'écran verrouillé**. Un guidage desktop aurait été inutilisable exactement là où il sert
+- [x] **Protocole shutdown négocié à froid avec Chourouk — fait le 09/08/2026. Mot-code : « shutdown ».** *(Version minimale, dans `psy/protocoles/jour-de-vol.md` §4.)* ✅ **La fiche explicative pour Chourouk est écrite le 09/08/2026** → `psy/protocoles/fiche-chourouk.md` (arbitrage de Xavier sur le constat 2 de la supervision : elle était déclarée dans quatre documents et n'existait nulle part). Reste le **bouton** Android (Étape 5)
 - [ ] **Commencer le palier 1 de la tension appliquée** — décision de Xavier : 3 min/jour, sans exposition, sans changement d'habitude ; ne consomme pas la règle « un seul chantier à la fois », la PPC restant le chantier n° 1
 
 ### Étape 4 — TCC de l'agoraphobie *(Axe C)*
@@ -507,6 +507,8 @@ Séquençage retenu : **Axe A minimal, puis Axe D à fond** (§tour 5). Le foie 
 - [ ] Écran de diagnostic des réglages batterie One UI
 - [ ] Visage à trait minimal + états + transitions lentes
 - [ ] Migration du check-in quotidien sur Android
+- [ ] **App tension appliquée** — guidage des cycles de contraction, **utilisable en salle d'examen** *(déplacée depuis l'Étape 3 le 09/08/2026 — cf. §1.2.1 : elle doit être accessible en un geste depuis l'écran verrouillé, comme le bouton shutdown)*
+- [ ] **Écran de crise** — ⭐ le **SMS au 114 pré-rempli au même rang que l'appel au 3114**. Un écran de crise qui n'offre que des appels est inutilisable exactement quand il sert
 
 ### Étape 6 — Réouverture de l'EMDR ⏸️
 - [ ] Instrument de stimulation bilatérale (web desktop) — **peut être construit dès maintenant**
@@ -515,7 +517,7 @@ Séquençage retenu : **Axe A minimal, puis Axe D à fond** (§tour 5). Le foie 
 ### Transverse
 - [x] ~~**Rapport v2.1** — intégrer stéatose, déficit intéroceptif, conduite alimentaire~~ → **fait, et dépassé : le rapport est en v2.4** (v2.1 versant somatique · v2.2 NASH et cible 7-10 % · v2.3 SAOS sévère · v2.4 observance PPC réelle)
 - [x] **Skill `psy-superviseur`** → `.claude/skills/psy-superviseur/` (09/08/2026) — **le garde-fou anti-effet-miroir du §6 cesse d'être une intention.** 7 contrôles, sortie dans `psy/agent/supervisions/` (**hors `dossier/`** : une supervision porte sur le dispositif, pas sur le patient — donc aucune modification du `SCHEMA.md` n'est requise). Première passe versée : `supervisions/2026-08-09-supervision.md`
-- [ ] **Traiter les arbitrages A2, A3, A4 de la supervision du 09/08** — fiche explicative pour Chourouk (déclarée dans 4 documents, écrite nulle part) · surface de l'app tension appliquée (Étape 3 vs §1.2.1 qui impose Android) · instrument d'intéroception (MAIA) pour adosser la règle §9.19, **la règle la plus citée du dossier et la seule sans mesure**
+- [x] **Arbitrages A2, A3, A4 de la supervision du 09/08 — rendus et exécutés le jour même.** A2 → `protocoles/fiche-chourouk.md` écrite **avant le départ**, le séjour étant la période à plus haut risque de shutdown du trimestre · A3 → l'app de tension appliquée **passe en Étape 5 (Android)**, §1.2.1 étant catégorique · A4 → `corpus/echelles/maia.md` ouverte, ⚠️ **items non obtenus, grille comportementale de substitution versée**
 - [ ] Récupérer et indexer les 4 corpus prioritaires (§1.5)
 - [ ] Rediscuter la **dette assumée** : psychologue en présentiel (§6.1)
 
