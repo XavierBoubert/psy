@@ -120,7 +120,7 @@ Et tant que 61 micro-éveils par heure fragmentent chaque nuit, **aucune évalua
 | Douleur, lésion cutanée, saignement de nez, otalgie | **Arrêt du palier**, contact prestataire. Ce n'est pas de l'anxiété, c'est du matériel mal ajusté. |
 | Attaque de panique **pendant** une séance | Sortie de situation immédiate. Épisode tracé dans `crises/` (`type: panique`, `contexte: autre`). Reprise au palier **inférieur** à la séance suivante. |
 | Shutdowns en hausse nette sur la semaine | Suspension du chantier PPC, point en séance de fond. L'indicateur n° 1 du burnout autistique passe devant. |
-| Idéation suicidaire, détresse aiguë | **Protocole de crise — 3114.** Le reste attend. Cf. `dossier/profil.md` §4. |
+| Idéation suicidaire, détresse aiguë | **Protocole de crise — 3114.** Le reste attend. Cf. [`crise-escalade.md`](crise-escalade.md) §2. |
 | **Toux sèche, gorge sèche, bouche sèche au réveil** | Signe documenté chez lui (04/05/2026), évocateur d'une **fuite buccale**. Ce n'est ni de l'anxiété ni un échec de palier. → prestataire, question 0.2. |
 | Aggravation subjective sous machine (céphalées matinales, somnolence accrue) | **Ne pas interpréter ici.** → Dr Roisman / prestataire, via le brief. |
 

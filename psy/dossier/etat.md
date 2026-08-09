@@ -1,7 +1,7 @@
 # État courant
 
 **Statut :** document **vivant** — réécrit à chaque clôture de séance. Contrepartie variable de `profil.md` (permanent).
-**Dernière mise à jour :** 09/08/2026 *(v1.6 — ouverture des Étapes 2 et 3)* · **Prochaine révision :** à la première séance de fond.
+**Dernière mise à jour :** 09/08/2026 *(v1.7 — audit de cohérence du dispositif)* · **Prochaine révision :** à la première séance de fond.
 
 > **Comment lire ce document.** `profil.md` dit *qui est Xavier*. Celui-ci dit *où on en est*. Les deux se chargent ensemble, jamais l'un sans l'autre.
 
@@ -103,10 +103,10 @@ Le brouillon d'email existe déjà : `ressources/xavier/20260808 Email au Dr Iso
 | 7 | **Surveillance hépatologique** à clarifier avec la Dr Bouarioua : contrôle non invasif à distance (biologie ± élastométrie) ? | Moyenne |
 | 8 | Bilan métabolique complet (HbA1c, lipides, tension) | Moyenne |
 | 9 | ✈️ **Ordonnance pour le séjour** (> 3 semaines, départ le 07/09) — quantité, bagage cabine, justificatif si besoin | 🔴 **la consultation tombe 4 jours avant le départ** |
+| 10 | ✈️ **Alprazolam pour le vol** — Xavier a indiqué le 09/08/2026 qu'il compte en prendre. La molécule est **déjà prescrite « si besoin »** : l'employer n'est pas une modification de traitement. ⚠️ **Mais le point de vigilance benzodiazépine / SAOS sévère (question 1) n'a jamais été instruit**, et il porte précisément sur ce médicament-là. **Élément nouveau à donner au prescripteur : la PPC part en Tunisie** et sera donc utilisée pendant le séjour. **Arbitrage au Dr Isorni le 03/09 — le dispositif ne se prononce pas.** | 🔴 |
+| 11 | 📄 **Demander l'échelle BES** (Binge Eating Scale, version française de Brunault et al. 2016) — instrument de dépistage non librement diffusé, dont il dispose en routine. Il conditionne le départage **hyperphagie boulimique / déficit intéroceptif**, donc le choix du traitement du chantier alimentaire. *(Alternative : la Dr Bouarioua, le dépistage faisant partie du bilan standard d'une NASH.)* | Moyenne — **une demande, pas une question clinique** |
 | 12 | 🆘 **Le 114 (urgences par SMS) est-il utilisable en shutdown ?** Il est officiellement destiné aux personnes sourdes, malentendantes, aphasiques ou dysphasiques. Un shutdown est une perte **transitoire** de la parole. **Tous les autres numéros d'urgence exigent de parler** — c'est-à-dire qu'ils sont inaccessibles au moment précis où ils serviraient. Question à trancher **avant** d'en avoir besoin | 🔴 **sécurité** |
 | 13 | 💪 **Tension appliquée et tension artérielle** — la technique (contraction musculaire par salves de 15 s) élève transitoirement la TA. Obésité de classe II + vigilance tensionnelle déjà notée sous venlafaxine : y a-t-il une réserve ? *(Acquisition à froid, aucun geste médical programmé.)* | Haute — **avant de démarrer le palier 1** |
-| 11 | 📄 **Demander l'échelle BES** (Binge Eating Scale, version française de Brunault et al. 2016) — instrument de dépistage non librement diffusé, dont il dispose en routine. Il conditionne le départage **hyperphagie boulimique / déficit intéroceptif**, donc le choix du traitement du chantier alimentaire. *(Alternative : la Dr Bouarioua, le dépistage faisant partie du bilan standard d'une NASH.)* | Moyenne — **une demande, pas une question clinique** |
-| 10 | ✈️ **Alprazolam pour le vol** — Xavier a indiqué le 09/08/2026 qu'il compte en prendre. La molécule est **déjà prescrite « si besoin »** : l'employer n'est pas une modification de traitement. ⚠️ **Mais le point de vigilance benzodiazépine / SAOS sévère (question 1) n'a jamais été instruit**, et il porte précisément sur ce médicament-là. **Élément nouveau à donner au prescripteur : la PPC part en Tunisie** et sera donc utilisée pendant le séjour. **Arbitrage au Dr Isorni le 03/09 — le dispositif ne se prononce pas.** | 🔴 |
 
 **Ordre imposé :** DIVA-5 **après** traitement effectif du SAOS, jamais avant. Un psychostimulant prescrit sur un SAOS non traité masque le trouble au lieu de le corriger.
 
@@ -170,6 +170,7 @@ Nourrisson né en 2026 (nuits fragmentées, charge sensorielle maximale **au dom
 
 | Version | Date | Modification |
 |---|---|---|
+| 1.7 | 09/08/2026 | **Audit de cohérence du dispositif** (aucun fait clinique modifié). §5 : les questions au Dr Isorni étaient listées 1-9, 12, 13, 11, 10 — **remises dans l'ordre, sans renumérotation** (les numéros 10, 11 et 12 sont cités ailleurs dans le dossier et dans le PLAN). Corrections portées hors de ce fichier : le protocole de crise a désormais **une seule fiche qui fait foi** (`protocoles/crise-escalade.md`) et toutes les surfaces y pointent ; `psy-seance` faisait encore foi sur le rapport **v2.3** ; `SCHEMA.md` passe en v1.1 (exemple VVIQ corrigé). |
 | 1.6 | 09/08/2026 | **Étape 3 ouverte.** Protocole de crise et tension appliquée écrits ; questions 12 (114 par SMS en shutdown) et 13 (tension appliquée et TA) ajoutées au Dr Isorni. |
 | 1.5 | 09/08/2026 | **Étape 2 ouverte.** Instruments versés dans `corpus/echelles/` ; §6 réécrit avec le plan de passation daté et les deux règles de sécurité (item 9 du PHQ-9, réserve SAOS sur le PHQ-9) ; question 11 ajoutée au Dr Isorni (obtenir le BES). |
 | 1.4 | 09/08/2026 | **Trois décisions de Xavier** : mot-code shutdown = **« shutdown »**, convenu avec Chourouk ; **la PPC part en Tunisie** ; alprazolam prévu pour le vol → question 10 au Dr Isorni. |

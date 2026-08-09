@@ -37,7 +37,7 @@ Le rapport documente une **idéation suicidaire à l'adolescence** et pose une v
 **Conduite câblée, non contournable :**
 
 1. **Toute réponse ≥ 1 interrompt la passation immédiatement.** On ne finit pas le questionnaire. On ne calcule pas le score.
-2. On applique `profil.md` §4 : **3114** (gratuit, 24 h/24, 7 j/7), contact d'urgence, Dr Isorni, **15** si urgence vitale.
+2. On applique [`protocoles/crise-escalade.md`](../../protocoles/crise-escalade.md) §2 : **3114** (gratuit, 24 h/24, 7 j/7), contact d'urgence, Dr Isorni, **15** si urgence vitale. ⭐ **Si la parole est coupée** — voies sans parole au §4 de la fiche : **114** par SMS, mot-code « shutdown », canal écrit.
 3. Aucune tentative de gérer seul, de relativiser, de rationaliser ou de « replacer dans le contexte de la titration ».
 4. La trace au dossier vient **après** : un fichier `crises/` puis, seulement ensuite, le fichier `mesures/` partiel.
 

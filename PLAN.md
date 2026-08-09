@@ -1,10 +1,15 @@
 # PLAN — Psychologue/Psychiatre virtuel pour Xavier
 
-**Statut :** brainstorming clos — feuille de route arrêtée (v1.1 — 09/08/2026). **Étape 0 close · Étape 1 ouverte** (§7)
+**Statut :** brainstorming clos — feuille de route arrêtée (v1.2 — 09/08/2026). **Étape 0 close · Étapes 1, 2 et 3 ouvertes en parallèle** (§7)
 **Méthode :** document vivant, enrichi au fil des questions/réponses entre Xavier et Claude (7 tours), puis au fil de la réalisation.
 **Base de référence :** `ressources/xavier/Rapport psychiatrique et psychologique.md` (**v2.4**) + `ressources/xavier/Biopsie hépatique.md` + `ressources/xavier/20260119 Gabriel ROISMAN Conclusion Polysomnographie.md`
 
-> ⚠️ **Ce document a été écrit avant la v2.3 du rapport.** Les sections §4.4 (cible ≥ 5 %, ≈ 5,5 kg) et **§4.5** (le SAOS y figure encore comme une *hypothèse à dépister*) sont **périmées** : la cible est **7-10 % → 99-102,3 kg** et le SAOS est un **diagnostic sévère constitué et non traité**. Elles sont conservées telles quelles — le plan est un journal de conception, pas un document courant. **Ce qui fait foi au quotidien : `psy/dossier/etat.md` et le rapport v2.3.** Seule la feuille de route (§7) est tenue à jour.
+> ⚠️ **Ce document a été écrit avant les v2.2, v2.3 et v2.4 du rapport. Trois sections sont périmées et conservées telles quelles** — le plan est un **journal de conception**, pas un document courant :
+> - **§4.1** — décrit une *stéatose simple sans surveillance particulière*, d'après le seul courriel de la Dr Bouarioua. **L'histologie a tranché autrement (v2.2) : stéato-hépatite non alcoolique (NASH), sans fibrose.**
+> - **§4.4** — cible « ≥ 5 %, ≈ 5,5 kg ». **Portée à 7-10 % → 99-102,3 kg** (v2.2), la NASH relevant des seuils hauts.
+> - **§4.5** — le SAOS y figure comme une *hypothèse à dépister*. **C'est un diagnostic sévère constitué (IAH 35/h), insuffisamment traité** — PPC prescrite, **utilisée de façon très irrégulière**, IAH résiduel < 6/h sous appareil (v2.3 puis v2.4).
+>
+> **Ce qui fait foi au quotidien : `psy/dossier/etat.md` et le rapport v2.4.** Seule la feuille de route (§7) est tenue à jour.
 
 ---
 
@@ -88,15 +93,17 @@ Le **dossier** est la pièce maîtresse : source de vérité unique, lue et écr
 
 ### 1.3 Les rôles (skills) envisagés
 
+> *Statuts mis à jour le 09/08/2026. Les skills vivent dans **`.claude/skills/psy-*`**, pas dans `psy/agent/` — cf. la correction notée au §1.2. La table courante fait foi dans `psy/agent/README.md`.*
+
 | Skill | Rôle | Statut |
 |---|---|---|
-| `psy-seance` | Conduite d'une séance de fond (ouverture, travail, clôture, compte-rendu) | ❓ à concevoir |
-| `psy-crise` | **Triage crise** : panique ? vasovagal ? shutdown ? → oriente vers la bonne parade, jamais la mauvaise | ❓ à concevoir |
-| `psy-bilan` | Passation et cotation des échelles (TAS-20, CAT-Q, VVIQ, GAD-7, PHQ-9, DIVA-5) | ❓ à concevoir |
-| `psy-brief-isorni` | Brief d'une page avant chaque consultation mensuelle | ❓ à concevoir |
-| `psy-journal` | Check-in quotidien à faible coût cognitif | ❓ à concevoir |
-| `psy-hygiene` | Programme et suivi d'hygiène de vie | ❓ à concevoir |
-| `psy-superviseur` | Contre-expertise : challenge les conclusions du thérapeute, détecte l'effet miroir | ❓ à concevoir |
+| `psy-seance` | Conduite d'une séance de fond (ouverture, travail, clôture, compte-rendu) | ✅ **écrit** — Étape 0 |
+| `psy-journal` | Check-in quotidien à faible coût cognitif | ✅ **écrit** — Étape 0 |
+| `psy-crise` | **Triage crise** : panique ? vasovagal ? shutdown ? → oriente vers la bonne parade, jamais la mauvaise | ⏸️ Étape 3 — **la fiche existe** (`psy/protocoles/crise-escalade.md`), le skill non |
+| `psy-bilan` | Passation et cotation des échelles (TAS-20, CAT-Q, VVIQ, GAD-7, PHQ-9, DIVA-5) | ⏸️ Étape 2 — **les instruments existent** (`psy/corpus/echelles/`), le skill non |
+| `psy-brief-isorni` | Brief d'une page avant chaque consultation mensuelle | ⏸️ Étape 2 — **échéance dure : le brief du 03/09 s'écrit au week-end du 29-30/08** |
+| `psy-hygiene` | Programme et suivi d'hygiène de vie | ⏸️ Étape 1 — **les trois protocoles existent**, le skill non |
+| `psy-superviseur` | Contre-expertise : challenge les conclusions du thérapeute, détecte l'effet miroir | ⏸️ non planifié |
 
 ### 1.4 Posture retenue : **direct, littéral, clinique**
 
@@ -108,6 +115,8 @@ Le **dossier** est la pièce maîtresse : source de vérité unique, lue et écr
 ### 1.5 Corpus à constituer
 
 > ✅ **Les quatre corpus prioritaires sont validés (tour 6).** À récupérer et indexer dans `psy/corpus/`.
+>
+> **État au 09/08/2026 : 1 des 4 est versé** — le n° 1 (tension appliquée d'Öst) → `psy/corpus/tension-appliquee/`. Les corpus 2, 3 et 4 restent à récupérer. S'y ajoute, non prévu à cette table, le corpus des **échelles** (`psy/corpus/echelles/`, Étape 2).
 
 | Priorité | Source | Objet |
 |---|---|---|
@@ -150,6 +159,8 @@ Principe : **le moins d'items possible, chacun justifié cliniquement**. Candida
 | Crises (type + contexte) | **Doit distinguer panique / vasovagal / shutdown** — les parades diffèrent (§9.14) |
 
 ### 2.3 Échelles jamais passées, à programmer
+
+> **État au 09/08/2026** *(Étape 2)* **: les instruments existent désormais** — `psy/corpus/echelles/` porte VVIQ, TAS-20, CAT-Q et GAD-7/PHQ-9 complets (items, cotation, seuils, limites), plus un BES partiel doublé d'une grille comportementale de substitution. **Aucune n'a encore été passée.** Le plan de passation daté fait foi dans `psy/corpus/echelles/README.md` §3, pas dans la table ci-dessous.
 
 Toutes recommandées au §10.3 du rapport, aucune administrée à ce jour :
 
@@ -250,7 +261,7 @@ Le risque concret n'est pas théorique : c'est l'**abréaction sans filet** — 
 
 ### 4.1 🔴 Cet axe n'est plus de l'hygiène de vie — c'est une prescription médicale
 
-> **Tranché le 08/08/2026 par le courriel de la Dr Leila Bouarioua** (hépato-gastro-entérologue) → `ressources/xavier/Biopsie hépatique - Dr Bouarioua.md`.
+> **Tranché le 08/08/2026 par le courriel de la Dr Leila Bouarioua** (hépato-gastro-entérologue) → `ressources/xavier/Biopsie hépatique.md` *(fichier fusionné le 08/08/2026 avec le compte-rendu anatomopathologique ; c'est ce dernier qui a corrigé le diagnostic en NASH — cf. l'avertissement en tête de document)*.
 
 La biopsie hépatique de juillet 2026, dont l'indication était inconnue du dossier, est expliquée : **stéatose hépatique liée au surpoids (MASLD), sans fibrose, sans surveillance particulière, avec perte de poids impérative (« absolument », « +++++ ») pour éviter l'aggravation.** Le traitement psychotrope n'est pas en cause.
 
@@ -331,7 +342,7 @@ IMC 35,1 + sommeil déclaré insuffisant et fragmenté = indication de dépistag
 
 ## 5. Axe E — Kokoro, le visage numérique Android
 
-> ❓ **En discussion.**
+> ✅ **Conception arrêtée au tour 7** (nom, graphisme, stack, état de repos, règles de conception). **Rien n'est construit** — l'app est l'Étape 5, et aucune ligne de Kotlin n'existe.
 
 ### Réponse technique à la question posée (« au-dessus de toutes les autres apps, même le verrouillage ? »)
 
@@ -394,16 +405,18 @@ Le choix du muet est cliniquement solide, pas seulement esthétique : une voix q
 - **la charge mesurée est consultable en un tap**, jamais affichée d'elle-même ;
 - **jamais de tristesse ni de reproche** dans l'expression, en aucune circonstance — uniquement des niveaux de charge, sans valence morale.
 
-**Questions ouvertes :** nom du personnage (série « psy » en cours de proposition) ; registre graphique précis.
+**Questions tranchées depuis** *(mise à jour du 09/08/2026 — cette ligne listait encore comme ouvertes deux décisions prises plus haut dans la même section)* **:** le nom est **Kokoro (心)**, le registre graphique est le **trait minimal, ligne claire**.
+
+**Reste ouvert :** une app par outil, ou une app unique multi-modules (cf. §3.1) ; et le **câblage de l'écran de crise** — il doit offrir le **SMS au 114 pré-rempli au même rang que l'appel au 3114** (découverte de l'Étape 3 : un écran de crise qui n'offre que des appels est inutilisable exactement quand il sert).
 
 ---
 
 ## 6. Axe transversal — Sécurité, éthique, données
 
-> ❓ **En discussion.**
+> ✅ **Tranché le 09/08/2026** — arbitrage des données de santé rendu (dépôt privé + Syncthing P2P), protocole de crise écrit comme fiche (`psy/protocoles/crise-escalade.md`), tiers dans la boucle arrêtés (§6.1). Reste ouvert : le rôle `psy-superviseur` (garde-fou anti-effet-miroir), non planifié à ce jour.
 
 - **Non-substitution** : le dispositif complète le Dr Isorni, ne le remplace pas. Jamais de conseil de modification de traitement.
-- **Protocole de crise** : idéation suicidaire → escalade immédiate, **3114** affiché, contact d'urgence.
+- **Protocole de crise** : idéation suicidaire → escalade immédiate, **3114** affiché, contact d'urgence. ✅ **Écrit comme fiche actionnable le 09/08/2026 → `psy/protocoles/crise-escalade.md`** (triage en 3 questions, sécurité avant mécanisme, ⭐ **114 par SMS** — seule voie utilisable en shutdown —, numéros de substitution pour la Tunisie).
 - **Données de santé** : ✅ **dossier versionné dans le dépôt privé `github.com/XavierBoubert/psy`** (arbitrage de Xavier, 09/08/2026) **+ Syncthing P2P** pour le transport PC↔téléphone (chiffré TLS, aucun serveur tiers ne stocke). Détail, conditions et porte de sortie : `psy/SYNCHRO.md`.
   > ⚠️ **Cette décision assouplit sciemment la règle « rien ne part vers un tiers ».** GitHub est un tiers, et il héberge un dossier médical complet. Arbitrage rendu en connaissance de cause, motivé par la traçabilité clinique (le git log est l'audit) et la sauvegarde hors-machine — `ressources/xavier/` y était de toute façon versionné depuis l'origine du projet.
   > **Conditions attachées** : dépôt privé (à revérifier périodiquement) · 2FA + clé SSH · aucun fork, aucun collaborateur, aucune GitHub Action ayant accès au contenu.
@@ -431,7 +444,7 @@ Séquençage retenu : **Axe A minimal, puis Axe D à fond** (§tour 5). Le foie 
 ### Étape 0 — Socle minimal *(Axe A)* ✅ **en place — 09/08/2026**
 - [x] Créer l'arborescence `psy/` (agent, dossier, corpus, protocoles, web, android) → `psy/README.md` + un README par surface
 - [x] **Schéma du dossier** : format de la mémoire longitudinale → **`psy/dossier/SCHEMA.md`** (normatif) + 5 gabarits dans `psy/dossier/gabarits/`
-- [x] **Fiche de profil condensée** → **`psy/dossier/profil.md`** (permanent) **+ `psy/dossier/etat.md`** (courant). *Le rapport fait désormais 670 lignes en v2.3 ; la fiche en tient 12 sections opérationnelles.*
+- [x] **Fiche de profil condensée** → **`psy/dossier/profil.md`** (permanent) **+ `psy/dossier/etat.md`** (courant). *Le rapport fait 693 lignes en v2.4 ; la fiche en tient 12 sections opérationnelles.*
 - [x] Skills `psy-seance` et `psy-journal` → **`.claude/skills/psy-*/SKILL.md`** *(et non `psy/agent/` : Claude Code ne découvre les skills que là — cf. `psy/agent/README.md`)*
 - [x] Synchro chiffrée PC↔téléphone → **décision arrêtée** dans `psy/SYNCHRO.md` : **dépôt privé** (historique) **+ Syncthing P2P** (transport PC↔Android). ⏸️ *Installation reportée à l'Étape 5 : il n'y a pas encore d'app avec laquelle synchroniser.*
 
@@ -447,7 +460,7 @@ Séquençage retenu : **Axe A minimal, puis Axe D à fond** (§tour 5). Le foie 
 > ⚠️ **Étape révisée le 09/08/2026.** Sa rédaction initiale datait du rapport v2.0 : elle demandait un *dépistage* du SAOS (depuis lors **diagnostiqué sévère et non traité**) et visait −5,5 kg (cible **révisée à 7,7-11 kg** en v2.2, l'histologie montrant une NASH et non une stéatose simple). Deux conséquences : **la PPC devient la cible n° 1 de l'étape**, et l'objectif pondéral est corrigé.
 
 - [x] ~~Poids, taille, IMC~~ → **1,77 m · 110 kg · IMC 35,1** (08/08/2026)
-- [x] ~~Demander un dépistage du SAOS~~ → **sans objet : SAOS sévère diagnostiqué le 19/01/2026** (IAH 35/h), PPC prescrite et non utilisée
+- [x] ~~Demander un dépistage du SAOS~~ → **sans objet : SAOS sévère diagnostiqué le 19/01/2026** (IAH 35/h), PPC prescrite et **utilisée de façon très irrégulière** *(corrigé le 09/08/2026 d'après la consultation du 04/05 — v2.4 ; ⭐ IAH résiduel < 6/h sous appareil)*
 - [x] 🔴 **Protocole de reprise de la PPC par désensibilisation** → `psy/protocoles/ppc-desensibilisation.md` — palier 0 logistique + 6 paliers d'exposition, critères de passage comportementaux, matériel et réglages à exiger
 - [x] **Programme alimentaire à structure externe** → `psy/protocoles/alimentation-structure-externe.md` — quantités décidées avant le repas, servies une fois, horaires fixes, rotation stable, zéro jugement calorique — **cible : −7,7 à −11 kg → 99-102,3 kg** (7-10 %, NASH sans fibrose)
 - [x] **Programme d'activité physique** → `psy/protocoles/activite-physique-sans-impact.md` — domicile, sans impact, 5 paliers de 5 à 20 min, deux variantes matériel, feu vert médical préalable
@@ -493,7 +506,7 @@ Séquençage retenu : **Axe A minimal, puis Axe D à fond** (§tour 5). Le foie 
 - [ ] Réouverture du protocole **sous les critères du §3.1**, après avis du Dr Isorni
 
 ### Transverse
-- [ ] **Rapport v2.1** — intégrer stéatose, déficit intéroceptif, conduite alimentaire (liste des points en fin de `Biopsie hépatique - Dr Bouarioua.md`)
+- [x] ~~**Rapport v2.1** — intégrer stéatose, déficit intéroceptif, conduite alimentaire~~ → **fait, et dépassé : le rapport est en v2.4** (v2.1 versant somatique · v2.2 NASH et cible 7-10 % · v2.3 SAOS sévère · v2.4 observance PPC réelle)
 - [ ] Récupérer et indexer les 4 corpus prioritaires (§1.5)
 - [ ] Rediscuter la **dette assumée** : psychologue en présentiel (§6.1)
 
@@ -503,6 +516,7 @@ Séquençage retenu : **Axe A minimal, puis Axe D à fond** (§tour 5). Le foie 
 
 | Date | Décisions prises |
 |---|---|
+| **09/08/2026** | 🔧 **Audit de cohérence du dispositif — aucun fait clinique modifié, dix-sept incohérences corrigées.** ⭐ **La plus grave, et elle était invisible : le protocole de crise avait deux domiciles, et toutes les surfaces pointaient vers le mauvais.** L'Étape 3 avait écrit `protocoles/crise-escalade.md` — triage, escalade, et surtout la découverte que **tous les numéros d'urgence français exigent de parler**, avec le **114 par SMS** en parade. Mais `psy-seance`, `psy-journal`, le corpus des échelles, le protocole PPC et la carte `psy/README.md` renvoyaient tous encore aux huit lignes de `profil.md` §4, **qui n'offrent que le 3114 et le 15 — deux numéros vocaux.** Autrement dit : le dispositif avait identifié que son protocole d'urgence était inutilisable en shutdown, avait écrit la parade, **et continuait à servir l'ancienne version à toutes ses surfaces.** Un défaut de câblage, pas de conception — mais il portait exactement sur le cas que la fiche avait été écrite pour couvrir. `profil.md` §4 est désormais déclaré **résumé**, la fiche fait foi, et les deux portent la mention des voies sans parole. ⚠️ **Deuxième défaut de même nature :** `psy-seance` instruisait de trancher tout doute clinique sur le rapport **v2.3** — la version que la v2.4 corrige précisément sur l'observance de la PPC. Une séance conduite ce jour-là aurait pu déclarer la PPC « non utilisée » devant Xavier, ce qui est faux et ce qui aurait sapé le chantier n° 1. **Corrigé.** ✅ Reste : trois fichiers annonçaient « Étape 1 ouverte » quand trois étapes le sont ; `SCHEMA.md` passe en **v1.1** (son exemple VVIQ portait `"VVIQ-2"` avec un `score_max` de 80, alors que le VVIQ-2 compte 32 items et plafonne à 160 — écart signalé à l'Étape 2, annoncé, **désormais appliqué** conformément au §9) ; deux renvois pointaient vers `Biopsie hépatique - Dr Bouarioua.md`, fichier fusionné le 08/08 et donc inexistant ; l'avertissement d'en-tête déclarait §4.4 et §4.5 périmées **en oubliant §4.1**, qui décrit encore une stéatose simple là où l'histologie dit NASH ; §1.3, §5 et §6 portaient des statuts « à concevoir » ou « en discussion » sur des points tranchés, §5 listant même comme « questions ouvertes » le nom et le graphisme **décidés vingt lignes plus haut**. 📌 **Choix de méthode assumé :** les entrées de ce journal et les tables de version des fiches **n'ont pas été réécrites**, y compris quand elles citent des faits corrigés depuis — R2 du schéma du dossier, l'historique reste lisible, **y compris ce qui s'est révélé faux**. Seuls les **pointeurs vivants** ont été corrigés. |
 | **09/08/2026** | 🔴 **Étape 3 ouverte — les deux protocoles de crise écrivables sont écrits.** (1) **`crise-escalade.md`** : le protocole de crise était déclaré « câblé en dur, non contournable » dans six documents et **n'existait nulle part comme fiche** — il vivait en huit lignes de `profil.md` §4. Il a désormais un **triage en trois questions fermées**, dont la première décision de conception est que **la question de sécurité passe avant la question du mécanisme** : typer un épisode pendant qu'une idéation court, c'est faire de la nosologie au lieu de porter secours. ⭐ **Découverte non prévue au plan, et c'est la plus importante de l'étape : tous les numéros d'urgence français sont des numéros de téléphone.** Le 3114 et le 15 demandent de **parler** — or le shutdown coupe précisément le canal verbal. **Le moment où Xavier a le plus besoin d'aide est celui où le dispositif d'aide standard lui est structurellement inaccessible.** Trois voies sans parole sont versées, dont le **114 (urgences par SMS)**, avec sa réserve honnête : il est officiellement destiné aux personnes sourdes ou aphasiques, l'usage en shutdown est défendable mais doit être **vérifié auprès du Dr Isorni** plutôt que découvert en situation. **Conséquence câblée pour Kokoro (Étape 5) : l'écran de crise doit offrir le SMS pré-rempli au même rang que l'appel** — un écran qui n'offre que des appels est inutilisable exactement quand il sert. ✈️ Ajout : le 3114, le 15 et le 114 **ne fonctionnent pas depuis la Tunisie** — numéros de substitution à préparer avant le 07/09. (2) **`tension-appliquee.md`** + corpus priorité n° 1 versé (Öst & Sterner 1987, Öst *et al.* 1991). ⭐ **Quatrième instance de la règle §9.19, et elle était invisible :** le protocole d'Öst prescrit de déclencher la tension « dès les premiers signes » — pâleur, sueur froide, nausée — c'est-à-dire **sur la détection d'une chute de tension artérielle, un signal interne**, chez quelqu'un dont le déficit intéroceptif est confirmé. Appliqué tel quel, il aurait échoué, et l'échec aurait été lu comme un manque d'application. **Remplacé par un déclenchement sur repères externes et au chronomètre** — franchir la porte, s'asseoir, voir le plateau —, avec la règle explicite : *on ne se demande jamais « est-ce que j'en ai besoin là ? »*, puisque répondre exigerait la perception qui manque. ✅ **Séquençage préservé** : l'acquisition à froid est 3 min/jour sans exposition ni changement d'habitude — elle **ne consomme pas** la règle « un seul chantier à la fois », la PPC reste le chantier n° 1, et le palier « vrai geste médical » est explicitement hors fiche. ⚠️ **Point de sécurité versé au brief** : la contraction élève transitoirement la tension artérielle, et une vigilance tensionnelle est déjà notée sous venlafaxine à IMC 35. |
 | **09/08/2026** | 🔴 **Étape 2 ouverte — les instruments de mesure sont versés** (`psy/corpus/echelles/`). Constat de départ : `psy/dossier/journal/` était **vide** et `psy/corpus/` ne contenait qu'un README — **rien de l'instrumentation n'existait**, alors que l'item « passer les échelles » supposait des instruments qui n'avaient jamais été récupérés. Versés complets : **VVIQ**, **TAS-20**, **CAT-Q**, **GAD-7/PHQ-9** — items, cotation, seuils, et pour chacun la rubrique obligatoire « ce qu'elle ne dit pas ». ⭐ **Décision de conception : R6 ne s'applique pas aux échelles validées, et il faut le dire explicitement.** Le journal quotidien reste strictement comportemental ; une échelle est un autre objet — une passation datée, avec un seuil publié, dont la validation psychométrique remplace l'ancre comportementale. **Corollaire non négociable, écrit dans chaque fiche : chez Xavier, un score élevé est informatif, un score bas ne clôt aucune question** — l'alexithymie et le déficit intéroceptif sont précisément une difficulté à répondre à ce type de question. ⚠️ **Trois points durs rencontrés et tranchés.** (1) **Le BES n'a pas pu être obtenu** : ses 16 items pondérés ne sont pas librement diffusés et une restitution approximative aurait produit un score faux — donc faussement rassurant, le pire résultat possible ici. Refus d'inventer ; à la place, une **grille comportementale de 5 questions** utilisable immédiatement, dont la question décisive — *« combien de fois t'es-tu arrêté de manger alors qu'il restait de la nourriture disponible ? »* — est **plus informative qu'un score BES** : un zéro y démontre que ce qui arrête le repas est l'épuisement du stock et jamais un signal interne. (2) 🔴 **L'item 9 du PHQ-9 interroge l'idéation suicidaire** : conduite câblée — il se pose **en dernier**, toute réponse ≥ 1 **interrompt la passation** et déclenche le 3114, le fichier `mesures/` s'écrit après. (3) ⭐ **Le PHQ-9 n'est pas interprétable comme une mesure de l'humeur chez Xavier aujourd'hui** : quatre de ses neuf items (sommeil, fatigue, concentration, ralentissement) sont **directement produits par un SAOS sévère insuffisamment traité** et peuvent à eux seuls porter le score en zone « modérée » sans dépression. **La réserve doit figurer au brief** — sans quoi le chiffre induira en erreur le seul praticien qui ignore encore le diagnostic. 📌 **Écart signalé, non corrigé :** l'exemple du `SCHEMA.md` §6 porte `"VVIQ-2"` avec un `score_max` de 80, alors que le VVIQ-2 compte 32 items et plafonne à 160 ; la version retenue est le **VVIQ 16 items /80**. Le schéma étant normatif, sa correction s'annonce avant de s'appliquer. |
 | **09/08/2026** | ✅ **Trois décisions de Xavier, qui débloquent le kit vol.** (1) ⭐ **Le mot-code shutdown est convenu avec Chourouk : « shutdown ».** C'est la première brique d'Étape 3 réellement en place, et la plus rentable du dossier — elle n'a coûté qu'une conversation et elle est utilisable en aéroport, en conflit, partout. Restent le bouton Android (Étape 5) et la fiche explicative pour Chourouk. (2) **La PPC part en Tunisie** : le séjour cesse d'être trois semaines perdues pour le chantier n° 1 — le port continue au niveau atteint, **sans progression de palier**, un environnement inconnu n'étant pas un endroit où monter d'un palier d'exposition. (3) **Alprazolam prévu pour le vol** — molécule **déjà prescrite « si besoin »**, donc son emploi n'est pas une modification de traitement ; mais le **point de vigilance benzodiazépine / SAOS sévère n'a jamais été instruit**, et il porte sur ce médicament précisément. Question 10 du brief, arbitrage au Dr Isorni le 03/09 — **avec un élément nouveau à lui donner : la PPC sera utilisée pendant le séjour**. Le dispositif ne se prononce pas. |

@@ -1,6 +1,11 @@
 # `psy/` — le dispositif
 
-Implémentation du plan de conception `PLAN.md` (racine). **Étape 0 — socle minimal : close. Étape 1 — Axe D : ouverte au 09/08/2026, protocoles écrits.**
+Implémentation du plan de conception `PLAN.md` (racine).
+
+**Étape 0 — socle minimal : close (09/08/2026).** Trois étapes sont **ouvertes en parallèle**, toutes le 09/08/2026 :
+**Étape 1 — Axe D** (prescription médicale) : les trois protocoles sont écrits · **Étape 2 — instrumentation du suivi** : les instruments sont versés, le check-in quotidien démarre · **Étape 3 — outils de crise** : le protocole câblé et la tension appliquée sont écrits.
+
+⚠️ **Écrit ne veut pas dire appliqué.** À ce jour, aucun palier n'a démarré et aucune échelle n'a été passée.
 
 ---
 
@@ -10,9 +15,9 @@ Implémentation du plan de conception `PLAN.md` (racine). **Étape 0 — socle m
 |---|---|---|
 | **`dossier/`** ⭐ | **Mémoire longitudinale — source de vérité unique.** Lue et écrite par les trois surfaces. | ✅ schéma + profil + état |
 | `agent/` | Rôles Claude Code. **Les skills vivent dans `.claude/skills/`** — cf. `agent/README.md` | ✅ `psy-seance`, `psy-journal` |
-| `corpus/` | Référentiels cliniques indexés | ⏸️ 4 corpus prioritaires à récupérer |
-| `protocoles/` | Protocoles thérapeutiques opérationnels (fiches actionnables) | ✅ 3 fiches — **PPC**, alimentation, activité physique |
-| `web/` | Outils de séance desktop — TypeScript strict | ⏸️ Étape 3-4 |
+| `corpus/` | Référentiels cliniques indexés | ✅ **échelles** (VVIQ, TAS-20, CAT-Q, GAD-7/PHQ-9 ; BES partiel) + **tension appliquée** (corpus n° 1) · ⏸️ 3 corpus prioritaires restants |
+| `protocoles/` | Protocoles thérapeutiques opérationnels (fiches actionnables) | ✅ 7 fiches — **crise/escalade**, **PPC**, tension appliquée, alimentation, activité physique, panique, jour de vol |
+| `web/` | Outils de séance desktop — TypeScript strict | ⏸️ aucun outil écrit — le premier attendu est l'app de guidage de la tension appliquée (Étape 3) |
 | `android/` | Kokoro (心) — compagnon permanent, Kotlin + Compose | ⏸️ Étape 5 |
 | `SYNCHRO.md` | Décisions de synchronisation et de sécurité des données | ✅ |
 
@@ -25,6 +30,7 @@ Implémentation du plan de conception `PLAN.md` (racine). **Étape 0 — socle m
 
 | Je veux… | Fichier |
 |---|---|
+| 🔴 **Faire face à une crise, maintenant** | **`protocoles/crise-escalade.md`** — prime sur tout le reste |
 | Savoir qui est Xavier avant de lui parler | `dossier/profil.md` |
 | Savoir où on en est aujourd'hui | `dossier/etat.md` |
 | Écrire ou lire une donnée du dossier | `dossier/SCHEMA.md` *(normatif)* |
@@ -44,4 +50,6 @@ Implémentation du plan de conception `PLAN.md` (racine). **Étape 0 — socle m
 4. **Demander de s'appuyer sur un signal interne absent** (satiété, fatigue, tension, émotion). Structure externe, toujours.
 5. **Introduire un streak, un compteur de régularité ou un reproche d'assiduité.** Il n'y a rien à motiver ; il y a des charges à réduire.
 
-En cas d'idéation suicidaire ou de détresse aiguë : **3114**, gratuit, 24h/24. Protocole complet dans `dossier/profil.md` §4.
+En cas d'idéation suicidaire ou de détresse aiguë : **3114**, gratuit, 24h/24. **Protocole complet : [`protocoles/crise-escalade.md`](protocoles/crise-escalade.md)** *(`dossier/profil.md` §4 n'en est que le résumé)*.
+
+⭐ **Si la parole est coupée**, le 3114 et le 15 sont inaccessibles — ce sont des numéros de téléphone. **114** (urgences par SMS), mot-code « shutdown », canal écrit : §4 de la fiche.

@@ -61,7 +61,9 @@ La règle **R6** du schéma du dossier interdit de coter des ressentis : *« on 
 
 ## 4. 🔴 Sécurité — un item de ce corpus déclenche le protocole de crise
 
-**PHQ-9, item 9** interroge directement l'idéation suicidaire. Toute réponse ≥ 1 à cet item **interrompt la passation** et déclenche le protocole de `profil.md` §4 : **3114** (gratuit, 24h/24), contact d'urgence, Dr Isorni, 15 si urgence vitale. Le fichier `mesures/` est écrit **après**, jamais avant. Détail : [`gad-7-phq-9.md`](gad-7-phq-9.md) §3.
+**PHQ-9, item 9** interroge directement l'idéation suicidaire. Toute réponse ≥ 1 à cet item **interrompt la passation** et déclenche [`protocoles/crise-escalade.md`](../../protocoles/crise-escalade.md) §2 : **3114** (gratuit, 24h/24), contact d'urgence, Dr Isorni, 15 si urgence vitale. Le fichier `mesures/` est écrit **après**, jamais avant. Détail : [`gad-7-phq-9.md`](gad-7-phq-9.md) §3.
+
+⭐ **Si la parole est coupée à ce moment-là**, les numéros vocaux sont inutilisables : voies sans parole au §4 de la fiche (**114** par SMS, mot-code « shutdown », canal écrit).
 
 ---
 

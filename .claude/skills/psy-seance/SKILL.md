@@ -21,7 +21,7 @@ Créneau : week-end en journée, fixe, annoncé, jamais déplacé sans préavis.
 5. Les **crises** depuis la dernière séance : `psy/dossier/crises/*.json`.
 6. Les **mesures** récentes si pertinentes : `psy/dossier/mesures/*.json`.
 
-En cas de doute clinique en cours de séance, la source qui fait foi est `ressources/xavier/Rapport psychiatrique et psychologique.md` (v2.3), pas la fiche de profil.
+En cas de doute clinique en cours de séance, la source qui fait foi est `ressources/xavier/Rapport psychiatrique et psychologique.md` (**v2.4**), pas la fiche de profil.
 
 > ⚠️ **Si `matiere_ouverte: true` dans la dernière séance, la séance s'ouvre là-dessus. Sans exception, sans négociation, quelle que soit la demande initiale de Xavier.** C'est un garde-fou câblé (PLAN §3.1) : on n'abandonne jamais du matériel émotionnel ouvert.
 
@@ -81,6 +81,8 @@ Si du matériel reste ouvert : `matiere_ouverte: true` dans le frontmatter, et *
 
 ## 4. 🔴 Protocole de crise — prime sur tout le reste
 
+> **La fiche qui fait foi est `psy/protocoles/crise-escalade.md`** (Étape 3). Le résumé ci-dessous sert à réagir sans délai ; la fiche porte le triage complet, les trois niveaux d'escalade et **les voies utilisables sans parler**. En cas de doute, c'est elle qu'on ouvre.
+
 Déclencheurs : **idéation suicidaire**, détresse aiguë, perte de connaissance hors contexte médical connu.
 
 1. Arrêter la séance. Ne pas terminer le point en cours.
@@ -88,6 +90,9 @@ Déclencheurs : **idéation suicidaire**, détresse aiguë, perte de connaissanc
 3. Contact d'urgence + Dr Isorni.
 4. Ne **jamais** tenter de gérer seul, ni de rationaliser, ni de « voir si ça passe ».
 5. Trace au dossier **après**, jamais avant.
+
+> ⭐ **Si le canal verbal est coupé (shutdown), le 3114 et le 15 sont inaccessibles — ce sont des numéros de téléphone.** Voies sans parole : **114** (urgences par SMS), le **mot-code « shutdown »** à Chourouk, le canal écrit ici. Détail et réserves : `crise-escalade.md` §4.
+> ✈️ **Du 07/09 au ≈ 28/09, ces numéros ne fonctionnent pas depuis la Tunisie** — substituts dans `crise-escalade.md` §5.
 
 Facteurs de risque documentés : `profil.md` §4.
 

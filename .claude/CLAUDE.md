@@ -52,7 +52,7 @@ Toujours communiquer avec l'utilisateur en français.
 
 | Répertoire | Objet |
 |-----------|---------|
-| `PLAN.md` (racine) | **Plan de conception du dispositif** (v1.0, brainstorming clos en 7 tours) : 5 axes + axe transversal sécurité/éthique, contraintes de conception, architecture à trois surfaces, feuille de route en 7 étapes, journal des décisions |
+| `PLAN.md` (racine) | **Plan de conception du dispositif** (v1.2, brainstorming clos en 7 tours) : 5 axes + axe transversal sécurité/éthique, contraintes de conception, architecture à trois surfaces, feuille de route en 7 étapes, journal des décisions. ⚠️ **Journal de conception, pas document courant** — §4.1, §4.4 et §4.5 sont périmées et conservées telles quelles ; seule la feuille de route §7 est tenue à jour |
 | **`psy/`** | **Le dispositif lui-même** (réalisation du PLAN). Carte d'entrée : `psy/README.md` |
 | **`psy/dossier/`** ⭐ | **Mémoire longitudinale — source de vérité unique**, lue et écrite par les trois surfaces. Contient `SCHEMA.md` (**normatif**), `profil.md` (permanent), `etat.md` (courant), `gabarits/`, et les répertoires `journal/` `seances/` `crises/` `mesures/` `briefs/` |
 | `psy/agent/` | Note d'aiguillage + table des rôles. **Les skills vivent dans `.claude/skills/psy-*`** — Claude Code ne les découvre que là |
@@ -75,6 +75,8 @@ Toujours communiquer avec l'utilisateur en français.
 | `psy-crise`, `psy-bilan`, `psy-brief-isorni`, `psy-hygiene`, `psy-superviseur` | Rôles restants | ⏸️ cf. `psy/agent/README.md` |
 
 **Invariants de tout skill du dispositif** : charger `profil.md` + `etat.md` avant d'agir · **non-substitution** (aucun conseil de modification de traitement, jamais, même sous forme interrogative — ça part au brief Dr Isorni) · **protocole de crise câblé** (3114, non contournable) · aucune visualisation · utilisable sans parler ni écrire · zéro streak ni compteur de régularité · annoncer avant de faire.
+
+> 🔴 **La fiche de crise qui fait foi est `psy/protocoles/crise-escalade.md`** — `psy/dossier/profil.md` §4 n'en est que le résumé. ⭐ **En shutdown, le 3114 et le 15 sont inaccessibles : ce sont des numéros de téléphone.** Voies sans parole (§4 de la fiche) : **114** par SMS · mot-code « shutdown » · canal écrit. ✈️ Ces numéros ne fonctionnent pas depuis la Tunisie du 07/09 au ≈ 28/09 (§5).
 
 ## Ressources spécialisées
 

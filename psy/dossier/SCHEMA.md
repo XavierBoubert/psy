@@ -198,18 +198,19 @@ Une passation = un fichier. Identifiants d'échelle : `vviq`, `tas20`, `catq`, `
 {
   "date": "2026-08-09",
   "echelle": "vviq",
-  "version": "VVIQ-2",
+  "version": "VVIQ-16-Zeman",
   "score": 16,
   "score_max": 80,
   "seuil": { "valeur": 32, "sens": "en_dessous", "interpretation": "aphantasie" },
   "sous_scores": null,
-  "reponses": [1, 1, 1, 1],
+  "reponses": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   "passation": "web",
   "notes": null
 }
 ```
 
-- `reponses` conserve **toujours** les réponses item par item. Le rapport v2.0 a pu re-coter l'AQ et l'EQ de façon indépendante uniquement parce que les réponses brutes existaient (§5) — c'est ce qui a permis de démontrer que le « manque d'empathie » de Xavier est un déficit de décodage et non d'intérêt pour autrui (§9.1). **Un score seul n'est pas une mesure, c'est un résumé.**
+- `version` porte **l'identification exacte de l'instrument, sens de cotation compris**. Le VVIQ en est la démonstration : la version originale de Marks (1973) cote à l'envers (1 = image parfaitement claire), la convention moderne dite « de Zeman » cote 1 = aucune image. **Un même score lu avec la mauvaise convention inverse la conclusion.** D'où `"VVIQ-16-Zeman"`, et non `"VVIQ"` ni `"VVIQ-2"` — le VVIQ-2 (Marks, 1995) est un autre instrument, à 32 items et 160 points. Fiche : `corpus/echelles/vviq.md`.
+- `reponses` conserve **toujours** les réponses item par item, **et en compte autant que l'instrument a d'items** — 16 pour le VVIQ ci-dessus. Le rapport v2.0 a pu re-coter l'AQ et l'EQ de façon indépendante uniquement parce que les réponses brutes existaient (§5) — c'est ce qui a permis de démontrer que le « manque d'empathie » de Xavier est un déficit de décodage et non d'intérêt pour autrui (§9.1). **Un score seul n'est pas une mesure, c'est un résumé.**
 - `seuil.sens` : `au_dessus` | `en_dessous` — quel côté du seuil est cliniquement positif dépend de l'échelle.
 
 ---
@@ -246,4 +247,5 @@ Toute modification de ce document est annoncée à Xavier **avant** d'être appl
 
 | Version | Date | Modification |
 |---|---|---|
+| 1.1 | 09/08/2026 | **Correction de l'exemple §6, annoncée puis appliquée** (audit de cohérence). L'exemple portait `"version": "VVIQ-2"` avec `score_max: 80` — incohérent avec lui-même, le VVIQ-2 comptant 32 items et plafonnant à 160 ; et `reponses` n'en listait que 4 pour une échelle qui en compte 16, ce qui contredisait la règle « réponses item par item, toujours ». Corrigé en `"VVIQ-16-Zeman"` et 16 réponses. Écart repéré et signalé à l'ouverture de l'Étape 2 (`corpus/echelles/vviq.md` §6). **Aucune règle ne change** : seul l'exemple était faux. |
 | 1.0 | 09/08/2026 | Création — Étape 0 du PLAN. |

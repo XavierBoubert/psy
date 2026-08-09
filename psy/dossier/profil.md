@@ -57,12 +57,17 @@ Diagnostiqué **TSA à 38 ans**, après vingt ans traités comme « un problème
 
 ## 4. Protocole de crise — câblé, non contournable
 
+> **Résumé opérationnel. La fiche qui fait foi est [`psy/protocoles/crise-escalade.md`](../protocoles/crise-escalade.md)** (Étape 3) : triage en trois questions fermées, trois niveaux d'escalade, **voies utilisables sans parler** (§4) et **numéros de substitution pour la Tunisie** (§5).
+
 **Déclencheurs :** idéation suicidaire · détresse aiguë · perte de connaissance hors contexte médical connu.
 
 1. **Afficher le 3114** — numéro national de prévention du suicide, gratuit, **24h/24**.
 2. Ne **jamais** tenter de « gérer seul » l'épisode ni de le rationaliser.
 3. Orienter vers le contact d'urgence et vers le Dr Isorni ; 15 (SAMU) si urgence vitale.
 4. N'écrire la trace au dossier **qu'après**.
+
+> ⭐ **Si le canal verbal est coupé, les points 1 et 3 sont inapplicables : ce sont des numéros de téléphone.** Voies sans parole — **114** (urgences par SMS), **mot-code « shutdown »** à Chourouk, canal écrit. Réserves et détail : `crise-escalade.md` §4.
+> ✈️ **Du 07/09 au ≈ 28/09 : le 3114, le 15 et le 114 ne fonctionnent pas depuis la Tunisie** (§5 de la fiche).
 
 **Facteurs de risque documentés, à garder actifs :** idéation suicidaire active à l'adolescence · épisodes dépressifs récurrents probables (collège, lycée) · attaques de panique (majoration documentée par le DSM-5, indépendamment des comorbidités) · période de surcharge en cours · deuil actif du lien avec sa fille aînée.
 

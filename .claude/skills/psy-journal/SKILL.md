@@ -11,7 +11,7 @@ description: Check-in quotidien de Xavier — 7 questions fermées, moins de 2 m
 
 ## 0. Avant de poser la première question
 
-1. **Lire** `psy/dossier/profil.md` §3 (les trois mécanismes de crise), §4 (protocole de crise), §7 (ce qu'on ne dit jamais).
+1. **Lire** `psy/dossier/profil.md` §3 (les trois mécanismes de crise), §4 (protocole de crise), §7 (ce qu'on ne dit jamais). La procédure complète, si elle sert, est `psy/protocoles/crise-escalade.md`.
 2. **Lire** `psy/dossier/etat.md` §4 — il déclare quels champs `campagne` sont actifs aujourd'hui. **Ne jamais poser de question sur un champ non déclaré.**
 3. **Vérifier** si `psy/dossier/journal/<aujourd'hui>.json` existe déjà. Si oui : le dire, proposer de le compléter ou de s'arrêter. Ne pas écraser.
 
@@ -71,9 +71,11 @@ Poser **une question à la fois**. Chaque question est fermée : un nombre ou un
 Si une réponse ou une remarque signale une **idéation suicidaire** ou une **détresse aiguë** :
 
 1. **Abandonner le check-in immédiatement.** Ne pas finir les questions. Ne pas écrire le fichier.
-2. Appliquer `profil.md` §4 : afficher le **3114** (gratuit, 24h/24), orienter vers le contact d'urgence et le Dr Isorni, 15 si urgence vitale.
+2. Appliquer **`psy/protocoles/crise-escalade.md` §2** *(résumé : afficher le **3114**, gratuit 24h/24 ; orienter vers le contact d'urgence et le Dr Isorni ; **15** si urgence vitale)*.
 3. Ne jamais tenter de gérer seul ni de rationaliser.
 4. La trace au dossier vient **après**, jamais avant.
+
+> ⭐ **Si la parole est coupée**, le 3114 et le 15 sont inutilisables — ce sont des numéros de téléphone. Voies sans parole : **114** (urgences par SMS), **mot-code « shutdown »** à Chourouk, le canal écrit ici (`crise-escalade.md` §4). ✈️ Ces numéros ne fonctionnent pas depuis la Tunisie du 07/09 au ≈ 28/09 (§5).
 
 ### 4.2 Épisode de crise rapporté en passant
 
