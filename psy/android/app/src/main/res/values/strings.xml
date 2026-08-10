@@ -13,15 +13,71 @@
     <string name="alerte_ecran_explication">Test K1 : cet écran s\'est ouvert par-dessus le verrouillage, sans son et sans vibration. Rien d\'autre n\'est demandé.</string>
     <string name="alerte_ecran_fermer">Fermer</string>
 
-    <string name="controle_titre">Kokoro — K1</string>
-    <string name="controle_sous_titre">Vérification du plein écran sur téléphone verrouillé.</string>
+    <string name="canal_acces_nom">Accès sans déverrouiller</string>
+    <string name="canal_acces_description">Notification permanente qui ouvre le mot-code et la tension appliquée depuis l\'écran verrouillé. Sans son, sans vibration.</string>
+    <string name="acces_titre">Kokoro</string>
+    <string name="acces_texte">mot-code · tension appliquée</string>
+    <string name="acces_action_mot_code">mot-code</string>
+    <string name="acces_action_tension">tension</string>
+
+    <string name="crise_bouton_mot_code">Mot-code à %1$s</string>
+    <string name="crise_repere_mot_code">La parole est coupée</string>
+    <string name="crise_bouton_tension">Tension appliquée</string>
+    <string name="crise_repere_tension">Aiguille, geste médical, sang</string>
+    <string name="crise_fermer">Fermer</string>
+
+    <string name="mot_code_destinataire">À %1$s</string>
+    <string name="mot_code_action_envoyer">Envoyer</string>
+    <string name="mot_code_repere_envoyer">Par SMS. Aucun réseau de données requis.</string>
+    <string name="mot_code_en_cours">Envoi en cours</string>
+    <string name="mot_code_envoye">Envoyé à %1$s</string>
+    <string name="mot_code_echec">Le message n\'est pas parti.</string>
+    <string name="mot_code_action_messages">Ouvrir Messages</string>
+    <string name="mot_code_repere_messages">Le message est pré-rempli. Le téléphone demandera le déverrouillage.</string>
+    <string name="mot_code_sans_numero">Aucun numéro enregistré. Il se saisit une fois dans Kokoro, à froid.</string>
+
+    <string name="tension_titre">Tension appliquée</string>
+    <string name="tension_geste">Contracter les bras, le tronc et les jambes en même temps. 15 secondes de contraction, 20 de relâche, 5 cycles. Le compte est à l\'écran ; il n\'y a rien à percevoir.</string>
+    <string name="tension_action_demarrer">Démarrer</string>
+    <string name="tension_repere_demarrer">5 cycles, moins de 3 minutes</string>
+    <string name="tension_phase_contracte">CONTRACTE</string>
+    <string name="tension_phase_relache">RELÂCHE</string>
+    <string name="tension_phase_termine">Bloc terminé</string>
+    <string name="tension_consigne_contracte">Bras, tronc, jambes.</string>
+    <string name="tension_consigne_relache">Revenir à la normale, pas se détendre.</string>
+    <string name="tension_consigne_termine">Les 5 cycles sont allés au bout.</string>
+    <string name="tension_cycle">Cycle %1$d sur %2$d</string>
+    <string name="tension_action_arreter">Arrêter</string>
+    <string name="tension_action_recommencer">Recommencer</string>
+
+    <string name="controle_titre">Kokoro — K2</string>
+    <string name="controle_sous_titre">Écran de réglage. Rien ici ne se règle en situation : tout se prépare à froid.</string>
+    <string name="controle_section_contact">Destinataire du mot-code</string>
+    <string name="controle_champ_nom">Prénom</string>
+    <string name="controle_champ_numero">Numéro de téléphone</string>
+    <string name="controle_action_enregistrer">Enregistrer</string>
+    <string name="controle_contact_enregistre">Enregistré : %1$s — %2$s</string>
+    <string name="controle_contact_absent">Aucun numéro enregistré.</string>
+    <string name="controle_mot_code">Message envoyé : « %1$s ». Il ne se modifie pas depuis l\'application — c\'est un mot convenu, pas un réglage.</string>
+
+    <string name="controle_section_autorisations">Autorisations</string>
     <string name="controle_etat_notifications">Notifications</string>
     <string name="controle_etat_plein_ecran">Notifications plein écran</string>
+    <string name="controle_etat_sms">Envoi de SMS</string>
     <string name="controle_accorde">accordé</string>
     <string name="controle_refuse">refusé</string>
     <string name="controle_action_notifications">Autoriser les notifications</string>
     <string name="controle_guidage_plein_ecran">Le réglage est refusé par défaut depuis Android 14. Chemin manuel : Paramètres → Applications → Kokoro → Notifications plein écran.</string>
     <string name="controle_action_plein_ecran">Ouvrir le réglage plein écran</string>
+    <string name="controle_guidage_sms">Sans cette autorisation, le mot-code passe par l\'application Messages et le téléphone demandera le déverrouillage.</string>
+    <string name="controle_action_sms">Autoriser l\'envoi de SMS</string>
+
+    <string name="controle_section_acces">Accès depuis l\'écran verrouillé</string>
+    <string name="controle_acces_explication">Une notification permanente porte deux boutons — mot-code et tension. Elle est muette et ne peut pas être balayée.</string>
+    <string name="controle_action_acces">Réafficher la notification d\'accès</string>
+    <string name="controle_action_ouvrir_crise">Ouvrir l\'écran de crise</string>
+
+    <string name="controle_section_test">Test K1</string>
     <string name="controle_consigne_test">Test : appuie sur le bouton, puis éteins l\'écran avec le bouton latéral. Au bout de 20 secondes, l\'écran doit se rallumer sur Kokoro, sans aucun son ni vibration.</string>
     <string name="controle_action_test">Déclencher le test dans 20 secondes</string>
 </resources>

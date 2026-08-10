@@ -14,8 +14,8 @@ android {
         applicationId = "io.allonsy.kokoro"
         minSdk = 31
         targetSdk = 36
-        versionCode = 2
-        versionName = "K1"
+        versionCode = 3
+        versionName = "K2"
     }
 
     buildTypes {
@@ -50,4 +50,5 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     debugImplementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.compose.ui.tooling.preview)
+    testImplementation(libs.junit)
 }

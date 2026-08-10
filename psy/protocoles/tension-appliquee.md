@@ -1,6 +1,6 @@
 # Tension appliquée (Öst) — protocole opérationnel
 
-**Statut :** fiche actionnable — v1.0 (09/08/2026) · **Étape 3**
+**Statut :** fiche actionnable — v1.1 (10/08/2026) · **Étape 3**
 **Cible dossier :** `tension-appliquee`
 **Corpus :** [`corpus/tension-appliquee/`](../corpus/tension-appliquee/README.md) — Öst & Sterner 1987, Öst, Fellenius & Sterner 1991.
 
@@ -89,7 +89,7 @@ Le camouflage pousse à ne rien dire et à « faire normal », ce qui est exacte
 
 | Situation | Conduite |
 |---|---|
-| **Perte de connaissance** | **S'allonger, jambes surélevées.** Ne pas se relever avant 10 minutes. Si elle ne se lève pas → **15**. Fichier `crises/` après. |
+| **Perte de connaissance** | **S'allonger, jambes surélevées.** Ne pas se relever avant 10 minutes. Si elle ne se lève pas → **recours médical d'urgence immédiat, par le moyen le plus rapide sur place**. Fichier `crises/` après. |
 | Céphalée ou douleur thoracique pendant les cycles | **Arrêter.** Ce n'est pas attendu. À porter au Dr Isorni. |
 | ⚠️ **Tension artérielle** | La contraction élève transitoirement la tension. **Obésité de classe II + vigilance tensionnelle déjà notée sous venlafaxine** → **question au Dr Isorni, portée au brief du 03/09.** Ce n'est pas un blocage : l'acquisition à froid peut commencer, le risque théorique porte sur des cycles répétés chez un hypertendu non contrôlé. |
 | Épisode typé `panique` mais avec perte de connaissance | **Le typage est faux.** À revoir en séance — c'est le discriminant du dossier. |
@@ -122,4 +122,5 @@ Le camouflage pousse à ne rien dire et à « faire normal », ce qui est exacte
 
 | Version | Date | Modification |
 |---|---|---|
+| **1.1** | **10/08/2026** | 🔴 **Un numéro d'appel d'urgence avait survécu au retrait du 10/08/2026** — le **15**, au §5, sur la ligne « perte de connaissance ». Trouvé en construisant K2, corrigé le jour même : la conduite devient « recours médical d'urgence immédiat, par le moyen le plus rapide sur place », formulation de [`crise-escalade.md`](crise-escalade.md) §0. ⚠️ **Le fait gênant est à retenir tel quel : le retrait annoncé « dans les 22 fichiers vivants » en avait manqué un, et c'était celui de la parade vasovagale** — précisément le protocole au nom duquel le retrait avait été décidé (*une syncope vasovagale ne s'appelle pas, elle s'allonge*). **Aucune conduite clinique modifiée** : s'allonger, jambes surélevées, ne pas se relever avant 10 minutes. |
 | 1.0 | 09/08/2026 | Création — Étape 3, corpus priorité n° 1. ⭐ **Écart assumé au protocole d'Öst** : le déclenchement sur prodromes est remplacé par un **déclenchement sur repères externes et au chronomètre** — le protocole d'origine suppose une intéroception intacte, quatrième instance de la règle §9.19. |
