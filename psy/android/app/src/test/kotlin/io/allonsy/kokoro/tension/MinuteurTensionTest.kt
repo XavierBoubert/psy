@@ -40,6 +40,22 @@ class MinuteurTensionTest {
     }
 
     @Test
+    fun `la barre remplit chaque phase de zero a un, sans saut`() {
+        assertEquals(0f, fractionPhase(0L), 0.001f)
+        assertEquals(0.5f, fractionPhase(7_500L), 0.001f)
+        assertEquals(0f, fractionPhase(15_000L), 0.001f)
+        assertEquals(0.5f, fractionPhase(25_000L), 0.001f)
+        assertEquals(0f, fractionPhase(35_000L), 0.001f)
+        assertEquals(1f, fractionPhase(175_000L), 0.001f)
+    }
+
+    @Test
+    fun `un bloc enchaine ne se termine jamais de lui-meme`() {
+        assertEquals(PhaseTension.CONTRACTE, etatTension(175, cycles = null).phase)
+        assertEquals(PhaseTension.RELACHE, etatTension(10_000, cycles = null).phase)
+    }
+
+    @Test
     fun `chaque seconde du bloc appartient a un cycle compris entre un et cinq`() {
         (0 until SECONDES_BLOC).forEach { seconde ->
             val etat = etatTension(seconde)

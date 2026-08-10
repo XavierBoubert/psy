@@ -26,6 +26,11 @@ private val NUMEROS_RETIRES = listOf("112", "114", "3114", "le 15", "samu", "pom
 
 private val RELAXATION_DELETERE = listOf("détends-toi", "detends-toi", "relaxe-toi", "respire lentement")
 
+private val DECLENCHEMENT_SUR_PRODROME = listOf(
+    "as-tu besoin", "en as-tu besoin", "si tu sens", "quand tu sens", "dès que tu sens",
+    "si ça monte", "quand ça monte", "aux premiers signes", "si tu te sens",
+)
+
 class InvariantsTextesTest {
 
     private val textes: String by lazy {
@@ -59,6 +64,14 @@ class InvariantsTextesTest {
     @Test
     fun `aucune consigne de relaxation sans support`() {
         interdire(RELAXATION_DELETERE, "délétère sur un vasovagal — la tension chute déjà")
+    }
+
+    @Test
+    fun `aucun declenchement sur un prodrome`() {
+        interdire(
+            DECLENCHEMENT_SUR_PRODROME,
+            "déficit intéroceptif — on déclenche sur un repère externe, jamais sur une sensation",
+        )
     }
 
     private fun interdire(motifs: List<String>, raison: String) {

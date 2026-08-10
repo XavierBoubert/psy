@@ -14,10 +14,13 @@ data class EtatTension(
     val cycle: Int,
 )
 
-fun etatTension(secondesEcoulees: Int): EtatTension {
+fun secondesDuBloc(cycles: Int?): Int? = cycles?.times(SECONDES_CYCLE)
+
+fun etatTension(secondesEcoulees: Int, cycles: Int? = NOMBRE_CYCLES): EtatTension {
     val ecoulees = secondesEcoulees.coerceAtLeast(0)
-    if (ecoulees >= SECONDES_BLOC) {
-        return EtatTension(PhaseTension.TERMINE, 0, NOMBRE_CYCLES)
+    val fin = secondesDuBloc(cycles)
+    if (cycles != null && fin != null && ecoulees >= fin) {
+        return EtatTension(PhaseTension.TERMINE, 0, cycles)
     }
     val cycle = ecoulees / SECONDES_CYCLE + 1
     val position = ecoulees % SECONDES_CYCLE
@@ -25,4 +28,15 @@ fun etatTension(secondesEcoulees: Int): EtatTension {
         return EtatTension(PhaseTension.CONTRACTE, SECONDES_CONTRACTION - position, cycle)
     }
     return EtatTension(PhaseTension.RELACHE, SECONDES_CYCLE - position, cycle)
+}
+
+fun fractionPhase(millisEcoulees: Long, cycles: Int? = NOMBRE_CYCLES): Float {
+    val ecoulees = millisEcoulees.coerceAtLeast(0L)
+    val fin = secondesDuBloc(cycles)?.times(1000L)
+    if (fin != null && ecoulees >= fin) return 1f
+    val position = (ecoulees % (SECONDES_CYCLE * 1000L)) / 1000f
+    if (position < SECONDES_CONTRACTION) {
+        return position / SECONDES_CONTRACTION
+    }
+    return (position - SECONDES_CONTRACTION) / SECONDES_RELACHE
 }

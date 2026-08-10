@@ -1,6 +1,6 @@
 # Tension appliquée (Öst) — protocole opérationnel
 
-**Statut :** fiche actionnable — v1.1 (10/08/2026) · **Étape 3**
+**Statut :** fiche actionnable — v1.2 (10/08/2026) · **Étape 3**
 **Cible dossier :** `tension-appliquee`
 **Corpus :** [`corpus/tension-appliquee/`](../corpus/tension-appliquee/README.md) — Öst & Sterner 1987, Öst, Fellenius & Sterner 1991.
 
@@ -50,6 +50,8 @@ Le protocole d'origine dit : *« appliquez la tension dès les premiers signes �
 | **Voir le plateau, le garrot, l'aiguille** | On ne s'arrête plus — cycles enchaînés jusqu'à la fin du geste |
 | **Après le geste** | **3 cycles de plus**, puis rester assis 5 minutes montre en main |
 
+> 📱 **Ces quatre repères ont un porteur depuis le 10/08/2026** — écran **Tension appliquée → Séquence de soins** de Kokoro (jalon K3), accessible **depuis l'écran verrouillé**, sans déverrouillage. On touche le repère au moment où il arrive ; l'application compte, et **ne demande jamais si on en a besoin**. Elle porte aussi la **phrase du §4**, affichable et **montrable au soignant**, et les **critères d'arrêt du §5**. ⚠️ **La fiche fait foi, pas l'écran** : si les deux divergent, c'est l'écran qui est faux.
+
 **Deux règles qui découlent du même principe :**
 - **On ne se demande jamais « est-ce que j'en ai besoin là ? »** La réponse à cette question exige la perception qui manque. On applique sur le repère, systématiquement — même si tout va bien.
 - **S'allonger dès que c'est possible**, jambes surélevées, et **le demander avant le geste**, pas pendant. Un prélèvement allongé est un droit qui se demande, pas une faveur.
@@ -68,6 +70,8 @@ Le protocole d'origine dit : *« appliquez la tension dès les premiers signes �
 | **2** | 2 blocs par jour, dont **un debout** (c'est la position réelle en salle d'attente) | **4 jours** consécutifs avec les 2 blocs complets |
 | **3** | Le geste **en regardant des photographies** de prise de sang, puis une vidéo. Écran desktop, à domicile | **3 séances** où la vidéo est allée à son terme sans interruption du comptage |
 | **4** | Le geste **enchaîné sur la séquence de repères** du §2, à blanc : franchir une porte, s'asseoir, compter | **2 répétitions** de la séquence complète |
+
+📱 **Le bloc quotidien des paliers 1 et 2 se déroule sur le même écran** — *Tension appliquée → Démarrer*, 5 cycles, écran allumé pendant tout le bloc. **Le palier 4 se répète à blanc** avec la *Séquence de soins*. ⭐ **L'application ne compte aucun palier et ne garde aucun historique** : le comptage des jours reste **en séance**, conformément au §6. Elle donne le geste, pas le score.
 
 ⛔ **Aucune étape d'imagination.** Regarder une photo réelle est une perception ; « imagine une prise de sang » est inopérant (aphantasie). Le palier 3 utilise des **stimuli réels sur écran**, jamais des images mentales.
 
@@ -122,5 +126,6 @@ Le camouflage pousse à ne rien dire et à « faire normal », ce qui est exacte
 
 | Version | Date | Modification |
 |---|---|---|
-| **1.1** | **10/08/2026** | 🔴 **Un numéro d'appel d'urgence avait survécu au retrait du 10/08/2026** — le **15**, au §5, sur la ligne « perte de connaissance ». Trouvé en construisant K2, corrigé le jour même : la conduite devient « recours médical d'urgence immédiat, par le moyen le plus rapide sur place », formulation de [`crise-escalade.md`](crise-escalade.md) §0. ⚠️ **Le fait gênant est à retenir tel quel : le retrait annoncé « dans les 22 fichiers vivants » en avait manqué un, et c'était celui de la parade vasovagale** — précisément le protocole au nom duquel le retrait avait été décidé (*une syncope vasovagale ne s'appelle pas, elle s'allonge*). **Aucune conduite clinique modifiée** : s'allonger, jambes surélevées, ne pas se relever avant 10 minutes. |
+| **1.2** | **10/08/2026** | 📱 **Le §2 gagne un porteur : la séquence de repères est à l'écran** (Kokoro K3, accessible depuis l'écran verrouillé). **Aucune conduite modifiée** — les repères, les durées et les nombres de cycles sont inchangés, et **la fiche continue de faire foi sur l'écran**. Deux notes ajoutées : l'app n'exige aucun ressenti et **ne compte aucun palier** (le §6 reste la règle : les paliers se cotent **en séance**, rien ne va au journal). |
+| 1.1 | 10/08/2026 | 🔴 **Un numéro d'appel d'urgence avait survécu au retrait du 10/08/2026** — le **15**, au §5, sur la ligne « perte de connaissance ». Trouvé en construisant K2, corrigé le jour même : la conduite devient « recours médical d'urgence immédiat, par le moyen le plus rapide sur place », formulation de [`crise-escalade.md`](crise-escalade.md) §0. ⚠️ **Le fait gênant est à retenir tel quel : le retrait annoncé « dans les 22 fichiers vivants » en avait manqué un, et c'était celui de la parade vasovagale** — précisément le protocole au nom duquel le retrait avait été décidé (*une syncope vasovagale ne s'appelle pas, elle s'allonge*). **Aucune conduite clinique modifiée** : s'allonger, jambes surélevées, ne pas se relever avant 10 minutes. |
 | 1.0 | 09/08/2026 | Création — Étape 3, corpus priorité n° 1. ⭐ **Écart assumé au protocole d'Öst** : le déclenchement sur prodromes est remplacé par un **déclenchement sur repères externes et au chronomètre** — le protocole d'origine suppose une intéroception intacte, quatrième instance de la règle §9.19. |

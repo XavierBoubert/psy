@@ -45,10 +45,18 @@
       "Bash(export ADB=/c/Users/xavie/AppData/Local/Android/Sdk/platform-tools/adb)",
       "Bash(/c/Users/xavie/AppData/Local/Android/Sdk/platform-tools/adb *)",
       "Bash(/c/Users/xavie/AppData/Local/Android/Sdk/platform-tools/adb shell *)",
-      "Bash(/c/Users/xavie/AppData/Local/Android/Sdk/platform-tools/adb exec-out *)"
+      "Bash(/c/Users/xavie/AppData/Local/Android/Sdk/platform-tools/adb exec-out *)",
+      "Bash(./gradlew test *)",
+      "Bash(adb devices *)",
+      "Bash(adb install *)",
+      "Bash(adb shell *)",
+      "Bash(./gradlew assembleDebug -q)",
+      "Bash(adb exec-out *)",
+      "Bash(adb shell input tap 539 650; sleep 4 *)"
     ],
     "additionalDirectories": [
-      "C:\\Users\\xavie"
+      "C:\\Users\\xavie",
+      "C:\\Users\\xavie\\AppData\\Local\\Temp\\claude\\c--p-psy\\83440835-cc1a-4da6-9de1-858cffd04cc2\\scratchpad"
     ]
   }
 }

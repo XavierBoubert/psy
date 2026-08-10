@@ -25,6 +25,7 @@
     <string name="crise_bouton_tension">Tension appliquée</string>
     <string name="crise_repere_tension">Aiguille, geste médical, sang</string>
     <string name="crise_fermer">Fermer</string>
+    <string name="crise_retour">Retour</string>
 
     <string name="mot_code_destinataire">À %1$s</string>
     <string name="mot_code_action_envoyer">Envoyer</string>
@@ -45,12 +46,47 @@
     <string name="tension_phase_termine">Bloc terminé</string>
     <string name="tension_consigne_contracte">Bras, tronc, jambes.</string>
     <string name="tension_consigne_relache">Revenir à la normale, pas se détendre.</string>
-    <string name="tension_consigne_termine">Les 5 cycles sont allés au bout.</string>
+    <string name="tension_consigne_termine">Les %1$d cycles sont allés au bout.</string>
     <string name="tension_cycle">Cycle %1$d sur %2$d</string>
+    <string name="tension_cycle_enchaine">Cycle %1$d — enchaînés</string>
     <string name="tension_action_arreter">Arrêter</string>
     <string name="tension_action_recommencer">Recommencer</string>
+    <string name="tension_action_revenir">Revenir aux repères</string>
+    <string name="tension_action_sequence">Séquence de soins</string>
+    <string name="tension_repere_sequence">Prise de sang, cathéter, vaccin, collyre, geste invasif</string>
+    <string name="tension_lien_phrase">La phrase pour le soignant</string>
+    <string name="tension_lien_arret">Quand arrêter</string>
 
-    <string name="controle_titre">Kokoro — K2</string>
+    <string name="sequence_titre">Séquence de soins</string>
+    <string name="sequence_consigne">Toucher le repère au moment où il arrive. Chaque repère est un fait extérieur : il n\'y a rien à décider, et rien à percevoir.</string>
+    <string name="sequence_attendu">Repère suivant : %1$s</string>
+    <string name="sequence_porte">Franchir la porte</string>
+    <string name="sequence_porte_bloc">Du cabinet, du laboratoire, du service. 5 cycles, assis.</string>
+    <string name="sequence_fauteuil">S\'asseoir dans le fauteuil</string>
+    <string name="sequence_fauteuil_bloc">5 cycles, sans interruption. Demander à être allongé maintenant, pas pendant.</string>
+    <string name="sequence_plateau">Voir le plateau, le garrot, l\'aiguille</string>
+    <string name="sequence_plateau_bloc">Cycles enchaînés. On ne s\'arrête plus jusqu\'à la fin du geste.</string>
+    <string name="sequence_apres">Après le geste</string>
+    <string name="sequence_apres_bloc">3 cycles, puis rester assis 5 minutes.</string>
+
+    <string name="assis_action">Rester assis</string>
+    <string name="assis_repere">5 minutes, comptées à l\'écran</string>
+    <string name="assis_titre">Rester assis</string>
+    <string name="assis_consigne">Assis, sans se relever. Le compte est à l\'écran.</string>
+    <string name="assis_restant">%1$d:%2$02d</string>
+    <string name="assis_termine">Les 5 minutes sont passées. Se relever lentement.</string>
+
+    <string name="phrase_titre">La phrase pour le soignant</string>
+    <string name="phrase_texte">J\'ai une phobie du sang avec des antécédents de malaise vagal — je me suis déjà évanoui trois fois. Je préfère être allongé pour le prélèvement. Je vais contracter mes muscles pendant le geste, c\'est une technique pour éviter le malaise, ce n\'est pas de la nervosité.</string>
+    <string name="phrase_montrer">Cet écran peut être montré tel quel. Rien n\'oblige à la dire à voix haute.</string>
+    <string name="phrase_appuis">Si la demande est discutée : le prélèvement allongé est une pratique courante et sans coût · trois syncopes documentées ne sont pas une appréhension · la tension appliquée est une technique validée, pas une invention personnelle.</string>
+
+    <string name="arret_titre">Quand arrêter</string>
+    <string name="arret_douleur">Céphalée ou douleur dans la poitrine pendant les cycles : arrêter. Ce n\'est pas attendu, et ça se porte au Dr Isorni.</string>
+    <string name="arret_syncope">Perte de connaissance : s\'allonger, jambes surélevées, ne pas se relever avant 10 minutes. Si la personne ne se relève pas, recours médical d\'urgence immédiat, par le moyen le plus rapide sur place.</string>
+    <string name="arret_discriminant">S\'il n\'y a ni aiguille, ni geste médical, ni sang, ce n\'est pas la bonne parade. La tension appliquée remonte une tension qui chute ; elle n\'a rien à faire dans une attaque de panique.</string>
+
+    <string name="controle_titre">Kokoro — K3</string>
     <string name="controle_sous_titre">Écran de réglage. Rien ici ne se règle en situation : tout se prépare à froid.</string>
     <string name="controle_section_contact">Destinataire du mot-code</string>
     <string name="controle_champ_nom">Prénom</string>
