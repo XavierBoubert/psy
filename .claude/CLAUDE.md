@@ -59,7 +59,7 @@ Toujours communiquer avec l'utilisateur en français.
 | `psy/corpus/` | Référentiels cliniques indexés. **`corpus/echelles/` ⭐ — instruments de mesure : VVIQ, TAS-20, CAT-Q, GAD-7/PHQ-9 (complets), BES (partiel + grille comportementale de substitution).** Les 4 corpus thérapeutiques prioritaires restent à récupérer |
 | `psy/protocoles/` | Protocoles thérapeutiques opérationnels — fiches actionnables |
 | `psy/web/` | Outils de séance desktop — TypeScript strict *(⏸️ Étape 3-4)* |
-| `psy/android/` | Kokoro (心) — compagnon permanent, Kotlin + Compose. **Étape 5 ouverte**, séquençage dans `PLAN-KOKORO.md` (K0 → K6). ✅ **K0 franchi le 10/08/2026** : chaîne de compilation installée, APK debug qui s'ouvre sur le Galaxy S22. Prochain jalon **K1 — le full-screen intent**, le point techniquement le plus risqué du projet |
+| `psy/android/` | Kokoro (心) — compagnon permanent, Kotlin + Compose. **Étape 5 ouverte**, séquençage dans `PLAN-KOKORO.md` (K0 → K6). ✅ **K0 et K1 franchis le 10/08/2026** : chaîne de compilation installée, et ⚡ **le full-screen intent fonctionne sur le Galaxy S22** — téléphone verrouillé, écran éteint, Kokoro s'affiche par-dessus le verrouillage **sans son ni vibration**. Le point le plus risqué du projet est levé. Prochain jalon **K2 — le noyau de crise** (mot-code à Chourouk + tension appliquée), **seul jalon daté : avant le 07/09** |
 | `psy/SYNCHRO.md` | Synchronisation et sécurité des données : dépôt privé (historique) + Syncthing P2P (transport PC↔Android) |
 | `ressources/originales/` | Documents source bruts (ex. PDF) |
 | `ressources/spécialisées/` | Documents convertis, utilisés comme entrées pour Claude |

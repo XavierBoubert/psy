@@ -3,7 +3,9 @@
 **Kotlin natif + Jetpack Compose.** 🏗️ **Étape 5 ouverte le 10/08/2026.**
 Cible : **Samsung Galaxy / One UI**. App personnelle et sideloadée — aucune contrainte Google Play.
 
-> 📐 **Ce README dit ce que Kokoro est. [`PLAN-KOKORO.md`](PLAN-KOKORO.md) dit dans quel ordre on le construit** — jalons **K0 → K6**, critères de fin, points durs Android. ⭐ **Le premier livrable n'est pas le visage, c'est l'écran de crise** — et ⚡ **le full-screen intent se lève en K1**, avant tout le reste.
+> 📐 **Ce README dit ce que Kokoro est. [`PLAN-KOKORO.md`](PLAN-KOKORO.md) dit dans quel ordre on le construit** — jalons **K0 → K6**, critères de fin, points durs Android. ⭐ **Le premier livrable n'est pas le visage, c'est l'écran de crise.**
+>
+> ✅ **K0 et K1 franchis le 10/08/2026.** ⚡ **Le full-screen intent fonctionne sur le Galaxy S22** : téléphone verrouillé, écran éteint, Kokoro s'affiche par-dessus le verrouillage **sans son ni vibration**. Prochain jalon : **K2 — le noyau de crise**, seul jalon daté (avant le 07/09).
 >
 > 🔴 **L'écran de crise ne porte aucun numéro d'urgence** *(10/08/2026)* : le mot-code à Chourouk et la tension appliquée, rien d'autre. Motifs : [`../protocoles/crise-escalade.md`](../protocoles/crise-escalade.md) §0.
 
@@ -45,8 +47,9 @@ Puis : check-in quotidien, outils de crise, suivi des repas.
 |---|---|
 | Flotter au-dessus de toutes les apps | `SYSTEM_ALERT_WINDOW` + `TYPE_APPLICATION_OVERLAY` |
 | Rester vivant en permanence | Foreground Service + exemption d'optimisation batterie |
-| S'afficher **par-dessus l'écran de verrouillage** | Activity avec `setShowWhenLocked(true)` + `setTurnScreenOn(true)` — l'overlay classique passe **sous** le keyguard |
-| Réveiller l'écran pour une alerte | `full-screen intent` |
+| S'afficher **par-dessus l'écran de verrouillage** | ✅ **vérifié le 10/08/2026** — Activity avec `setShowWhenLocked(true)` + `setTurnScreenOn(true)` ; l'overlay classique passe **sous** le keyguard |
+| Réveiller l'écran pour une alerte | ✅ **vérifié le 10/08/2026** — `full-screen intent` sur canal `IMPORTANCE_HIGH` **muet** (`setSound(null, null)`, vibration désactivée) **+ `WAKE_LOCK`**, sans lequel l'Always On Display s'intercale et l'app ne s'affiche pas. ⚠️ **Un canal est immuable une fois créé** : son identifiant est versionné (`kokoro_alerte_v1`), toute modification de ses réglages impose de passer à `_v2` |
+| **Ne jamais saisir l'écran pendant que Xavier s'en sert** | ✅ **garanti par Android** — un full-screen intent est automatiquement rétrogradé en bannière dès que l'écran est allumé et le téléphone en usage. Vérifié le 10/08/2026 |
 
 **Le point d'attention réel n'est pas Android, c'est le constructeur.** Deux réglages One UI, sans lesquels le compagnon mourra silencieusement au bout de quelques heures : *Batterie → Limites d'utilisation en arrière-plan → Applications jamais mises en veille* ; et désactivation de l'optimisation de la batterie (`REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`).
 

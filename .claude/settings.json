@@ -38,7 +38,14 @@
       "Read(//c/Users/xavie/AppData/Local/Android/Sdk/**)",
       "Bash(/c/Users/xavie/AppData/Local/Android/Sdk/platform-tools/adb.exe version *)",
       "Bash(reg.exe query *)",
-      "Bash(git check-ignore *)"
+      "Bash(git check-ignore *)",
+      "Bash(export ANDROID_HOME=/c/Users/xavie/AppData/Local/Android/Sdk)",
+      "Bash(export JAVA_HOME=\"/c/Program Files/Microsoft/jdk-21.0.12.8-hotspot\")",
+      "Bash(/c/Users/xavie/AppData/Local/Android/Sdk/platform-tools/adb devices *)",
+      "Bash(export ADB=/c/Users/xavie/AppData/Local/Android/Sdk/platform-tools/adb)",
+      "Bash(/c/Users/xavie/AppData/Local/Android/Sdk/platform-tools/adb *)",
+      "Bash(/c/Users/xavie/AppData/Local/Android/Sdk/platform-tools/adb shell *)",
+      "Bash(/c/Users/xavie/AppData/Local/Android/Sdk/platform-tools/adb exec-out *)"
     ],
     "additionalDirectories": [
       "C:\\Users\\xavie"

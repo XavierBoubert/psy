@@ -1,4 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Kokoro</string>
+
+    <string name="canal_alerte_nom">Alerte plein écran</string>
+    <string name="canal_alerte_description">Affichage d\'un écran de Kokoro sur téléphone verrouillé. Sans son, sans vibration.</string>
+
+    <string name="alerte_titre">Kokoro</string>
+    <string name="alerte_texte">Écran de test K1</string>
+
+    <string name="alerte_ecran_titre">Kokoro</string>
+    <string name="alerte_ecran_heure">Déclenché à %1$s</string>
+    <string name="alerte_ecran_explication">Test K1 : cet écran s\'est ouvert par-dessus le verrouillage, sans son et sans vibration. Rien d\'autre n\'est demandé.</string>
+    <string name="alerte_ecran_fermer">Fermer</string>
+
+    <string name="controle_titre">Kokoro — K1</string>
+    <string name="controle_sous_titre">Vérification du plein écran sur téléphone verrouillé.</string>
+    <string name="controle_etat_notifications">Notifications</string>
+    <string name="controle_etat_plein_ecran">Notifications plein écran</string>
+    <string name="controle_accorde">accordé</string>
+    <string name="controle_refuse">refusé</string>
+    <string name="controle_action_notifications">Autoriser les notifications</string>
+    <string name="controle_guidage_plein_ecran">Le réglage est refusé par défaut depuis Android 14. Chemin manuel : Paramètres → Applications → Kokoro → Notifications plein écran.</string>
+    <string name="controle_action_plein_ecran">Ouvrir le réglage plein écran</string>
+    <string name="controle_consigne_test">Test : appuie sur le bouton, puis éteins l\'écran avec le bouton latéral. Au bout de 20 secondes, l\'écran doit se rallumer sur Kokoro, sans aucun son ni vibration.</string>
+    <string name="controle_action_test">Déclencher le test dans 20 secondes</string>
 </resources>

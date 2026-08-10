@@ -1,6 +1,6 @@
 # Plan de construction — Kokoro (心) et la surface web
 
-**Statut :** plan de construction — **v1.2 (10/08/2026)**. Ouvre l'**Étape 5** du `PLAN.md` racine. ✅ **K0 franchi le 10/08/2026.**
+**Statut :** plan de construction — **v1.3 (10/08/2026)**. Ouvre l'**Étape 5** du `PLAN.md` racine. ✅ **K0 et K1 franchis le 10/08/2026.**
 **Portée :** ce document dit **dans quel ordre on construit les applications, et pourquoi cet ordre-là**. Il ne redit ni la conception du personnage (→ [`README.md`](README.md)), ni les décisions d'architecture (→ `../../PLAN.md` §5), ni le format des données (→ [`../dossier/SCHEMA.md`](../dossier/SCHEMA.md), **normatif**).
 
 > **Ce document fait foi sur le séquençage et les critères de fin.** Sur tout le reste, il pointe.
@@ -91,7 +91,7 @@ Chaque jalon a un **critère de fin vérifiable**. Un jalon n'est pas « fini »
 >
 > 📌 **Ce qui n'est volontairement pas fait :** aucun module `:feature-*` n'a été créé d'avance. Ils arrivent avec leur jalon. Des coquilles vides seraient exactement la doctrine-sans-acte que la supervision du 09/08 a relevée.
 
-### K1 — ⚡ Le full-screen intent *(spike de faisabilité — arbitrage de Xavier, 10/08/2026)*
+### K1 — ⚡ Le full-screen intent *(spike de faisabilité — arbitrage de Xavier, 10/08/2026)* — ✅ **franchi le 10/08/2026**
 
 **Pourquoi ici, juste après K0 :** c'est **le point techniquement le plus risqué du projet**, et le seul dont l'échec invaliderait une partie de la conception. Depuis Android 14, `USE_FULL_SCREEN_INTENT` est réservé aux apps d'appel et d'alarme ; pour les autres, l'accès est **révoqué par défaut**. Le `PLAN.md` §5 le donnait pour acquis (« ✅ ») — **c'est faux depuis Android 14.** Le lever maintenant, sur un APK vide, coûte une soirée ; le découvrir en K5 coûterait une refonte.
 
@@ -100,6 +100,30 @@ Chaque jalon a un **critère de fin vérifiable**. Un jalon n'est pas « fini »
 - **Critère de fin :** téléphone verrouillé et écran éteint, une notification déclenchée à distance allume l'écran et affiche l'Activity de Kokoro, **sans aucun son ni vibration**.
 
 > ⭐ **Ce jalon décide de la suite.** S'il passe, l'interpellation (K6) et le réveil d'écran sont acquis. **S'il ne passe pas sur ce téléphone, Kokoro reste une app qu'on ouvre** — ce qui reste utile, mais doit être su avant de construire dessus, pas après.
+
+**Constat de fin — 10/08/2026.** Galaxy S22 (SM-S901B, Android 16 / SDK 36), APK debug `versionName=K1`. **Trois passages**, dont le dernier conduit par Xavier seul, sans PC.
+
+| Ce qui a été constaté | Comment |
+|---|---|
+| **État de départ** : téléphone verrouillé, écran éteint | `dumpsys power` → `mWakefulness=Dozing` · `dumpsys display` → `mScreenState=DOZE` · `dumpsys window` → `mDreamingLockscreen=true` |
+| **Déclenchement à distance** *(passages 1 et 2)* | `adb shell am broadcast -n io.allonsy.kokoro/.alerte.DeclencheurAlerte` |
+| **Déclenchement sans PC** *(passage 3, par Xavier)* | Bouton dans l'app → `AlarmManager.setAndAllowWhileIdle`, 20 s, écran éteint entre-temps |
+| **L'écran s'allume seul et Kokoro s'affiche par-dessus le verrouillage** | `mWakefulness=Awake` · `mScreenState=ON` · `topResumedActivity=io.allonsy.kokoro/.alerte.AlerteActivity` · capture d'écran · ✅ **constaté de visu par Xavier** |
+| **Aucun son, aucune vibration** | `dumpsys notification` → canal `mImportance=4`, `mSound=null`, `mVibrationEnabled=false`, `mVibrationPattern=null`, `mLights=false` ; notification `sound=null vibrate=null defaults=0` · ✅ **confirmé à l'oreille par Xavier, sonnerie active** |
+
+> ⭐ **La restriction d'Android 14 n'a pas bloqué sur ce téléphone.** `USE_FULL_SCREEN_INTENT` est **accordée à l'installation** (`granted=true`), l'app op reste en mode `default`, et `canUseFullScreenIntent()` renvoie **vrai** sans aucune manipulation de réglage. **Ce n'est pas une raison de retirer l'écran de guidage** : il reste dans l'app, et il est la seule chose qui sauvera le jalon si une mise à jour One UI change ce comportement — comme elle réinitialise déjà les réglages batterie (K6).
+>
+> 🔦 **Un réveil d'écran explicite a été nécessaire, et il faut savoir pourquoi.** `setTurnScreenOn(true)` seul laisse l'Always On Display de Samsung s'intercaler : l'écran « s'allume » sans afficher l'app. Le déclencheur prend donc un `SCREEN_BRIGHT_WAKE_LOCK or ACQUIRE_CAUSES_WAKEUP` de 10 s avant de publier la notification — d'où la permission **`WAKE_LOCK`**. L'API est dépréciée depuis longtemps et reste le seul moyen fiable ; c'est ce qu'emploient les réveils.
+>
+> ⭐ **Comportement découvert et vérifié, à ne pas prendre pour un défaut : quand l'écran est allumé et le téléphone en cours d'utilisation, Android ne lance PAS le full-screen intent** — il le rétrograde en bannière, qu'il faut toucher. Constaté à 13h26 : broadcast reçu, `topResumedActivity` resté sur `MainActivity`. **C'est un comportement voulu du système, et il coïncide avec la doctrine du dispositif** — `PLAN-KOKORO.md` K6 pose déjà que l'interpellation ne prend jamais le plein écran. Autrement dit : **Kokoro ne peut pas saisir l'écran pendant que Xavier s'en sert, même par erreur de programmation.** C'est une garantie, pas une limite.
+>
+> ⚠️ **Une seule réserve subsiste.** Les trois passages ont eu lieu avec l'app récemment au premier plan et le téléphone `deviceidle=ACTIVE`. **Le déclenchement depuis un processus froid, après plusieurs heures de veille profonde, reste à observer** — c'est la condition réelle de K5/K6, et elle ne se teste qu'en laissant passer une nuit.
+>
+> 📌 **Détail d'implémentation qui se perdra si on ne l'écrit pas : un canal de notification est immuable une fois créé.** Changer le son ou la vibration dans le code ne change **rien** sur un téléphone où le canal existe déjà. D'où l'identifiant versionné **`kokoro_alerte_v1`** : toute modification des réglages du canal impose de passer à `_v2`, sans quoi la règle « jamais de son » serait violée en silence sur le seul téléphone qui compte.
+>
+> 🔒 **Le déclencheur à distance n'existe qu'en build de debug** (`app/src/debug/AndroidManifest.xml`, `tools:replace="android:exported"`). En release, le récepteur est fermé.
+>
+> **Trois permissions apparaissent au manifeste** — `POST_NOTIFICATIONS`, `USE_FULL_SCREEN_INTENT` et `WAKE_LOCK`. L'invariant « aucune permission » de K0 tombe ici, comme prévu : **aucune n'est réseau, aucune n'est capteur, aucune ne touche au micro, il n'y a toujours ni `INTERNET` ni analytics.**
 
 ### K2 — 🔴 Le noyau de crise *(le seul jalon avec une date cible : avant le 07/09)*
 
@@ -134,7 +158,7 @@ Un écran, deux actions, aucune saisie de texte, **aucun numéro d'urgence**, au
 - **Critère de fin :** l'overlay survit 72 h consécutives sans être tué par One UI.
 
 ### K6 — Interpellation et diagnostic
-- Interpellation opportuniste selon `PLAN.md` §2.4 : **une phrase, une raison chiffrée, refus à coût nul, plafond 1/jour et 3/semaine**, jamais de son ni de plein écran.
+- Interpellation opportuniste selon `PLAN.md` §2.4 : **une phrase, une raison chiffrée, refus à coût nul, plafond 1/jour et 3/semaine**, jamais de son ni de plein écran. ✅ **Garanti par le système depuis K1** : Android rétrograde un full-screen intent en bannière dès que l'écran est allumé et le téléphone en cours d'usage — l'interpellation ne peut pas saisir l'écran, même par erreur de programmation.
 - **Écran de diagnostic One UI** : vérifie les deux réglages batterie et guide leur réactivation (une mise à jour système les réinitialise).
 - **Critère de fin :** après une mise à jour système simulée (réglages remis à zéro à la main), l'écran de diagnostic les signale.
 
@@ -144,7 +168,7 @@ Un écran, deux actions, aucune saisie de texte, **aucun numéro d'urgence**, au
 
 | Point | Réalité | Traitement |
 |---|---|---|
-| **Full-screen intent** | Depuis Android 14, `USE_FULL_SCREEN_INTENT` est réservé aux apps d'appel/alarme ; pour les autres, l'accès est **révoqué par défaut**. Le `PLAN.md` §5 le donne pour acquis (« ✅ ») — **c'est faux depuis Android 14.** | ⚡ **Traité en K1**, avant tout le reste : c'est le risque le plus élevé du projet. Sideload : Xavier peut l'accorder à la main. À vérifier **sur son téléphone**, pas en théorie. |
+| **Full-screen intent** | ✅ **Levé le 10/08/2026 sur le Galaxy S22** : la permission est accordée à l'installation et `canUseFullScreenIntent()` renvoie vrai sans manipulation. La restriction d'Android 14 existe, elle ne s'est pas appliquée ici. | ✅ **Traité en K1.** L'écran de guidage vers le réglage One UI **reste dans l'app** : une mise à jour système peut changer ce comportement, comme elle réinitialise les réglages batterie. |
 | **Foreground service** | Depuis Android 14, un `foregroundServiceType` déclaré est obligatoire. | `specialUse` avec justification. Aucune contrainte de review : l'app est sideloadée. |
 | **Notification persistante** | Une notification de service peut sonner. | Canal en `IMPORTANCE_LOW`, **aucun son, aucune vibration** — règle non négociable, pas une préférence. |
 | **Accès aux fichiers du dossier** | Le stockage cloisonné empêche d'écrire librement dans un dossier partagé avec Syncthing. | Deux voies : `MANAGE_EXTERNAL_STORAGE` (simple, acceptable en sideload) ou SAF avec URI d'arbre persistant (`takePersistableUriPermission`). **À trancher en K4**, pas avant. |
@@ -208,6 +232,7 @@ Une contrainte de conception qui reste une phrase se perd à l'implémentation. 
 
 | Version | Date | Modification |
 |---|---|---|
-| **1.2** | **10/08/2026** | ✅ **K0 franchi — le premier acte exécutable du dispositif sur Android.** JDK 21, SDK Android (platform 36 / build-tools 36 / platform-tools 37.0.1), variables utilisateur posées, squelette Gradle écrit, APK debug installé et ouvert sur le **Galaxy S22 (Android 16)**. §1 devient un avant/après daté, K0 gagne son constat de fin chiffré. ⭐ **Android Studio écarté** *(arbitrage de Xavier)* : outillage CLI seul, l'IDE n'était pas dans le critère de fin. **Aucun module `:feature-*` créé d'avance** — ils arrivent avec leur jalon. |
+| **1.3** | **10/08/2026** | ⚡ **K1 franchi — le point le plus risqué du projet est levé.** Téléphone verrouillé et écran éteint (`mWakefulness=Dozing`, `mScreenState=DOZE`), l'écran s'allume seul et Kokoro s'affiche **par-dessus le verrouillage**, **sans son ni vibration** — constaté sur **trois passages**, dont un conduit par Xavier sans PC, ✅ **silence confirmé à l'oreille sonnerie active**. ⭐ **La restriction d'Android 14 ne s'applique pas sur ce Galaxy S22** ; **l'écran de guidage reste néanmoins dans l'app** — une mise à jour One UI peut changer ce comportement. 🔦 **Un `WAKE_LOCK` s'est révélé nécessaire** : `setTurnScreenOn` seul laisse l'Always On Display s'intercaler. ⭐ **Comportement découvert : Android rétrograde le full-screen intent en bannière quand le téléphone est en cours d'usage** — ce n'est pas un défaut, c'est **la garantie système que Kokoro ne peut pas saisir l'écran de Xavier**, et elle rejoint la doctrine de K6. **Conséquence directe : l'interpellation (K6) et le réveil d'écran cessent d'être des paris.** Une seule réserve subsiste — le déclenchement depuis un **processus froid après veille profonde**, qui demande de laisser passer une nuit. Un détail qui se serait perdu : **un canal de notification est immuable**, d'où l'identifiant versionné `kokoro_alerte_v1`. §5 et K6 mis à jour. |
+| 1.2 | 10/08/2026 | ✅ **K0 franchi — le premier acte exécutable du dispositif sur Android.** JDK 21, SDK Android (platform 36 / build-tools 36 / platform-tools 37.0.1), variables utilisateur posées, squelette Gradle écrit, APK debug installé et ouvert sur le **Galaxy S22 (Android 16)**. §1 devient un avant/après daté, K0 gagne son constat de fin chiffré. ⭐ **Android Studio écarté** *(arbitrage de Xavier)* : outillage CLI seul, l'IDE n'était pas dans le critère de fin. **Aucun module `:feature-*` créé d'avance** — ils arrivent avec leur jalon. |
 | 1.1 | 10/08/2026 | ⚡ **Le full-screen intent devient le jalon K1** *(arbitrage de Xavier)*, juste après le poste de travail : c'est le point le plus risqué du projet — le lever sur un APK vide coûte une soirée, le découvrir en K5 coûterait une refonte. Le jalon impose en plus le **canal muet**, un full-screen intent sonnant par défaut. Jalons suivants décalés (K2 crise · K3 tension · K4 check-in · K5 présence · K6 interpellation). 🔴 **L'écran de crise ne porte plus aucun numéro** — retrait acté dans tout le dispositif ; il se réduit au **mot-code** et à la **tension appliquée**, et le **mode étranger disparaît** avec les numéros de substitution. ✅ **Chourouk valide le canal SMS du mot-code** — arbitrage B levé. |
 | 1.0 | 10/08/2026 | Création — ouverture de l'Étape 5. ⭐ Trois décisions : **le premier livrable est l'écran de crise, pas le visage** · **app unique multi-modules** (question ouverte du `PLAN.md` §3.1 et §5, tranchée) · **aucune base de données, l'app écrit des fichiers** (R1/R2/R3). Constat vérifié : aucun outillage Android sur la machine — le jalon K0 est l'installation. Nuance apportée au `PLAN.md` §5 : le **full-screen intent** n'est plus acquis par défaut depuis Android 14. |
