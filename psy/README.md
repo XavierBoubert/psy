@@ -17,8 +17,8 @@ Implémentation du plan de conception `PLAN.md` (racine).
 | `agent/` | Rôles Claude Code + `supervisions/`. **Les skills vivent dans `.claude/skills/`** — cf. `agent/README.md` | ✅ **7/7** — `psy-seance`, `psy-journal`, `psy-crise`, `psy-bilan`, `psy-brief-isorni`, `psy-hygiene`, `psy-superviseur` |
 | `corpus/` | Référentiels cliniques indexés | ✅ **échelles** (VVIQ, TAS-20, CAT-Q, GAD-7/PHQ-9 ; BES partiel) + **tension appliquée** (corpus n° 1) · ⏸️ 3 corpus prioritaires restants |
 | `protocoles/` | Protocoles thérapeutiques opérationnels (fiches actionnables) | ✅ 7 fiches — **crise/escalade**, **PPC**, tension appliquée, alimentation, activité physique, panique, jour de vol |
-| `web/` | Outils de séance desktop — TypeScript strict | ⏸️ aucun outil écrit — le premier attendu est l'app de guidage de la tension appliquée (Étape 3) |
-| `android/` | Kokoro (心) — compagnon permanent, Kotlin + Compose | ⏸️ Étape 5 |
+| `web/` | Outils de séance desktop — TypeScript strict | ⏸️ aucun outil écrit — le premier attendu est désormais la **formalisation Zod du schéma du dossier**, avec le jalon K3 ([`android/PLAN-KOKORO.md`](android/PLAN-KOKORO.md) §7) |
+| `android/` | Kokoro (心) — compagnon permanent, Kotlin + Compose | 🏗️ **Étape 5 ouverte (10/08/2026)** — plan de construction : [`android/PLAN-KOKORO.md`](android/PLAN-KOKORO.md). ⭐ Le premier livrable est l'**écran de crise**, pas le visage |
 | `SYNCHRO.md` | Décisions de synchronisation et de sécurité des données | ✅ |
 
 **Critère de répartition entre surfaces, à ne jamais enfreindre :**
@@ -52,4 +52,6 @@ Implémentation du plan de conception `PLAN.md` (racine).
 
 En cas d'idéation suicidaire ou de détresse aiguë : **3114**, gratuit, 24h/24. **Protocole complet : [`protocoles/crise-escalade.md`](protocoles/crise-escalade.md)** *(`dossier/profil.md` §4 n'en est que le résumé)*.
 
-⭐ **Si la parole est coupée**, le 3114 et le 15 sont inaccessibles — ce sont des numéros de téléphone. **114** (urgences par SMS), mot-code « shutdown », canal écrit : §4 de la fiche.
+🔴 **Les numéros d'appel d'urgence — 15, 112, 114 — ont été retirés du dispositif le 10/08/2026**, à la demande de Xavier (motifs : §0 de la fiche). **Le 3114 est le seul conservé, et il ne s'affiche que sur le déclencheur ci-dessus** — jamais en ouverture, jamais « au cas où ».
+
+⭐ **Si la parole est coupée**, le 3114 est inaccessible — c'est un numéro de téléphone. Mot-code « shutdown » à Chourouk, canal écrit : §4 de la fiche.

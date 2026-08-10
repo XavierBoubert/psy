@@ -71,11 +71,12 @@ Poser **une question à la fois**. Chaque question est fermée : un nombre ou un
 Si une réponse ou une remarque signale une **idéation suicidaire** ou une **détresse aiguë** :
 
 1. **Abandonner le check-in immédiatement.** Ne pas finir les questions. Ne pas écrire le fichier.
-2. Appliquer **`psy/protocoles/crise-escalade.md` §2** *(résumé : afficher le **3114**, gratuit 24h/24 ; orienter vers le contact d'urgence et le Dr Isorni ; **15** si urgence vitale)*.
+2. Appliquer **`psy/protocoles/crise-escalade.md` §2** *(résumé : afficher le **3114**, gratuit 24h/24 ; orienter vers le contact d'urgence et le Dr Isorni)*.
 3. Ne jamais tenter de gérer seul ni de rationaliser.
 4. La trace au dossier vient **après**, jamais avant.
 
-> ⭐ **Si la parole est coupée**, le 3114 et le 15 sont inutilisables — ce sont des numéros de téléphone. Voies sans parole : **114** (urgences par SMS), **mot-code « shutdown »** à Chourouk, le canal écrit ici (`crise-escalade.md` §4). ✈️ Ces numéros ne fonctionnent pas depuis la Tunisie du 07/09 au ≈ 28/09 (§5).
+> ⭐ **Si la parole est coupée**, le 3114 est inutilisable — c'est un numéro de téléphone. Voies sans parole : **mot-code « shutdown »** à Chourouk, le canal écrit ici (`crise-escalade.md` §4).
+> ⚠️ *Les numéros d'appel d'urgence (15, 112, 114) ont été retirés du dispositif le 10/08/2026 — cf. `crise-escalade.md` §0. Le 3114 est le seul conservé, et il ne s'affiche que sur idéation suicidaire ou détresse aiguë.*
 
 ### 4.2 Épisode de crise rapporté en passant
 

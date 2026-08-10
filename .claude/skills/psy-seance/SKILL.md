@@ -86,13 +86,13 @@ Si du matériel reste ouvert : `matiere_ouverte: true` dans le frontmatter, et *
 Déclencheurs : **idéation suicidaire**, détresse aiguë, perte de connaissance hors contexte médical connu.
 
 1. Arrêter la séance. Ne pas terminer le point en cours.
-2. **3114** — prévention du suicide, gratuit, 24h/24. **15** si urgence vitale.
+2. **3114** — prévention du suicide, gratuit, 24h/24. Si l'urgence est vitale : recours médical immédiat, par le moyen le plus rapide sur place.
 3. Contact d'urgence + Dr Isorni.
 4. Ne **jamais** tenter de gérer seul, ni de rationaliser, ni de « voir si ça passe ».
 5. Trace au dossier **après**, jamais avant.
 
-> ⭐ **Si le canal verbal est coupé (shutdown), le 3114 et le 15 sont inaccessibles — ce sont des numéros de téléphone.** Voies sans parole : **114** (urgences par SMS), le **mot-code « shutdown »** à Chourouk, le canal écrit ici. Détail et réserves : `crise-escalade.md` §4.
-> ✈️ **Du 07/09 au ≈ 28/09, ces numéros ne fonctionnent pas depuis la Tunisie** — substituts dans `crise-escalade.md` §5.
+> ⭐ **Si le canal verbal est coupé (shutdown), le 3114 est inaccessible — c'est un numéro de téléphone.** Voies sans parole : le **mot-code « shutdown »** à Chourouk, le canal écrit ici. Détail : `crise-escalade.md` §4.
+> ⚠️ **Les numéros d'appel d'urgence (15, 112, 114) ont été retirés du dispositif le 10/08/2026** — motifs au `crise-escalade.md` §0, dont celui-ci : ⭐ **une syncope vasovagale ne s'appelle pas, elle s'allonge.** Le 3114 est le seul conservé, et il ne s'affiche **que** sur ce déclencheur-ci.
 
 Facteurs de risque documentés : `profil.md` §4.
 

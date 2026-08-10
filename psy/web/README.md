@@ -1,6 +1,8 @@
 # `web/` — outils de séance desktop
 
-**TypeScript strict** (règles projet : `ay-typescript`, `ay-functional`). ⏸️ Construction à partir de l'Étape 3.
+**TypeScript strict** (règles projet : `ay-typescript`, `ay-functional`). ⏸️ Construction à partir de l'Étape 5.
+
+> 📐 **Séquençage : [`../android/PLAN-KOKORO.md`](../android/PLAN-KOKORO.md) §7.** ⭐ **Le premier livrable web est la formalisation Zod du schéma du dossier** — le contrat de données partagé entre les surfaces, aujourd'hui validé par rien —, construit avec le jalon K3. La passation d'échelles passe **après le retour de Tunisie** : les échelles urgentes se passent les 16 et 22-23/08, conduites par `psy-bilan` en conversation.
 
 ## Pourquoi le desktop n'est pas un confort mais une nécessité clinique
 

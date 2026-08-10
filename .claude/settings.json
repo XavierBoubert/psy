@@ -13,7 +13,13 @@
       "Edit(/.claude/skills/psy-journal/**)",
       "Bash(git -C /c/p/psy diff --stat)",
       "Bash(git -C /c/p/psy diff .claude/settings.json)",
-      "mcp__claude_ai_Gmail__create_draft"
+      "mcp__claude_ai_Gmail__create_draft",
+      "Bash(grep -v \":0$\")",
+      "Bash(sort -t: -k2 -rn)",
+      "Edit(/.claude/skills/psy-crise/**)",
+      "Edit(/.claude/skills/psy-bilan/**)",
+      "Edit(/.claude/skills/psy-hygiene/**)",
+      "Edit(/.claude/skills/psy-brief-isorni/**)"
     ],
     "additionalDirectories": [
       "C:\\Users\\xavie"

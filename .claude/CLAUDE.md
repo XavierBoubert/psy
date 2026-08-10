@@ -72,7 +72,7 @@ Toujours communiquer avec l'utilisateur en français.
 |---|---|---|
 | `psy-seance` | Séance de fond hebdomadaire — ouverture / travail (une seule cible) / clôture obligatoire / compte-rendu dans `psy/dossier/seances/` | ✅ |
 | `psy-journal` | Check-in quotidien — 7 questions fermées, < 2 min, aucune saisie de texte obligatoire → `psy/dossier/journal/AAAA-MM-JJ.json` | ✅ |
-| `psy-crise` | **Triage de crise** — sécurité avant mécanisme, panique / vasovagal / shutdown, escalade 3114 et voies sans parole. ⭐ **Seule exception au chargement de contexte : les numéros s'affichent avant la lecture du dossier** | ✅ |
+| `psy-crise` | **Triage de crise** — sécurité avant mécanisme, panique / vasovagal / shutdown, escalade 3114 et voies sans parole. ⭐ **Seule exception au chargement de contexte : la question de sécurité se pose avant la lecture du dossier** | ✅ |
 | `psy-bilan` | Passation et cotation d'une échelle → `psy/dossier/mesures/` — items lus dans `psy/corpus/echelles/`, **jamais restitués de mémoire** ; item 9 du PHQ-9 câblé sur le protocole de crise | ✅ |
 | `psy-brief-isorni` | Brief d'une page avant consultation → `psy/dossier/briefs/`, `transmis: false` — chiffres calculés depuis le journal, réserves obligatoires, **aucune proposition pharmacologique** | ✅ |
 | `psy-hygiene` | Versant somatique (PPC, alimentation, activité) — ⭐ **le passage de palier se compte dans le journal, il ne se demande pas** | ✅ |
@@ -80,7 +80,9 @@ Toujours communiquer avec l'utilisateur en français.
 
 **Invariants de tout skill du dispositif** : charger `profil.md` + `etat.md` avant d'agir · **non-substitution** (aucun conseil de modification de traitement, jamais, même sous forme interrogative — ça part au brief Dr Isorni) · **protocole de crise câblé** (3114, non contournable) · aucune visualisation · utilisable sans parler ni écrire · zéro streak ni compteur de régularité · annoncer avant de faire.
 
-> 🔴 **La fiche de crise qui fait foi est `psy/protocoles/crise-escalade.md`** — `psy/dossier/profil.md` §4 n'en est que le résumé. ⭐ **En shutdown, le 3114 et le 15 sont inaccessibles : ce sont des numéros de téléphone.** Voies sans parole (§4 de la fiche) : **114** par SMS · mot-code « shutdown » · canal écrit. ✈️ Ces numéros ne fonctionnent pas depuis la Tunisie du 07/09 au ≈ 28/09 (§5).
+> 🔴 **La fiche de crise qui fait foi est `psy/protocoles/crise-escalade.md`** — `psy/dossier/profil.md` §4 n'en est que le résumé.
+> 🔴 **Les numéros d'appel d'urgence — 15, 112, 114 — ont été retirés de tout le dispositif le 10/08/2026**, à la demande de Xavier (motifs au §0 de la fiche : aucun n'a jamais servi · ⭐ **une syncope vasovagale ne s'appelle pas, elle s'allonge** — proposer un appel au lieu de la tension appliquée était une erreur d'orientation · l'affichage permanent était anxiogène). **Ne jamais les réintroduire, sous aucune forme, dans aucune surface.**
+> ⭐ **Le 3114 est le seul numéro conservé** — prévention du suicide, déclenché **uniquement** par une idéation suicidaire ou une détresse aiguë (§2 de la fiche), **jamais affiché en ouverture ni « au cas où »**. En shutdown il est inaccessible : c'est un numéro de téléphone. Voies sans parole (§4) : mot-code « shutdown » · canal écrit. ✈️ Il ne fonctionne pas depuis la Tunisie du 07/09 au ≈ 28/09 (§5).
 
 ## Ressources spécialisées
 

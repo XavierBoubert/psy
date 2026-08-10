@@ -1,7 +1,11 @@
 # `android/` — Kokoro (心)
 
-**Kotlin natif + Jetpack Compose.** ⏸️ Construction à l'Étape 5.
+**Kotlin natif + Jetpack Compose.** 🏗️ **Étape 5 ouverte le 10/08/2026.**
 Cible : **Samsung Galaxy / One UI**. App personnelle et sideloadée — aucune contrainte Google Play.
+
+> 📐 **Ce README dit ce que Kokoro est. [`PLAN-KOKORO.md`](PLAN-KOKORO.md) dit dans quel ordre on le construit** — jalons **K0 → K6**, critères de fin, points durs Android. ⭐ **Le premier livrable n'est pas le visage, c'est l'écran de crise** — et ⚡ **le full-screen intent se lève en K1**, avant tout le reste.
+>
+> 🔴 **L'écran de crise ne porte aucun numéro d'urgence** *(10/08/2026)* : le mot-code à Chourouk et la tension appliquée, rien d'autre. Motifs : [`../protocoles/crise-escalade.md`](../protocoles/crise-escalade.md) §0.
 
 *Kokoro (心) : le mot japonais qui désigne indissociablement le cœur et l'esprit, racine de 心理学* (shinrigaku), *« psychologie ». Il nomme l'objet du soin, pas une promesse de résultat.*
 

@@ -15,24 +15,21 @@ description: Triage d'un épisode de crise chez Xavier — sécurité d'abord, p
 
 Tous les autres skills du dispositif chargent le contexte avant la première phrase. **Ici, non.** Lire deux fiches prend du temps, et le temps est exactement ce qui manque. La séquence est :
 
-1. **Afficher les numéros** (§1) — immédiatement, avant toute question ;
-2. **poser la question de sécurité** (§2) ;
+1. **Poser la question de sécurité** (§2) — immédiatement, avant toute autre chose ;
+2. **orienter selon le mécanisme** (§3) ;
 3. **puis** charger `profil.md` §3-§4 et `etat.md` §1 si l'épisode se prolonge.
 
 Un contexte chargé n'a jamais aidé personne pendant les trente premières secondes d'une crise.
 
 ---
 
-## 1. Les numéros — affichés en entier, jamais abrégés
+## 1. 🔴 Aucun numéro ne s'affiche à l'ouverture *(révisé le 10/08/2026)*
 
-| Numéro | Quoi | Quand |
-|---|---|---|
-| **3114** | Prévention du suicide — gratuit, **24 h/24, 7 j/7** | Idées noires, détresse aiguë |
-| **15** | SAMU | Urgence vitale, perte de connaissance qui ne se lève pas |
-| **114** | ⭐ **Urgences par SMS** | **Quand la parole est coupée** — cf. §4 |
-| **112** | Urgences européennes | Depuis l'étranger |
+**Les numéros d'appel d'urgence — 15, 112, 114 — ont été retirés du dispositif** le 10/08/2026, à la demande de Xavier. Motifs au [`crise-escalade.md`](../../../psy/protocoles/crise-escalade.md) §0 : aucun n'a jamais servi · ⭐ **une syncope vasovagale ne s'appelle pas, elle s'allonge** — proposer un appel au lieu de la tension appliquée était une **erreur d'orientation** · l'affichage permanent était anxiogène.
 
-**Jamais « tu connais le numéro », jamais « appelle le numéro habituel ».** Empathie cognitive : rien ne se sous-entend, rien ne se décode.
+**Un seul numéro subsiste : le 3114** (prévention du suicide), **et uniquement au §5**, déclenché par une réponse « oui » ou « je ne sais pas » à la question de sécurité. **Ne jamais l'afficher en ouverture, ni en rappel, ni « au cas où ».**
+
+⚠️ **Ce qui n'a pas changé :** la question de sécurité se pose **toujours en premier**, et l'escalade du §5 reste **non contournable**. Le retrait porte sur des numéros, pas sur une conduite. En cas d'**urgence vitale** (perte de connaissance qui ne se lève pas, geste en cours) : recours médical immédiat par le moyen le plus rapide sur place, **sans que le dispositif ait un numéro à proposer**.
 
 ---
 
@@ -72,12 +69,11 @@ Un contexte chargé n'a jamais aidé personne pendant les trente premières seco
 
 1. **Arrêter toute question ouverte.** Basculer sur des choix numérotés : « **1** = ça va · **2** = ça ne va pas · **3** = j'ai besoin d'aide maintenant ». Un chiffre est produisible en shutdown ; une phrase, non.
 2. **Ne jamais relancer.** Pas de « tu es là ? », pas de « réponds-moi », pas de « dis quelque chose ». L'insistance est le pire traitement du shutdown.
-3. **Rappeler les trois voies sans parole**, en entier :
+3. **Rappeler les deux voies sans parole**, en entier :
 
 | Voie | Ce que c'est | Réserve |
 |---|---|---|
-| **114** | Urgences nationales **par SMS** (aussi visio/tchat), relaie vers 15/17/18. Gratuit, 24 h/24. | Officiellement destiné aux personnes sourdes ou aphasiques. L'usage en shutdown est défendable, **il est en attente de vérification auprès du Dr Isorni** (question 12, `etat.md` §5). Ce n'est pas une raison de ne pas l'utiliser en situation. |
-| **Mot-code « shutdown » à Chourouk** | Convenu à froid le 09/08/2026. Se dit **ou s'écrit**. | Relais de charge, pas relais d'urgence. |
+| **Mot-code « shutdown » à Chourouk** | Convenu à froid le 09/08/2026, **canal SMS validé par elle le 10/08/2026**. Se dit **ou s'écrit**. | Relais de charge, pas relais d'urgence — et c'est exactement ce qui sert ici. |
 | **Écrire ici** | Le canal écrit reste ouvert en shutdown. | Le dispositif oriente ; il ne prend pas en charge. |
 
 ---
@@ -87,8 +83,8 @@ Un contexte chargé n'a jamais aidé personne pendant les trente premières seco
 **Déclencheurs, chacun suffisant à lui seul :** idéation suicidaire, même évoquée en passant, même « je ne sais pas » · détresse aiguë · perte de connaissance **hors** contexte médical connu.
 
 1. **Tout s'arrête** — check-in, séance, passation d'échelle, protocole en cours. On ne finit pas les questions.
-2. **Afficher le 3114**, en entier.
-3. **Orienter** vers le contact d'urgence et le **Dr Isorni**. **15** si urgence vitale.
+2. **Afficher le 3114**, en entier. ⭐ **C'est ici — et nulle part ailleurs dans le dispositif — qu'un numéro apparaît.**
+3. **Orienter** vers le contact d'urgence et le **Dr Isorni**. Si l'urgence est vitale : recours médical immédiat, par le moyen le plus rapide sur place.
 4. **Ne jamais tenter de gérer seul.** Ne pas rationaliser, ne pas relativiser, ne pas « replacer dans le contexte de la titration », ne pas attendre la séance.
 5. **La trace au dossier vient après.**
 
@@ -96,11 +92,11 @@ Un contexte chargé n'a jamais aidé personne pendant les trente premières seco
 
 ---
 
-## 6. ✈️ Du 07/09 au ≈ 28/09 — les numéros changent
+## 6. ✈️ Du 07/09 au ≈ 28/09 — le protocole ne change plus *(simplifié le 10/08/2026)*
 
-**Le 3114, le 15 et le 114 sont français et ne fonctionnent pas depuis la Tunisie.** Avant de dérouler §1 pendant le séjour, ouvrir [`crise-escalade.md`](../../../psy/protocoles/crise-escalade.md) §5 : numéro d'urgence local, assurance voyage, **112** à vérifier, coordonnées du Dr Isorni joignables depuis l'étranger.
+Le retrait des numéros a une conséquence favorable : **le triage est désormais identique en France et en Tunisie.** Le mot-code avec Chourouk fonctionne là-bas, et elle est sur place.
 
-**Le mot-code avec Chourouk est la seule brique du protocole qui traverse la frontière sans modification.**
+**Seule différence à connaître :** le **3114 ne fonctionne pas depuis la Tunisie**. Si le §5 se déclenche pendant le séjour, l'orientation se fait vers le **Dr Isorni** (coordonnées joignables depuis l'étranger, à préparer avant le départ) et vers un recours médical local.
 
 ---
 

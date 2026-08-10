@@ -87,7 +87,7 @@ Les échelles d'effort perçu (type Borg) demandent d'évaluer une sensation int
 
 | Signal | Conduite |
 |---|---|
-| **Douleur thoracique, oppression, douleur irradiant au bras ou à la mâchoire** | **Arrêt immédiat. 15 (SAMU).** Ne pas attendre, ne pas interpréter. |
+| **Douleur thoracique, oppression, douleur irradiant au bras ou à la mâchoire** | **Arrêt immédiat. Recours médical d'urgence, maintenant.** Ne pas attendre, ne pas interpréter. *(Le numéro a été retiré du dispositif le 10/08/2026 — [`crise-escalade.md`](crise-escalade.md) §0 ; le critère d'arrêt est inchangé.)* |
 | Malaise, vertige, vision qui se trouble, sueurs inhabituelles | Arrêt, s'allonger jambes surélevées, point avec le Dr Fournier |
 | Essoufflement disproportionné à l'effort, palpitations | Arrêt, séance suivante au palier inférieur, à signaler au brief |
 | Douleur articulaire (genoux, hanches, dos) | Arrêt de l'exercice en cause. Passage en variante B (vélo) si ça se répète. |

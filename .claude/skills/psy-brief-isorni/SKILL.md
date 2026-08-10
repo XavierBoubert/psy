@@ -90,7 +90,7 @@ Copier `psy/dossier/gabarits/brief-isorni.md` → `psy/dossier/briefs/AAAA-MM-JJ
 - ✈️ **L'ordonnance de venlafaxine pour un séjour de plus de 3 semaines** — quantité, marge, bagage **cabine**, justificatif. **La venlafaxine ne se manque jamais** : l'arrêt brutal expose à un syndrome de sevrage marqué. **Logistique, jamais posologie.**
 - ✈️ **L'alprazolam prévu pour le vol** — déjà prescrit « si besoin », donc son emploi n'est pas une modification de traitement ; **mais le point de vigilance benzodiazépine / SAOS n'a jamais été instruit.** Élément nouveau à donner : **la PPC part en Tunisie** et sera utilisée pendant le séjour. **Arbitrage au Dr Isorni — le dispositif ne se prononce pas.**
 - 🔴 **Les deux diagnostics qu'il ignore : SAOS sévère (IAH 35/h) et NASH.** Les deux courriers du Dr Roisman (19/01 et 04/05/2026) sont partis au seul Dr Fournier. **⭐ IAH résiduel < 6/h sous appareil** — l'efficacité est démontrée, seul le port manque.
-- **Le 114 par SMS est-il utilisable en shutdown ?** (question 12) — question de sécurité, à trancher **avant** d'en avoir besoin.
+- ~~**Le 114 par SMS est-il utilisable en shutdown ?**~~ (question 12) — ✅ **caduque le 10/08/2026** : les numéros d'appel d'urgence ont été retirés du dispositif à la demande de Xavier (`crise-escalade.md` §0). **Un créneau de consultation économisé.**
 - **Tension appliquée et tension artérielle** (question 13) — avant de démarrer le palier 1.
 - **Demander l'échelle BES** (question 11) — une demande de document, pas une question clinique.
 

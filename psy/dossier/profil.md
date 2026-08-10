@@ -57,17 +57,19 @@ Diagnostiqué **TSA à 38 ans**, après vingt ans traités comme « un problème
 
 ## 4. Protocole de crise — câblé, non contournable
 
-> **Résumé opérationnel. La fiche qui fait foi est [`psy/protocoles/crise-escalade.md`](../protocoles/crise-escalade.md)** (Étape 3) : triage en trois questions fermées, trois niveaux d'escalade, **voies utilisables sans parler** (§4) et **numéros de substitution pour la Tunisie** (§5).
+> **Résumé opérationnel. La fiche qui fait foi est [`psy/protocoles/crise-escalade.md`](../protocoles/crise-escalade.md)** (**v1.1**) : triage en trois questions fermées, trois niveaux d'escalade, **voies utilisables sans parler** (§4).
+>
+> 🔴 **Révision du 10/08/2026 — les numéros d'appel d'urgence (15, 112, 114) sont retirés de tout le dispositif**, à la demande de Xavier. Motifs au §0 de la fiche : aucun n'a jamais servi · ⭐ **une syncope vasovagale ne s'appelle pas, elle s'allonge** — proposer un appel au lieu de la tension appliquée était une **erreur d'orientation**, pas une sécurité de plus · leur affichage permanent était anxiogène sur un profil TAG. **Ne jamais les réintroduire.**
 
 **Déclencheurs :** idéation suicidaire · détresse aiguë · perte de connaissance hors contexte médical connu.
 
-1. **Afficher le 3114** — numéro national de prévention du suicide, gratuit, **24h/24**.
+1. **Afficher le 3114** — prévention du suicide, gratuit, **24h/24**. ⭐ **Seul numéro conservé par le dispositif, et il n'apparaît que sur ces déclencheurs** — jamais en ouverture, jamais « au cas où ».
 2. Ne **jamais** tenter de « gérer seul » l'épisode ni de le rationaliser.
-3. Orienter vers le contact d'urgence et vers le Dr Isorni ; 15 (SAMU) si urgence vitale.
+3. Orienter vers le contact d'urgence et vers le Dr Isorni. Si l'urgence est vitale : recours médical immédiat, par le moyen le plus rapide sur place.
 4. N'écrire la trace au dossier **qu'après**.
 
-> ⭐ **Si le canal verbal est coupé, les points 1 et 3 sont inapplicables : ce sont des numéros de téléphone.** Voies sans parole — **114** (urgences par SMS), **mot-code « shutdown »** à Chourouk, canal écrit. Réserves et détail : `crise-escalade.md` §4.
-> ✈️ **Du 07/09 au ≈ 28/09 : le 3114, le 15 et le 114 ne fonctionnent pas depuis la Tunisie** (§5 de la fiche).
+> ⭐ **Si le canal verbal est coupé, les points 1 et 3 sont inapplicables : un appel demande de parler.** Voies sans parole — **mot-code « shutdown »** à Chourouk (canal SMS validé par elle le 10/08/2026), canal écrit. Détail : `crise-escalade.md` §4.
+> ✈️ **Du 07/09 au ≈ 28/09 : le 3114 ne fonctionne pas depuis la Tunisie** — orientation vers le Dr Isorni et un recours médical local (§5 de la fiche).
 
 **Facteurs de risque documentés, à garder actifs :** idéation suicidaire active à l'adolescence · épisodes dépressifs récurrents probables (collège, lycée) · attaques de panique (majoration documentée par le DSM-5, indépendamment des comorbidités) · période de surcharge en cours · deuil actif du lien avec sa fille aînée.
 
@@ -189,5 +191,6 @@ Expertise technique d'exception, jamais mise en cause · **entrepreneuriat réus
 
 | Version | Date | Modification |
 |---|---|---|
+| **1.2** | **10/08/2026** | 🔴 **§4 révisé — les numéros d'appel d'urgence (15, 112, 114) sont retirés de tout le dispositif**, à la demande de Xavier. **Le 3114 est conservé**, sur ses seuls déclencheurs. ⭐ Motif principal versé : **une syncope vasovagale ne s'appelle pas, elle s'allonge** — le dispositif proposait un appel là où la parade est la tension appliquée. **Aucun fait clinique modifié** : ni les déclencheurs, ni la conduite, ni les facteurs de risque. Fiche : `protocoles/crise-escalade.md` **v1.1**. |
 | 1.1 | 09/08/2026 | Rapport **v2.4** : PPC « non utilisée » → **très irrégulièrement utilisée** ; SAOS **insuffisamment traité** et non « non traité » ; **IAH résiduel < 6/h** ajouté ; le Dr Roisman **sait** depuis le 04/05/2026. |
 | 1.0 | 09/08/2026 | Création — Étape 0 du PLAN, à partir du rapport v2.3. |

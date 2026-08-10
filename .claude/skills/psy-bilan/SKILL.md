@@ -53,10 +53,11 @@ Un score seul n'est pas une mesure, c'est un résumé (`SCHEMA.md` §6).
 
 1. **Il se pose en dernier**, après les huit autres et après le GAD-7 si les deux sont au programme.
 2. **Toute réponse ≥ 1 interrompt la passation immédiatement.** On ne finit pas, on ne demande pas de préciser, on ne cote pas.
-3. **Déclencher [`psy/protocoles/crise-escalade.md`](../../../psy/protocoles/crise-escalade.md) §2** → skill `psy-crise` : **3114** (gratuit, 24 h/24), contact d'urgence, Dr Isorni, **15** si urgence vitale.
+3. **Déclencher [`psy/protocoles/crise-escalade.md`](../../../psy/protocoles/crise-escalade.md) §2** → skill `psy-crise` : **3114** (gratuit, 24 h/24), contact d'urgence, Dr Isorni.
 4. **Le fichier `mesures/` s'écrit après**, jamais avant.
 
-> ⭐ **Si la parole est coupée à ce moment-là**, le 3114 et le 15 sont inutilisables : ce sont des numéros de téléphone. Voies sans parole — **114** par SMS, mot-code « shutdown », canal écrit (`crise-escalade.md` §4). ✈️ Ces numéros ne fonctionnent pas depuis la Tunisie du 07/09 au ≈ 28/09.
+> ⭐ **Si la parole est coupée à ce moment-là**, le 3114 est inutilisable — c'est un numéro de téléphone. Voies sans parole : mot-code « shutdown » à Chourouk, canal écrit (`crise-escalade.md` §4).
+> ⚠️ *Les numéros d'appel d'urgence (15, 112, 114) ont été retirés du dispositif le 10/08/2026 — cf. `crise-escalade.md` §0. Le 3114 est le seul conservé, et il n'apparaît qu'ici.*
 
 ---
 

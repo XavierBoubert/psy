@@ -1,6 +1,6 @@
 # Protocole de crise et d'escalade — câblé, non contournable
 
-**Statut :** fiche actionnable — v1.0 (09/08/2026) · **Étape 3**
+**Statut :** fiche actionnable — **v1.1 (10/08/2026)** · **Étape 3**
 **Cible dossier :** aucune — cette fiche prime sur toute cible en cours.
 **Source clinique :** `profil.md` §3 et §4 · PLAN §2.5 et §6 · rapport v2.4 §6.4, §9.14, §9.16, §9.20.
 
@@ -9,16 +9,19 @@
 
 ---
 
-## 0. 🔴 Les numéros — d'abord, avant toute autre chose
+## 0. 🔴 Ce qui s'affiche, et ce qui ne s'affiche plus *(révisé le 10/08/2026)*
 
-| Numéro | Quoi | Quand |
-|---|---|---|
-| **3114** | **Numéro national de prévention du suicide.** Gratuit, **24 h/24, 7 j/7**, professionnels de santé au bout du fil | Idéation suicidaire, détresse aiguë, « je ne veux plus être là » |
-| **15** | SAMU | Urgence vitale, perte de connaissance qui ne se lève pas, geste en cours |
-| **112** | Urgences européennes | Depuis l'étranger — ⚠️ **le 3114 et le 15 ne fonctionnent pas depuis la Tunisie** (cf. §5) |
-| **114** | ⭐ **Urgences par SMS** | **Quand le canal verbal est coupé** — cf. §4 |
+**Un seul numéro subsiste dans tout le dispositif : le 3114**, et il n'apparaît **qu'au §2**, déclenché par un fait précis — une réponse « oui » ou « je ne sais pas » à la question de sécurité. **Il ne s'affiche jamais en ouverture, jamais en rappel, jamais « au cas où ».**
 
-**Ces numéros s'affichent en entier, jamais abrégés, jamais « tu connais le numéro ».** Empathie cognitive : rien ne se sous-entend.
+**Les numéros d'appel d'urgence — 15, 112, 114 — ont été retirés du dispositif le 10/08/2026**, à la demande de Xavier et sur trois motifs qui tiennent :
+
+1. **Aucun n'a jamais servi.** Le dossier ne documente aucun recours aux urgences.
+2. ⭐ **Une syncope vasovagale ne s'appelle pas, elle s'allonge.** La parade est posturale et musculaire — [`tension-appliquee.md`](tension-appliquee.md) —, et proposer un appel à la place de la bonne parade était une **erreur d'orientation**, pas une sécurité supplémentaire.
+3. **Leur présence était anxiogène.** Sur un profil TAG, afficher en permanence un dispositif d'urgence entretient exactement ce qu'il prétend couvrir.
+
+> ⚠️ **Ce que ce retrait ne change pas :** l'escalade du §2 reste **non contournable**, et la question de sécurité reste posée en premier, à chaque fois. Ce qui a été retiré, ce sont des numéros d'appel — pas la conduite à tenir.
+>
+> **Urgence vitale** (perte de connaissance qui ne se lève pas, douleur thoracique, geste en cours) : recours médical d'urgence immédiat, par le moyen le plus rapide sur place. Le dispositif ne conserve pas de numéro pour ce cas — **il ne saurait rien en dire de plus utile que « maintenant ».**
 
 ---
 
@@ -57,8 +60,8 @@
 **Déclencheurs, chacun suffisant :** idéation suicidaire, même évoquée en passant, même « je ne sais pas » · détresse aiguë · perte de connaissance **hors** contexte médical connu.
 
 1. **Tout s'arrête.** Le check-in, la séance, la passation d'échelle, le protocole en cours. On ne finit pas les questions. On n'écrit rien au dossier pour l'instant.
-2. **Afficher le 3114** — gratuit, 24 h/24. En entier.
-3. **Orienter** vers le contact d'urgence et vers le **Dr Isorni**. **15** si urgence vitale.
+2. **Afficher le 3114** — prévention du suicide, gratuit, 24 h/24, 7 j/7. En entier. ⭐ **C'est le seul numéro que le dispositif porte encore, et c'est ici — et nulle part ailleurs — qu'il apparaît.**
+3. **Orienter** vers le contact d'urgence et vers le **Dr Isorni**. Si l'urgence est vitale : recours médical immédiat, par le moyen le plus rapide sur place.
 4. **Ne jamais tenter de gérer seul.** Ne pas rationaliser, ne pas relativiser, ne pas « replacer dans le contexte de la titration », ne pas attendre la prochaine séance.
 5. **La trace au dossier vient après**, jamais avant : `crises/AAAA-MM-JJ-HHMM-<type>.json`.
 
@@ -86,34 +89,32 @@
 
 ---
 
-## 4. ⭐ Le trou structurel : tous les numéros d'urgence français sont des numéros de téléphone
+## 4. ⭐ Le shutdown coupe le canal verbal — ce qui reste ouvert
 
-**C'est un problème de conception, pas un détail.** Le shutdown coupe le canal verbal. Le 3114 et le 15 demandent de **parler**. Autrement dit : **le moment où Xavier a le plus besoin d'aide est précisément celui où le dispositif d'aide standard lui est inaccessible.** C'est une quatrième instance de la règle §9.19 — une prescription valide en population générale, structurellement inapplicable ici.
+**Le constat de conception tient toujours, et il est indépendant des numéros :** un appel demande de **parler**, et le shutdown est précisément la perte transitoire de la parole. Ce qui vaut pour le 3114 vaudrait pour n'importe quel numéro. **On ne compte donc pas sur la voix.**
 
-**Les trois voies utilisables sans parler, à connaître avant d'en avoir besoin :**
+**Les deux voies utilisables sans parler, à connaître avant d'en avoir besoin :**
 
 | Voie | Ce que c'est | Réserve honnête |
 |---|---|---|
-| **114** | **Numéro d'urgence national accessible par SMS** (et visio/tchat). Relaie vers le 15, le 17 ou le 18. Gratuit, 24 h/24. | Il est **officiellement destiné aux personnes sourdes, malentendantes, aphasiques ou dysphasiques**. Un shutdown est une perte transitoire de la parole : l'usage est défendable, mais ce n'est pas son indication écrite. **À vérifier auprès du Dr Isorni** plutôt qu'à découvrir en situation. |
-| **Le mot-code « shutdown » à Chourouk** | Convenu à froid le 09/08/2026. Se dit **ou s'écrit**. | Elle n'a aucun accès au dossier et n'est pas un relais d'urgence — c'est un relais de charge. |
+| **Le mot-code « shutdown » à Chourouk** | Convenu à froid le 09/08/2026, **canal SMS validé par elle le 10/08/2026**. Se dit **ou s'écrit**. | Elle n'a aucun accès au dossier et n'est pas un relais d'urgence — c'est un **relais de charge**, et c'est ce qui est utile ici. |
 | **Écrire ici** | Le canal écrit reste ouvert en shutdown : c'est l'argument central du choix « compagnon muet, texte uniquement » (PLAN §5). | Le dispositif **oriente**, il ne prend pas en charge. |
 
-> **Conséquence pour Kokoro (Étape 5), à ne pas perdre :** le bouton de crise doit proposer **le 114 par SMS pré-rempli** au même rang que l'appel au 3114, et pas comme une option secondaire. Un écran de crise qui n'offre que des appels est inutilisable exactement quand il sert.
+> **Conséquence pour Kokoro (Étape 5)** *(révisée le 10/08/2026)* **:** l'écran de crise ne porte **aucun numéro d'urgence**. Il porte le **mot-code à Chourouk** et l'accès à la **tension appliquée** — les deux seules choses qui aient jamais servi. Le 3114 n'apparaît que dans la conduite du §2, jamais sur un écran d'accueil.
 
 ---
 
-## 5. ✈️ Du 07/09 au ≈ 28/09 — le protocole change de numéros
+## 5. ✈️ Du 07/09 au ≈ 28/09 — ce qui traverse la frontière *(simplifié le 10/08/2026)*
 
-**Le 3114, le 15 et le 114 sont des numéros français. Ils ne fonctionnent pas depuis la Tunisie.**
+Le retrait des numéros d'urgence a une conséquence favorable et inattendue : **il n'y a plus de liste à refaire pour le séjour.** Le protocole devient identique en France et en Tunisie.
 
 | À faire | Quand |
 |---|---|
-| Noter le **numéro d'urgence local** et celui de l'assurance voyage | **Avant le départ**, à froid |
-| Vérifier que le **112** fonctionne depuis le pays et l'opérateur utilisés | Avant le départ |
-| Coordonnées du **Dr Isorni** joignables depuis l'étranger (mail inclus) | Avant le départ |
-| **Le mot-code avec Chourouk reste opérant** — c'est la seule brique du protocole qui traverse la frontière sans modification | — |
+| ⭐ **Le mot-code avec Chourouk reste opérant** — et elle est sur place | — |
+| Coordonnées du **Dr Isorni** joignables depuis l'étranger (mail inclus) | **Avant le départ**, à froid |
+| Numéro de l'**assurance voyage** — une information de voyage, au même titre que les papiers | Avant le départ |
 
-⚠️ **À porter au kit vol** ([`jour-de-vol.md`](jour-de-vol.md) §1) : c'est une ligne de plus sur une liste qui existe déjà, pas un nouveau chantier.
+⚠️ **À porter au kit vol** ([`jour-de-vol.md`](jour-de-vol.md) §1) : deux lignes sur une liste qui existe déjà, pas un nouveau chantier. **Le 3114 ne fonctionne pas depuis la Tunisie** — si le §2 se déclenche pendant le séjour, l'orientation se fait vers le Dr Isorni et vers un recours médical local.
 
 ---
 
@@ -148,4 +149,5 @@ Un épisode → `crises/AAAA-MM-JJ-HHMM-<type>.json`, d'après `gabarits/crise.j
 
 | Version | Date | Modification |
 |---|---|---|
+| **1.1** | **10/08/2026** | 🔴 **Retrait des numéros d'appel d'urgence — 15, 112, 114 — de tout le dispositif, à la demande de Xavier.** Motifs versés au §0 : aucun n'a jamais servi · ⭐ **une syncope vasovagale ne s'appelle pas, elle s'allonge** — proposer un appel à la place de la tension appliquée était une **erreur d'orientation**, pas une sécurité de plus · leur affichage permanent était anxiogène sur un profil TAG. **Le 3114 est conservé, et lui seul**, au §2 uniquement, déclenché par la question de sécurité — **jamais affiché en ouverture ni « au cas où »**. §4 réécrit : le constat « on ne compte pas sur la voix en shutdown » **tient sans le 114** et devient plus simple ; il reste le mot-code et le canal écrit. §5 simplifié : **le protocole devient identique en France et en Tunisie**, il n'y a plus de liste de numéros à refaire pour le séjour. ✅ **Canal SMS du mot-code validé par Chourouk le 10/08/2026.** ⚠️ **Ce qui n'a pas bougé : l'escalade du §2 reste non contournable et la question de sécurité reste posée en premier.** Ce qui a été retiré, ce sont des numéros — pas une conduite à tenir. |
 | 1.0 | 09/08/2026 | Création — Étape 3. Triage à trois questions, sécurité avant mécanisme. ⭐ Ajout non prévu au plan : le **114 par SMS**, seule voie d'urgence utilisable en shutdown, et les numéros de substitution pour le séjour en Tunisie. |

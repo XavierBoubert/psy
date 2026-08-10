@@ -78,7 +78,7 @@ description: Conduite du versant somatique de Xavier — PPC (chantier n° 1), a
 
 | Signal | Conduite |
 |---|---|
-| **Douleur thoracique, oppression, douleur irradiant au bras ou à la mâchoire** *(activité)* | **Arrêt immédiat. 15 (SAMU).** Ne pas attendre, ne pas interpréter. |
+| **Douleur thoracique, oppression, douleur irradiant au bras ou à la mâchoire** *(activité)* | **Arrêt immédiat. Recours médical d'urgence, maintenant.** Ne pas attendre, ne pas interpréter. *(Le numéro a été retiré du dispositif le 10/08/2026 — `crise-escalade.md` §0. Le critère d'arrêt, lui, est inchangé.)* |
 | **Idéation suicidaire, détresse aiguë** | **Protocole de crise — skill `psy-crise`, 3114.** Le chantier attend. |
 | **Shutdowns en hausse nette sur la semaine** | **Suspension du chantier.** L'indicateur n° 1 du burnout autistique passe devant n'importe quel palier. |
 | **Repas sautés, restriction spontanée** *(alimentation)* | Le dispositif a été détourné en régime. Retour au palier précédent. Chez quelqu'un qui ne perçoit ni faim ni satiété, **une restriction ne se sent pas venir**. |

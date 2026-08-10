@@ -72,16 +72,16 @@ Un shutdown n'est pas une urgence médicale. Il se lève seul.
 
 **Deux situations sortent de ce cadre et demandent d'agir :**
 
-- **S'il perd connaissance.** Ça ne fait pas partie du shutdown. Appelez le **15**.
+- **S'il perd connaissance.** Ça ne fait pas partie du shutdown. **Appelez les secours.**
 - **S'il exprime des idées noires**, même en passant, même par écrit — c'est le **3114** (prévention du suicide, gratuit, 24 h/24, 7 j/7). Il connaît ce numéro et il est écrit dans ses documents. Vous n'avez pas à évaluer si c'est sérieux : ce n'est pas votre rôle, et ce n'est celui de personne dans l'entourage.
 
-⭐ **Une chose à savoir, parce qu'elle est contre-intuitive :** pendant un shutdown, **il ne peut pas téléphoner**. Tous les numéros d'urgence demandent de parler. C'est pour ça que le canal écrit compte — il existe un numéro d'urgence **par SMS, le 114**, et le mot-code avec vous.
+⭐ **Une chose à savoir, parce qu'elle est contre-intuitive :** pendant un shutdown, **il ne peut pas téléphoner**. Un appel demande de parler, et c'est exactement ce qui est coupé. C'est pour ça que **le canal écrit compte, et que le mot-code avec vous est ce qui marche le mieux** — un mot écrit, sans rien à expliquer.
 
 ---
 
 ## Pendant le voyage
 
-À partir du 7 septembre, le 3114, le 15 et le 114 **ne fonctionnent pas depuis la Tunisie**. Xavier prépare les numéros locaux avant le départ.
+À partir du 7 septembre, le 3114 **ne fonctionne pas depuis la Tunisie** — c'est un numéro français. Xavier prépare avant le départ les coordonnées du Dr Isorni joignables depuis l'étranger et celles de l'assurance voyage.
 
 **Le mot-code, lui, marche partout.** C'est la seule chose de tout ce dispositif qui traverse la frontière sans rien changer.
 
