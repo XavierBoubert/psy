@@ -1,6 +1,6 @@
 # Plan de construction — Kokoro (心) et la surface web
 
-**Statut :** plan de construction — **v1.1 (10/08/2026)**. Ouvre l'**Étape 5** du `PLAN.md` racine.
+**Statut :** plan de construction — **v1.2 (10/08/2026)**. Ouvre l'**Étape 5** du `PLAN.md` racine. ✅ **K0 franchi le 10/08/2026.**
 **Portée :** ce document dit **dans quel ordre on construit les applications, et pourquoi cet ordre-là**. Il ne redit ni la conception du personnage (→ [`README.md`](README.md)), ni les décisions d'architecture (→ `../../PLAN.md` §5), ni le format des données (→ [`../dossier/SCHEMA.md`](../dossier/SCHEMA.md), **normatif**).
 
 > **Ce document fait foi sur le séquençage et les critères de fin.** Sur tout le reste, il pointe.
@@ -9,18 +9,20 @@
 
 ## 1. Constat de départ — et il est plus dur que « rien n'est écrit »
 
-Vérifié le 10/08/2026 sur la machine :
+Vérifié le 10/08/2026 sur la machine, **au matin** :
 
-| Élément | État |
-|---|---|
-| `psy/android/` | 1 README. **Zéro ligne de Kotlin.** |
-| `psy/web/` | 1 README. **Zéro ligne de TypeScript.** |
-| JDK | ❌ absent |
-| Android Studio / SDK / `adb` | ❌ absent |
-| Syncthing (PC et Android) | ❌ non installé (prévu à cette étape — [`../SYNCHRO.md`](../SYNCHRO.md) §4) |
-| Node | ✅ v24.14 |
+| Élément | État initial | État à 12h03 |
+|---|---|---|
+| `psy/android/` | 1 README. **Zéro ligne de Kotlin.** | ✅ squelette Gradle + `MainActivity` |
+| `psy/web/` | 1 README. **Zéro ligne de TypeScript.** | inchangé *(après K1, cf. §7)* |
+| JDK | ❌ absent | ✅ **Microsoft OpenJDK 21.0.12** |
+| SDK / `adb` | ❌ absent | ✅ **platform 36, build-tools 36.0.0, platform-tools 37.0.1** |
+| Syncthing (PC et Android) | ❌ non installé | ❌ non installé *(prévu en K4 — [`../SYNCHRO.md`](../SYNCHRO.md) §4)* |
+| Node | ✅ v24.14 | ✅ |
 
 **Conséquence à écrire noir sur blanc :** la première tâche de Kokoro n'est pas de dessiner un visage, c'est **d'installer une chaîne de compilation et de faire tourner un APK sur le téléphone**. Tant que ce jalon n'est pas franchi, tout ce qui est écrit ici est de la littérature — et le dispositif vient précisément de se faire reprocher, en supervision, de produire de la doctrine plus vite que des actes.
+
+> ✅ **C'est fait.** Le 10/08/2026 à 12h03, un APK debug s'est ouvert sur le **Galaxy S22 (SM-S901B, Android 16 / SDK 36)** et a affiché un écran vide. **Kokoro existe comme processus avant d'exister comme personnage** — et ce paragraphe cesse d'être une intention.
 
 ---
 
@@ -68,10 +70,26 @@ Le `PLAN.md` la laissait ouverte en deux endroits (§3.1, §5). Elle était en r
 
 Chaque jalon a un **critère de fin vérifiable**. Un jalon n'est pas « fini » parce que le code compile : il l'est quand le critère est constaté sur le téléphone de Xavier.
 
-### K0 — Le poste de travail *(prérequis absolu)*
-- JDK 21 · Android Studio · SDK · mode développeur + débogage USB sur le Galaxy · `adb` qui voit le téléphone.
+### K0 — Le poste de travail *(prérequis absolu)* — ✅ **franchi le 10/08/2026**
+- JDK 21 · ~~Android Studio~~ · SDK · mode développeur + débogage USB sur le Galaxy · `adb` qui voit le téléphone.
 - Squelette Gradle : Kotlin, Compose, `minSdk 31`, `compileSdk` = la plus récente installée, **aucune dépendance réseau, aucune analytics**.
 - **Critère de fin :** un APK debug installé par sideload s'ouvre sur le téléphone de Xavier et affiche un écran vide.
+
+**Constat de fin — 10/08/2026, 12h03.** APK installé par `adb install`, `topResumedActivity = io.allonsy.kokoro/.MainActivity`, écran vide affiché. Téléphone : **Galaxy S22 (SM-S901B), Android 16 / SDK 36**.
+
+| | |
+|---|---|
+| JDK | Microsoft OpenJDK **21.0.12** — `C:\Program Files\Microsoft\jdk-21.0.12.8-hotspot` |
+| SDK | `%LOCALAPPDATA%\Android\Sdk` — platform **36**, build-tools **36.0.0**, platform-tools **37.0.1** |
+| Variables utilisateur | `JAVA_HOME`, `ANDROID_HOME`, `PATH` posées dans `HKCU\Environment` *(persistantes)* |
+| Gradle | **8.14.5** par wrapper · AGP **8.13.2** · Kotlin **2.2.21** · Compose BOM **2026.06.01** |
+| Cibles | `minSdk 31` · `compileSdk 36` · `targetSdk 36` · `applicationId io.allonsy.kokoro` |
+
+> ✅ **Android Studio n'a pas été installé** *(arbitrage de Xavier, 10/08/2026)* : outillage en ligne de commande seul, ~600 Mo au lieu de ~4 Go. Le critère de fin ne le demandait pas. **L'IDE reste installable plus tard sans rien casser** — il lirait le même projet Gradle.
+>
+> ⚠️ **Deux invariants sont vérifiables dès maintenant, et ils le sont** : le manifeste ne déclare **aucune permission** — pas même `INTERNET` — et le module ne dépend d'**aucun** SDK d'analytics ou de crash reporting.
+>
+> 📌 **Ce qui n'est volontairement pas fait :** aucun module `:feature-*` n'a été créé d'avance. Ils arrivent avec leur jalon. Des coquilles vides seraient exactement la doctrine-sans-acte que la supervision du 09/08 a relevée.
 
 ### K1 — ⚡ Le full-screen intent *(spike de faisabilité — arbitrage de Xavier, 10/08/2026)*
 
@@ -190,5 +208,6 @@ Une contrainte de conception qui reste une phrase se perd à l'implémentation. 
 
 | Version | Date | Modification |
 |---|---|---|
-| **1.1** | **10/08/2026** | ⚡ **Le full-screen intent devient le jalon K1** *(arbitrage de Xavier)*, juste après le poste de travail : c'est le point le plus risqué du projet — le lever sur un APK vide coûte une soirée, le découvrir en K5 coûterait une refonte. Le jalon impose en plus le **canal muet**, un full-screen intent sonnant par défaut. Jalons suivants décalés (K2 crise · K3 tension · K4 check-in · K5 présence · K6 interpellation). 🔴 **L'écran de crise ne porte plus aucun numéro** — retrait acté dans tout le dispositif ; il se réduit au **mot-code** et à la **tension appliquée**, et le **mode étranger disparaît** avec les numéros de substitution. ✅ **Chourouk valide le canal SMS du mot-code** — arbitrage B levé. |
+| **1.2** | **10/08/2026** | ✅ **K0 franchi — le premier acte exécutable du dispositif sur Android.** JDK 21, SDK Android (platform 36 / build-tools 36 / platform-tools 37.0.1), variables utilisateur posées, squelette Gradle écrit, APK debug installé et ouvert sur le **Galaxy S22 (Android 16)**. §1 devient un avant/après daté, K0 gagne son constat de fin chiffré. ⭐ **Android Studio écarté** *(arbitrage de Xavier)* : outillage CLI seul, l'IDE n'était pas dans le critère de fin. **Aucun module `:feature-*` créé d'avance** — ils arrivent avec leur jalon. |
+| 1.1 | 10/08/2026 | ⚡ **Le full-screen intent devient le jalon K1** *(arbitrage de Xavier)*, juste après le poste de travail : c'est le point le plus risqué du projet — le lever sur un APK vide coûte une soirée, le découvrir en K5 coûterait une refonte. Le jalon impose en plus le **canal muet**, un full-screen intent sonnant par défaut. Jalons suivants décalés (K2 crise · K3 tension · K4 check-in · K5 présence · K6 interpellation). 🔴 **L'écran de crise ne porte plus aucun numéro** — retrait acté dans tout le dispositif ; il se réduit au **mot-code** et à la **tension appliquée**, et le **mode étranger disparaît** avec les numéros de substitution. ✅ **Chourouk valide le canal SMS du mot-code** — arbitrage B levé. |
 | 1.0 | 10/08/2026 | Création — ouverture de l'Étape 5. ⭐ Trois décisions : **le premier livrable est l'écran de crise, pas le visage** · **app unique multi-modules** (question ouverte du `PLAN.md` §3.1 et §5, tranchée) · **aucune base de données, l'app écrit des fichiers** (R1/R2/R3). Constat vérifié : aucun outillage Android sur la machine — le jalon K0 est l'installation. Nuance apportée au `PLAN.md` §5 : le **full-screen intent** n'est plus acquis par défaut depuis Android 14. |

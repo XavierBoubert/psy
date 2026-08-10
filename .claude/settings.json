@@ -19,7 +19,26 @@
       "Edit(/.claude/skills/psy-crise/**)",
       "Edit(/.claude/skills/psy-bilan/**)",
       "Edit(/.claude/skills/psy-hygiene/**)",
-      "Edit(/.claude/skills/psy-brief-isorni/**)"
+      "Edit(/.claude/skills/psy-brief-isorni/**)",
+      "Bash(winget --version)",
+      "Bash(choco --version)",
+      "Read(//c/Program Files/**)",
+      "Bash(winget install *)",
+      "Bash(/c/Windows/System32/tar.exe --version)",
+      "Read(//c/Program Files/Microsoft/**)",
+      "Bash(curl -sSL https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle/maven-metadata.xml)",
+      "Bash(curl -sSL https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin/maven-metadata.xml)",
+      "Bash(curl -sSL https://dl.google.com/dl/android/maven2/androidx/compose/compose-bom/maven-metadata.xml)",
+      "Bash(curl -sSL https://dl.google.com/dl/android/maven2/androidx/activity/activity-compose/maven-metadata.xml)",
+      "Bash(curl -sSL https://dl.google.com/dl/android/maven2/androidx/core/core-ktx/maven-metadata.xml)",
+      "Bash(curl -sSL https://dl.google.com/dl/android/maven2/androidx/lifecycle/lifecycle-runtime-ktx/maven-metadata.xml)",
+      "Bash(curl -sSL \"https://services.gradle.org/versions/current\")",
+      "Bash(curl -sSL https://services.gradle.org/versions/all)",
+      "Bash(reg query *)",
+      "Read(//c/Users/xavie/AppData/Local/Android/Sdk/**)",
+      "Bash(/c/Users/xavie/AppData/Local/Android/Sdk/platform-tools/adb.exe version *)",
+      "Bash(reg.exe query *)",
+      "Bash(git check-ignore *)"
     ],
     "additionalDirectories": [
       "C:\\Users\\xavie"

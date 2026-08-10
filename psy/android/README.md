@@ -55,3 +55,15 @@ Puis : check-in quotidien, outils de crise, suivi des repas.
 ## Données
 
 Lecture/écriture de `psy/dossier/` selon `psy/dossier/SCHEMA.md`. Transport : **Syncthing** — cf. `psy/SYNCHRO.md`.
+
+## Construire et installer *(K0 franchi le 10/08/2026)*
+
+Depuis `psy/android/`, téléphone branché et débogage USB autorisé :
+
+```bash
+./gradlew assembleDebug
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+```
+
+`local.properties` (non versionné) porte `sdk.dir`. Versions et chemins exacts du poste : [`PLAN-KOKORO.md`](PLAN-KOKORO.md) § K0.
+**Pas d'Android Studio sur ce poste** — outillage en ligne de commande seul ; l'IDE lirait le même projet Gradle s'il était installé un jour.
