@@ -45,6 +45,11 @@ import io.allonsy.kokoro.alerte.programmerAlerteTest
 import io.allonsy.kokoro.crise.CriseActivity
 import io.allonsy.kokoro.crise.creerCanalAcces
 import io.allonsy.kokoro.crise.publierAccesCrise
+import io.allonsy.kokoro.journal.JournalActivity
+import io.allonsy.kokoro.journal.cheminAffichable
+import io.allonsy.kokoro.journal.enregistrerDossier
+import io.allonsy.kokoro.journal.intentChoisirDossier
+import io.allonsy.kokoro.journal.lireDossier
 import io.allonsy.kokoro.reglages.MOT_CODE
 import io.allonsy.kokoro.reglages.Reglages
 import io.allonsy.kokoro.reglages.ecrireReglages
@@ -62,6 +67,16 @@ data class EtatAutorisations(
 class MainActivity : ComponentActivity() {
     private val autorisations = mutableStateOf(EtatAutorisations(false, false, false))
     private val reglages = mutableStateOf(Reglages("", ""))
+    private val dossier = mutableStateOf<String?>(null)
+
+    private val choixDossier = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult(),
+    ) { resultat ->
+        resultat.data?.data?.let { arbre ->
+            enregistrerDossier(this, arbre)
+            relire()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,11 +89,13 @@ class MainActivity : ComponentActivity() {
                 EcranControle(
                     autorisations = autorisations.value,
                     reglages = reglages.value,
+                    dossier = dossier.value,
                     onRelire = { relire() },
                     onEnregistrer = {
                         ecrireReglages(this, it)
                         relire()
                     },
+                    onChoisirDossier = { choixDossier.launch(intentChoisirDossier()) },
                 )
             }
         }
@@ -93,6 +110,7 @@ class MainActivity : ComponentActivity() {
     private fun relire() {
         autorisations.value = lireAutorisations(this)
         reglages.value = lireReglages(this)
+        dossier.value = cheminAffichable(this, lireDossier(this))
     }
 }
 
@@ -135,8 +153,10 @@ private fun ouvrirReglageNotifications(context: Context) {
 private fun EcranControle(
     autorisations: EtatAutorisations,
     reglages: Reglages,
+    dossier: String?,
     onRelire: () -> Unit,
     onEnregistrer: (Reglages) -> Unit,
+    onChoisirDossier: () -> Unit,
 ) {
     val context = LocalContext.current
     val demandeNotifications = rememberLauncherForActivityResult(
@@ -222,6 +242,21 @@ private fun EcranControle(
             Action(stringResource(R.string.controle_action_acces)) { publierAccesCrise(context) }
             Action(stringResource(R.string.controle_action_ouvrir_crise)) {
                 context.startActivity(Intent(context, CriseActivity::class.java))
+            }
+
+            Section(stringResource(R.string.controle_section_journal))
+            Text(
+                text = when (dossier) {
+                    null -> stringResource(R.string.controle_dossier_absent)
+                    else -> stringResource(R.string.controle_dossier_choisi, dossier)
+                },
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
+            Explication(stringResource(R.string.controle_dossier_explication))
+            Action(stringResource(R.string.controle_action_dossier), onClick = onChoisirDossier)
+            Action(stringResource(R.string.controle_action_journal)) {
+                context.startActivity(Intent(context, JournalActivity::class.java))
             }
 
             Section(stringResource(R.string.controle_section_test))

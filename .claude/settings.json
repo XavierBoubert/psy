@@ -52,7 +52,15 @@
       "Bash(adb shell *)",
       "Bash(./gradlew assembleDebug -q)",
       "Bash(adb exec-out *)",
-      "Bash(adb shell input tap 539 650; sleep 4 *)"
+      "Bash(adb shell input tap 539 650; sleep 4 *)",
+      "Bash(./gradlew --console=plain testDebugUnitTest)",
+      "Read(//c/Users/xavie/AppData/Local/Microsoft/WindowsApps/**)",
+      "Read(//c/Users/xavie/AppData/Local/Programs/**)",
+      "Bash(winget list *)",
+      "Bash(winget search *)",
+      "Read(//c/Users/xavie/AppData/Local/**)",
+      "Bash(./gradlew --console=plain testDebugUnitTest assembleDebug)",
+      "Bash(awk -F'\"' '{t+=$2; f+=$6; e+=$8} END {print t\" tests, \"f\" échecs, \"e\" erreurs\"}')"
     ],
     "additionalDirectories": [
       "C:\\Users\\xavie",

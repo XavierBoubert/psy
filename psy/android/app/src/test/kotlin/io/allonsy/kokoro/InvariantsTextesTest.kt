@@ -15,6 +15,12 @@ private val VISUALISATION = listOf(
 private val COTATION_DE_RESSENTI = listOf(
     "sur 10", "sur dix", "note ton", "note ta", "évalue ton", "évalue ta",
     "à combien te sens", "ressens-tu",
+    "ton anxiété", "ton humeur", "ton moral", "ton stress", "ta fatigue", "ton niveau de",
+)
+
+private val JUGEMENT_OU_RELANCE = listOf(
+    "bravo", "félicitations", "c'est bien", "très bien", "tu devrais", "il faut que tu",
+    "pense à", "n'oublie pas", "un effort", "essaie quand même",
 )
 
 private val REGULARITE = listOf(
@@ -64,6 +70,14 @@ class InvariantsTextesTest {
     @Test
     fun `aucune consigne de relaxation sans support`() {
         interdire(RELAXATION_DELETERE, "délétère sur un vasovagal — la tension chute déjà")
+    }
+
+    @Test
+    fun `aucun jugement ni relance sur ce qui est saisi`() {
+        interdire(
+            JUGEMENT_OU_RELANCE,
+            "le check-in enregistre, il ne commente pas — l'interprétation appartient à la séance",
+        )
     }
 
     @Test

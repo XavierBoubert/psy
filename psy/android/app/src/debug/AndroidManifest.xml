@@ -11,6 +11,10 @@
         <receiver
             android:name=".crise.DeclencheurCrise"
             android:exported="true" />
+
+        <receiver
+            android:name=".journal.TemoinJournal"
+            android:exported="true" />
     </application>
 
 </manifest>

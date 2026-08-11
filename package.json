@@ -7,6 +7,8 @@
     "pdf-to-markdown": "node scripts/pdf-to-markdown.ts",
     "docx-to-markdown": "node scripts/docx-to-markdown.ts",
     "markdown-to-pdf": "node scripts/markdown-to-pdf.ts",
+    "journal-ingest": "node scripts/journal-ingest.ts",
+    "sync": "node scripts/journal-ingest.ts \"H:/Mon Drive/psy-journal/journal\"",
     "typecheck": "tsc --noEmit"
   },
   "engines": {

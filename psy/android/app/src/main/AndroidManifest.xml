@@ -36,6 +36,13 @@
             android:turnScreenOn="true" />
 
         <activity
+            android:name=".journal.JournalActivity"
+            android:exported="false"
+            android:label="@string/journal_titre"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Kokoro" />
+
+        <activity
             android:name=".alerte.AlerteActivity"
             android:excludeFromRecents="true"
             android:exported="false"

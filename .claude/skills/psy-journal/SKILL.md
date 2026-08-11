@@ -94,7 +94,20 @@ Si Xavier mentionne un épisode (panique, vasovagal, shutdown) : **ne pas le noy
 
 Copier `psy/dossier/gabarits/journal.json` → `psy/dossier/journal/AAAA-MM-JJ.json`, remplir, `"source": "claude-code"`.
 
-**Un fichier par jour, jamais de fichier partagé** (R1 du schéma — contrainte Syncthing).
+**Un fichier par jour, jamais de fichier partagé** (R1 du schéma — contrainte de transport).
+
+### 5.1 ⭐ Une seule surface écrit le journal un jour donné *(depuis le 11/08/2026)*
+
+Kokoro (K4) sait écrire le check-in depuis le téléphone, avec `"source": "android"`. **Deux surfaces qui écrivent le même jour écrivent le même nom de fichier** (R4) — et Google Drive, qui assure le transport, **accepte deux fichiers du même nom sans le signaler** (`SYNCHRO.md` §2.2).
+
+**Conduite, sans exception :**
+
+1. **Vérifier d'abord** si `psy/dossier/journal/<aujourd'hui>.json` existe — c'est déjà la règle du §0.3.
+2. **Vérifier aussi le transit** si le doute existe : **`npm run sync`** verse ce qui vient du téléphone **sans jamais écraser**, et signale tout doublon.
+3. Si Xavier a fait son check-in sur le téléphone, **ne pas le refaire ici**. Le dire en une phrase, et s'arrêter.
+4. La bascule **se déclare, elle ne se devine pas** : si Xavier annonce qu'il passe au téléphone, le PC cesse d'écrire le journal.
+
+⚠️ **Ne jamais rattraper un jour manquant** parce qu'il a été saisi ailleurs. Un jour sans fichier n'est pas une donnée négative — **ce n'est pas une donnée du tout** (§3).
 
 ---
 

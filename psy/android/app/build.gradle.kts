@@ -14,8 +14,8 @@ android {
         applicationId = "io.allonsy.kokoro"
         minSdk = 31
         targetSdk = 36
-        versionCode = 4
-        versionName = "K3"
+        versionCode = 5
+        versionName = "K4"
     }
 
     buildTypes {
