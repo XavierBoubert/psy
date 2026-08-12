@@ -9,6 +9,8 @@
     "markdown-to-pdf": "node scripts/markdown-to-pdf.ts",
     "journal-ingest": "node scripts/journal-ingest.ts",
     "sync": "node scripts/journal-ingest.ts \"H:/Mon Drive/psy-journal/journal\"",
+    "programme-publish": "node scripts/programme-publish.ts",
+    "publish": "node scripts/programme-publish.ts \"H:/Mon Drive/psy-journal\"",
     "typecheck": "tsc --noEmit"
   },
   "engines": {

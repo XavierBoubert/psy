@@ -57,7 +57,16 @@ Puis : check-in quotidien, outils de crise, suivi des repas.
 
 ## Données
 
-Lecture/écriture de `psy/dossier/` selon `psy/dossier/SCHEMA.md`. Transport : **Syncthing** — cf. `psy/SYNCHRO.md`.
+**Kokoro n'accède jamais à `psy/dossier/`.** Il écrit et lit **un seul dossier de transit**, désigné une fois par Xavier (SAF — aucune permission au manifeste), et c'est le PC qui fait la jonction avec le dossier clinique.
+
+| Sens | Fichiers | Format | Versé par |
+|---|---|---|---|
+| Kokoro **écrit** | `journal/AAAA-MM-JJ.json` · `reponses/AAAA-MM-JJ-HHMM-<id>.json` | [`../dossier/SCHEMA.md`](../dossier/SCHEMA.md) *(normatif)* · [`../programme/FORMAT.md`](../programme/FORMAT.md) §4 | `npm run sync` |
+| Kokoro **lit** | `programme.json` | [`../programme/FORMAT.md`](../programme/FORMAT.md) *(normatif)* | écrit par `npm run publish` |
+
+Transport : ~~Syncthing~~ → **Google Drive** depuis le 11/08/2026, étendu aux deux sens le 12/08/2026 — cf. [`../SYNCHRO.md`](../SYNCHRO.md) §2.2 et §2.3.
+
+⭐ **Ni profil, ni état, ni séances, ni crises, ni mesures, ni briefs ne quittent le PC.** Le programme est **dérivé** du dossier, il n'en est pas un extrait : il porte ce qu'il y a à faire, jamais ce qui a été constaté ou diagnostiqué.
 
 ## Construire et installer *(K0 franchi le 10/08/2026)*
 

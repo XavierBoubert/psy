@@ -1,6 +1,7 @@
 # Plan de construction — Kokoro (心) et la surface web
 
-**Statut :** plan de construction — **v1.7 (11/08/2026)**. Ouvre l'**Étape 5** du `PLAN.md` racine. ✅ **K0, K1 et K2 franchis le 10/08/2026**, K2 **sans réserve** — mot-code envoyé pour de vrai, réception confirmée par Chourouk. ✅ **K3 construit et vérifié sur l'appareil** ; ⏳ **son critère de fin — un bloc en salle d'attente réelle — reste ouvert**. ✅ **K4 franchi le 11/08/2026** — un **vrai check-in** saisi sur le téléphone est arrivé dans `dossier/journal/`, valide au schéma ; 🔴 **le transport passe par Google Drive** *(arbitrage de Xavier, Syncthing écarté)*.
+**Statut :** plan de construction — **v1.8 (12/08/2026)**. ⭐ **Changement de nature acté : Kokoro cesse d'être une app à fonctions et devient le porteur de la thérapie écrite par Claude Psy** (K5). ❌ **L'interpellation (ex-K6) est supprimée** — Kokoro ne notifie de rien.
+**Statut précédent :** v1.7 (11/08/2026). Ouvre l'**Étape 5** du `PLAN.md` racine. ✅ **K0, K1 et K2 franchis le 10/08/2026**, K2 **sans réserve** — mot-code envoyé pour de vrai, réception confirmée par Chourouk. ✅ **K3 construit et vérifié sur l'appareil** ; ⏳ **son critère de fin — un bloc en salle d'attente réelle — reste ouvert**. ✅ **K4 franchi le 11/08/2026** — un **vrai check-in** saisi sur le téléphone est arrivé dans `dossier/journal/`, valide au schéma ; 🔴 **le transport passe par Google Drive** *(arbitrage de Xavier, Syncthing écarté)*.
 **Portée :** ce document dit **dans quel ordre on construit les applications, et pourquoi cet ordre-là**. Il ne redit ni la conception du personnage (→ [`README.md`](README.md)), ni les décisions d'architecture (→ `../../PLAN.md` §5), ni le format des données (→ [`../dossier/SCHEMA.md`](../dossier/SCHEMA.md), **normatif**).
 
 > **Ce document fait foi sur le séquençage et les critères de fin.** Sur tout le reste, il pointe.
@@ -62,7 +63,9 @@ Le `PLAN.md` la laissait ouverte en deux endroits (§3.1, §5). Elle était en r
 
 `SCHEMA.md` R1/R2/R3 imposent : un fichier par événement, append-only, JSON pour ce qu'écrit une application. **Une base Room dupliquerait la source de vérité et créerait un état à réconcilier.**
 
-→ Kokoro **écrit directement des fichiers JSON** dans le répertoire synchronisé par Syncthing, et **ne tient aucun cache persistant** des données cliniques. `"source": "kokoro"` dans chaque fichier écrit (R4 : `journal/` est écrit par une seule surface à la fois — la bascule PC → Android se déclare, elle ne se devine pas).
+→ Kokoro **écrit directement des fichiers JSON** dans le dossier de transit désigné *(Google Drive depuis le 11/08/2026 — ~~Syncthing~~ écarté)*, et **ne tient aucun cache persistant** des données cliniques. `"source": "android"` dans chaque fichier écrit (R4 : `journal/` est écrit par une seule surface à la fois — la bascule PC → Android se déclare, elle ne se devine pas).
+
+> 📌 **Une seule exception, et elle est minuscule :** le **jeton local de date** ajouté à K4, qui empêche un second check-in le même jour. Il ne contient qu'une date, aucune réponse, et **sa perte ne perd rien**. À partir de K5 s'y ajoute la **version de programme déjà vue**, de même nature — un entier, pour savoir s'il faut afficher la ligne « le programme a changé ». Ni l'un ni l'autre n'est une donnée clinique.
 
 ---
 
@@ -238,16 +241,33 @@ Un écran, deux actions, aucune saisie de texte, **aucun numéro d'urgence**, au
 1. Vérifier que le dossier Drive **n'est partagé avec personne** et que la 2FA est active sur le compte Google (`SYNCHRO.md` §2.2).
 2. Trancher l'arbitrage **E** ci-dessous — le compte Google du dossier de transit.
 
-### K5 — La présence *(Kokoro devient Kokoro)*
+### K5 — ⭐ Le programme *(Kokoro porte la thérapie)* — 🔴 **jalon en cours**
+
+**Le changement de nature du projet, et il faut le dire ainsi :** jusqu'ici, chaque besoin clinique nouveau demandait un écran nouveau — donc un jalon, donc du code. **À partir de K5, Kokoro n'apprend plus rien : il lit.** Claude Psy écrit la thérapie dans `psy/programme/programme.json`, Kokoro l'affiche, et renvoie ce que Xavier a fait. Ajouter une démarche, un exercice ou un questionnaire cesse d'être un acte de développement pour devenir un acte clinique, fait en séance.
+
+- **Format :** [`../programme/FORMAT.md`](../programme/FORMAT.md) — **normatif**, partagé par les deux côtés. Cinq types d'étapes : `ecran` · `exercice` · `questionnaire` · `demarche` · `fiche`.
+- **Écran d'accueil** : la liste, groupée en *aujourd'hui* · *quand j'en ai besoin* · *sans date*. **Aucun score, aucune progression, aucun historique.**
+- **Annonce des changements** : une ligne discrète en haut quand la version publiée a changé — **jamais une notification** *(arbitrage de Xavier, 12/08/2026 : annoncé, non bloquant)*.
+- **Écrit** `reponses/AAAA-MM-JJ-HHMM-<id>.json` dans le dossier de transit, versé au dossier par `npm run sync`.
+- **Critère de fin :** une étape publiée depuis le PC apparaît sur le téléphone, est faite par Xavier, et sa réponse revient dans `psy/dossier/` — valide au format, sans intervention manuelle.
+
+> 🔴 **Le point dur de ce jalon n'est pas la lecture d'un JSON, c'est un trou de sécurité qu'il ouvre.** Les tests de Kokoro vérifient aujourd'hui les textes de l'app (`InvariantsTextesTest`). **Ces textes-là ne seront plus dans l'app** : visualisation, cotation de ressenti, streak, numéro d'urgence, conseil de traitement redeviendraient possibles, **et en silence**.
+> **Double garde, l'une existe déjà :** `npm run publish` **refuse la publication entière** *(écrit et vérifié le 12/08/2026 — les 7 familles d'interdits sont attrapées)* ; **Kokoro écarte la seule étape fautive** et affiche le reste, parce que sur le téléphone on ne peut pas corriger et que perdre tout le programme pour une ligne serait pire.
+
+> ⭐ **Ce que ce jalon ne fait pas, et ne fera jamais : notifier.** *(Décision de Xavier, 12/08/2026.)* **Tant que Xavier ne vient pas vers Kokoro, Kokoro ne lui signale rien.** Seule exception, inchangée depuis K2 : la notification d'accès crise sur l'écran verrouillé — **c'est une porte, pas un rappel.**
+
+### K6 — La présence *(Kokoro devient Kokoro)* — *ex-K5*
 - Foreground service + overlay `SYSTEM_ALERT_WINDOW` / `TYPE_APPLICATION_OVERLAY`.
 - Visage à **trait minimal, ligne claire** ; **état de repos : il respire, c'est tout** — micro-animation lente, sans information.
 - Charge mesurée **consultable en un tap**, jamais affichée d'elle-même. **Jamais de tristesse ni de reproche**, en aucune circonstance.
-- **Critère de fin :** l'overlay survit 72 h consécutives sans être tué par One UI.
+- **Écran de diagnostic One UI** *(repris de l'ancien K6)* : vérifie les deux réglages batterie et guide leur réactivation — une mise à jour système les réinitialise, et l'overlay ne survit pas sans eux.
+- **Critère de fin :** l'overlay survit 72 h consécutives sans être tué par One UI, et l'écran de diagnostic signale des réglages remis à zéro à la main.
 
-### K6 — Interpellation et diagnostic
-- Interpellation opportuniste selon `PLAN.md` §2.4 : **une phrase, une raison chiffrée, refus à coût nul, plafond 1/jour et 3/semaine**, jamais de son ni de plein écran. ✅ **Garanti par le système depuis K1** : Android rétrograde un full-screen intent en bannière dès que l'écran est allumé et le téléphone en cours d'usage — l'interpellation ne peut pas saisir l'écran, même par erreur de programmation.
-- **Écran de diagnostic One UI** : vérifie les deux réglages batterie et guide leur réactivation (une mise à jour système les réinitialise).
-- **Critère de fin :** après une mise à jour système simulée (réglages remis à zéro à la main), l'écran de diagnostic les signale.
+### ~~K6 — Interpellation~~ — ❌ **supprimé le 12/08/2026**
+
+**Motif :** *« tant que Xavier ne vient pas vers Kokoro, Kokoro ne lui notifie de rien »* (décision de Xavier, 12/08/2026). L'interpellation opportuniste du `PLAN.md` §2.4 — une phrase, une raison chiffrée, plafond 1/jour et 3/semaine — **est incompatible avec ce principe**, quelle que soit sa modération.
+
+> 📌 **Ce n'est pas une perte, et le constat de K1 l'avait déjà anticipé sans le savoir.** Android rétrograde un full-screen intent en bannière dès que le téléphone est en cours d'usage : le système empêchait déjà Kokoro d'interrompre Xavier. **La décision du 12/08 ne fait qu'aligner l'intention sur ce que la plateforme garantissait déjà.** L'**écran de diagnostic One UI**, seul élément de l'ancien K6 qui restait nécessaire, est repris dans le nouveau K6.
 
 ---
 
@@ -303,7 +323,8 @@ Une contrainte de conception qui reste une phrase se perd à l'implémentation. 
 4. Une consigne de **visualisation**, y compris dans un texte d'aide.
 5. Une **expression de tristesse, de déception ou de reproche** sur le visage.
 6. Un **service tiers** : pas de cloud, pas d'analytics, pas de crash reporting, pas de police de caractères distante. (`SYNCHRO.md` §2 : refusé par défaut.)
-7. 🔴 **Un numéro d'urgence, sous quelque forme que ce soit** — appel, SMS, lien, texte d'aide *(décision du 10/08/2026, [`../protocoles/crise-escalade.md`](../protocoles/crise-escalade.md) §0)*. ⭐ **Y compris le 3114 :** il appartient à la conduite d'escalade sur idéation suicidaire, **pas à une interface**. Un écran qui l'affiche en permanence le transforme en décor, et c'est précisément ce qui angoissait sans jamais servir.
+7. 🔴 **Une notification, un rappel, une relance** *(décision du 12/08/2026)*. **Kokoro ne vient jamais vers Xavier — Xavier vient vers Kokoro.** Seule exception, inchangée : la notification d'accès crise sur l'écran verrouillé, qui est **une porte, pas un rappel** ; elle ne dit rien, ne demande rien, et n'apparaît pas parce qu'il s'est passé quelque chose.
+8. 🔴 **Un numéro d'urgence, sous quelque forme que ce soit** — appel, SMS, lien, texte d'aide *(décision du 10/08/2026, [`../protocoles/crise-escalade.md`](../protocoles/crise-escalade.md) §0)*. ⭐ **Y compris le 3114 :** il appartient à la conduite d'escalade sur idéation suicidaire, **pas à une interface**. Un écran qui l'affiche en permanence le transforme en décor, et c'est précisément ce qui angoissait sans jamais servir.
 
 ---
 
@@ -315,12 +336,17 @@ Une contrainte de conception qui reste une phrase se perd à l'implémentation. 
 | ~~**B**~~ | ~~Canal SMS du mot-code à Chourouk~~ | ✅ **Validé par Chourouk le 10/08/2026.** |
 | ~~**C**~~ | ~~Numéros de substitution pour la Tunisie~~ | ✅ **Sans objet le 10/08/2026** — les numéros sont sortis du dispositif, le mode étranger disparaît. |
 | ~~**D**~~ | ~~`MANAGE_EXTERNAL_STORAGE` ou SAF~~ | ✅ **Tranché le 11/08/2026 : SAF.** Un seul dossier désigné, aucune permission au manifeste. |
+| ~~**F**~~ | ~~Le workflow avant ou après la présence ?~~ | ✅ **Tranché le 12/08/2026 : le workflow d'abord.** La présence devient K6. |
+| ~~**G**~~ | ~~Un changement de programme doit-il être annoncé ?~~ | ✅ **Tranché le 12/08/2026 : annoncé, non bloquant.** Une ligne discrète en haut, l'écran est déjà à jour. Rien n'arrive en silence, rien n'impose un tap. |
+| ~~**H**~~ | ~~`mesures/` et le programme ont-ils le droit de transiter par Drive ?~~ | ✅ **Tranché le 12/08/2026 : oui** — *« Drive contient le contenu vivant »*. Arbitrage neuf tracé au [`../SYNCHRO.md`](../SYNCHRO.md) §2.3, avec ce qu'il élargit : le programme porte des **libellés cliniques**, pas seulement des compteurs. |
+| **I** | 🔴 **Le PHQ-9 reste-t-il hors de Kokoro ?** L'item 9 (idéation suicidaire) impose une escalade **3114** — que l'app s'interdit par construction (§8.8). | ⭐ **Oui, hors de Kokoro.** C'est le seul instrument du corpus porteur d'un déclencheur de sécurité ; il se passe en conversation avec `psy-bilan`. Le GAD-7 seul reste publiable. |
 | **E** | 🔴 **Compte Google du dossier de transit** — le test a été fait sur **`xavier@allons-y.io`**, l'adresse principale. Le dossier `psy-journal` y a été créé. | ⭐ **À reconsidérer :** c'est le compte de la **structure professionnelle**. Un compte personnel isolerait mieux des données de santé d'un espace lié à l'activité. **Le changement coûte deux taps** — Kokoro → « Désigner le dossier synchronisé ». |
 
 ---
 
 | Version | Date | Modification |
 |---|---|---|
+| **1.8** | **12/08/2026** | ⭐ **K5 change de contenu et le projet change de nature : Kokoro devient le porteur de la thérapie, pas une collection de fonctions.** Claude Psy écrit `psy/programme/programme.json`, Kokoro l'affiche et renvoie les réponses — **ajouter une étape cesse d'être un acte de développement pour devenir un acte clinique**, fait en séance. Format normatif : `../programme/FORMAT.md`, cinq types d'étapes. ✅ **La moitié PC est écrite et vérifiée** : `npm run publish` refuse la publication entière si une étape enfreint un invariant — **testé sur 9 pièges, les 9 attrapés**. 🔴 **Le point dur est nommé : les garde-fous câblés en tests devenaient contournables par du contenu, en silence** — d'où la double garde (refus total côté PC, écartement de la seule étape fautive côté téléphone). ❌ **L'ancien K6 (interpellation) est supprimé** — *« tant que Xavier ne vient pas vers Kokoro, Kokoro ne lui notifie de rien »* (décision de Xavier) ; son écran de diagnostic One UI est repris dans le nouveau K6. ⭐ **La présence devient K6** : Xavier a arbitré le workflow d'abord, le visage ensuite. 📌 **Les changements de programme sont annoncés sans bloquer** (arbitrage du 12/08). 🔗 `SYNCHRO.md` passe en **v2.1** : le Drive porte maintenant le contenu vivant **dans les deux sens**, arbitrage neuf tracé au §2.3. |
 | **1.7** | **11/08/2026** | ✅ **K4 franchi le jour même — un vrai check-in saisi sur le téléphone est arrivé au dossier** (`journal/2026-08-11.json`, `"source": "android"`, valide au schéma). **Le check-in quotidien passe sur Android — le check-in quotidien passe sur le téléphone, et le dossier a un transport.** Les **11 champs** (7 du noyau + 4 de campagne) en **compteurs et choix fermés**, énoncés **mot pour mot** du skill `psy-journal`, `"source": "android"`, format **identique au gabarit** du dossier — vérifié en relisant le fichier depuis Drive. 🔴 **Le transport n'est plus Syncthing mais Google Drive** : arbitrage de Xavier, rendu **après objection argumentée et maintien de la décision**, tracé entier dans `SYNCHRO.md` §2.2 avec ce qui reste non résolu. ⭐ **Réduction de surface appliquée d'office : seul `journal/` transite.** ✅ **Arbitrage D tranché : SAF** — un dossier désigné, **aucune permission au manifeste**, transport interchangeable sans toucher au code. ⚠️ **Une objection du dispositif s'est révélée fausse** (Drive *est* sélectionnable en arbre de documents — le contournement prévu n'a pas servi) et 🔴 **une autre s'est révélée pire que prévu** : **Drive accepte deux fichiers du même nom** et n'en dit rien — constaté, **garde doublée le jour même** (jeton local + interrogation du dossier), et `journal-ingest` refuse d'écraser côté PC. 📌 **Un défaut d'interface corrigé sur l'appareil** : le dossier s'affichait en identifiant Drive opaque. ⏳ **Le critère de fin reste ouvert : il exige un check-in réel.** Un check-in fabriqué depuis le PC serait une **donnée clinique fausse** — le témoin porte donc la date du 01/01/2000 et a été supprimé après usage. |
 | 1.6 | 10/08/2026 | ✅ **K3 construit — la tension appliquée cesse d'être un minuteur et devient un guidage.** Les **quatre repères externes de la fiche §2** sont à l'écran dans leur ordre (porte · fauteuil · plateau-garrot-aiguille en **cycles enchaînés** · après-geste 3 cycles puis 5 minutes assis), la **phrase pour le soignant** est affichable et **montrable**, les **critères d'arrêt** sont à un tap. Constaté **écran éteint au départ, `deviceLocked=1` à chaque étape** : bloc de 5 cycles mené à son terme (175 s), bloc d'après-geste à 3 cycles (105 s), décompte des 5 minutes, **aucun son ni vibration**, **aucune permission nouvelle**. ⭐ **Ce que le jalon ajoute vraiment : on ne déclenche plus sur une sensation, on déclenche sur un fait extérieur** — la règle §9.19 passe du texte de la fiche à l'interface. ⏳ **Le critère de fin reste ouvert : il exige une salle d'attente réelle**, et ça ne se vérifie pas depuis un PC. 📌 **Deux défauts trouvés sur l'appareil et corrigés le jour même** — « les **5** cycles » affiché sur un bloc de **3**, et le contenu passant sous la barre d'état. 🧪 **Trois gardes nouvelles** : séquence verrouillée contre la fiche, **sources Kotlin** interdites de son / vibration / réseau, et **déclenchement sur prodrome** interdit dans les textes. |
 | 1.5 | 10/08/2026 | ⭐ **La réserve de K2 est levée le jour même : le mot-code a été envoyé pour de vrai et Chourouk a confirmé la réception.** Essai conduit par **Xavier seul, téléphone débranché du PC**, **verrouillé**, **depuis la notification** — la chaîne est vérifiée **de bout en bout dans les conditions réelles**, et non plus jusqu'au bouton. **L'essai a été fait à froid, en la prévenant** : la première fois que Chourouk recevra ce mot ne sera pas la première fois qu'elle le reçoit. 📌 **La réserve précédente reste écrite au-dessus plutôt qu'effacée** — elle était juste au moment où elle a été posée. |

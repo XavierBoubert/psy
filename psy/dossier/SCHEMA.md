@@ -15,7 +15,7 @@ Le dossier est la **source de vérité unique** du dispositif (PLAN §1.2). C'es
 
 | # | Règle | Raison |
 |---|---|---|
-| **R1** | **Un fichier par événement.** Jamais de fichier partagé auquel on ajoute des lignes. | Syncthing (PC ↔ Android) résout mal les écritures concurrentes sur un même fichier : deux appareils qui appendent produisent un conflit. Un fichier par événement rend le conflit structurellement impossible. |
+| **R1** | **Un fichier par événement.** Jamais de fichier partagé auquel on ajoute des lignes. | Tout transport PC ↔ Android résout mal les écritures concurrentes sur un même fichier : deux appareils qui appendent produisent un conflit. Un fichier par événement rend le conflit **structurellement impossible**. ⚠️ **La règle a gagné en importance le 11/08/2026** : le transport retenu est **Google Drive**, qui accepte deux fichiers du même nom **sans rien signaler** — là où Syncthing marquait ses conflits. |
 | **R2** | **Append-only.** Un enregistrement daté n'est jamais réécrit ni supprimé. Une correction est un **ajout**, jamais une réécriture. | C'est un dossier clinique. L'historique doit rester lisible, y compris ce qui s'est révélé faux. Le git log est l'audit. |
 | **R3** | **Le format suit l'auteur.** Ce que **Claude** écrit → Markdown + frontmatter YAML. Ce qu'une **application** écrit → JSON. | Claude produit du Markdown de façon fiable et le relit sans parseur. Les apps produisent du JSON de façon fiable. Chacun son format, pas de conversion. |
 | **R4** | **Nommage `AAAA-MM-JJ` en préfixe, toujours.** Le tri lexicographique = le tri chronologique. | Un `ls` trié est une chronologie. Aucun index à maintenir. |
@@ -247,5 +247,6 @@ Toute modification de ce document est annoncée à Xavier **avant** d'être appl
 
 | Version | Date | Modification |
 |---|---|---|
+| 1.2 | 12/08/2026 | **Fait périmé corrigé dans la justification de R1** *(contrôle C2)* : elle invoquait **Syncthing**, écarté le 11/08/2026 au profit de Google Drive. ⚠️ **Aucune règle ne change** — R1 est même **renforcée** : Drive accepte deux fichiers du même nom sans rien signaler, là où Syncthing marquait ses conflits. *(Le format du dossier n'est pas touché ; `psy/programme/` n'appartient pas au dossier et relève de son propre contrat, `psy/programme/FORMAT.md`.)* |
 | 1.1 | 09/08/2026 | **Correction de l'exemple §6, annoncée puis appliquée** (audit de cohérence). L'exemple portait `"version": "VVIQ-2"` avec `score_max: 80` — incohérent avec lui-même, le VVIQ-2 comptant 32 items et plafonnant à 160 ; et `reponses` n'en listait que 4 pour une échelle qui en compte 16, ce qui contredisait la règle « réponses item par item, toujours ». Corrigé en `"VVIQ-16-Zeman"` et 16 réponses. Écart repéré et signalé à l'ouverture de l'Étape 2 (`corpus/echelles/vviq.md` §6). **Aucune règle ne change** : seul l'exemple était faux. |
 | 1.0 | 09/08/2026 | Création — Étape 0 du PLAN. |

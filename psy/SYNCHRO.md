@@ -11,7 +11,7 @@
 | Mécanisme | Rôle | Périmètre | Quand |
 |---|---|---|---|
 | **Dépôt git privé** `github.com/XavierBoubert/psy` | **Historique et sauvegarde.** Traçabilité clinique gratuite : qui a écrit quoi, quand, et retour arrière possible. | Tout le dépôt, `psy/dossier/` compris | ✅ **En place** |
-| **Google Drive** | **Transport Android → PC.** Dossier de transit hors dépôt. | ⭐ **`journal/` seulement** | 🔴 **K4** *(arbitrage du 11/08/2026)* |
+| **Google Drive** | **Transport dans les deux sens** — le contenu vivant entre Claude Psy et Kokoro. Dossier de transit hors dépôt. | `journal/` · `programme.json` *(PC → Android)* · `reponses/` *(Android → PC)*. ⭐ **Rien d'autre du dossier ne transite** | 🔴 **K4** *(11/08/2026)* étendu le **12/08/2026** (§2.3) |
 | ~~Syncthing (P2P)~~ | ~~Transport PC ↔ Android~~ | — | ❌ **Écarté le 11/08/2026** |
 
 **Pourquoi pas git comme canal Android :** il n'existe pas de client git confortable sur Android, et une app compagnon qui doit écrire en un geste ne peut pas dépendre d'un `commit`/`push`. Drive pose des fichiers ; c'est ce qu'il faut.
@@ -60,7 +60,29 @@ C'est un arbitrage rendu par Xavier le 09/08/2026, en connaissance de cause, pou
 - Le dossier Drive est un **transit** : les fichiers y arrivent, sont copiés dans le dépôt, et le dépôt fait foi.
 - ⚠️ **Aucune extension du périmètre sans nouvel arbitrage tracé ici.** Le jour où une surface voudra faire transiter `seances/` ou `crises/`, c'est une décision nouvelle — pas une continuation de celle-ci.
 
-### 2.3 La règle qui n'a pas changé
+### 2.3 ⭐ Extension du périmètre — le Drive porte le contenu vivant *(arbitrage du 12/08/2026)*
+
+**Le §2.2 exigeait qu'une extension du périmètre soit un arbitrage neuf, tracé ici. En voici un.**
+
+Décision de Xavier, 12/08/2026 : *« Partons du principe que Google Drive contienne le contenu vivant qui transite entre Claude Psy et Kokoro. »* Le transport cesse d'être à sens unique.
+
+| | Avant *(11/08)* | Après *(12/08)* |
+|---|---|---|
+| Sens | Android → PC | **Les deux sens** |
+| Ce qui transite | `journal/` seul | `journal/` · **`programme.json`** *(PC → Android)* · **`reponses/`** *(Android → PC)* |
+| Ce qui reste au PC | profil, état, séances, crises, mesures, briefs, gabarits | **Inchangé — aucun de ces répertoires ne transite** |
+
+**Ce que ça change vraiment, dit franchement :**
+
+- 🔴 **Le contenu qui part chez Google cesse d'être uniquement des compteurs.** `programme.json` porte des **libellés cliniques** — le nom des démarches PPC, les consignes d'exercice, les énoncés de questionnaire. On y lit le chantier en cours, et le nom des praticiens sollicités. C'est plus qu'un compteur de comportements ; c'est moins qu'un compte rendu, un diagnostic ou une idéation, qui eux ne transitent toujours pas.
+- ⚠️ **Un questionnaire publié un jour dans Kokoro fera transiter ses réponses**, donc des scores. **Le PHQ-9 reste hors de ce circuit** — c'est le seul instrument porteur d'un déclencheur d'escalade, et il ne se passe qu'en conversation.
+- ✅ **Le risque de conflit ne s'aggrave pas** : `programme.json` est écrit par le PC **seul**, `reponses/` par Kokoro **seul**. Aucun fichier n'a deux auteurs — c'est ce qui rend l'ajout tolérable, et c'est une condition de l'arbitrage, pas une observation.
+
+**Conditions attachées** — les mêmes qu'au §2.2, plus une :
+
+- ⭐ **Aucun contenu de `psy/dossier/` ne part par ce canal.** Le programme est **dérivé** du dossier, il n'en est pas un extrait : il porte ce qu'il y a à faire, jamais ce qui a été constaté, mesuré ou diagnostiqué.
+
+### 2.4 La règle qui n'a pas changé
 
 L'assouplissement porte sur **GitHub et Google Drive, et rien d'autre**. Hors de ces deux-là et hors des appels à Claude, **aucune donnée ne part vers un tiers** : pas de cloud santé, pas de service d'analyse externe, pas de télémétrie, pas de sauvegarde chez un hébergeur. **Toute proposition d'ajouter un service tiers au dispositif est refusée par défaut et doit faire l'objet d'un arbitrage explicite, tracé ici** — comme les deux ci-dessus.
 
@@ -101,16 +123,20 @@ Ces contraintes sont **déjà câblées** dans `psy/dossier/SCHEMA.md`. Elles va
 
 ## 5. Reste à faire
 
-- [ ] Vérifier si le sélecteur de dossier Android propose Google Drive *(décide de la voie retenue au §4.2)*
-- [ ] Installer Google Drive pour ordinateur, dossier de transit hors dépôt
-- [ ] Écrire `scripts/journal-ingest`
+- [x] ~~Vérifier si le sélecteur de dossier Android propose Google Drive~~ → ✅ **oui**, vérifié le 11/08/2026
+- [x] ~~Installer Google Drive pour ordinateur, dossier de transit hors dépôt~~ → ✅ `H:\Mon Drive\psy-journal`
+- [x] ~~Écrire `scripts/journal-ingest`~~ → ✅ `npm run sync`
+- [x] ~~Écrire le script de publication du programme~~ → ✅ `npm run publish` *(12/08/2026)*
+- [ ] **Kokoro lit `programme.json` et écrit `reponses/`** — jalon K5
 - [ ] Vérifier que le dépôt GitHub est privé et que la 2FA est active — **sur GitHub et sur le compte Google**
 - [ ] Vérifier que le dossier Drive n'est partagé avec personne
+- [ ] Trancher l'arbitrage E — compte Google du transit *(aujourd'hui `xavier@allons-y.io`, compte de la structure professionnelle)*
 - [ ] Décider si une sauvegarde froide hors-ligne (disque chiffré) s'ajoute au dispositif
 
 ---
 
 | Version | Date | Modification |
 |---|---|---|
+| **2.1** | **12/08/2026** | ⭐ **Le Drive porte désormais le contenu vivant, dans les deux sens** *(arbitrage de Xavier — §2.3, tracé comme arbitrage neuf ainsi que le §2.2 l'exigeait)*. S'ajoutent `programme.json` **(PC → Android)** et `reponses/` **(Android → PC)**. 🔴 **Ce qui part chez Google cesse d'être uniquement des compteurs** : le programme porte des **libellés cliniques** — nom des démarches, consignes d'exercice, praticiens sollicités. Il reste **dérivé** du dossier et n'en est pas un extrait : ni profil, ni état, ni séances, ni crises, ni mesures, ni briefs ne transitent. ✅ **Le risque de conflit ne s'aggrave pas** — `programme.json` n'a qu'un auteur (le PC), `reponses/` n'en a qu'un (Kokoro) : **aucun fichier à deux mains**, et c'est une condition de l'arbitrage. ⚠️ **Le PHQ-9 reste hors de ce circuit** : seul instrument porteur d'un déclencheur d'escalade, il ne se passe qu'en conversation. |
 | **2.0** | **11/08/2026** | 🔴 **Syncthing est écarté, le transport passe par Google Drive** — arbitrage de Xavier, rendu après objection argumentée du dispositif et maintien de la décision. **L'objection est conservée entière au §2.2**, avec ce qu'elle a de non résolu (conflits silencieux) et ce qu'elle a de motivé (Syncthing exige deux appareils allumés et une installation par F-Droid). ⭐ **Réduction de surface appliquée d'office : seul `journal/` transite** — ni profil, ni état, ni séances, ni crises, ni mesures, ni briefs. Ce qui part chez Google se limite à des compteurs de comportements. 📌 **Drive est un transit hors dépôt** : le dépôt git n'est synchronisé par aucun service, et un script d'ingestion refuse d'écraser (R2). ⚠️ **Un point technique reste à vérifier sur l'appareil** et il commande la mise en œuvre : Drive apparaît-il dans le sélecteur de dossier Android ? |
 | 1.0 | 09/08/2026 | Création — Étape 0. Décisions : dossier versionné dans le dépôt privé · Syncthing P2P pour le transport PC ↔ Android. |

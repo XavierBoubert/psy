@@ -18,11 +18,17 @@ Implémentation du plan de conception `PLAN.md` (racine).
 | `corpus/` | Référentiels cliniques indexés | ✅ **échelles** (VVIQ, TAS-20, CAT-Q, GAD-7/PHQ-9 ; BES partiel) + **tension appliquée** (corpus n° 1) · ⏸️ 3 corpus prioritaires restants |
 | `protocoles/` | Protocoles thérapeutiques opérationnels (fiches actionnables) | ✅ 7 fiches — **crise/escalade**, **PPC**, tension appliquée, alimentation, activité physique, panique, jour de vol |
 | `web/` | Outils de séance desktop — TypeScript strict | ⏸️ aucun outil écrit — le premier attendu est désormais la **formalisation Zod du schéma du dossier**, avec le jalon K3 ([`android/PLAN-KOKORO.md`](android/PLAN-KOKORO.md) §7) |
-| `android/` | Kokoro (心) — compagnon permanent, Kotlin + Compose | 🏗️ **Étape 5 ouverte (10/08/2026)** — plan de construction : [`android/PLAN-KOKORO.md`](android/PLAN-KOKORO.md). ⭐ Le premier livrable est l'**écran de crise**, pas le visage |
-| `SYNCHRO.md` | Décisions de synchronisation et de sécurité des données | ✅ |
+| `android/` | Kokoro (心) — compagnon permanent, Kotlin + Compose | 🏗️ **Étape 5 ouverte (10/08/2026)** — plan : [`android/PLAN-KOKORO.md`](android/PLAN-KOKORO.md). ✅ **K0→K4 franchis** : crise, mot-code essayé pour de vrai, tension appliquée guidée, check-in. 🔴 **K5 en cours — le programme** |
+| **`programme/`** ⭐ | **La thérapie telle que Kokoro l'affiche.** Écrit par Claude Psy en séance, publié par `npm run publish`. [`programme/FORMAT.md`](programme/FORMAT.md) est **normatif** | 🏗️ moitié PC écrite et vérifiée · Kokoro ne le lit pas encore |
+| `SYNCHRO.md` | Décisions de synchronisation et de sécurité des données | ✅ **v2.1** — le Drive porte le contenu vivant **dans les deux sens** |
 
 **Critère de répartition entre surfaces, à ne jamais enfreindre :**
 > **Ce qui doit être là au moment où ça arrive → Android. Ce qui demande de la surface et du calme → desktop.**
+
+**Qui fait quoi** *(12/08/2026)* — détail et schéma : [`agent/README.md`](agent/README.md).
+
+> **Claude Psy** monte la thérapie et la publie · **Kokoro** la porte, la guide et renvoie ce qui a été fait · **le Superviseur** contrôle Claude, jamais Xavier.
+> ⭐ **Kokoro ne vient jamais vers Xavier.** Il ne notifie rien, ne relance rien, ne reproche rien. Xavier vient à lui, et y trouve tout. *(Seule exception : l'accès crise sur l'écran verrouillé — une porte, pas un rappel.)*
 
 ---
 

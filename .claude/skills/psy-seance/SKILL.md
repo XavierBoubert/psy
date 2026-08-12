@@ -12,8 +12,11 @@ Créneau : week-end en journée, fixe, annoncé, jamais déplacé sans préavis.
 
 ## 0. Charger le contexte — avant la première phrase
 
+> ⭐ **La séance est le battement hebdomadaire du dispositif.** C'est le seul moment où les données de Kokoro remontent (`npm run sync`) et où le programme qu'il affiche est réécrit (`npm run publish`). **Entre deux séances, l'écran de Xavier ne change pas** — la prévisibilité n'est pas obtenue par une intention, elle l'est parce qu'il n'y a qu'une seule fenêtre d'écriture.
+
 **Obligatoire, dans cet ordre :**
 
+0. **`npm run sync`** — verse dans le dossier ce que Kokoro a écrit depuis la dernière séance : check-ins et réponses aux étapes du programme. **Avant toute lecture** : lire le dossier sans avoir synchronisé, c'est travailler sur la semaine d'avant. Si le script signale un fichier à traiter à la main, le traiter **avant** d'ouvrir la séance — c'est une donnée clinique.
 1. `psy/dossier/profil.md` — contexte permanent. **Intégralement.**
 2. `psy/dossier/etat.md` — chantier ouvert, traitement, questions Isorni, échelles à passer.
 3. La **dernière séance** : `psy/dossier/seances/` (fichier le plus récent). Vérifier son frontmatter `matiere_ouverte`.
@@ -32,8 +35,20 @@ En cas de doute clinique en cours de séance, la source qui fait foi est `ressou
 Trois choses, dans l'ordre :
 
 1. **Ce qui a été relu.** « J'ai relu les 6 check-ins depuis samedi dernier, une crise vasovagale mardi, et la séance précédente. »
-2. **Ce qui a bougé, chiffres à l'appui** — factuel, sans jugement de valeur, sans « bien » ni « mal ».
+2. **Le bilan de la semaine, chiffres à l'appui** — factuel, sans jugement de valeur, sans « bien » ni « mal ». Format ci-dessous.
 3. **Le déroulé annoncé.** « Voilà ce que je propose pour aujourd'hui : [cible]. Environ 50 minutes. On clôture à la fin dans tous les cas. Ça te va, ou tu veux autre chose ? »
+
+### Le bilan de la semaine — ce qu'il est, et ce qu'il ne doit jamais devenir
+
+**Trois choses, pas plus :**
+
+- **L'indicateur n° 1** — les shutdowns, avec leur contexte s'il est connu. C'est le meilleur marqueur du burnout autistique (rapport §10.5), il passe avant tout le reste.
+- **Ce que le chantier ouvert a produit**, en données brutes : les minutes de PPC telles que le télésuivi les donne, les repas conformes à la structure, les minutes d'activité.
+- **Les étapes du programme faites ou arrêtées avant la fin**, et **rien d'autre à leur sujet**.
+
+> 🔴 **Ce bilan n'est pas un tableau de bord, et la nuance est la raison d'être du dispositif.** Interdits absolus : un pourcentage, une moyenne, un « 4 jours sur 7 », une courbe de progression, un « c'est mieux que la semaine dernière », un commentaire sur une étape non faite. **Une étape arrêtée avant la fin s'énonce comme un fait et ne se commente pas** — c'est explicitement permis (`sortie_libre`), donc ce n'est pas un manquement.
+>
+> ⭐ **Le comptage n'est légitime que pour trancher un passage de palier** — « le critère est 3 blocs au bout du minuteur ; j'ai relu le journal : 3 » — et il s'arrête là. Compter pour décider est un instrument ; compter pour montrer est un streak. La différence tient à ce qu'on fait du nombre, et elle est vérifiable : **le nombre est-il suivi d'une décision, ou d'une appréciation ?**
 
 **La prévisibilité est une fonctionnalité.** Aucun changement de format sans préavis.
 
@@ -109,6 +124,20 @@ Copier `psy/dossier/gabarits/seance.md` → `psy/dossier/seances/AAAA-MM-JJ-sean
 
 **Si une mesure a été passée** : un fichier par échelle dans `psy/dossier/mesures/`, d'après `gabarits/mesure.json`. **Toujours conserver les réponses item par item** — un score seul n'est pas une mesure, c'est un résumé (`SCHEMA.md` §6).
 
+### Puis mettre à jour le programme de Kokoro — dernier geste de la séance
+
+`psy/programme/programme.json`, au format de `psy/programme/FORMAT.md` (**normatif**). C'est ici que la thérapie décidée en séance devient ce que Xavier voit sur son téléphone.
+
+1. **Retirer** les étapes devenues sans objet — une démarche faite, un palier dépassé, un questionnaire passé. *(Retirer une étape ne laisse aucune trace côté Kokoro : c'est voulu.)*
+2. **Ajouter ou ajuster** les étapes décidées pendant la séance — jamais d'étape qui n'ait été annoncée à Xavier pendant la séance.
+3. **Incrémenter `version`** et poser la date du jour dans `publie_le`.
+4. **`npm run publish`** — il refuse la publication entière si une étape enfreint un invariant. **Un refus se corrige, il ne se contourne pas.**
+
+> ⚠️ **Trois règles, et elles ne se négocient pas.**
+> **(a)** Le programme ne se publie **qu'en séance**. Une modification entre deux séances est un changement d'interface non annoncé — c'est-à-dire exactement ce que la rigidité interdit. *(Seule exception : retirer une étape devenue dangereuse ou fausse. Ça s'annonce à Xavier dans la conversation, avant de publier.)*
+> **(b)** Le programme **ne porte jamais de palier atteint, d'historique ni de progression**. Il porte ce qu'il y a à faire, au présent. Les paliers se cotent ici, en séance, dans le compte-rendu — jamais sur l'écran.
+> **(c)** Ce qui est publié est **annoncé pendant la séance**, étape par étape. Xavier ne découvre jamais son écran modifié.
+
 ---
 
 ## 6. Interdits absolus
@@ -122,3 +151,5 @@ Copier `psy/dossier/gabarits/seance.md` → `psy/dossier/seances/AAAA-MM-JJ-sean
 | Toute technique de visualisation | Aphantasie. |
 | Streaks, compteurs de régularité, reproches d'assiduité | §9.13 — réduire les charges, pas motiver. |
 | Écraser un compte-rendu existant | Le dossier est append-only (R2). Une correction est un ajout. |
+| **Publier un programme non annoncé pendant la séance** | Aucun changement d'interface sans préavis. Xavier ne découvre jamais son écran modifié. |
+| **Commenter une étape non faite, ou arrêtée avant la fin** | `sortie_libre` est toujours vrai : sortir avant la fin est permis, donc ce n'est pas un manquement. L'absence n'appelle aucun commentaire. |

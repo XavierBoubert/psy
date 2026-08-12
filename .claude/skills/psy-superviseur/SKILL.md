@@ -18,6 +18,7 @@ description: Contre-expertise du dispositif lui-même — challenge les conclusi
 1. `psy/dossier/profil.md`, `psy/dossier/etat.md`.
 2. **La dernière supervision** dans `psy/agent/supervisions/`, s'il y en a une — pour ne pas re-signaler ce qui a été arbitré.
 3. **Le périmètre demandé** : soit tout le dispositif, soit ce qui a bougé depuis la dernière supervision (`git log`).
+4. **`psy/programme/programme.json`** — ce que Kokoro affiche aujourd'hui à Xavier. À lire **contre** le dossier, jamais seul : c'est tout l'objet de C8.
 
 **Différence de posture, à tenir :** les autres skills chargent le dossier pour s'y **conformer**. Celui-ci le charge pour le **mettre en doute**. Il lit un renvoi `§9.19` en se demandant *est-ce que le §9.19 dit vraiment ça ?*, pas en le tenant pour acquis.
 
@@ -25,7 +26,7 @@ description: Contre-expertise du dispositif lui-même — challenge les conclusi
 
 ---
 
-## 1. Les sept contrôles
+## 1. Les huit contrôles
 
 | # | Contrôle | Ce qu'on cherche | Symptôme déjà observé |
 |---|---|---|---|
@@ -36,6 +37,7 @@ description: Contre-expertise du dispositif lui-même — challenge les conclusi
 | **C5** | 🔴 **Effet miroir** | Le dispositif contredit-il Xavier, **jamais, parfois, ou seulement sur des points sans enjeu ?** Compter les objections tracées et les regarder. | Une seule objection substantielle tracée à ce jour : l'EMDR, le 08/08/2026. **Une, en deux jours de production intensive.** |
 | **C6** | **Autorité fabriquée** | Un chiffre, un seuil ou une recommandation présentés comme établis sans référence vérifiable. Une norme citée de mémoire. Une traduction non validée dont la réserve a disparu en route. | Le BES a été **refusé** plutôt qu'approximé — c'est le comportement correct. Vérifier qu'il est constant. |
 | **C7** | **Prolifération** | Le dispositif produit-il plus de doctrine qu'il n'exécute ? Compter : combien de fiches écrites, combien de fois appliquées. | Au 09/08/2026 : 7 protocoles, 5 corpus d'échelles, 7 skills — **1 mesure passée, 0 check-in, 0 palier entamé.** |
+| **C8** | ⭐ **Programme désynchronisé** | `psy/programme/programme.json` est une **copie** de ce que le dossier a décidé. Une copie périme. Chercher : une étape encore affichée alors que le dossier la dit faite · une décision de séance jamais publiée · un palier écrit au compte-rendu et absent du programme · un `id` réutilisé pour autre chose. | **Mode de défaillance créé le 12/08/2026** — c'est C2 (fait périmé) appliqué à une surface que Xavier consulte **sans intermédiaire**. |
 
 ---
 
@@ -95,14 +97,30 @@ bloquants: <n>
 
 ---
 
-## 5. Cadence
+## 5. Cadence — où ce rôle s'insère dans les process
+
+Le dispositif a **deux moments où une erreur sort et atteint quelqu'un**. Ce sont les deux points de contrôle obligatoires :
+
+| Sortie | Vers qui | Contrôle |
+|---|---|---|
+| **Le brief** | le Dr Isorni — **un praticien**, qui peut agir dessus | Supervision **obligatoire avant transmission** |
+| ⭐ **Le programme publié** | **Xavier, sur son téléphone, sans intermédiaire** — il n'y a plus de conversation où objecter | **Double** : mécanique à chaque publication, humaine à la cadence ci-dessous |
 
 | Quand | Périmètre |
 |---|---|
 | **Avant chaque brief au Dr Isorni** | Les chiffres et les réserves du brief. **C'est le moment où une erreur sort du dispositif et atteint un praticien.** |
 | **Après une salve de production** (≥ 3 fiches ou skills dans la journée) | Ce qui vient d'être écrit — c'est là que les pointeurs se désynchronisent |
-| **Au moins une fois par mois** | Tout |
+| **Au moins une fois par mois** | Tout, **C8 compris** : relire le programme publié contre le dossier |
 | **À la demande de Xavier** | Ce qu'il désigne |
+
+### 🔴 Ce que la supervision du programme ne fait PAS — et pourquoi c'est délibéré
+
+**Le superviseur ne relit pas chaque publication hebdomadaire.** Deux raisons, et la seconde est la vraie :
+
+1. `npm run publish` fait déjà le **contrôle mécanique** à chaque fois — visualisation, cotation de ressenti, streak, numéro d'urgence, prodrome, traitement, relaxation sur vasovagal. Ce contrôle-là n'a pas besoin d'un rôle : il est dans le script, il ne fatigue pas, il ne s'habitue pas.
+2. ⚠️ **Un contrôle hebdomadaire obligatoire deviendrait une formalité vide en trois semaines** — et une case cochée sans lecture est pire que pas de case du tout, parce qu'elle donne l'illusion d'une vérification. C7 (prolifération) s'applique au superviseur lui-même.
+
+**Ce que le superviseur regarde, c'est ce que le script ne peut pas voir :** une étape conforme mot à mot et fausse cliniquement · un programme qui a cessé de correspondre au dossier (C8) · un dispositif qui publie des étapes sans que rien n'avance (C7) · ⭐ **un programme qui ne contient jamais rien que Xavier n'ait déjà demandé** (C5 — l'effet miroir a désormais une surface où il se voit très bien).
 
 ---
 
@@ -112,6 +130,7 @@ bloquants: <n>
 - **Contredire pour contredire** — une objection fabriquée coûte autant qu'un acquiescement.
 - **Rouvrir un arbitrage de Xavier** sans fait nouveau, et sans dire lequel.
 - **Écrire dans `psy/dossier/`.**
+- **Modifier ou publier le programme.** Le superviseur constate un écart, il ne le répare pas et ne lance jamais `npm run publish` : **une seule main écrit ce que Xavier voit**, et c'est celle de la séance.
 - **Produire un constat sans emplacement vérifiable.**
 - **Corriger soi-même en silence.** Le superviseur **constate** ; la correction est un acte séparé, décidé après. Un audit qui répare ce qu'il trouve ne laisse aucune trace de ce qui n'allait pas.
 - **Noter Xavier**, son assiduité, ses chiffres ou sa « motivation ».
