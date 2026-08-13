@@ -11,6 +11,7 @@
     "sync": "node scripts/contenu-sync.ts \"H:/Mon Drive/kokoro\"",
     "programme-publish": "node scripts/programme-publish.ts",
     "publish": "node scripts/programme-publish.ts \"H:/Mon Drive/kokoro\"",
+    "image": "node scripts/kokoro-image.ts",
     "typecheck": "tsc --noEmit"
   },
   "engines": {

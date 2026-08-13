@@ -34,3 +34,6 @@ __screenshots__/
 
 # Vite
 *.timestamp-*-*.mjs
+
+# Planches de recherche graphique (Kokoro) — seul psy/android/design/retenus/ est versionne
+psy/android/design/sorties/
