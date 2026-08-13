@@ -120,3 +120,4 @@ Trois issues, trois conséquences distinctes :
 ```
 
 > ✅ **Écart avec `SCHEMA.md` §6 — résolu le 09/08/2026** *(audit de cohérence ; annoncé puis appliqué, conformément à `SCHEMA.md` §9)*. L'exemple du schéma portait `"version": "VVIQ-2"` avec un `score_max` de 80, alors que le **VVIQ-2** (Marks, 1995) compte **32 items** — chaque scène évaluée les yeux ouverts puis fermés — et plafonne à **160** : l'exemple était incohérent avec lui-même. Il listait par ailleurs 4 réponses pour une échelle qui en compte 16. **Le schéma est désormais aligné sur la version retenue ici — VVIQ 16 items /80, identifiant `"VVIQ-16-Zeman"`** ; `SCHEMA.md` est passé en v1.1. Aucune règle n'a changé : seul l'exemple était faux.
+> *(Renvoi mis à jour le 13/08/2026 : le schéma du dossier vit désormais au `PLAN.md` §7.7 — `SCHEMA.md` a été absorbé. **L'entrée ci-dessus n'est pas réécrite** : c'est un enregistrement daté, R2.)*

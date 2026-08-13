@@ -2,7 +2,7 @@
 
 **Statut :** fiche actionnable — v1.0 (09/08/2026) · **Étape 3**
 **Destinataire :** Chourouk. **Xavier la relit et décide de la transmettre ou non** — comme le brief au Dr Isorni.
-**Source clinique :** rapport v2.4 §9.1, §9.16 · `profil.md` §3, §9 · PLAN §6.1.
+**Source clinique :** rapport v2.4 §9.1, §9.16 · `profil.md` §3, §9 · `PLAN.md` §1.6.
 
 > ⚠️ **Note interne, à retirer avant transmission.** Ce document est écrit **pour être lu par quelqu'un qui n'est ni soignant ni patient**. Pas de jargon, pas de renvoi de section, pas de chiffre de dossier. Il ne demande rien à Chourouk et ne lui attribue aucun rôle thérapeutique : **c'est une explication, pas une consigne de soin.** Elle n'a aucun accès au journal, aux séances ni aux mesures, et cette fiche est la seule chose écrite qu'elle reçoit.
 

@@ -2,7 +2,7 @@
 
 **Source :** Mehling, W. E., Acree, M., Stewart, A., Silas, J., Jones, A. (2018). *The Multidimensional Assessment of Interoceptive Awareness, Version 2 (MAIA-2).* PLoS ONE, 13(12), e0208034 — **accès libre, CC-BY**. Version d'origine : Mehling *et al.* (2012), PLoS ONE, 7(11), e48230.
 **Version retenue :** **MAIA-2, 37 items** — la révision de 2018 réécrit les sous-échelles *Not-Distracting* et *Not-Worrying*, dont les propriétés psychométriques étaient faibles dans le MAIA-1 (32 items).
-**Durée :** 10 minutes. **Identifiant `mesures/` :** `maia` *(réservé au `SCHEMA.md` §6 depuis l'Étape 0)*.
+**Durée :** 10 minutes. **Identifiant `mesures/` :** `maia` *(réservé au `PLAN.md` §7.7 depuis l'Étape 0)*.
 **Libellés :** ⚠️ **traduction française locale**, faite à partir des items originaux versés ci-dessous. Une **MAIA-FR validée** existe (2021) mais n'est pas librement diffusée — cf. §7.
 
 ---

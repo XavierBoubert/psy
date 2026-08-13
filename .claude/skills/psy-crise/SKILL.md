@@ -102,7 +102,7 @@ Le retrait des numéros a une conséquence favorable : **le triage est désormai
 
 ## 7. Trace au dossier — après, jamais avant
 
-Copier `psy/dossier/gabarits/crise.json` → `psy/dossier/crises/AAAA-MM-JJ-HHMM-<type>.json` (`SCHEMA.md` §4).
+Copier `psy/dossier/gabarits/crise.json` → `psy/dossier/crises/AAAA-MM-JJ-HHMM-<type>.json` (`PLAN.md` §7.5).
 
 | Champ | Vigilance |
 |---|---|

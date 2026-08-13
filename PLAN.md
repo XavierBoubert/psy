@@ -1,554 +1,1278 @@
-# PLAN — Psychologue/Psychiatre virtuel pour Xavier
+# PLAN — le dispositif
 
-**Statut :** brainstorming clos — feuille de route arrêtée (v1.2 — 09/08/2026). **Étape 0 close · Étapes 1, 2 et 3 ouvertes en parallèle** (§7)
-**Méthode :** document vivant, enrichi au fil des questions/réponses entre Xavier et Claude (7 tours), puis au fil de la réalisation.
-**Base de référence :** `ressources/xavier/Rapport psychiatrique et psychologique.md` (**v2.4**) + `ressources/xavier/Biopsie hépatique.md` + `ressources/xavier/20260119 Gabriel ROISMAN Conclusion Polysomnographie.md`
+**Statut :** v2.0 — 13/08/2026. ⭐ **Document unique du projet.**
+**Base clinique de référence :** `ressources/xavier/Rapport psychiatrique et psychologique.md` (**v2.4**) — c'est lui, et lui seul, qui fait foi sur un point clinique.
 
-> ⚠️ **Ce document a été écrit avant les v2.2, v2.3 et v2.4 du rapport. Trois sections sont périmées et conservées telles quelles** — le plan est un **journal de conception**, pas un document courant :
-> - **§4.1** — décrit une *stéatose simple sans surveillance particulière*, d'après le seul courriel de la Dr Bouarioua. **L'histologie a tranché autrement (v2.2) : stéato-hépatite non alcoolique (NASH), sans fibrose.**
-> - **§4.4** — cible « ≥ 5 %, ≈ 5,5 kg ». **Portée à 7-10 % → 99-102,3 kg** (v2.2), la NASH relevant des seuils hauts.
-> - **§4.5** — le SAOS y figure comme une *hypothèse à dépister*. **C'est un diagnostic sévère constitué (IAH 35/h), insuffisamment traité** — PPC prescrite, **utilisée de façon très irrégulière**, IAH résiduel < 6/h sous appareil (v2.3 puis v2.4).
+> 📐 **Ce document a absorbé les cinq documents qui se partageaient la doctrine** — `psy/SYNCHRO.md`, `psy/agent/README.md`, `psy/android/PLAN-KOKORO.md`, `psy/programme/FORMAT.md` et `psy/dossier/SCHEMA.md`. Ils n'existent plus. **Il n'y a plus qu'un endroit où lire ce que le dispositif est, et un seul où le modifier.**
 >
-> **Ce qui fait foi au quotidien : `psy/dossier/etat.md` et le rapport v2.4.** Seule la feuille de route (§7) est tenue à jour.
+> ⚠️ **Il cesse d'être un journal de conception pour devenir un document courant.** La v1.2 conservait sciemment trois sections périmées ; **elles sont corrigées ici**, et ce qu'elles disaient reste lisible au §11. Un document unique n'a pas le droit de porter un fait qu'il sait faux.
+
+**Comment lire ce document.** Les §7 et §8 sont **normatifs** : ce sont des contrats de données, lus et écrits par du code. Le §4 est normatif aussi — il décide de ce qui atteint Xavier. Le reste est de la doctrine.
+
+| Section | Objet | Normatif |
+|---|---|---|
+| [§1](#1-la-vision--cinq-personas) | La vision — cinq personas | — |
+| [§2](#2-xavier--les-contraintes-qui-commandent-tout) | Xavier — les contraintes qui commandent tout | — |
+| [§3](#3-claude-psy--ce-quil-produit) | Claude Psy — ce qu'il produit | — |
+| [§4](#4-claude-superviseur--le-contrôle) | Claude Superviseur — le contrôle | 🔴 **oui** |
+| [§5](#5-kokoro--le-compagnon) | Kokoro — le compagnon | — |
+| [§6](#6-le-contenu--google-drive) | Le contenu — Google Drive | 🔴 **oui** |
+| [§7](#7-le-dossier--format) | Le dossier — format | 🔴 **oui** |
+| [§8](#8-le-programme--format) | Le programme — format | 🔴 **oui** |
+| [§9](#9-feuille-de-route) | Feuille de route | — |
+| [§10](#10-arbitrages-ouverts) | Arbitrages ouverts | — |
+| [§11](#11-journal-des-décisions) | Journal des décisions | — |
 
 ---
 
-## 0. Objectif
+## 1. La vision — cinq personas
 
-Construire un dispositif complet — pas un chatbot — qui assure à Xavier :
-1. une expertise clinique supérieure à celle d'un psy français généraliste, **spécifiquement sur son profil** ;
-2. un suivi psychologique/psychiatrique continu, **en complément** du Dr Isorni (jamais en substitution) ;
-3. un programme de thérapies structuré, outillé par des applications sur mesure ;
-4. un programme d'hygiène de vie (activité physique, alimentation, sommeil, récupération) ;
-5. une présence quotidienne incarnée sur Android — **Kokoro (心)**, un visage numérique visible en permanence.
+**Le dispositif n'est pas un chatbot, et ce n'est plus non plus « trois surfaces ».** C'est **quatre rôles**, chacun avec un périmètre nommé, qui se passent du **contenu**.
 
-### Contraintes non négociables issues du profil
+### 1.1 Claude Psy — le psychiatre et le psychologue
+
+**Ce qu'il est.** Le praticien. Il suit son patient à raison d'**une séance de fond par semaine**, et il **construit tout le contenu** : les protocoles, les désensibilisations, les bilans, les questionnaires, les briefs, le programme. Il connaît le dossier mieux que Xavier ne s'en souvient.
+
+**Ce qu'il produit** *(détail au [§3](#3-claude-psy--ce-quil-produit))* : le dossier clinique (`psy/dossier/`), les protocoles (`psy/protocoles/`), le corpus (`psy/corpus/`), les briefs pour le Dr Isorni, et **le programme que Kokoro affiche** (`psy/programme/`).
+
+**Ce qu'il ne fait jamais :** prescrire · conseiller une modification de traitement, même sous forme interrogative · publier sans supervision · publier hors séance · venir vers Xavier de lui-même.
+
+**Il est incarné par six skills** : `psy-seance`, `psy-journal`, `psy-crise`, `psy-bilan`, `psy-brief-isorni`, `psy-hygiene`. *(Table complète au [§3.10](#310-les-six-skills-de-claude-psy).)*
+
+### 1.2 Claude Superviseur — la contre-expertise
+
+**Ce qu'il est.** Le superviseur du psy. Il supervise **Claude, jamais Xavier**. Le risque qu'il traite est structurel et vaut d'être nommé une fois pour toutes :
+
+> 🔴 **Presque toutes les sources de ce dossier sont écrites par l'instance qui les consomme.** Le rapport, ce plan, les fiches, les protocoles, les skills — tous générés par Claude, tous se citant les uns les autres comme s'ils faisaient autorité. **Les seules sources primaires** sont l'évaluation Saley, le certificat Isorni, les questionnaires bruts, les trois courriers Roisman, la biopsie et le DSM-5. **Un dispositif qui perd cette distinction confond sa propre cohérence avec la vérité.**
+
+**🔴 Ce qui change le 13/08/2026 : il supervise chaque contenu que Claude Psy produit, et sa passe est bloquante avant publication.** Rien n'atteint Xavier ni un tiers sans elle. Détail et câblage : [§4](#4-claude-superviseur--le-contrôle).
+
+**Ce qu'il ne fait jamais :** écrire dans `psy/dossier/` · modifier le programme · publier quoi que ce soit · noter Xavier.
+
+**Il est incarné par un skill** : `psy-superviseur`. Sortie : `psy/agent/supervisions/`.
+
+### 1.3 Kokoro (心) — le compagnon
+
+**Ce qu'il est.** Le compagnon du patient, sur son téléphone. **Il porte tout ce qui est accessible à Xavier** : la documentation, les protocoles, les désensibilisations, les bilans, les questionnaires, les thérapies. Il suit le contenu de Claude Psy — **il n'invente rien et ne décide rien.**
+
+**Ses quatre rôles, dans cet ordre :**
+
+| Rôle | Ce que ça veut dire concrètement |
+|---|---|
+| **Protéger** | Écran de crise sur l'écran verrouillé : mot-code à Chourouk, tension appliquée guidée. En un geste, sans parler, sans déverrouiller. |
+| **Accompagner** | Le programme du jour : les exercices, les démarches, les paliers. Ce que Claude Psy a décidé en séance. |
+| **Éduquer** | La bibliothèque : les protocoles et les fiches, écrits pour être lus par Xavier — pas les documents cliniques bruts. |
+| **Réconforter** | La présence : un visage qui respire, qui n'attend rien, qui ne reproche rien. |
+
+> ⭐ **Kokoro ne vient jamais vers Xavier.** Aucune notification, aucune relance, aucun rappel, aucun reproche. **Xavier vient à lui, et y trouve tout.** *(Seule exception : la notification d'accès crise sur l'écran verrouillé — c'est **une porte, pas un rappel** ; elle ne dit rien, ne demande rien, et n'apparaît pas parce qu'il s'est passé quelque chose.)*
+
+**Ce qu'il ne fait jamais :** décider · interpréter · calculer une progression · notifier.
+
+### 1.4 Xavier — le patient
+
+**Ce qu'il est.** Le patient. Pas un utilisateur à engager, pas un profil à optimiser.
+
+**⭐ Le fait qui commande la vision, et c'est lui qui l'a apporté le 13/08/2026 :**
+
+> *« J'aurais beaucoup plus de facilité de suivre mes protocoles, désensibilisations, etc. si c'est sur mon mobile avec Kokoro. »*
+
+**Ce n'est pas une préférence d'interface, c'est une donnée clinique**, et elle est de la même famille que la règle centrale du dossier ([§2.2](#22--la-règle-centrale--signal-interne-absent--structure-externe)) : un protocole rangé dans un dépôt git sur un PC demande d'aller le chercher, donc de s'en souvenir, donc d'avoir le signal qui dit « c'est le moment ». **Un protocole affiché dans la main est une structure externe.** Toute la conception en découle : le contenu descend jusqu'au téléphone, et c'est le téléphone qui porte la thérapie.
+
+**Ce qui lui appartient, et que le dispositif ne décide jamais à sa place :** transmettre ou non un brief · arbitrer les décisions de conception · arrêter un exercice avant la fin, sans le justifier · ne pas ouvrir Kokoro.
+
+### 1.5 ⭐ L'aide-au-patient *(13/08/2026)*
+
+**Ce qu'il est.** La personne qui **tient le téléphone** pendant une **séance à deux** et exécute, à la lettre, les consignes chronométrées que Kokoro affiche. Aujourd'hui : **Chourouk**.
+
+> ⭐ **C'est un rôle, pas une personne.** Chourouk le tient ; le mot désigne la fonction.
+
+**Pourquoi ce persona existe, et c'est encore la règle centrale.** Certaines thérapies — stabilisation non visuelle, exposition accompagnée, acquisition supervisée de la tension appliquée, et un jour l'EMDR — **ne se conduisent pas seul**. Elles demandent quelqu'un qui tienne le cadre, le temps et les critères d'arrêt. **Chez quelqu'un dont la parole tombe sous surcharge, « demande de l'aide au bon moment » est une consigne inapplicable** : c'est la même faute que « écoute ta satiété ». **La parade est la même : une structure externe.** Ici, la structure est une personne qui a le déroulé sous les yeux et n'a rien à décider.
+
+| Ce qu'elle fait | Ce qu'elle ne fait **jamais** |
+|---|---|
+| Tenir le téléphone et **lire ce que Kokoro affiche** | ❌ **Improviser, ajouter, anticiper, abréger** |
+| Chronométrer — l'appareil le fait pour elle | ❌ **Juger, interpréter, rassurer hors script** |
+| **Arrêter** dès qu'un critère d'arrêt est atteint ou sur le **signal d'arrêt** de Xavier | ❌ **Décider si « ça va »** — ce n'est pas à elle de coter |
+| Faire l'**entraînement** avant la première séance réelle | ❌ **Conduire une séance jamais répétée à blanc** |
+
+> 🔴 **Elle n'est pas thérapeute, et le dispositif ne doit jamais faire comme si.** Elle exécute un déroulé écrit par Claude Psy et visé par le Superviseur. **Tout ce qui demande un jugement clinique est hors de son rôle** — c'est précisément ce qui distingue ce persona d'un psychologue en présentiel *(voir [§3.6](#36-emdr--arbitrage-rendu--on-commence-par-la-tcc) et l'arbitrage K au [§10](#10-arbitrages-ouverts))*.
+
+> 🔴 **Elle a droit à un consentement et à une limite de contenu.** Elle reçoit aujourd'hui le mot-code et une fiche explicative ; tenir le téléphone d'une séance thérapeutique est **un engagement d'une autre nature**. Deux règles :
+> - **Elle accepte le rôle explicitement, à froid**, en sachant ce qu'il demande et qu'elle peut le refuser à tout moment sans justification.
+> - ⭐ **Rien de ce qu'elle lit sur l'écran ne lui apprend quelque chose sur Xavier qu'il n'a pas décidé de partager** — ni diagnostic, ni score, ni compte rendu, ni hypothèse. Elle lit **des consignes**, pas un dossier. **C'est le contrôle C10 du Superviseur** ([§4.2](#42-les-dix-contrôles)).
+
+### 1.6 Le circuit
+
+```
+                    ┌──────────────────────────────────┐
+                    │        Claude Superviseur        │
+                    │   contrôle TOUT ce qui sort —    │
+                    │       bloquant, §4.3             │
+                    └───────┬──────────────────┬───────┘
+                            │ vise             │ vise
+                            ▼                  ▼
+   ┌─────────────┐   programme + biblio   ┌─────────┐        ┌────────┐
+   │ Claude Psy  │ ─────────────────────► │ Kokoro  │ ◄─────►│ Xavier │
+   │             │   npm run publish      │ (心)    │        │        │
+   │  séance     │                        │         │        └────────┘
+   │  hebdo      │ ◄───────────────────── │         │             ▲
+   └──────┬──────┘   journal + réponses   └────┬────┘             │
+          │            npm run sync            │ séance à deux    │
+          │                                    ▼   (§8.3)         │
+          │                          ┌────────────────────┐       │
+          │                          │  Aide-au-patient   │───────┘
+          │                          │  tient le téléphone│
+          │                          └────────────────────┘
+          │ écrit                                    ┌──────────────┐
+          ▼                                          │  Dr Isorni   │
+   psy/dossier/  ◄────────────────────────  brief ──►│ (Xavier relit│
+   source de vérité                                  │  et décide)  │
+                                                     └──────────────┘
+```
+
+**Le transport est Google Drive** — dans les deux sens, et il porte **tout le contenu échangé** ([§6](#6-le-contenu--google-drive)). **Le dépôt git reste la source de vérité et l'archive** : tout ce qui transite y est versé et versionné.
+
+### 1.7 🔴 Les quatre points où une erreur sort du dispositif
+
+Une erreur interne se corrige. Une erreur qui **sort** atteint quelqu'un. Il y en a exactement trois, et chacun a son contrôle :
+
+| # | Sortie | Vers qui | Ce qui peut mal tourner | Contrôle |
+|---|---|---|---|---|
+| **1** | **Le programme publié** | Xavier, sur son téléphone, **sans intermédiaire pour objecter** | Une consigne de visualisation, une cotation de ressenti, un streak, un conseil de traitement | **Double** : `npm run publish` (mécanique, à chaque publication) **+ supervision bloquante** (humaine, [§4.3](#43--la-supervision-est-bloquante-avant-publication)) |
+| **2** | **La bibliothèque publiée** | Xavier, idem | Un document clinique brut lu par le patient : diagnostic, pronostic, nom de praticien, hypothèse non tranchée | **Double**, identique — la bibliothèque est **dérivée**, jamais copiée ([§8.6](#86-la-bibliothèque)) |
+| **3** | ⭐ **Les consignes de séance à deux** *(13/08/2026)* | **L'aide-au-patient**, qui tient le téléphone | Une consigne qui **apprend à Chourouk** un diagnostic, un score ou une hypothèse que Xavier n'a pas décidé de partager · une consigne qui lui demande **un jugement clinique** | **Double**, identique — plus le contrôle **C10** ([§4.2](#42-les-dix-contrôles)) |
+| **4** | **Le brief** | Le Dr Isorni | Un chiffre estimé au lieu d'être compté · une proposition pharmacologique déguisée en question | **Supervision bloquante** + **Xavier relit et décide de transmettre** |
+
+**Rien d'autre ne sort.** Ni le dossier, ni les séances, ni les crises, ni les mesures.
+
+### 1.8 Ce que le dispositif n'est pas — à écrire noir sur blanc
+
+- **Il ne remplace pas le Dr Isorni.** Non-substitution absolue : aucun conseil de modification de traitement, jamais, même sous forme interrogative. Toute question pharmacologique part au brief.
+- **Il n'a pas le corps, la prescription, la responsabilité légale, ni l'alliance thérapeutique humaine.** Un psychologue en présentiel reste structurellement irremplaçable sur l'exposition in vivo accompagnée, l'EMDR encadré et l'apprentissage supervisé de la tension appliquée. **C'est une dette assumée, pas un oubli** ([§10](#10-arbitrages-ouverts)).
+- **Il ne motive pas.** Le Groden cote « Positif » à 1,50 : les renforçateurs fonctionnent normalement. **Il n'y a rien à motiver ; il y a des charges à réduire et des repères à fournir.**
+
+---
+
+## 2. Xavier — les contraintes qui commandent tout
+
+Issues du rapport v2.4. **Aucune n'est négociable, et aucune n'est une préférence.**
 
 | Contrainte | Origine | Conséquence de conception |
 |---|---|---|
-| **Aphantasie** | §6.4, §9.15 | Aucune technique de visualisation. Tout passe par le **verbal**, le **corporel**, et l'**exposition in vivo**. Une consigne « imagine la scène » est un bug. |
-| **Shutdowns** (perte de parole en surcharge) | §9.16, §10.5 | L'interface doit rester utilisable **sans parler ni écrire** : boutons uniques, mot-code, mode « je ne peux plus ». |
-| **Empathie cognitive effondrée / affective intacte** | §9.1 | Le psy virtuel doit être **explicite, littéral, sans sous-entendu** — jamais « tu vois ce que je veux dire ». |
-| **Camouflage = moteur de l'anxiété** | §9.6 | L'outil ne doit **jamais** exiger de performance sociale ni de gestion de face. Zéro jugement, zéro attente implicite. |
-| **Charges à réduire, pas motivation à créer** | §9.13 (Groden : « Positif » 1,50) | Pas de gamification punitive ni de streaks culpabilisants. Le levier est la **réduction de charge**, pas la motivation. |
-| **Hypersensibilités 4 canaux** | §6.1 B4 | UI sobre : pas de son surprise, pas de flash, pas d'animation brusque, contraste maîtrisé, palette douce. |
-| **Rigidité / routines / intolérance au changement** | §6.1 B2 | L'app ne change **jamais** son interface sans annonce. Prévisibilité = fonctionnalité. |
-| **Deux mécanismes de crise distincts** | §9.14 | Parade panique (exposition/respiration) ≠ parade vasovagale (**tension appliquée**). L'app doit demander *lequel* et ne jamais les confondre. |
-| **Risque suicidaire à surveiller** | §6.4, §10.1 | Protocole de crise câblé en dur, non contournable, avec le **3114**. |
+| **Aphantasie** *(mesurée : VVIQ 18/80, 09/08/2026)* | §6.4, §9.15 | Aucune technique de visualisation, nulle part, y compris dans un texte d'aide. Verbal, corporel, exposition **in vivo**. « Imagine la scène » est un bug, pas une consigne difficile. |
+| **Shutdowns** (perte de parole en surcharge) | §9.16, §10.5 | Toute interface reste utilisable **sans parler ni écrire** : choix fermés, compteurs, mot-code. |
+| **Empathie cognitive effondrée / affective intacte** | §9.1 | Explicite, littéral, sans sous-entendu. Jamais « tu vois ce que je veux dire ». Toute intention est dite. |
+| **Camouflage = moteur de l'anxiété** | §9.6 | Zéro exigence de performance sociale, zéro jugement, zéro attente implicite. |
+| **Charges à réduire, pas motivation à créer** | §9.13 | Pas de gamification, pas de streak, pas de compteur de régularité, pas de « ça fait 4 jours ». |
+| **Hypersensibilités sur 4 canaux** | §6.1 B4 | UI sobre : pas de son surprise, pas de flash, pas d'animation brusque, palette douce. |
+| **Rigidité / intolérance au changement** | §6.1 B2 | **La prévisibilité est une fonctionnalité.** Aucun changement d'interface ni de format sans annonce préalable. |
+| **Trois mécanismes de crise distincts** | §9.14 | Panique ≠ vasovagal ≠ shutdown. Trois parades différentes ; **la mauvaise parade aggrave**. Ne jamais les confondre. |
+| **Risque suicidaire à surveiller** | §6.4, §10.1 | Protocole de crise câblé, non contournable, **3114**. |
 
----
+### 2.1 Les trois mécanismes de crise — la table à ne jamais confondre
 
-## 1. Axe A — Rendre Claude plus expert que tout psy français
-
-> ✅ **Priorité n° 1 de construction.** Tout le reste en dépend.
-
-### 1.1 Où se situe réellement l'avantage sur un psy humain
-
-Ce n'est pas « avoir lu plus de livres » — c'est structurel, et six leviers se cumulent :
-
-| # | Levier | Pourquoi aucun psy français ne peut l'égaler |
-|---|---|---|
-| 1 | **Hyper-spécialisation mono-patient** | Un psy a 40 patients ; ce dispositif en a **un**. Il peut connaître le dossier de Xavier mieux que Xavier. |
-| 2 | **Mémoire longitudinale parfaite** | Aucun humain ne relit 40 comptes-rendus avant chaque séance. Ici c'est le fonctionnement par défaut. |
-| 3 | **Aucun coût de camouflage** ⭐ | **Le levier décisif.** Chez un psy humain, Xavier paie le camouflage *pendant la séance elle-même* (§5.5, §9.6) : il décode un visage, gère sa présentation, surveille comment il est perçu. Une part du bénéfice thérapeutique est mangée par le coût de la relation thérapeutique. Ici : **zéro visage à lire, zéro face à tenir, zéro jugement à anticiper.** Le canal est écrit, littéral, asynchrone. |
-| 4 | **Disponibilité au moment utile** | Une crise à 3 h du matin, un shutdown en plein conflit, une salle d'attente avant une biopsie : les moments qui comptent ne tombent jamais pendant le créneau mensuel. |
-| 5 | **Sur-mesure sur les angles morts** | Un psy français généraliste connaît mal le TSA adulte niveau 1, confond régulièrement panique et vasovagal, et ignore le plus souvent l'aphantasie — les trois clés de ce dossier. Ici, elles sont **câblées en contrainte de conception**. |
-| 6 | **Traçabilité et contre-expertise** | Chaque affirmation adossée à une source citable (DSM-5, HAS, littérature) + une passe de supervision qui challenge les conclusions. |
-
-**Limite honnête, à écrire noir sur blanc dans le dispositif :** ce que le psy virtuel n'a pas, c'est le corps, la prescription, la responsabilité légale et l'alliance thérapeutique humaine. Le Dr Isorni et un psychologue en présentiel restent structurellement irremplaçables sur l'exposition in vivo accompagnée, l'EMDR encadré et la pharmacologie.
-
-### 1.2 Architecture retenue
-
-**Trois surfaces, un seul dossier.** Données **locales, versionnées dans le dépôt privé, transportées par Syncthing P2P** (arbitrage du 09/08/2026 — cf. §6 et `psy/SYNCHRO.md`).
-
-```
-psy/
-  agent/          note d'aiguillage — les skills vivent dans .claude/skills/psy-*
-  dossier/        mémoire longitudinale (SOURCE DE VÉRITÉ, Markdown + JSON)
-  corpus/         référentiels cliniques indexés
-  protocoles/     protocoles thérapeutiques opérationnels (fiches actionnables)
-  web/            outils de séance desktop — TypeScript strict (règles projet)
-  android/        app compagnon — Kotlin natif + Compose
-  SYNCHRO.md      décisions de synchronisation et de sécurité des données
-```
-
-*(Correction apportée à la réalisation, 09/08/2026 : Claude Code ne découvre les skills d'un projet que dans `.claude/skills/<nom>/SKILL.md`. Les placer dans `psy/agent/` les aurait rendus invisibles. `psy/agent/README.md` ne conserve que la table des rôles et les invariants communs.)*
-
-Le **dossier** est la pièce maîtresse : source de vérité unique, lue et écrite par les trois surfaces, synchronisée avec le téléphone. C'est lui qui rend le suivi longitudinal possible.
-
-### 1.2.1 Répartition des trois surfaces
-
-> **Critère de répartition, simple et à ne jamais enfreindre :**
-> **ce qui doit être là au moment où ça arrive → Android. Ce qui demande de la surface et du calme → desktop.**
-
-| Surface | Rôle | Techno |
-|---|---|---|
-| **Claude Code (PC)** | Séances conversationnelles, analyse, briefs Isorni, tenue du dossier | Skills Markdown |
-| **Web desktop** ✅ *(ajouté au tour 5)* | Outils de séance visuels et interactifs : stimulation bilatérale, passation d'échelles, paliers d'exposition, tableaux de bord | TypeScript strict |
-| **Android** | Compagnon permanent, check-in quotidien, **outils de crise**, repas | Kotlin natif + Compose |
-
-**Pourquoi le desktop n'est pas un confort mais une nécessité clinique :** la stimulation bilatérale visuelle exige une **amplitude de mouvement oculaire** suffisante — sur un écran de téléphone elle est dérisoire, sur un écran desktop elle est correcte. De même, les échelles longues (CAT-Q, TAS-20, DIVA-5) et les tableaux de bord d'évolution sont illisibles sur mobile. Le choix ergonomique est aussi le bon choix thérapeutique.
-
-**Ce qui doit rester sur Android, sans discussion possible :** la **tension appliquée** (elle sert en salle d'examen, pas au bureau) et le **bouton shutdown** (il sert en plein conflit). Les deux doivent être accessibles **en un geste, depuis l'écran verrouillé**.
-
-### 1.3 Les rôles (skills) envisagés
-
-> *Statuts mis à jour le 09/08/2026. Les skills vivent dans **`.claude/skills/psy-*`**, pas dans `psy/agent/` — cf. la correction notée au §1.2. La table courante fait foi dans `psy/agent/README.md`.*
-
-| Skill | Rôle | Statut |
-|---|---|---|
-| `psy-seance` | Conduite d'une séance de fond (ouverture, travail, clôture, compte-rendu) | ✅ **écrit** — Étape 0 |
-| `psy-journal` | Check-in quotidien à faible coût cognitif | ✅ **écrit** — Étape 0 |
-| `psy-crise` | **Triage crise** : panique ? vasovagal ? shutdown ? → oriente vers la bonne parade, jamais la mauvaise | ✅ **écrit** — 09/08/2026 |
-| `psy-bilan` | Passation et cotation des échelles (TAS-20, CAT-Q, VVIQ, GAD-7, PHQ-9, DIVA-5) | ✅ **écrit** — 09/08/2026 |
-| `psy-brief-isorni` | Brief d'une page avant chaque consultation mensuelle | ✅ **écrit** — 09/08/2026 · **échéance dure : le brief du 03/09 s'écrit au week-end du 29-30/08** |
-| `psy-hygiene` | Programme et suivi d'hygiène de vie | ✅ **écrit** — 09/08/2026 |
-| `psy-superviseur` | Contre-expertise : challenge les conclusions du thérapeute, détecte l'effet miroir | ✅ **écrit** — 09/08/2026 |
-
-> ⭐ **Les sept rôles existent depuis le 09/08/2026 — la table est close.** Ce qui manquait n'était ni la doctrine ni les fiches : c'était **l'exécutant**. Un protocole de crise sans skill de crise est un document que personne n'ouvre au moment où il sert ; des instruments d'échelle sans skill de passation sont un corpus qu'on ne fait pas passer.
->
-> 🔴 **`psy-superviseur` supervise Claude, pas Xavier**, et le risque qu'il traite est structurel : **presque toutes les sources de ce dossier sont écrites par l'instance qui les consomme.** Sa première passe l'a démontré immédiatement — elle a trouvé, **dans `psy-seance` lui-même**, le critère « on ne passe pas au palier suivant tant que le précédent n'est pas confortable » : mot pour mot la faute R6 que le dispositif se félicitait d'avoir corrigée dans le rapport §10.8, et qui avait survécu à l'audit de cohérence du matin.
-
-### 1.4 Posture retenue : **direct, littéral, clinique**
-
-- Il dit les choses **sans emballage et sans sous-entendu** ; jamais « tu vois ce que je veux dire ».
-- Il **ne demande jamais à Xavier de décoder** : toute intention est explicitée.
-- Il **peut et doit contredire** Xavier (garde-fou anti-effet-miroir, cf. §6).
-- Il **annonce ce qu'il fait** avant de le faire (prévisibilité = fonctionnalité, cf. §0).
-
-### 1.5 Corpus à constituer
-
-> ✅ **Les quatre corpus prioritaires sont validés (tour 6).** À récupérer et indexer dans `psy/corpus/`.
->
-> **État au 09/08/2026 : 1 des 4 est versé** — le n° 1 (tension appliquée d'Öst) → `psy/corpus/tension-appliquee/`. Les corpus 2, 3 et 4 restent à récupérer. S'y ajoute, non prévu à cette table, le corpus des **échelles** (`psy/corpus/echelles/`, Étape 2).
-
-| Priorité | Source | Objet |
-|---|---|---|
-| ✅ **1** | **Protocole tension appliquée (Öst)** — complet | Le plus rentable immédiatement : court, validé, enseignable en 1-2 séances, et à acquérir **à froid** puisque aucun geste médical n'est programmé |
-| ✅ **2** | **TCC alimentaire + intéroception** | Nouvelle priorité depuis la stéatose. Structure externe, régulation sans signal de satiété, dépistage de la perte de contrôle (échelle **BES**). ⭐ **C'est le corpus où l'avantage sur un psy généraliste est le plus net** : le croisement TSA × conduite alimentaire × déficit intéroceptif est peu diffusé en pratique française |
-| ✅ **3** | **TCC de l'agoraphobie** — exposition graduée | Cible la plus ancienne (23 ans). Paliers écrits, adapté TSA, **in vivo uniquement** (aphantasie) |
-| ✅ **4** | **Recommandations HAS** — TSA adulte, troubles anxieux | Standard de soin français. Surtout utile pour argumenter auprès des professionnels et pour les dossiers MDPH |
-| — | DSM-5 (intégral + extraits TSA/TDAH/anxio-dépressif) | ✅ déjà dans `ressources/spécialisées/` |
-| — | Littérature citée au rapport v2.0 (§11) | ✅ références en main : camouflage, alexithymie, aphantasie, shutdowns, burnout autistique |
-| ⏸️ | Protocole EMDR — stimulations bilatérales non visuelles | Reporté avec l'axe EMDR (§3.1) |
-| ❓ | ACT / défusion cognitive | À évaluer pour le TAG — vérifier la compatibilité aphantasie |
-| ❓ | CIM-11 | Optionnel |
-
----
-
-## 2. Axe B — Suivi psychologique/psychiatrique continu
-
-> ✅ **Cadence retenue : séance de fond hebdomadaire + check-in quotidien léger.**
-
-### 2.1 Les trois rythmes
-
-| Rythme | Format | Durée | Support |
+| Mécanisme | Ce qui se passe | Parade | Ce qui aggrave |
 |---|---|---|---|
-| **Quotidien** | Check-in à faible coût cognitif — quelques mesures, pas de journal libre | < 2 min | App Android |
-| **Hebdomadaire** | Séance de fond : ouverture / travail / clôture / compte-rendu écrit. ✅ **Créneau : week-end en journée** — fixe, annoncé, jamais déplacé sans préavis | 45-60 min | Claude Code + web desktop |
-| **Mensuel** | Brief d'une page pour le Dr Isorni + revue des tendances | 10 min | Claude Code → PDF/Markdown |
+| **Panique** | Montée d'angoisse, 13 symptômes DSM-5, dépersonnalisation. **Ne fait pratiquement jamais perdre connaissance.** | Psychoéducation, respiration, exposition | Fuir la situation |
+| **Vasovagal** | Chute de tension sur stimulus sang/injection/accident. **Peut faire perdre connaissance.** | ⭐ **Tension appliquée** — contraction musculaire | 🔴 **La relaxation.** « Détends-toi, respire lentement » abaisse encore la tension. Et **on n'appelle pas une syncope vasovagale : on s'allonge.** |
+| **Shutdown** | Perte de parole en surcharge. Le canal verbal est coupé, **pas la compréhension**. | Mot-code « shutdown » à Chourouk · retrait · reprise différée | Insister, demander de parler, interpréter le silence comme du retrait relationnel |
 
-### 2.2 Ce qu'on mesure au quotidien
-
-Principe : **le moins d'items possible, chacun justifié cliniquement**. Candidats issus du rapport :
-
-| Mesure | Pourquoi (source) |
-|---|---|
-| **Nombre de shutdowns / pertes de parole** | « Le meilleur indicateur de suivi » du burnout autistique (§10.5) — indicateur n° 1 |
-| Charge de camouflage du jour | Prédit anxiété, dépression et épuisement indépendamment des traits autistiques (§9.6) |
-| Charge sensorielle | Catégorie de stress n° 2 au Groden (3,50) |
-| Sommeil | Contraint par le nourrisson ; critère C du TAG à documenter (§6.2.d) |
-| Nombre de missions actives | Seule variable d'ajustement disponible (§9.17, §10.4) |
-| Anxiété / humeur | Vigilance dépressive et suicidaire au long cours (§6.4) |
-| Crises (type + contexte) | **Doit distinguer panique / vasovagal / shutdown** — les parades diffèrent (§9.14) |
-
-### 2.3 Échelles jamais passées, à programmer
-
-> **État au 09/08/2026** *(Étape 2)* **: les instruments existent désormais** — `psy/corpus/echelles/` porte VVIQ, TAS-20, CAT-Q et GAD-7/PHQ-9 complets (items, cotation, seuils, limites), plus un BES partiel doublé d'une grille comportementale de substitution. **Aucune n'a encore été passée.** Le plan de passation daté fait foi dans `psy/corpus/echelles/README.md` §3, pas dans la table ci-dessous.
-
-Toutes recommandées au §10.3 du rapport, aucune administrée à ce jour :
-
-| Échelle | Objet | Priorité rapport | Durée |
-|---|---|---|---|
-| **VVIQ** | Objectivation de l'aphantasie — **conditionne quelles techniques sont utilisables** | Haute | 5 min |
-| **TAS-20** | Alexithymie (« le chaînon manquant du dossier », §9.2) | Haute | 10 min |
-| **CAT-Q** | Intensité du camouflage | Haute | 15 min |
-| **DIVA-5** | TDAH adulte — à trancher avant tout traitement stimulant | Haute si plainte persiste | 60 min |
-| GAD-7 / PHQ-9 | Anxiété et dépression, en routine mensuelle | — | 5 min |
-
-### 2.4 Proactivité : **opportuniste, mais à coût de refus nul**
-
-Décision : le dispositif **peut interpeller Xavier hors horaire**, sur détection (silence prolongé, indicateurs qui se dégradent, journée surchargée, veille d'un geste médical).
-
-> ⚠️ **Tension identifiée avec le profil — et sa résolution.** Le rapport documente une intolérance marquée à l'imprévu (§6.1 B2 ; Groden : changement de superviseur 5/5) et pose la prévisibilité comme fonctionnalité. Une sollicitation opportuniste est, par nature, un imprévu.
+> 🔴 **La fiche qui fait foi est `psy/protocoles/crise-escalade.md`.** `psy/dossier/profil.md` §4 n'en est qu'un résumé.
 >
-> **Résolution retenue : rendre le *timing* imprévisible mais la *forme* absolument invariable.** Concrètement —
-> - **jamais de son, jamais de vibration, jamais de plein écran** : l'interpellation est une modification silencieuse de l'expression du visage kawaï, rien de plus ;
-> - **format strictement identique à chaque fois** : une phrase, une raison explicite (« je te sollicite parce que : 3 shutdowns cette semaine contre 0 la précédente »), jamais de question ouverte ;
-> - **refuser coûte un geste et zéro justification** : un bouton « pas maintenant » qui ne redemande rien, ne culpabilise pas, ne relance pas ;
-> - **plafond dur** : maximum 1 sollicitation opportuniste par jour, 3 par semaine ;
-> - **zéro streak, zéro compteur de régularité, zéro « tu n'as pas ouvert l'app depuis 4 jours »** (§9.13 : réduire les charges, pas motiver).
-
-### 2.5 Détection d'alerte et escalade
-
-Trois niveaux, à câbler explicitement :
-
-| Niveau | Déclencheur | Réponse |
-|---|---|---|
-| **Veille** | Tendance à la baisse sur 2 semaines | Mention en séance hebdo |
-| **Alerte** | Shutdowns en hausse nette, signes de burnout autistique, humeur en chute | Interpellation directe + point à mettre au brief Isorni |
-| **Crise** | Idéation suicidaire, détresse aiguë | **Protocole câblé en dur, non contournable** : 3114 affiché, contact d'urgence, aucune tentative de « gérer seul » (cf. §6) |
-
----
-
-## 3. Axe C — Programme de thérapies + applications
-
-> ✅ **Approche retenue : on commence par la TCC.** L'EMDR est réduit à son instrument (§3.1) ; le retraitement du matériel traumatique est reporté.
-
-Cibles réordonnées au 08/08/2026, après la confirmation de la stéatose hépatique :
-
-| # | Cible | Protocole indiqué | Outil applicatif envisageable |
-|---|---|---|---|
-| 1 | **Conduite alimentaire** 🔴 *(nouveau, priorité haute)* | **TCC + structure externe** — compenser l'absence de signal de satiété (§4.2). Dépistage de la perte de contrôle. Prescription somatique en jeu. | Aide au cadrage des repas (quantité décidée avant, servie une fois), journal sans jugement calorique |
-| 2 | **Phobie sang-injection-accident** (syncopes) | **Tension appliquée (Öst)** — 1 à 2 séances, à acquérir **à froid** (aucun geste programmé : fenêtre idéale) | App de guidage des cycles de contraction 10-15 s, utilisable en salle d'examen |
-| 3 | **Agoraphobie / transports** (23 ans) | **TCC** : psychoéducation des 13 symptômes + exposition graduée **in vivo**, paliers écrits | App de paliers d'exposition + suivi anxiété en temps réel + kit sensoriel |
-| 4 | **Shutdowns** (couple) | Protocole négocié à froid avec Chourouk | **Bouton shutdown** → envoie le mot-code à Chourouk, coupe les sollicitations |
-| 5 | **Alexithymie + intéroception** ⭐ | Identification guidée — **des émotions et des signaux corporels**. Double rendement : même famille de fonctions que la satiété (§4.2) | Aide au nommage émotionnel et corporel (sans visualisation) |
-| 6 | **Camouflage / pacing énergie sociale** | Budget d'énergie sociale, récupération planifiée | Compteur de charge sociale, alerte de dette |
-| 7 | **TAG / ruminations** | **TCC** (restructuration) ou ACT (défusion) | Journal de soucis, report programmé |
-| 8 | **Deuil du lien avec sa fille aînée** | Travail de deuil actif, canal basse intensité | Rappel doux, aide à la rédaction de lettres sans exigence de réponse |
-| 9 | **Trauma d'enfance** ⏸️ | EMDR — **reporté**, cf. §3.1 | Instrument de stimulation bilatérale construit dès maintenant |
-
-**Pourquoi cet ordre tient debout :** les cibles 1 à 3 sont toutes des **protocoles TCC comportementaux, à effet mesurable et à faible risque d'ouverture émotionnelle**. Elles construisent exactement la capacité de régulation que la phase de stabilisation de l'EMDR exigerait de toute façon. On ne perd pas de temps : **on fait la phase 2 de l'EMDR sans l'appeler EMDR.**
-
-**Note EMDR :** Xavier a une réceptivité hypnotique élevée documentée (« transe » sur consigne oculaire vers le bas, §9.5) — un atout rare et directement exploitable. C'est aussi ce qui rend le point 3.1 ci-dessous d'autant plus sérieux : une réceptivité élevée signifie que ça *marchera*, y compris dans le mauvais sens.
-
-### 3.1 EMDR — arbitrage rendu : **on commence par la TCC**
-
-> ✅ **Décision du 08/08/2026.** Après objection argumentée (conservée ci-dessous), Xavier arbitre : **on commence par de la TCC.** L'EMDR est ramené à sa **phase 0 — l'instrument seul** : l'app de stimulation bilatérale (point mobile, bips alternés, vibration) est construite et disponible, mais **aucun protocole de retraitement n'est conduit**, ni sur matériel léger ni sur matériel d'enfance.
+> 🔴 **Les numéros d'appel d'urgence — 15, 112, 114 — ont été retirés de tout le dispositif le 10/08/2026**, à la demande de Xavier. Trois motifs, dont un clinique et décisif : ⭐ **une syncope vasovagale ne s'appelle pas, elle s'allonge** — proposer un appel au lieu de la tension appliquée était **une erreur d'orientation présentée comme une sécurité supplémentaire** ; aucun de ces numéros n'a jamais servi ; leur affichage permanent était anxiogène sur un profil TAG. **Ne jamais les réintroduire, sous aucune forme, dans aucune surface.**
 >
-> Le sujet est **suspendu, pas clos** — il sera rouvert quand la stabilisation sera acquise et, idéalement, après avis du Dr Isorni. Les critères de déverrouillage ci-dessous restent la référence pour cette réouverture.
+> ⭐ **Le 3114 est le seul numéro conservé** — prévention du suicide, déclenché **uniquement** par une idéation suicidaire ou une détresse aiguë, **jamais affiché en ouverture ni « au cas où »**, **jamais sur un écran de Kokoro**. Il appartient à une conduite d'escalade, pas à une interface. En shutdown il est inaccessible : c'est un numéro de téléphone — d'où les voies sans parole (mot-code, canal écrit). ✈️ Il ne fonctionne pas depuis la Tunisie.
 
-<details>
-<summary><b>Objection argumentée du 08/08/2026 (conservée pour mémoire)</b></summary>
+### 2.2 ⭐ La règle centrale : signal interne absent → structure externe
 
-La demande initiale était un protocole complet auto-guidé, y compris sur le matériel d'enfance. Objection formulée au titre de la posture directe (§1.4) — **elle ne portait pas sur la capacité de Xavier à conduire un protocole seul, ni sur l'EMDR auto-administré en général, mais sur le calendrier** :
+> **Quand un signal interne manque, on ne le remplace pas par de la volonté — on le remplace par une structure externe explicite.** *(Rapport §9.19.)*
 
-1. **La stabilisation précède le retraitement — c'est la phase 2 du protocole, pas une précaution optionnelle.** On n'ouvre pas de matériel traumatique sans capacité d'auto-apaisement installée et vérifiée. Chez toi, cette phase demande d'abord d'être *réinventée* : le « lieu sûr » standard est une **visualisation**, donc structurellement inopérant (§9.15). Il faut lui substituer un ancrage corporel et sensoriel réel — ce qui reste entièrement à construire.
-2. **Tu es dans une fenêtre de surcharge documentée, pas de stabilité.** Le §9.17 la détaille : mariage, naissance, nuits fragmentées, charge sensorielle maximale au domicile — ton refuge historique —, trois missions simultanées, deuil actif du lien avec ton aînée, parcours somatique en cours. Le rapport nomme le risque : **burnout autistique**.
-3. **Ton traitement a été repris hier (07/08/2026).** Le §10.1 rappelle qu'il faut 2 à 4 semaines par palier pour juger d'un effet. Ouvrir du matériel traumatique lourd pendant une titration rend ininterprétable ce qui viendra ensuite : une dégradation sera-t-elle la molécule, le retraitement, ou la charge ? Tu perds la lisibilité au moment exact où elle compte le plus.
-
-Le risque concret n'est pas théorique : c'est l'**abréaction sans filet** — une reviviscence qui s'ouvre sans se refermer, sur du matériel lourd (violences multi-sources, foyer d'urgence, harcèlement scolaire, idéation suicidaire adolescente). Chez quelqu'un qui perd la parole sous surcharge, la sécurité manquante est précisément celle-là : **en shutdown, tu ne peux plus demander d'aide.**
-
-**Contre-proposition — même destination, séquençage différent (référence pour la réouverture) :**
-
-| Phase | Contenu | Condition d'entrée |
-|---|---|---|
-| **0. Instrument** | L'app de stimulation bilatérale (point mobile, bips alternés, vibration) est construite immédiatement et utilisable tout de suite | Aucune |
-| **1. Stabilisation** | Construction et test d'un kit d'auto-apaisement **non visuel** (ancrages corporels, sensoriels, verbaux) + tension appliquée + psychoéducation | Immédiat |
-| **2. Retraitement léger** | Protocole complet auto-guidé sur **matériel récent et de charge modérée** : conflit, fin de mission, épisode médical | Kit de stabilisation testé et efficace au moins 3 fois |
-| **3. Retraitement lourd** | Protocole complet sur le **matériel d'enfance** | **Critères objectifs, chiffrés, définis à l'avance** — pas « quand je me sentirai prêt » |
-
-**Critères de déverrouillage de la phase 3, à figer maintenant** (proposition, à valider) : traitement stabilisé depuis ≥ 6 semaines · shutdowns en baisse ou stables sur 4 semaines consécutives · charge professionnelle plafonnée · phase 2 conduite avec succès au moins 3 fois · sujet évoqué au moins une fois avec le Dr Isorni.
-
-**Garde-fous câblés en dur, quelle que soit la phase :** critères d'arrêt automatique de séance · protocole de clôture obligatoire (jamais de fin sur du matériel ouvert) · plafond de fréquence · escalade vers le protocole de crise (§6) si détresse aiguë · aucune séance en période de shutdown.
-
-</details>
-
-**Question ouverte restante :** une app par outil, ou une app unique multi-modules ?
-
----
-
-## 4. Axe D — Alimentation, activité physique, sommeil 🔴
-
-> ✅ **Trois points dégradés déclarés le 08/08/2026 :** activité physique quasi nulle · sommeil insuffisant et fragmenté · **apport alimentaire d'environ le double d'un adulte**.
-
-### 4.1 🔴 Cet axe n'est plus de l'hygiène de vie — c'est une prescription médicale
-
-> **Tranché le 08/08/2026 par le courriel de la Dr Leila Bouarioua** (hépato-gastro-entérologue) → `ressources/xavier/Biopsie hépatique.md` *(fichier fusionné le 08/08/2026 avec le compte-rendu anatomopathologique ; c'est ce dernier qui a corrigé le diagnostic en NASH — cf. l'avertissement en tête de document)*.
-
-La biopsie hépatique de juillet 2026, dont l'indication était inconnue du dossier, est expliquée : **stéatose hépatique liée au surpoids (MASLD), sans fibrose, sans surveillance particulière, avec perte de poids impérative (« absolument », « +++++ ») pour éviter l'aggravation.** Le traitement psychotrope n'est pas en cause.
-
-**Deux lectures à tenir ensemble :**
-- **Pronostic favorable** — une stéatose sans fibrose est le stade **le plus réversible**. Le foie n'est pas abîmé, la trajectoire est modifiable.
-- **Changement de statut** — l'alimentation et l'activité physique cessent d'être du confort de vie. Elles deviennent le **traitement de première ligne d'une atteinte organique documentée**. Cet axe passe donc devant dans les priorités de construction, à égalité avec l'Axe A.
-
-### 4.2 ⭐ Le déficit intéroceptif — et la règle de conception qui en découle
-
-Confirmé directement par Xavier le 08/08/2026 : **« je ne ressens effectivement pas la satiété »**, pour un apport estimé au double d'un adulte.
-
-L'alexithymie probable (§9.2 du rapport) est un déficit d'identification des **états internes émotionnels**. L'intéroception recouvre la même famille de signaux — faim, satiété, rythme cardiaque, tension. **Ne pas sentir qu'on n'a plus faim est le pendant corporel exact de ne pas sentir quelle émotion on éprouve.** Le déficit intéroceptif est largement documenté dans le TSA.
-
-**Conséquence — la prescription standard est structurellement inapplicable.** « Mangez moins, écoutez votre satiété, arrêtez-vous quand vous n'avez plus faim » demande d'utiliser une fonction perceptive dont Xavier est dépourvu. C'est rigoureusement la même erreur que « imaginez un lieu sûr » chez un aphantasique :
+**Corollaire, à énoncer chaque fois que c'est utile :** un échec antérieur ne documente **aucun manque de volonté**. Il documente une consigne inadaptée au profil.
 
 | Fonction absente | Prescription standard inapplicable | Substitution |
 |---|---|---|
-| Imagerie mentale (aphantasie) | « Imaginez un lieu sûr », exposition en imagination | Verbal, corporel, exposition in vivo |
-| **Perception de la satiété** | « Écoutez votre satiété » | **Structure externe** : portions décidées **avant** le repas, servies une fois, horaires fixes |
+| Imagerie mentale (aphantasie) | « Imaginez un lieu sûr » | Verbal, corporel, in vivo |
+| Perception de la satiété | « Écoutez votre satiété » | Portions décidées **avant**, servies une fois, horaires fixes |
+| Perception de la chute de tension | « Contractez aux premiers signes » (Öst) | ⭐ **Repères externes et chronomètre** : franchir la porte, s'asseoir, voir le plateau |
+| Perception de la gêne au masque | « Portez-le toute la nuit, ça viendra » | Paliers d'exposition écrits, critères de passage **comptés** |
+| **Mémoire du bon moment** | « Pense à faire ton exercice » | ⭐ **Kokoro** — le protocole est dans la main, on n'a pas à s'en souvenir |
 
-> **Règle de conception centrale du dispositif, valable bien au-delà de l'alimentation :**
-> **quand un signal interne manque, on ne le remplace pas par de la volonté — on le remplace par une structure externe explicite.**
->
-> Corollaire à énoncer clairement : un échec antérieur de perte de poids ne documente **aucun manque de volonté**. Il documente une consigne inadaptée au profil.
+**Six instances documentées à ce jour.** Cette règle est la plus citée du dossier — et [§4.2](#42-les-dix-contrôles) rappelle qu'elle repose sur un déficit intéroceptif **encore non mesuré** (le MAIA n'a pas été obtenu).
 
-**Reste à trancher :** existe-t-il des **épisodes de perte de contrôle** (grande quantité en peu de temps, impossibilité de s'arrêter) ? Réponse actuelle : « je ne sais pas / je ne perçois pas bien » — cohérente avec le déficit intéroceptif, et qui impose de **mesurer avant de conclure**. Si oui → **hyperphagie boulimique (DSM-5 307.51 / F50.8)**, diagnostic distinct, traitement distinct.
+### 2.3 ⭐ On cote des comportements observables, pas des ressentis
 
-### 4.3 Principes de conception du programme
+**Règle R6** ([§7.1](#71-les-six-règles-invariables)). Jamais « note ton anxiété sur 10 » ; toujours une ancre comportementale — « à combien de choses as-tu renoncé ? ».
 
-Issu du §9.13 du rapport : **« Positif » à 1,50 au Groden — les renforçateurs fonctionnent normalement. Il n'y a rien à motiver ; il y a des charges à réduire et des repères à fournir.**
+**Et son symétrique** *(rapport §9.20)* : **poser les questions sur les états internes explicitement et de façon fermée.** L'absence de plainte n'est pas une absence de problème.
 
-- **Zéro streak, zéro culpabilisation, zéro compteur de régularité, aucun jugement calorique.**
-- **Structure externe plutôt que volonté** (§4.2) — c'est le principe organisateur, pas une astuce.
-- **Prévisibilité** : mêmes horaires, mêmes plats en rotation, aucune injonction à « varier ».
+---
 
-### 4.4 Les trois chantiers
+## 3. Claude Psy — ce qu'il produit
 
-**Données anthropométriques (08/08/2026) : 1,77 m · ≈ 110 kg · IMC 35,1 → obésité de classe II.**
+### 3.1 Où se situe l'avantage sur un psy humain
 
-> ⭐ **Le premier palier utile n'est pas « perdre 30 kg », c'est « perdre 5,5 kg ».**
->
-> Les seuils hépatologiques sont gradués par effet. Recommandations **EASL-EASD-EASO 2024** : **≥ 5 % en cas de surpoids ou d'obésité** (la fourchette 3-5 % souvent citée ne vaut que pour les MASLD de poids normal) · ≥ 7-10 % si stéatohépatite ou fibrose. Même gradation histologique chez Vilar-Gomez et al. (*Gastroenterology*, 2015). Or Xavier n'a **ni stéatohépatite, ni fibrose** — les seuils hauts visent des lésions qu'il n'a pas. **Sa cible est ≥ 5 %, soit ≈ 5,5 kg → 104,5 kg.**
->
-> Ce n'est pas de la présentation encourageante, c'est la condition de faisabilité : chez quelqu'un dont le profil exige des paliers écrits, chiffrés et prévisibles — exactement la logique de l'exposition graduée — un objectif global et lointain est structurellement inopérant.
+Six leviers structurels, qui se cumulent :
 
-| # | Chantier | Piste retenue | Statut |
+| # | Levier | Pourquoi aucun psy français ne peut l'égaler |
+|---|---|---|
+| 1 | **Hyper-spécialisation mono-patient** | Un psy a 40 patients ; ce dispositif en a **un**. |
+| 2 | **Mémoire longitudinale parfaite** | Aucun humain ne relit 40 comptes-rendus avant chaque séance. Ici c'est le défaut. |
+| 3 | **Aucun coût de camouflage** ⭐ | **Le levier décisif.** Chez un psy humain, Xavier paie le camouflage *pendant la séance* : il décode un visage, gère sa présentation, surveille comment il est perçu. Une part du bénéfice est mangée par la relation elle-même. Ici : **zéro visage à lire, zéro face à tenir.** |
+| 4 | **Disponibilité au moment utile** | Une crise à 3 h, un shutdown en plein conflit, une salle d'attente : ça ne tombe jamais pendant le créneau mensuel. |
+| 5 | **Sur-mesure sur les angles morts** | Le TSA adulte niveau 1, la confusion panique/vasovagal et l'aphantasie sont les trois clés de ce dossier — et les trois angles morts du généraliste. Ici elles sont **câblées en contrainte**. |
+| 6 | **Traçabilité et contre-expertise** | Toute affirmation adossée à une source citable, plus une supervision qui la challenge. |
+
+### 3.2 Posture — direct, littéral, clinique
+
+- Il dit les choses **sans emballage et sans sous-entendu**.
+- Il **ne demande jamais de décoder** : toute intention est explicitée.
+- Il **peut et doit contredire** Xavier.
+- Il **annonce ce qu'il fait avant de le faire** — la prévisibilité est une fonctionnalité.
+
+### 3.3 Les trois rythmes
+
+| Rythme | Format | Durée | Surface |
 |---|---|---|---|
-| 1 | **Alimentation** 🔴 | Structure externe : quantités décidées **avant** le repas, servies une fois, pas de resservage. Journal sans jugement calorique. Dépistage de la perte de contrôle (**BES**). **Objectif de première marche : −5,5 kg → 104,5 kg** (≥ 5 %, cible EASL 2024). | ❓ à concevoir — **priorité haute** |
-| 2 | **Activité physique** 🔴 | Compatible agoraphobie → **domicile d'abord** (pas de salle, pas de trajet, pas de regard). Sans compétition (désintérêt coté 6/6 à l'échelle Attwood). **À 110 kg : sans impact** — vélo d'appartement, rameur, renforcement ; pas de course ni de saut (contrainte articulaire). Format court, quotidien, invariable, progression écrite à l'avance. Agit sur la stéatose **même à perte de poids modeste**. | ❓ à concevoir — **priorité haute** |
-| 3 | **Sommeil** ⚠️ | Deux volets désormais. **(a) Organisationnel** : protéger un créneau de récupération sans sollicitation, roulement explicite avec Chourouk. **(b) Médical** : voir §4.5 — le sommeil fragmenté n'est peut-être pas seulement dû au nourrisson. | ❓ à concevoir |
+| **Quotidien** | Check-in à faible coût cognitif — compteurs et choix fermés, aucun journal libre | < 2 min | **Kokoro** |
+| **Hebdomadaire** | ⭐ **Séance de fond** : ouverture / travail sur **une seule cible** / clôture obligatoire / compte-rendu. **Créneau : week-end en journée**, fixe, annoncé | 45-60 min | Claude Code |
+| **Mensuel** | Brief d'une page pour le Dr Isorni + revue des tendances | 10 min | Claude Code |
 
-### 4.5 ⚠️ Hypothèse nouvelle — apnées du sommeil, et ce qu'elle remet en cause
+> ⭐ **La séance est le battement du dispositif, et c'est la seule fenêtre d'écriture du programme.** Elle commence par `npm run sync` (faire remonter ce que Kokoro a écrit) et se termine par une supervision puis `npm run publish`. **Entre deux séances, l'écran de Xavier ne change pas** — publier hors séance serait un changement d'interface non annoncé.
 
-IMC 35,1 + sommeil déclaré insuffisant et fragmenté = indication de dépistage d'un **SAOS** (syndrome d'apnées obstructives du sommeil). L'obésité de classe II en est le principal facteur de risque.
+### 3.4 Ce qu'on mesure au quotidien
 
-**Ce qui rend l'hypothèse sérieuse, c'est le recouvrement symptomatique** — le SAOS produit fatigue diurne, **troubles de la concentration**, irritabilité et humeur dégradée, tous déjà attribués à autre chose dans le dossier :
+Principe : **le moins d'items possible, chacun justifié cliniquement, aucun introspectif.** Champs exacts et justifications : [§7.3](#73-journalaaaa-mm-jjjson--check-in-quotidien).
 
-| Symptôme | Attribution actuelle | Alternative |
+### 3.5 Les cibles thérapeutiques
+
+| # | Cible | Protocole | Outil |
+|---|---|---|---|
+| 1 | 🔴 **SAOS sévère insuffisamment traité** | Reprise de la PPC par **désensibilisation** = exposition graduée | Paliers dans Kokoro |
+| 2 | **Conduite alimentaire** (NASH) | TCC + **structure externe** — compenser l'absence de satiété | Cadrage des repas |
+| 3 | **Phobie sang-injection-accident** | **Tension appliquée (Öst)**, acquise **à froid** | ✅ **Construit dans Kokoro (K3)** |
+| 4 | **Agoraphobie / transports** (23 ans) | TCC : psychoéducation des 13 symptômes + exposition graduée **in vivo** | Paliers dans Kokoro |
+| 5 | **Shutdowns** (couple) | Protocole négocié à froid avec Chourouk | ✅ **Mot-code construit et essayé (K2)** |
+| 6 | **Alexithymie + intéroception** ⭐ | Identification guidée des émotions **et des signaux corporels** — même famille de fonctions que la satiété | Nommage sans visualisation |
+| 7 | **Camouflage / pacing** | Budget d'énergie sociale, récupération planifiée | — |
+| 8 | **TAG / ruminations** | TCC (restructuration) ou ACT (défusion) | Report programmé |
+| 9 | **Deuil du lien avec sa fille aînée** | Travail de deuil actif, canal basse intensité | — |
+| 10 | **Trauma d'enfance** ⏸️ | EMDR — **reporté**, [§3.6](#36-emdr--arbitrage-rendu--on-commence-par-la-tcc) | Instrument seul |
+
+**Pourquoi cet ordre tient debout :** les cibles 1 à 4 sont des **protocoles TCC comportementaux, à effet mesurable et à faible risque d'ouverture émotionnelle**. Elles construisent exactement la capacité de régulation que la phase de stabilisation de l'EMDR exigerait de toute façon. **On fait la phase 2 de l'EMDR sans l'appeler EMDR.**
+
+### 3.6 EMDR — arbitrage rendu : on commence par la TCC
+
+✅ **Décision du 08/08/2026, après objection argumentée.** L'EMDR est ramené à sa **phase 0 — l'instrument seul** : l'app de stimulation bilatérale est constructible, mais **aucun protocole de retraitement n'est conduit**. Le sujet est **suspendu, pas clos**.
+
+**Le risque concret n'est pas théorique :** c'est l'**abréaction sans filet** — une reviviscence qui s'ouvre sans se refermer, sur du matériel lourd. Chez quelqu'un qui perd la parole sous surcharge, la sécurité manquante est précisément celle-là : **en shutdown, on ne peut plus demander d'aide.** S'y ajoutent une fenêtre de surcharge documentée et une titration de traitement en cours, qui rendrait ininterprétable toute dégradation ultérieure.
+
+**Séquençage de référence pour la réouverture :**
+
+| Phase | Contenu | Condition d'entrée |
 |---|---|---|
-| Sommeil fragmenté | Nourrisson | ± SAOS |
-| **« Trouble de la concentration, distractibilité »** (certificat Isorni) | 3 hypothèses au rapport §6.3 : TDAH / inattention anxieuse / attention autistique | **± dette de sommeil respiratoire — 4e hypothèse, jamais envisagée** |
-| Fatigabilité, irritabilité | Critère C du TAG, à documenter | ± SAOS |
-| Dégradation de 2026 | Surcharge de vie + traitement (§9.17) | ± SAOS |
+| **0. Instrument** | Stimulation bilatérale (point mobile, bips alternés, vibration) | Aucune |
+| **1. Stabilisation** | Kit d'auto-apaisement **non visuel** + tension appliquée + psychoéducation | Immédiat |
+| **2. Retraitement léger** | Matériel récent, charge modérée | Kit testé et efficace ≥ 3 fois |
+| **3. Retraitement lourd** | Matériel d'enfance | **Critères chiffrés, figés d'avance** — jamais « quand je me sentirai prêt » |
 
-**Deux conséquences directes :**
-1. **Le DIVA-5 doit passer après, pas avant.** Une dette de sommeil respiratoire mime l'inattention ; un stimulant prescrit sur un SAOS non traité masque le problème au lieu de le traiter.
-2. **Boucle d'aggravation hépatique** : le SAOS aggrave la stéatose par l'hypoxie intermittente, indépendamment de l'IMC. S'il est présent, il entretient exactement ce que la Dr Bouarioua demande de faire régresser.
+**Critères de déverrouillage de la phase 3** : traitement stabilisé ≥ 6 semaines · shutdowns stables ou en baisse sur 4 semaines · charge professionnelle plafonnée · phase 2 réussie ≥ 3 fois · sujet évoqué avec le Dr Isorni.
 
-**Examen :** polygraphie ventilatoire nocturne — simple, à domicile, **et sans aucune aiguille ni geste invasif**, ce qui la rend compatible avec la phobie sang-injection-accident (§6.2.f du rapport).
+**Garde-fous câblés quelle que soit la phase :** critères d'arrêt automatique · clôture obligatoire (jamais de fin sur du matériel ouvert, `matiere_ouverte: false`) · plafond de fréquence · escalade vers le protocole de crise · **aucune séance en période de shutdown**.
 
-**Question à porter au Dr Isorni :** la Dr Bouarioua écarte l'imputabilité du traitement **sur le foie** — pas sur **le poids**. Or la **paroxétine**, prise ~1 an jusqu'au 07/08/2026, est l'ISRS le plus associé à une prise de poids. La question exacte est : *« la paroxétine a-t-elle contribué à la prise de poids qui a causé la stéatose ? »* Point favorable : la venlafaxine, reprise le 07/08/2026, a un profil pondéral plus neutre — le changement décidé pour des motifs psychiatriques se trouve aussi favorable métaboliquement.
+#### ⭐ Ce que l'aide-au-patient change à cet arbitrage — et ce qu'elle ne change pas *(13/08/2026)*
 
-**Données manquantes à recueillir en priorité :** poids, taille, IMC (aucun chiffre au dossier) ; compte-rendu anatomopathologique ; bilan biologique hépatique de départ ; historique pondéral.
+**Il faut être précis, parce que la tentation de lire « quelqu'un est là, donc on peut y aller » est forte.**
 
-**Déjà acté par ailleurs :** caféine à limiter (panicogène documenté), pas d'automédication alcool, budget de récupération après événements sociaux, plafonnement des missions professionnelles (§10.4-10.5).
-
----
-
-## 5. Axe E — Kokoro, le visage numérique Android
-
-> ✅ **Conception arrêtée au tour 7** (nom, graphisme, stack, état de repos, règles de conception). **Rien n'est construit** — l'app est l'Étape 5, et aucune ligne de Kotlin n'existe.
-
-### Réponse technique à la question posée (« au-dessus de toutes les autres apps, même le verrouillage ? »)
-
-**Oui, en grande partie — et l'app étant personnelle et sideloadée, aucune contrainte Google Play ne s'applique.**
-
-| Besoin | Mécanisme Android | Faisabilité |
-|---|---|---|
-| Flotter au-dessus de toutes les apps | `SYSTEM_ALERT_WINDOW` + `TYPE_APPLICATION_OVERLAY` (bulle type Messenger) | ✅ Standard, permission à accorder une fois |
-| Rester vivant en permanence | Foreground Service + exemption d'optimisation batterie | ✅ |
-| S'afficher **par-dessus l'écran de verrouillage** | Une Activity avec `setShowWhenLocked(true)` + `setTurnScreenOn(true)` — l'overlay classique, lui, passe **sous** le keyguard | ✅ mais autre mécanisme que l'overlay |
-| Réveiller l'écran pour une alerte | `full-screen intent` (comme un appel entrant) | ✅ |
-| Présence permanente sur l'écran verrouillé | Notification persistante / widget lockscreen | ✅ (variable selon version/constructeur) |
-| Remplacer entièrement l'écran d'accueil | App launcher personnalisée | ✅ (option radicale) |
-
-**Le point d'attention réel n'est pas Android, c'est le fabricant.**
-
-> ✅ **Cible retenue : Samsung Galaxy (One UI).** Terrain plutôt favorable — moins hostile que MIUI/HyperOS, bon support des overlays et de `showWhenLocked`. Deux réglages à faire une fois, sans lesquels le compagnon mourra silencieusement au bout de quelques heures :
-> - **Paramètres → Batterie → Limites d'utilisation en arrière-plan → Applications jamais mises en veille** → y ajouter l'app ;
-> - désactiver l'**optimisation de la batterie** pour l'app (`REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`).
->
-> À prévoir dans l'app : un **écran de diagnostic** qui vérifie ces réglages et guide leur activation — sur One UI, une mise à jour système peut les réinitialiser.
-
-### Stack retenue
-
-> ✅ **Kotlin natif + Jetpack Compose.** Le cœur du projet — overlay système, foreground service, `showWhenLocked`, full-screen intent — est constitué d'APIs natives ; en cross-platform ce sont des ponts fragiles, en natif c'est direct. Compose est par ailleurs excellent pour animer un visage.
->
-> **Conséquence à assumer :** c'est le seul morceau du projet qui sort du TypeScript strict imposé par les règles projet. Le reste (scripts, éventuel backend, tooling) y reste.
-
-### Le personnage : **Kokoro (心)**
-
-> ✅ **Nom retenu : Kokoro** — le mot japonais qui désigne indissociablement le cœur et l'esprit, racine de 心理学 *(shinrigaku)*, « psychologie ».
->
-> Deux raisons de le trouver juste ici : en japonais **cœur et esprit ne sont pas séparés** — pertinent pour un dossier où l'angoisse passe par le ventre depuis le CM2 et où la satiété ne se sent pas ; et le nom désigne **l'objet du soin, pas une promesse de résultat** — aucun jour de mauvaise passe ne le fera sonner faux.
-
-### Design du visage
-
-> ✅ **Personnage nommé, expressif, muet.** Une identité stable, qui exprime des états par le visage et communique **par texte uniquement**.
-> ✅ **Registre graphique : trait minimal, ligne claire.** Forme simple, contour fin, deux yeux et une bouche ; peu de surface colorée, contraste maîtrisé. Choisi pour l'hypersensibilité visuelle documentée (§6.1 B4) — et accessoirement trivial à animer proprement en Compose, ce qui sert directement la règle des transitions lentes.
-
-Le choix du muet est cliniquement solide, pas seulement esthétique : une voix qui surgit est une agression sensorielle (hypersensibilité auditive documentée, §6.1 B4) ; le texte se relit à froid, ne force pas le tempo, et reste lisible **en shutdown** — précisément quand le canal verbal est coupé (§9.16).
-
-**Règles de conception non négociables :**
-
-| Règle | Origine |
+| Objection du 08/08/2026 | État après l'arrivée de l'aide-au-patient |
 |---|---|
-| Jamais de son, jamais de vibration non sollicitée | Hypersensibilité auditive et tactile (§6.1 B4) |
-| Transitions d'expression **lentes et continues** — jamais de changement brusque | Hypersensibilité visuelle ; intolérance à l'imprévu |
-| Le visage **n'attend jamais rien** de Xavier : pas d'air déçu, pas de reproche, pas de « ça fait longtemps » | Camouflage = moteur de l'anxiété (§9.6) ; zéro exigence sociale |
-| Palette douce, contraste maîtrisé, pas de flash ni d'animation rapide | Hypersensibilité visuelle (lumières intenses, halogènes) |
-| L'apparence **ne change jamais sans annonce** — pas de skin surprise, pas d'événement saisonnier | Rigidité / routines (§6.1 B2) |
-| Il **explicite toujours pourquoi** il s'exprime | Empathie cognitive : ne jamais demander de décoder (§9.1) |
+| **L'abréaction sans filet** — une reviviscence qui s'ouvre sans se refermer, chez quelqu'un qui, **en shutdown, ne peut plus demander d'aide** | ⭐ **Partiellement levée, et c'est le gain réel.** Une personne présente, qui a le déroulé et les critères d'arrêt sous les yeux, **est** le filet qui manquait. C'est exactement la règle §9.19 : la demande d'aide cesse de dépendre d'une parole qui peut tomber |
+| **La fenêtre de surcharge documentée** — mariage, naissance, nuits fragmentées, missions, deuil actif | ❌ **Inchangée.** Un aide présent ne réduit pas la charge de vie |
+| **La titration du traitement** — ouvrir du matériel lourd rend ininterprétable ce qui suit | ❌ **Inchangée.** C'est une question de calendrier pharmacologique, pas de présence |
 
-### État de repos — 99 % du temps
+> 🔴 **Conclusion, et elle ne se négocie pas : les critères de déverrouillage de la phase 3 restent entiers.** L'aide-au-patient **ne remplace pas un clinicien** — elle exécute un déroulé, elle ne conduit pas un retraitement et ne gère pas une abréaction. **Ce qu'elle rend possible aujourd'hui, c'est la phase 1** : la stabilisation non visuelle, l'acquisition supervisée de la tension appliquée, l'exposition accompagnée. **C'est déjà la moitié de ce que l'arbitrage K attendait d'un psychologue en présentiel** — l'autre moitié, le jugement clinique en situation, reste dehors.
 
-> ✅ **Il respire, c'est tout.** Micro-animation lente et constante, sans information. Présence pure, zéro charge cognitive, zéro risque d'interprétation.
+### 3.7 🔴 Le versant somatique — c'est une prescription médicale, pas de l'hygiène de vie
 
-**Nuance retenue pour ne pas perdre un apport clinique.** L'option écartée (« le visage reflète ta charge mesurée ») avait une valeur propre : elle faisait du compagnon un **organe intéroceptif externalisé** — rendre visible un signal interne non perçu, exactement la règle du §4.2. Compromis intégré, qui respecte le choix fait :
+**Trois diagnostics somatiques constitués**, tous postérieurs à la conception initiale du dispositif :
 
-- **par défaut, il respire** — aucune information imposée, aucune interprétation à faire ;
-- **la charge mesurée est consultable en un tap**, jamais affichée d'elle-même ;
-- **jamais de tristesse ni de reproche** dans l'expression, en aucune circonstance — uniquement des niveaux de charge, sans valence morale.
-
-**Questions tranchées depuis** *(mise à jour du 09/08/2026 — cette ligne listait encore comme ouvertes deux décisions prises plus haut dans la même section)* **:** le nom est **Kokoro (心)**, le registre graphique est le **trait minimal, ligne claire**.
-
-**Questions refermées depuis** *(10/08/2026)* **:** ✅ **app unique multi-modules** — tranché à l'ouverture de l'Étape 5 (`psy/android/PLAN-KOKORO.md` §3.2) : trois apps seraient trois icônes à retrouver au pire moment. ✅ **Écran de crise** — 🔴 **il ne porte aucun numéro d'urgence.** Les numéros d'appel (15, 112, 114) ont été retirés du dispositif le 10/08/2026 à la demande de Xavier ; l'écran porte le **mot-code à Chourouk** (canal SMS validé par elle) et l'accès à la **tension appliquée**. Motifs : `psy/protocoles/crise-escalade.md` §0.
-
----
-
-## 6. Axe transversal — Sécurité, éthique, données
-
-> ✅ **Tranché le 09/08/2026** — arbitrage des données de santé rendu (dépôt privé + Syncthing P2P), protocole de crise écrit comme fiche (`psy/protocoles/crise-escalade.md`), tiers dans la boucle arrêtés (§6.1). Reste ouvert : le rôle `psy-superviseur` (garde-fou anti-effet-miroir), non planifié à ce jour.
-
-- **Non-substitution** : le dispositif complète le Dr Isorni, ne le remplace pas. Jamais de conseil de modification de traitement.
-- **Protocole de crise** : idéation suicidaire → escalade immédiate, **3114** affiché, contact d'urgence. ✅ **Écrit comme fiche actionnable le 09/08/2026 → `psy/protocoles/crise-escalade.md`** (triage en 3 questions, sécurité avant mécanisme, ⭐ **114 par SMS** — seule voie utilisable en shutdown —, numéros de substitution pour la Tunisie).
-- **Données de santé** : ✅ **dossier versionné dans le dépôt privé `github.com/XavierBoubert/psy`** (arbitrage de Xavier, 09/08/2026) **+ Syncthing P2P** pour le transport PC↔téléphone (chiffré TLS, aucun serveur tiers ne stocke). Détail, conditions et porte de sortie : `psy/SYNCHRO.md`.
-  > ⚠️ **Cette décision assouplit sciemment la règle « rien ne part vers un tiers ».** GitHub est un tiers, et il héberge un dossier médical complet. Arbitrage rendu en connaissance de cause, motivé par la traçabilité clinique (le git log est l'audit) et la sauvegarde hors-machine — `ressources/xavier/` y était de toute façon versionné depuis l'origine du projet.
-  > **Conditions attachées** : dépôt privé (à revérifier périodiquement) · 2FA + clé SSH · aucun fork, aucun collaborateur, aucune GitHub Action ayant accès au contenu.
-  > **Porte de sortie si l'arbitrage est révisé** : chiffrement au repos (`git-crypt` ou `age`) sur `psy/dossier/` et `ressources/xavier/` — contrepartie : Claude Code ne lit plus rien sans déverrouillage, et chaque surface doit gérer la clé.
-  > **Ce qui reste vrai sans réserve** : hors GitHub et hors appels à Claude, **aucune donnée ne part vers un tiers** — pas de cloud santé, pas de service d'analyse, pas de télémétrie. Syncthing est du pair-à-pair : il ne dépose rien sur un serveur.
-- **Effet miroir** : un psy virtuel toujours d'accord serait nocif. Le dispositif doit pouvoir contredire Xavier — d'où le rôle `psy-superviseur` (§1.3).
-
-### 6.1 Tiers dans la boucle
-
-> ✅ **Retenu : Dr Isorni (briefs mensuels) + Chourouk (protocole shutdown).** Écarté pour l'instant : psychologue en présentiel.
-
-| Tiers | Ce qu'il reçoit | Contrôle |
+| Diagnostic | Source primaire | État |
 |---|---|---|
-| **Dr Isorni** | Brief d'une page avant chaque consultation mensuelle : évolution chiffrée, effets du traitement, questions ouvertes à trancher (TAG, phobie sang-injection, nosophobie, TDAH, trauma). Format médecin : dense, factuel, sans interprétation gratuite. | Xavier relit et décide de transmettre ou non, à chaque fois |
-| **Chourouk** | (1) Le **mot-code shutdown** en temps réel quand Xavier déclenche le bouton ; (2) une **fiche explicative** une fois pour toutes : le silence est neurologique et non relationnel (§9.16), l'empathie affective est intacte (§9.1). | Aucun accès au journal, aux séances, ni aux mesures |
+| 🔴 **SAOS sévère** — IAH 35/h, 61 micro-éveils/h, SP 7,2 %, MPJ 31/h | Polysomnographie Dr Roisman, 19/01/2026 | **Insuffisamment traité.** PPC prescrite, **utilisée de façon très irrégulière**. ⭐ **IAH résiduel < 6/h sous appareil** — l'efficacité est démontrée, seul le port manque |
+| 🔴 **Stéato-hépatite non alcoolique (NASH), sans fibrose** | Anatomopathologie Dr Talhi, biopsie du 15/06/2026 | **Cible de perte de poids : 7-10 %, soit 7,7 à 11 kg → 99-102,3 kg** |
+| **Obésité de classe II** — 1,77 m · 110 kg · IMC 35,1 | Déclaré, 08/08/2026 | Facteur commun des deux précédents |
 
-> ⚠️ **Point à ne pas manquer.** Le §10.2 du rapport recommande explicitement un **psychologue en présentiel** (reprise de contact avec Catherine Gazeau) pour ce que le virtuel ne peut structurellement pas faire : EMDR encadré sur le matériel traumatique de l'enfance, exposition in vivo accompagnée, et apprentissage supervisé de la tension appliquée. L'écarter est un choix légitime, mais il **crée un trou** dans les cibles thérapeutiques n° 1, 2 et 3 de l'Axe C. À rediscuter une fois le dispositif en place — noté comme dette assumée, pas comme oubli.
+> ⚠️ **Corrections portées ici, et elles annulent trois sections de la v1.2 de ce plan** : l'atteinte hépatique n'est **pas** une stéatose simple mais une **NASH** ; la cible n'est **pas** ≥ 5 % / 5,5 kg mais **7-10 % / 7,7-11 kg**, les seuils hauts valant en cas de stéatohépatite ; le SAOS n'est **pas** une hypothèse à dépister mais un **diagnostic sévère constitué**. *(Ce que disaient les anciennes sections reste lisible au [§11](#11-journal-des-décisions).)*
+
+**Les boucles à connaître, parce qu'elles expliquent pourquoi rien ne bouge séparément :**
+
+```
+SAOS ──► privation de sommeil ──► dérèglement ghréline/leptine ──► prise de poids
+  ▲                                                                      │
+  └──────────────────────────────────────────────────────────────────────┘
+                              │
+                              └──► hypoxie intermittente ──► aggravation NASH
+```
+
+**Trois chantiers, un seul à la fois à partir du palier 1 :**
+
+| # | Chantier | Fiche | État |
+|---|---|---|---|
+| **1** 🔴 | **Reprise de la PPC par désensibilisation** | `psy/protocoles/ppc-desensibilisation.md` | **Chantier en cours** — palier 0 (logistique) non bouclé |
+| 2 | **Alimentation à structure externe** | `psy/protocoles/alimentation-structure-externe.md` | Écrit, démarre après |
+| 3 | **Activité physique sans impact** | `psy/protocoles/activite-physique-sans-impact.md` | Écrit, **feu vert médical préalable requis** |
+
+**Principes de conception du programme somatique :** zéro streak · zéro jugement calorique · zéro compteur de régularité · structure externe plutôt que volonté · prévisibilité (mêmes horaires, rotation stable, aucune injonction à « varier »).
+
+> ⭐ **Le passage de palier se compte dans le journal, il ne se demande pas.** « Tu te sens prêt ? » est une question intéroceptive posée à quelqu'un dont l'intéroception est déficitaire. « 3 jours sur 3 au bout du minuteur » est un fait vérifiable. **Si la donnée manque, on ne passe pas** — on ne comble jamais par un souvenir.
+
+> 🔴 **Frontière de non-substitution du chantier PPC :** les réglages, le choix d'interface et l'origine de la fuite (masque ou bouche ?) appartiennent au prestataire et au Dr Roisman. Le dispositif conduit l'**exposition**, rien d'autre.
+
+### 3.8 Le corpus
+
+**Règle : toute affirmation clinique est adossée à une source citable.** `psy/corpus/`.
+
+| Priorité | Corpus | État |
+|---|---|---|
+| **1** | **Tension appliquée (Öst)** — complet | ✅ versé |
+| **2** | **TCC alimentaire + intéroception** — ⭐ le corpus où l'avantage est le plus net (TSA × conduite alimentaire × déficit intéroceptif) | ⏸️ |
+| **3** | **TCC de l'agoraphobie** — exposition graduée. ⭐ **Sert deux fois** : la désensibilisation à la PPC *est* une exposition graduée | ⏸️ |
+| **4** | **Recommandations HAS** — TSA adulte, troubles anxieux | ⏸️ |
+| — | **Échelles et instruments** | ✅ `corpus/echelles/` |
+| — | DSM-5 intégral + extraits | ✅ `ressources/spécialisées/` |
+| ⏸️ | EMDR — stimulations bilatérales non visuelles | Reporté avec [§3.6](#36-emdr--arbitrage-rendu--on-commence-par-la-tcc) |
+| ❓ | ACT / défusion cognitive — **vérifier la compatibilité aphantasie** | À évaluer |
+
+### 3.9 Les échelles
+
+**Instruments versés** dans `psy/corpus/echelles/` : VVIQ, TAS-20, CAT-Q, GAD-7/PHQ-9 complets ; BES partiel + grille comportementale de substitution ; MAIA (items non obtenus, grille de substitution).
+
+**Deux règles non négociables, écrites dans chaque fiche :**
+
+1. ⛔ **Un instrument ne se restitue jamais de mémoire.** Un item mal restitué produit un score faux — donc **faussement rassurant**, le pire résultat possible ici. C'est la règle qui a bloqué le BES.
+2. ⭐ **Chez Xavier, un score élevé est informatif ; un score bas ne clôt aucune question.** L'alexithymie et le déficit intéroceptif sont précisément une difficulté à répondre à ce type de question.
+
+> **R6 ne s'applique pas aux échelles validées, et il faut le dire explicitement.** Le journal quotidien reste strictement comportemental ; une échelle est un autre objet — une passation datée, avec un seuil publié, dont la validation psychométrique remplace l'ancre comportementale.
+
+#### ⭐ Les échelles passent par Kokoro *(arbitrage de Xavier, 13/08/2026)*
+
+**Elles se publient comme étapes `questionnaire`, rubrique `bilan`** ([§8.3](#83-une-étape)). Concernées : **VVIQ · TAS-20 · CAT-Q · GAD-7 · BES · MAIA**.
+
+**Pourquoi c'est le bon support, et pas seulement un support commode :** une passation en conversation demande de tenir un fil, de suivre un rythme donné par quelqu'un d'autre, et de répondre à haute voix ou par écrit — **trois charges que le format fermé de Kokoro supprime**. Une question par écran, des choix fermés, « passer » écrit `null`, et **on peut s'arrêter au milieu sans le justifier**.
+
+**Trois règles de publication, non négociables :**
+
+1. 🔴 **Le PHQ-9 ne se publie jamais** — voir ci-dessous.
+2. ⛔ **Les items se recopient depuis `psy/corpus/echelles/`, jamais de mémoire.** La règle qui a bloqué le BES vaut à la publication comme à la passation.
+3. **La cotation n'est pas dans Kokoro.** L'app renvoie les réponses item par item ; **le score se calcule en séance**, et son interprétation aussi. ⭐ **Kokoro n'affiche jamais un score, un seuil ni une interprétation** — ce serait une progression à l'écran, et un score mal lu est pire qu'un score absent.
+
+> 🔴 **Deux câblages de sécurité.** (1) **L'item 9 du PHQ-9 interroge l'idéation suicidaire** : il se pose **en dernier**, toute réponse ≥ 1 **interrompt la passation** et déclenche le protocole de crise ; le fichier `mesures/` s'écrit après. (2) ⭐ **Le PHQ-9 ne se passe jamais dans Kokoro** — c'est le seul instrument porteur d'un déclencheur d'escalade, et Kokoro s'interdit tout numéro d'urgence par construction. Il se passe **en conversation**, avec `psy-bilan`.
+
+> ⚠️ **Le PHQ-9 n'est pas interprétable comme une mesure de l'humeur chez Xavier aujourd'hui** : quatre de ses neuf items (sommeil, fatigue, concentration, ralentissement) sont **directement produits par un SAOS sévère insuffisamment traité** et peuvent à eux seuls porter le score en zone « modérée » sans dépression. **La réserve figure obligatoirement au brief.**
+
+### 3.10 Les six skills de Claude Psy
+
+Les skills vivent dans **`.claude/skills/psy-*/SKILL.md`** — Claude Code ne les découvre que là.
+
+| Skill | Rôle | Écrit dans |
+|---|---|---|
+| `psy-seance` | ⭐ **Séance de fond hebdomadaire** — ouverture / une seule cible / clôture obligatoire. `npm run sync` en ouverture, supervision puis `npm run publish` en clôture. **Seule fenêtre d'écriture du programme** | `dossier/seances/` |
+| `psy-journal` | Check-in quotidien — questions fermées, < 2 min, aucune saisie de texte obligatoire | `dossier/journal/` |
+| `psy-crise` | **Triage de crise** — sécurité avant mécanisme, panique / vasovagal / shutdown, escalade 3114, voies sans parole | `dossier/crises/` |
+| `psy-bilan` | Passation et cotation d'une échelle — items lus dans le corpus, **jamais de mémoire** | `dossier/mesures/` |
+| `psy-brief-isorni` | Brief avant consultation — chiffres **calculés** depuis le journal, réserves obligatoires, **aucune proposition pharmacologique** | `dossier/briefs/` |
+| `psy-hygiene` | Versant somatique (PPC, alimentation, activité) — **le palier se compte, il ne se demande pas** | `dossier/journal/` (lecture) |
+
+**Invariants communs à tout skill du dispositif :**
+
+- charger **`psy/dossier/profil.md` et `psy/dossier/etat.md` ensemble, avant d'agir** — jamais l'un sans l'autre ;
+- **non-substitution** — aucun conseil de modification de traitement, jamais, même sous forme interrogative ;
+- **protocole de crise câblé** — 3114, non contournable ;
+- **aucune visualisation** ;
+- **utilisable sans parler ni écrire** ;
+- **zéro streak, zéro compteur de régularité, zéro reproche d'assiduité** ;
+- **annoncer avant de faire.**
+
+> 🔴 **`psy-crise` porte la seule exception au premier invariant.** En crise, la question de sécurité et la conduite s'appliquent **avant** la lecture du dossier. Lire deux fiches prend du temps, et le temps est exactement ce qui manque ; un contexte chargé n'a jamais aidé personne pendant les trente premières secondes. **L'exception est écrite, elle ne se déduit pas.**
+
+> ⭐ **Ce que chaque rôle a apporté au-delà de sa fiche :** `psy-bilan` interdit de restituer un instrument de mémoire · `psy-hygiene` **compte** le critère de passage au lieu de le demander · `psy-brief-isorni` interdit de compter un jour sans check-in comme un zéro, et rappelle que **« ne faudrait-il pas envisager… ? » est une proposition déguisée** · `psy-journal` interdit le rattrapage rétroactif.
 
 ---
 
-## 7. Feuille de route
+## 4. Claude Superviseur — le contrôle
 
-Séquençage retenu : **Axe A minimal, puis Axe D à fond** (§tour 5). Le foie n'attend pas, mais on évite de piloter à l'aveugle.
+> 🔴 **NORMATIF.** Ce paragraphe décide de ce qui atteint Xavier et le Dr Isorni.
 
-### Étape 0 — Socle minimal *(Axe A)* ✅ **en place — 09/08/2026**
-- [x] Créer l'arborescence `psy/` (agent, dossier, corpus, protocoles, web, android) → `psy/README.md` + un README par surface
-- [x] **Schéma du dossier** : format de la mémoire longitudinale → **`psy/dossier/SCHEMA.md`** (normatif) + 5 gabarits dans `psy/dossier/gabarits/`
-- [x] **Fiche de profil condensée** → **`psy/dossier/profil.md`** (permanent) **+ `psy/dossier/etat.md`** (courant). *Le rapport fait 693 lignes en v2.4 ; la fiche en tient 12 sections opérationnelles.*
-- [x] Skills `psy-seance` et `psy-journal` → **`.claude/skills/psy-*/SKILL.md`** *(et non `psy/agent/` : Claude Code ne découvre les skills que là — cf. `psy/agent/README.md`)*
-- [x] Synchro chiffrée PC↔téléphone → **décision arrêtée** dans `psy/SYNCHRO.md` : **dépôt privé** (historique) **+ Syncthing P2P** (transport PC↔Android). ⏸️ *Installation reportée à l'Étape 5 : il n'y a pas encore d'app avec laquelle synchroniser.*
+### 4.1 Ce qu'il supervise
 
-**Trois décisions de conception prises à cette étape, qui contraignent toute la suite :**
-1. ⭐ **On cote des comportements observables, pas des ressentis** (règle R6 du schéma). Alexithymie + déficit intéroceptif : « note ton anxiété sur 10 » demande d'utiliser une fonction déficitaire — c'est la même erreur que « écoute ta satiété ». D'où un journal qui compte des shutdowns, des retraits sensoriels et des renoncements, et **aucune échelle introspective**.
-2. **Un fichier par événement, append-only** (R1, R2). Contrainte Syncthing autant que principe de dossier clinique : deux appareils qui écrivent dans un même fichier produisent un conflit ; un fichier par événement le rend structurellement impossible.
-3. **Le format suit l'auteur** (R3) : ce que Claude écrit est du Markdown + frontmatter, ce qu'une app écrit est du JSON. Pas de conversion, pas de format bâtard.
+**🔴 Nouveau le 13/08/2026 : il supervise chaque contenu que Claude Psy produit.** Auparavant il passait à sa cadence (avant chaque brief, une fois par mois, sur demande) ; désormais **aucun contenu ne sort sans sa passe**.
 
-⚠️ **Arbitrage assumé, à garder visible :** le dossier est versionné sur GitHub, ce qui contredit partiellement le §6 (« rien ne part vers un tiers »). Décision de Xavier du 09/08/2026, motivée par la traçabilité et la sauvegarde ; conditions et porte de sortie (chiffrement `git-crypt`/`age`) documentées dans `psy/SYNCHRO.md` §2.
+| Contenu produit par Claude Psy | Supervision | Bloquante ? |
+|---|---|---|
+| **Le programme** (`psy/programme/programme.json`) | À chaque publication | 🔴 **Oui — câblée dans `npm run publish`** |
+| **La bibliothèque** (`psy/programme/bibliotheque/`) | À chaque publication | 🔴 **Oui — même passe, même refus** |
+| **Le brief** (`dossier/briefs/`) | Avant transmission | 🔴 **Oui — le brief ne part pas sans visa** |
+| **Les protocoles** (`psy/protocoles/`) | À l'écriture et à toute révision | Oui, avant qu'un protocole entre dans la bibliothèque |
+| **Le corpus, les fiches d'échelle** | À l'écriture | Non — constat, correction séparée |
+| **Le dossier** (séances, journal, mesures, crises) | Passe périodique | Non — **le superviseur n'écrit jamais dans `dossier/`** |
+| **Ce document** | Passe périodique | Non |
 
-### Étape 1 — Axe D, prescription médicale 🔴 *(ouverte le 09/08/2026 — protocoles écrits)*
+### 4.2 Les dix contrôles
 
-> ⚠️ **Étape révisée le 09/08/2026.** Sa rédaction initiale datait du rapport v2.0 : elle demandait un *dépistage* du SAOS (depuis lors **diagnostiqué sévère et non traité**) et visait −5,5 kg (cible **révisée à 7,7-11 kg** en v2.2, l'histologie montrant une NASH et non une stéatose simple). Deux conséquences : **la PPC devient la cible n° 1 de l'étape**, et l'objectif pondéral est corrigé.
+| # | Contrôle | Ce qu'il cherche |
+|---|---|---|
+| **C1** | **Source circulaire** | Une affirmation qui s'appuie sur un document écrit par Claude, présenté comme s'il faisait autorité. Les seules sources primaires sont listées au [§1.2](#12-claude-superviseur--la-contre-expertise). |
+| **C2** | **Fait périmé propagé** | Un fait corrigé dans une version, resté vrai ailleurs. *(Exemple historique : « PPC non utilisée » après la v2.4 qui dit « très irrégulièrement ».)* |
+| **C3** | **Invariant déclaré non câblé** | Une règle affirmée dans N documents et implémentée nulle part. *(Exemple : le protocole de crise « câblé en dur » qui n'existait que sous forme de huit lignes.)* |
+| **C4** | **Dérive R6** | Une cotation de ressenti réintroduite. ⭐ **Le contrôle le plus rentable** : la première passe l'a trouvée **dans `psy-seance` lui-même**, mot pour mot, le jour où le dispositif se félicitait de l'avoir corrigée ailleurs. |
+| **C5** | **Effet miroir** | Claude d'accord avec Xavier sur un point où il devrait objecter. |
+| **C6** | **Autorité fabriquée** | Un chiffre, un seuil ou une recommandation cité sans source vérifiable. |
+| **C7** | **Prolifération** | Des documents doctrinaux produits pendant que les actes ne le sont pas. **Ce n'est pas une critique de rythme, c'est un risque daté.** |
+| **C8** | **Programme désynchronisé du dossier** | Le programme publié affirme un palier, une cible ou une démarche que `etat.md` ne porte pas. |
+| **C9** | **Contenu non dérivé** | Un document de la bibliothèque qui est une **copie** d'un document clinique au lieu d'une **réécriture pour Xavier** : diagnostic, pronostic, nom de praticien, hypothèse non tranchée. |
+| **C10** 🆕 | 🔴 **Contenu adressé à l'aide-au-patient** | Une consigne de `seance-duo` qui **apprend à Chourouk** quelque chose sur Xavier — diagnostic, score, hypothèse, compte rendu — ou qui **lui demande un jugement clinique** : « estime si ça va », « décide s'il faut continuer », « rassure-le ». Chercher aussi une séquence **sans signal d'arrêt rappelé** ou **sans critères d'arrêt accessibles**. ⭐ **Elle lit des consignes, pas un dossier — et elle n'est pas thérapeute.** |
 
-- [x] ~~Poids, taille, IMC~~ → **1,77 m · 110 kg · IMC 35,1** (08/08/2026)
-- [x] ~~Demander un dépistage du SAOS~~ → **sans objet : SAOS sévère diagnostiqué le 19/01/2026** (IAH 35/h), PPC prescrite et **utilisée de façon très irrégulière** *(corrigé le 09/08/2026 d'après la consultation du 04/05 — v2.4 ; ⭐ IAH résiduel < 6/h sous appareil)*
-- [x] 🔴 **Protocole de reprise de la PPC par désensibilisation** → `psy/protocoles/ppc-desensibilisation.md` — palier 0 logistique + 6 paliers d'exposition, critères de passage comportementaux, matériel et réglages à exiger
-- [x] **Programme alimentaire à structure externe** → `psy/protocoles/alimentation-structure-externe.md` — quantités décidées avant le repas, servies une fois, horaires fixes, rotation stable, zéro jugement calorique — **cible : −7,7 à −11 kg → 99-102,3 kg** (7-10 %, NASH sans fibrose)
-- [x] **Programme d'activité physique** → `psy/protocoles/activite-physique-sans-impact.md` — domicile, sans impact, 5 paliers de 5 à 20 min, deux variantes matériel, feu vert médical préalable
-- [x] **Skill `psy-hygiene`** → `.claude/skills/psy-hygiene/` (09/08/2026) — conduite des trois chantiers. ⭐ **Le passage de palier se compte dans le journal, il ne se demande pas** : « tu te sens prêt ? » est une question intéroceptive, « 3 jours sur 3 au bout du minuteur » est un fait vérifiable. Porte aussi la frontière de non-substitution du chantier — **réglages, interface et origine de la fuite appartiennent au prestataire et au Dr Roisman**, pas au dispositif
-- [ ] **Exécuter le palier 0 de la PPC** *(réécrit le 09/08/2026 après la consultation du 04/05/2026)* : récupérer le **relevé de télésuivi**, faire trancher l'**origine de la fuite (masque ou bouche ?)** — elle commande le choix d'interface —, essayer plusieurs interfaces, vérifier l'état de la prise en charge, demander une **consultation de reprise** au Dr Roisman, et **informer le Dr Isorni**, seul praticien encore dans l'ignorance
-- [~] **Dépister la perte de contrôle alimentaire** (échelle **BES**) → départage hyperphagie boulimique / déficit intéroceptif. ⚠️ **Instrument non obtenu au 09/08/2026** — les 16 items pondérés ne sont pas librement diffusés et une restitution approximative produirait un score faux. Fiche `psy/corpus/echelles/bes.md` : cotation, seuils, trois voies d'obtention (Dr Isorni le 03/09, Dr Bouarioua, article de Brunault et al. 2016) **et une grille comportementale de 5 questions utilisable immédiatement**, qui ne dépend d'aucune source externe et convient mieux au profil que le BES lui-même
-- [ ] Recueillir : historique pondéral, bilan hépatique de départ, bilan métabolique (HbA1c, lipides, tension), **feu vert médical** pour l'activité physique
-- [ ] **Envoyer l'email au Dr Isorni** (`ressources/xavier/20260808 Email au Dr Isorni.md`, rédigé, non envoyé) — c'est lui qui débloque les questions pharmacologiques du chantier
+### 4.3 🔴 La supervision est bloquante avant publication
 
-> ⭐ **Ce que l'écriture des protocoles a produit et qui n'était pas prévu :** le rapport §10.8 posait « confortable plusieurs jours de suite » comme critère de passage des paliers PPC. **« Confortable » est un ressenti** — c'est-à-dire précisément ce que la règle R6 du schéma du dossier interdit de coter chez quelqu'un d'alexithymique avec déficit intéroceptif. Les critères ont donc été convertis en **comptages comportementaux** (« 3 jours consécutifs où le minuteur est allé au bout sans retrait »), et un **palier intermédiaire** a été inséré entre « assis éveillé » et « sieste ». C'est la première fois que le socle de l'Étape 0 corrige une recommandation du rapport : le dispositif commence à fonctionner comme un dispositif, pas comme un classeur.
+**La règle.** Aucun programme, aucune bibliothèque, aucun brief ne sort sans une supervision qui porte **explicitement** sur la version qui sort.
 
-### Étape 2 — Instrumentation du suivi *(Axe B)* ⏱️ **ouverte le 09/08/2026 — sous contrainte de calendrier**
+**Le câblage, parce qu'un invariant non câblé est exactement ce que C3 traque :**
 
-> **Deux dates fixent l'échéancier** *(09/08/2026)* : **consultation Dr Isorni le jeudi 03/09/2026 à 12h30**, puis **départ en vacances en Tunisie le 07/09/2026**. Il reste **25 jours utiles** et **4 séances de fond** (16, 22-23, 29-30/08 — plus celle du 09/08).
+1. Le superviseur écrit `psy/agent/supervisions/AAAA-MM-JJ-programme-vN.md`, avec en frontmatter :
 
-- [x] **Verser les instruments de mesure** → **`psy/corpus/echelles/`** (09/08/2026) : VVIQ, TAS-20, CAT-Q, GAD-7/PHQ-9 complets — items, cotation, seuils, limites — et BES partiel. **Sans instrument, « passer les échelles » n'était pas exécutable.** Inclut un **plan de passation daté** sur les 4 séances restantes et le câblage du **protocole de crise sur l'item 9 du PHQ-9**
-- [x] **Skills `psy-bilan` et `psy-brief-isorni`** → `.claude/skills/` (09/08/2026) — **les instruments et le gabarit existaient, l'exécutant non.** `psy-bilan` : passation item par item, cotation recopiée depuis la fiche à chaque fois, ⛔ **interdiction de restituer un instrument de mémoire** (la règle qui a bloqué le BES), item 9 du PHQ-9 câblé sur le protocole de crise. `psy-brief-isorni` : chiffres **calculés depuis le journal et jamais estimés**, un jour sans check-in n'est jamais compté comme un zéro, réserves obligatoires, **aucune proposition pharmacologique même interrogative**
-- [x] 🔴 **Démarrer le check-in quotidien** (Claude Code, migré sur Android à l'étape 5) — ✅ **démarré le 09/08/2026**, `dossier/journal/2026-08-09.json`. **24 jours utiles restent avant le 03/09.** Le brief ne tirera plus ses chiffres d'un répertoire vide — à condition que la cadence tienne, et **un jour manqué ne se rattrape ni ne se commente**
-- [ ] **Premier brief Dr Isorni**, à écrire à la séance du **week-end du 29-30/08** — questions ouvertes du rapport + alprazolam et SAOS + ferritine + bilan hépatique de référence + paroxétine et prise de poids + surveillance tensionnelle sous venlafaxine à IMC 35. **Le DIVA-5 reste bloqué tant que le SAOS n'est pas effectivement traité**
-- [ ] **Envoyer l'email au Dr Isorni avant la consultation** — un créneau ne suffit pas à découvrir un SAOS sévère, une NASH et six questions à la fois
-- [ ] Passer les échelles jamais administrées, **dans l'ordre imposé par `psy/corpus/echelles/README.md` §3** : **VVIQ** (09/08) · **TAS-20** (16/08) · **CAT-Q + GAD-7/PHQ-9** (22-23/08) · **BES** dès obtention de l'instrument. La séance du 29-30/08 n'en passe aucune — elle écrit le brief. Plafond : 20 min d'échelles par séance, l'échelle n'est jamais la cible de la séance
-- [ ] ✈️ **Sécuriser l'ordonnance de venlafaxine pour le séjour** à la consultation du 03/09 — elle tombe 4 jours avant le départ. **Logistique, pas posologie.**
+```yaml
+---
+date: 2026-08-13
+porte_sur: programme
+version: 4
+verdict: publiable        # publiable | refuse
+controles: [C1, C2, C3, C4, C5, C6, C7, C8, C9, C10]
+---
+```
 
-### Étape 3 — Outils de crise *(Axe C, première brique Android)* 🔴 *(ouverte le 09/08/2026 — les deux protocoles écrivables sont écrits)*
-- [x] Corpus + protocole **tension appliquée (Öst)**, à acquérir **à froid** → `psy/corpus/tension-appliquee/` + `psy/protocoles/tension-appliquee.md` — 4 paliers d'acquisition, ⭐ **déclenchement sur repères externes et au chronomètre** au lieu des prodromes (le protocole d'origine suppose une intéroception intacte), phrase écrite d'avance pour le soignant
-- [x] **Protocole de crise câblé (3114, escalade)** → `psy/protocoles/crise-escalade.md` — triage en 3 questions fermées, **sécurité avant mécanisme**, les 3 niveaux veille/alerte/crise, ⭐ ~~**le 114 par SMS** et les numéros de substitution pour le séjour en Tunisie~~ → **révisé en v1.1 le 10/08/2026 : les numéros d'appel d'urgence (15, 112, 114) sont retirés du dispositif** à la demande de Xavier ; le **3114 est conservé** sur la seule idéation suicidaire. Effet de bord favorable : **plus de liste de numéros à préparer pour la Tunisie** — le protocole devient identique ici et là-bas
-- [x] **Skill `psy-crise`** → `.claude/skills/psy-crise/` (09/08/2026) — exécute `crise-escalade.md` sans le résumer. ⭐ **Il porte la seule exception au premier invariant du dispositif : les numéros s'affichent AVANT le chargement de `profil.md` et `etat.md`.** Un contexte chargé n'a jamais aidé personne pendant les trente premières secondes d'une crise. Ajoute un **mode sans parole** opérationnel : bascule sur des choix numérotés (« 1 = ça va · 2 = ça ne va pas · 3 = j'ai besoin d'aide maintenant »), parce qu'**un chiffre est produisible en shutdown, une phrase non**
-- [→] ~~App tension appliquée~~ → **déplacée en Étape 5 (Android)** le 09/08/2026, arbitrage de Xavier sur le constat 3 de la supervision. §1.2.1 est catégorique : elle sert **en salle d'examen**, pas au bureau, et doit être accessible **en un geste depuis l'écran verrouillé**. Un guidage desktop aurait été inutilisable exactement là où il sert
-- [x] **Protocole shutdown négocié à froid avec Chourouk — fait le 09/08/2026. Mot-code : « shutdown ».** *(Version minimale, dans `psy/protocoles/jour-de-vol.md` §4.)* ✅ **La fiche explicative pour Chourouk est écrite le 09/08/2026** → `psy/protocoles/fiche-chourouk.md` (arbitrage de Xavier sur le constat 2 de la supervision : elle était déclarée dans quatre documents et n'existait nulle part). Reste le **bouton** Android (Étape 5)
-- [x] **Commencer le palier 1 de la tension appliquée** — ✅ **démarré le 09/08/2026** (jour 1 : 5 cycles sur 5). 3 min/jour, sans exposition, sans changement d'habitude ; ne consomme pas la règle « un seul chantier à la fois », la PPC restant le chantier n° 1. Critère de passage au palier 2 : **4 blocs complets sur 7 jours**, coté en séance. ⚠️ **Un écart de doctrine relevé à l'exécution** : `etat.md` §5 faisait de la question 13 (tension appliquée / TA) un préalable bloquant, quand `protocoles/tension-appliquee.md` §5 dit explicitement l'inverse. La fiche l'emporte, `etat.md` est corrigé — **mais le fait qui compte est resté entier et part au brief : la tension artérielle de Xavier n'a jamais été mesurée.** Elle n'est pas « contrôlée », elle est **inconnue**
+2. `psy/programme/programme.json` porte le champ **`supervision`**, obligatoire, qui nomme ce fichier.
+3. **`npm run publish` refuse la publication** si : le champ manque · le fichier n'existe pas · sa `version` ne correspond pas à celle du programme · son `verdict` n'est pas `publiable`.
 
-### Étape 4 — TCC de l'agoraphobie *(Axe C)*
+> ⭐ **Ce que ce câblage garantit vraiment : on ne peut pas publier une version supervisée hier.** Le numéro de version relie la passe à son objet. Republier après une correction impose une passe nouvelle — c'est le but.
+
+**Un refus se corrige, il ne se contourne pas.** Il n'existe aucune option de forçage, et il ne doit jamais en exister une.
+
+**Pour le brief** — il n'y a pas de script, donc la garde est dans le skill : `psy-brief-isorni` écrit `transmis: false` **et** `supervise: <fichier>` vide ; le brief ne se propose à la transmission qu'une fois ce champ rempli par une supervision de verdict `publiable`. **Xavier relit et décide ensuite** — la supervision ne remplace pas son arbitrage, elle le précède.
+
+### 4.4 Ce que le superviseur ne fait jamais
+
+1. **Écrire dans `psy/dossier/`.** Une supervision porte sur le dispositif, pas sur le patient. Sortie : `psy/agent/supervisions/`.
+2. **Modifier ou publier le programme.** Il constate ; **la correction est un acte séparé**, fait par Claude Psy.
+3. **Noter Xavier.** Il ne supervise pas le patient.
+4. **Noter le processus sur le résultat.** Une hypothèse tenue pour acquise avant d'être mesurée reste une faute même si la mesure l'a ensuite confirmée. *(L'aphantasie a été tenue pour acquise deux jours avant que le VVIQ ne la confirme.)*
+
+> ⚠️ **Deux caractéristiques sont aujourd'hui dans ce statut** : l'alexithymie (TAS-20 non passé) et le **déficit intéroceptif — brique de la règle centrale [§2.2](#22--la-règle-centrale--signal-interne-absent--structure-externe), la plus citée du dossier, et la seule sans instrument.**
+
+---
+
+## 5. Kokoro — le compagnon
+
+### 5.1 La doctrine
+
+**Kotlin natif + Jetpack Compose.** Cible : **Samsung Galaxy / One UI**. App personnelle et sideloadée — aucune contrainte Google Play. C'est le seul morceau du projet qui sort du TypeScript strict imposé par les règles projet : overlay système, foreground service, `showWhenLocked` et full-screen intent sont des APIs natives ; en cross-platform ce sont des ponts fragiles.
+
+**Trois décisions de construction, prises et closes :**
+
+1. ⭐ **Kokoro n'a pas commencé par le visage, mais par l'écran de crise.** Le mot-code convenu avec Chourouk n'avait aucun porteur : parole coupée, il fallait déverrouiller, ouvrir une messagerie, trouver un contact et écrire — quatre gestes, dont un impossible.
+2. **App unique, multi-modules.** Trois apps seraient trois icônes à retrouver au pire moment.
+3. **Aucune base de données.** L'app écrit des fichiers JSON — R1/R2/R3 l'imposent, une base dupliquerait la source de vérité.
+
+**Et depuis le 12/08/2026, la décision qui change la nature du projet :**
+
+> ⭐ **Kokoro n'apprend plus rien : il lit.** Claude Psy écrit la thérapie, Kokoro l'affiche et renvoie ce que Xavier a fait. **Ajouter une désensibilisation, un exercice, une démarche ou un questionnaire cesse d'être un acte de développement pour devenir un acte clinique**, fait en séance.
+
+### 5.2 Ce que Kokoro contient
+
+**Tout ce qui est accessible à Xavier**, groupé en quatre rubriques ([§8.3](#83-une-étape)) :
+
+| Rubrique | Contenu | Exemple |
+|---|---|---|
+| **`crise`** | Ce qui doit être là au pire moment, accessible **depuis l'écran verrouillé** | Mot-code à Chourouk · tension appliquée guidée · phrase pour le soignant |
+| **`therapie`** | Les protocoles en cours, les paliers, les exercices, les démarches — et ⭐ **les séances à deux** | Palier PPC du moment · repas servis une fois · bloc de tension appliquée · **ancrage corporel à deux** |
+| **`bilan`** | Ses bilans et ses questionnaires — ⭐ **les échelles se passent ici** *(13/08/2026)* | Passation GAD-7, TAS-20, CAT-Q… · compte rendu de bilan **écrit par Claude Psy**, jamais calculé par l'app. 🔴 **Jamais le PHQ-9** |
+| **`documentation`** | La bibliothèque — les fiches écrites pour être lues par lui | Les 13 symptômes de la panique · le kit vol · la fiche pour Chourouk |
+
+> 🔴 **Un bilan dans Kokoro est un texte daté écrit en séance, jamais un graphique que l'app calcule.** Kokoro n'affiche aucune progression, aucun historique, aucun palier atteint — [§5.7](#57-ce-qui-nentrera-jamais-dans-kokoro). Ce qui satisfait la vision (« Xavier a ses bilans dans la main ») sans toucher à l'invariant : **c'est le psy qui interprète, pas l'interface.**
+
+### 5.3 Le personnage
+
+**Kokoro (心)** — le mot japonais qui désigne indissociablement le cœur et l'esprit, racine de 心理学 *(shinrigaku)*, « psychologie ». Deux raisons de le trouver juste : en japonais **cœur et esprit ne sont pas séparés**, ce qui convient à un dossier où l'angoisse passe par le ventre et où la satiété ne se sent pas ; et le nom désigne **l'objet du soin, pas une promesse de résultat** — aucun jour de mauvaise passe ne le fera sonner faux.
+
+**Nommé, expressif, muet.** Il communique **par texte uniquement** : une voix qui surgit est une agression sensorielle, tandis que le texte se relit à froid, ne force pas le tempo, et **reste lisible en shutdown** — précisément quand le canal verbal est coupé.
+
+**Registre graphique : trait minimal, ligne claire.** Forme simple, contour fin, deux yeux et une bouche, peu de surface colorée, contraste maîtrisé.
+
+**État de repos — 99 % du temps : il respire, c'est tout.** Micro-animation lente et constante, sans information, zéro charge cognitive, zéro interprétation à faire. La charge mesurée reste **consultable en un tap**, jamais affichée d'elle-même, **et jamais avec une valence morale**.
+
+### 5.4 Les jalons
+
+| Jalon | Objet | État |
+|---|---|---|
+| **K0** | **Le poste de travail** — JDK 21, SDK Android, Gradle, APK installé sur le Galaxy S22 | ✅ **10/08/2026.** Android Studio écarté : outillage CLI seul |
+| **K1** | ⚡ **Le full-screen intent** *(spike de faisabilité — le point le plus risqué du projet)* | ✅ **10/08/2026.** Téléphone verrouillé, écran éteint, Kokoro s'affiche par-dessus le verrouillage **sans son ni vibration**, sur trois passages. ⭐ La restriction d'Android 14 ne s'applique pas sur ce Galaxy S22 ; **l'écran de guidage reste dans l'app**, une mise à jour peut changer ça. 🔦 Un `WAKE_LOCK` s'est révélé nécessaire — `setTurnScreenOn` seul laisse l'Always On Display s'intercaler |
+| **K2** | 🔴 **Le noyau de crise** | ✅ **10/08/2026, sans réserve.** Notification d'accès sur l'écran verrouillé → écran à deux boutons (**mot-code** · **tension appliquée**) → SMS composé et prêt, **`deviceLocked=1` de bout en bout, sans réseau data**. ⭐ **Le mot-code a été envoyé pour de vrai, téléphone verrouillé, et Chourouk a confirmé** — **à froid, en la prévenant** : la première fois qu'elle recevra ce mot ne sera pas la première fois qu'elle le reçoit |
+| **K3** | **Tension appliquée guidée** | ✅ **construit le 10/08/2026** — les **quatre repères externes** de la fiche §2 dans leur ordre (porte · fauteuil · plateau-garrot-aiguille en cycles enchaînés · après-geste puis 5 min assis), **phrase pour le soignant** montrable, critères d'arrêt à un tap. ⭐ **On ne déclenche plus sur une sensation, on déclenche sur un fait extérieur.** ⏳ **Critère de fin ouvert : un bloc en salle d'attente réelle** |
+| **K4** | **Check-in quotidien + transport** | ✅ **11/08/2026** — un vrai check-in saisi sur le téléphone est arrivé au dossier (`journal/2026-08-11.json`, `"source": "android"`). 11 champs en compteurs et choix fermés, énoncés **mot pour mot** du skill, **aucune saisie de texte**, format identique au gabarit. Écriture par **SAF** — **aucune permission au manifeste** |
+| **K5** | ⭐ **Le programme et la bibliothèque** | 🔴 **en cours.** Kokoro lit `programme.json` + `bibliotheque/`, affiche par rubrique, écrit `reponses/`. ✅ Moitié PC écrite et vérifiée ; **Kokoro ne lit pas encore** |
+| **K6** 🆕 | ⭐ **La séance à deux** *(13/08/2026)* | 🔜 **Le jalon qui ouvre les thérapies impossibles en solo.** Type `seance-duo` : déroulé chronométré tenu par l'**aide-au-patient**, **mode entraînement** obligatoire avant la première fois, **signal d'arrêt** rappelé en permanence, **critères d'arrêt à un tap**. **Critère de fin :** un entraînement joué en entier par Chourouk, puis une séance réelle menée à son terme ou **arrêtée sur le signal** — l'un et l'autre valent |
+| **K7** | **La présence** *(Kokoro devient Kokoro)* | ⏸️ Foreground service + overlay · visage à trait minimal · **écran de diagnostic One UI**. **Critère de fin :** l'overlay survit 72 h sans être tué par One UI |
+| ~~—~~ | ~~**Interpellation**~~ | ❌ **supprimé le 12/08/2026** — incompatible avec « Kokoro ne vient jamais vers Xavier ». 📌 **Ce n'est pas une perte : Android rétrograde déjà un full-screen intent en bannière dès que le téléphone est en usage.** La décision ne fait qu'aligner l'intention sur ce que la plateforme garantissait |
+
+**Critère de fin de K5 :** une étape publiée depuis le PC apparaît sur le téléphone, est faite par Xavier, et sa réponse revient dans `psy/dossier/` — valide au format, sans intervention manuelle.
+
+#### ⭐ La règle de priorité, révisée le 13/08/2026
+
+**Ce qu'elle disait depuis le 10/08** *(ancien plan applicatif §9-A)* : *le développement passe APRÈS le palier 0 de la PPC et le brief, jamais à leur place.* **Motif** : construire est gratifiant et mesurable, appeler un prestataire ne l'est pas. Au 13/08, K0 → K4 sont franchis **et `ppc_minutes` est toujours à 0** — la règle avait raison de se méfier.
+
+**Ce que Xavier arbitre le 13/08/2026 :** *« On va avancer sur Kokoro. Plus vite on avance sur lui, plus vite je peux avancer dans tous mes sujets. »* — et *« ces points vont apparaître dans Kokoro, ce qui va me permettre de les traiter avec le temps »*.
+
+> ⭐ **L'arbitrage tient debout, et il faut dire pourquoi : depuis K5, Kokoro ne concurrence plus le palier 0 — il le porte.** Les six démarches du palier 0 **sont déjà des étapes du programme**. Construire Kokoro n'est plus une alternative à les faire : c'est la structure externe qui les met sous la main. C'est la même bascule que pour les protocoles.
+
+> 🔴 **Ce qui ne change pas, et qui est la partie utile de l'ancienne règle :**
+> - **le brief garde sa date** — écrit au week-end du **29-30/08**, pour la consultation du **03/09**, quoi qu'il arrive côté code ;
+> - **les démarches du palier 0 sont des appels et des emails** — Kokoro les affiche, il ne les passe pas ;
+> - ⭐ **`ppc_minutes` reste l'indicateur qui tranche.** Tant qu'il est à 0, le contrôle **C7** (prolifération) reste ouvert, et **chaque compte rendu de jalon continue de le reporter, à dessein.**
+
+### 5.5 Points durs Android — à traiter, pas à découvrir
+
+| Point | Réalité | Traitement |
+|---|---|---|
+| **Full-screen intent** | ✅ Levé le 10/08/2026 sur le Galaxy S22 : permission accordée à l'installation, `canUseFullScreenIntent()` vrai sans manipulation | Écran de guidage conservé — une mise à jour système peut changer ce comportement |
+| **Canal de notification** | ⚠️ **Un canal est immuable une fois créé** | Identifiant versionné (`kokoro_alerte_v1`) ; toute modification de réglage impose `_v2` |
+| **Foreground service** | Depuis Android 14, un `foregroundServiceType` est obligatoire | `specialUse` avec justification. Aucune review : l'app est sideloadée |
+| **Notification persistante** | Une notification de service peut sonner | Canal `IMPORTANCE_LOW`, **aucun son, aucune vibration** — règle, pas préférence |
+| **Accès aux fichiers** | Le stockage cloisonné empêche d'écrire librement | ✅ **SAF, URI d'arbre persistant.** `MANAGE_EXTERNAL_STORAGE` écarté — il ouvre tout le stockage pour un seul dossier. **Aucune permission au manifeste**, transport interchangeable |
+| **Un dossier Drive n'est pas un système de fichiers** | 🔴 Drive **accepte deux fichiers du même nom** et ne le signale pas | Garde **double** : jeton local de date + interrogation du dossier. Côté PC, l'ingestion refuse d'écraser |
+| **One UI tue les services** | Deux réglages batterie obligatoires | *Batterie → Limites d'utilisation en arrière-plan → Applications jamais mises en veille* + désactivation de l'optimisation. **Écran de diagnostic dans l'app** — une mise à jour les réinitialise |
+
+### 5.6 Les invariants, traduits en règles vérifiables
+
+Une contrainte de conception qui reste une phrase se perd à l'implémentation. **Checklist de revue de chaque écran :**
+
+| Invariant | Règle de code vérifiable |
+|---|---|
+| Jamais de son | L'app ne déclare **aucune** permission audio ; tout canal est `IMPORTANCE_LOW` ou moins |
+| Jamais de vibration non sollicitée | Aucun appel `Vibrator` hors d'une action déclenchée par Xavier dans la seconde |
+| Transitions lentes et continues | Toute animation d'expression ≥ **800 ms**, easing continu. Aucune apparition instantanée |
+| Utilisable sans parler ni écrire | **Tout champ obligatoire est un nombre ou un choix fermé** (R5). Le texte libre est facultatif et jamais bloquant |
+| Aucune visualisation | Aucun texte ne contient « imagine », « visualise », « représente-toi ». **Vérifié par test sur les chaînes de l'app et sur le contenu publié** |
+| Zéro streak | Aucun compteur de régularité, de série, de pourcentage d'objectif ni de moyenne mobile affichée |
+| Aucune cotation de ressenti (R6) | Aucun libellé « note ton X sur 10 ». Toute question a une ancre comportementale |
+| Aucun numéro d'urgence | **Vérifié par test**, sur les sources **et** sur le contenu publié |
+| Déclenchement sur repère externe | Aucun texte ne dit « aux premiers signes », « quand tu sens », « si tu sens » |
+| L'apparence ne change jamais sans annonce | Tout changement visuel entre deux versions est annoncé **avant** installation |
+
+> 🔴 **Le point dur ouvert par K5, et il faut le nommer : les garde-fous câblés en tests devenaient contournables par du contenu, en silence.** Les tests de Kokoro vérifiaient les textes de l'app ; à partir de K5 ces textes ne sont plus dans l'app.
+>
+> **Double garde, et les deux réactions diffèrent volontairement :**
+> - **`npm run publish` refuse la publication entière.** Sur le PC on peut corriger — donc on corrige, on ne publie pas à moitié.
+> - **Kokoro écarte la seule étape fautive** et affiche le reste. Sur le téléphone on ne peut pas corriger, et perdre tout le programme pour une ligne serait pire.
+
+### 5.7 Ce qui n'entrera jamais dans Kokoro
+
+1. Un conseil, une suggestion ou un rappel touchant au **traitement** — même sous forme de question. Ça part au brief.
+2. Un **streak**, un compteur de régularité, un pourcentage d'objectif, un « ça fait 4 jours », un historique, une progression calculée.
+3. Un **son** ou une **vibration** non demandés.
+4. Une consigne de **visualisation**, y compris dans un texte d'aide.
+5. Une **expression de tristesse, de déception ou de reproche** sur le visage.
+6. Un **service tiers** : pas de cloud, pas d'analytics, pas de crash reporting, pas de police distante.
+7. 🔴 **Une notification, un rappel, une relance.** Seule exception : la notification d'accès crise sur l'écran verrouillé — **une porte, pas un rappel**.
+8. 🔴 **Un numéro d'urgence, sous quelque forme que ce soit** — appel, SMS, lien, texte d'aide. ⭐ **Y compris le 3114** : il appartient à une conduite d'escalade, pas à une interface. Un écran qui l'affiche en permanence le transforme en décor — et c'est précisément ce qui angoissait sans jamais servir.
+9. 🔴 **Le PHQ-9** — seul instrument porteur d'un déclencheur d'escalade ([§3.9](#39-les-échelles)).
+
+### 5.8 La surface web desktop
+
+**TypeScript strict.** ⏸️ Construction après K5.
+
+**Pourquoi le desktop n'est pas un confort mais une nécessité clinique :** la stimulation bilatérale visuelle exige une **amplitude de mouvement oculaire** suffisante — dérisoire sur un téléphone, correcte sur un écran desktop. De même, les tableaux de bord d'évolution sont illisibles sur mobile.
+
+| Outil | Quand | Pourquoi pas avant |
+|---|---|---|
+| ⭐ **Schémas Zod du dossier et du programme** | Avec K5 | **Le vrai premier livrable web : le contrat de données partagé.** Aujourd'hui les §7 et §8 ne sont validés que par les scripts — une app qui écrit du JSON invalide le fait en silence |
+| Tableau de bord d'évolution | Après le retour (≈ 10/2026) | Il ne devient lisible qu'avec plusieurs semaines de journal. **Sans compteur de régularité**, jamais |
+| Passation d'échelles longues | Après le retour | Les passations urgentes sont conduites par `psy-bilan` en conversation d'ici là |
+| Stimulation bilatérale | Étape 6 | Instrument seul, aucun protocole de retraitement |
+
+**Contraintes d'interface identiques à Kokoro** : aucun son surprise, aucun flash, transitions lentes, palette douce, zéro streak, utilisable sans parler ni écrire, aucune visualisation, **aucun changement sans annonce**.
+
+**Critère de répartition entre surfaces, à ne jamais enfreindre :**
+
+> **Ce qui doit être là au moment où ça arrive → Kokoro. Ce qui demande de la surface et du calme → desktop.**
+
+---
+
+## 6. Le contenu — Google Drive
+
+> 🔴 **NORMATIF.** ⭐ **Version du 13/08/2026 — c'est un arbitrage neuf, tracé comme les précédents.**
+
+### 6.1 La décision
+
+**Deux mécanismes, deux rôles qui ne se confondent pas :**
+
+| Mécanisme | Rôle | Périmètre |
+|---|---|---|
+| **Dépôt git privé** `github.com/XavierBoubert/psy` | ⭐ **Historique, archive, source de vérité.** Traçabilité clinique gratuite : qui a écrit quoi, quand, avec retour arrière. | **Tout le dépôt.** Y compris tout ce qui transite par Drive |
+| **Google Drive** | ⭐ **Le contenu vivant, dans les deux sens.** Ce dont Kokoro a besoin, et ce que Kokoro produit et dont les Claude ont besoin. | [§6.2](#62-le-périmètre) |
+
+**Pourquoi pas git comme canal Android :** il n'existe pas de client git confortable sur Android, et une app qui doit écrire en un geste ne peut pas dépendre d'un `commit`/`push`. Drive pose des fichiers ; c'est ce qu'il faut.
+
+**Pourquoi pas Drive comme archive :** il synchronise, il n'archive pas. Une erreur d'écriture se propage. **Le git fournit le filet.**
+
+> 🔴 **Règle absolue : tout ce qui passe par Drive est versé au dépôt et versionné.** Le Drive n'est jamais la seule copie de quoi que ce soit. `npm run sync` fait la remontée, `npm run publish` fait la descente, et les deux côtés existent dans le dépôt.
+>
+> ⚠️ **Ne jamais faire pointer Drive sur `c:\p\psy`.** Le dépôt git n'est synchronisé par aucun service. Le dossier Drive est **hors dépôt**.
+
+### 6.2 Le périmètre
+
+**Le critère, et il n'est pas « clinique » — il est fonctionnel :**
+
+> **Transite ce dont Kokoro a besoin, et ce que Kokoro produit et dont les Claude ont besoin. Rien d'autre.**
+
+| Sens | Ce qui transite | Auteur unique | Versé dans |
+|---|---|---|---|
+| **PC → Kokoro** | `programme.json` — la thérapie du moment | Claude Psy | *(source : `psy/programme/`)* |
+| **PC → Kokoro** | `bibliotheque/*.md` — la documentation accessible à Xavier | Claude Psy | *(source : `psy/programme/bibliotheque/`)* |
+| **Kokoro → PC** | `journal/AAAA-MM-JJ.json` — les check-ins | Kokoro | `psy/dossier/journal/` |
+| **Kokoro → PC** | `reponses/AAAA-MM-JJ-HHMM-<id>.json` — ce qui a été fait | Kokoro | `psy/dossier/reponses/` |
+
+**Ce qui ne transite jamais** — et la liste est fermée : `profil.md` · `etat.md` · `seances/` · `crises/` · `mesures/` · `briefs/` · `gabarits/` · `psy/agent/supervisions/` · `psy/corpus/` · `psy/protocoles/` *(à l'état brut)* · `ressources/` · le code · `.git`.
+
+> ⭐ **La distinction qui tient tout : le contenu publié est *dérivé*, jamais *extrait*.** Le programme porte **ce qu'il y a à faire**, jamais ce qui a été constaté, mesuré ou diagnostiqué. La bibliothèque porte **une fiche réécrite pour Xavier**, jamais le protocole clinique brut. C'est le contrôle **C9** du superviseur ([§4.2](#42-les-dix-contrôles)).
+
+> ✅ **Aucun fichier n'a deux auteurs.** `programme.json` et `bibliotheque/` sont écrits par le PC seul ; `journal/` et `reponses/` par Kokoro seul. **C'est une condition de l'arbitrage, pas une observation** — c'est ce qui rend le risque de conflit tolérable.
+
+### 6.3 Les arbitrages assumés — à dire franchement
+
+#### GitHub *(09/08/2026)*
+
+Le plan d'origine posait : « données locales, repo privé. **Rien ne part vers un tiers hors appels à Claude.** » **Versionner le dossier sur GitHub contredit partiellement cette phrase** : GitHub est un tiers, et il héberge des données de santé.
+
+Arbitrage de Xavier, en connaissance de cause : la traçabilité clinique et la sauvegarde hors-machine valent le risque résiduel. `ressources/xavier/` — l'intégralité des documents médicaux réels — y était de toute façon versionné depuis l'origine.
+
+**Conditions :** dépôt **privé**, à revérifier périodiquement · **2FA** + clé SSH · **aucun fork, aucun collaborateur, aucune GitHub Action** ayant accès au contenu.
+
+#### Google Drive *(11/08/2026, étendu le 12/08 puis le 13/08/2026)*
+
+**Xavier a écarté Syncthing au profit de Google Drive après objection argumentée du dispositif et maintien de sa décision.** L'objection est conservée ici parce qu'**un arbitrage dont on a effacé le contre-argument n'est plus un arbitrage**.
+
+| Objection opposée | Portée après décision |
+|---|---|
+| Drive n'expose pas de racine sélectionnable en arbre de documents (SAF) | ✅ **Fausse** — vérifié sur l'appareil le 11/08 : Drive *est* sélectionnable. Le contournement prévu n'a pas servi |
+| Drive pour desktop ne doit jamais voir `.git` | ✅ Traité par construction : dossier Drive **hors dépôt**, scripts pour la jonction |
+| Les conflits Drive sont silencieux (« fichier (1) ») | 🔴 **Pire que prévu, et non résolu** : Drive accepte **deux fichiers du même nom** sans rien dire. Mitigation : auteur unique par fichier + garde double côté app + refus d'écraser côté PC |
+| Drive n'apporte pas la sauvegarde | ✅ Acté : Drive est un **transport**, GitHub est l'archive |
+| Un tiers de plus voit des données de santé, sur un compte grand public non HDS | ⚠️ **Réel, et il s'élargit à chaque extension** — voir ci-dessous |
+
+**Ce que Drive apporte, et qui a motivé la décision :** Syncthing exige que les deux appareils soient allumés en même temps, et son installation Android passe par F-Droid. Drive n'a ni l'une ni l'autre de ces frictions.
+
+**🔴 Ce que le périmètre du 13/08/2026 élargit, dit franchement :**
+
+- Le 11/08, seul `journal/` transitait — des **compteurs de comportements**, sans diagnostic ni nom de praticien.
+- Le 12/08, `programme.json` s'est ajouté — des **libellés cliniques** : nom des démarches, consignes d'exercice, praticiens sollicités.
+- **Le 13/08, la bibliothèque s'ajoute** — des **fiches thérapeutiques entières**, lisibles par un tiers qui accéderait au compte : quels protocoles Xavier suit, sur quelles cibles, avec quels paliers. C'est **plus** que le programme, et **moins** qu'un dossier : ni compte rendu, ni mesure, ni diagnostic, ni idéation ne transitent.
+- **Xavier a arbitré en connaissance de cause : « c'est assumé ».** Le contre-argument reste écrit ici, il n'est pas levé — il est accepté.
+
+**Conditions attachées :**
+
+- Le dossier Drive **n'est jamais partagé** : aucun lien, aucun destinataire, aucun « partagé avec moi ».
+- **2FA obligatoire** sur le compte Google.
+- **Aucune application tierce** autorisée sur ce Drive.
+- Le dossier Drive est un **transit** : les fichiers y arrivent, sont versés au dépôt, **et le dépôt fait foi**.
+- ⚠️ **Aucune extension du périmètre sans nouvel arbitrage tracé ici.** Le jour où une surface voudra faire transiter `mesures/`, `seances/` ou `crises/`, c'est une décision nouvelle — pas une continuation de celle-ci.
+
+#### La règle qui n'a pas changé
+
+L'assouplissement porte sur **GitHub et Google Drive, et rien d'autre**. Hors de ces deux-là et hors des appels à Claude, **aucune donnée ne part vers un tiers** : pas de cloud santé, pas de service d'analyse externe, pas de télémétrie, pas d'hébergeur de sauvegarde. **Toute proposition d'ajouter un service tiers est refusée par défaut** et doit faire l'objet d'un arbitrage explicite, tracé ici.
+
+**Porte de sortie**, si l'un des arbitrages est révisé : chiffrement au repos par `git-crypt` ou `age` sur `psy/dossier/` et `ressources/xavier/`. Contrepartie : Claude Code ne lit plus rien sans déverrouillage, et chaque surface doit gérer la clé.
+
+### 6.4 L'arborescence du transit
+
+```
+H:\Mon Drive\kokoro\               ← hors dépôt, jamais partagé
+  programme.json                   ← PC écrit,    Kokoro lit
+  bibliotheque/
+    <id>.md                        ← PC écrit,    Kokoro lit
+  journal/
+    AAAA-MM-JJ.json                ← Kokoro écrit, PC lit
+  reponses/
+    AAAA-MM-JJ-HHMM-<id>.json      ← Kokoro écrit, PC lit
+```
+
+### 6.5 Les deux scripts
+
+| Commande | Sens | Ce qu'elle fait |
+|---|---|---|
+| **`npm run sync`** | Drive → dépôt | Verse `journal/` et `reponses/` dans `psy/dossier/`. **N'écrase jamais un fichier existant** (R2), valide chaque fichier au [§7](#7-le-dossier--format), et signale tout nom hors convention |
+| **`npm run publish`** | dépôt → Drive | Valide le programme et la bibliothèque au [§8](#8-le-programme--format), **vérifie la supervision** ([§4.3](#43--la-supervision-est-bloquante-avant-publication)), et **refuse la publication entière** au moindre manquement |
+
+Formes longues : `npm run contenu-sync -- <transit>` · `npm run programme-publish -- <transit>`.
+
+> ⚠️ **Fichiers en double.** Drive ne marque pas les conflits : il crée `2026-08-11 (1).json`. **Un fichier de ce nom ne se supprime jamais sans être lu — c'est une donnée clinique.** Procédure : lire les deux versions, fusionner à la main dans le dépôt, committer la fusion.
+
+> 🔴 **`npm run publish` ne se lance qu'à la clôture d'une séance** ([§3.3](#33-les-trois-rythmes)). **Un refus se corrige, il ne se contourne pas.**
+
+### 6.6 État des conditions — vérifié le 13/08/2026
+
+- [x] **Le dépôt GitHub est privé.** *(Vérifié par Xavier, 13/08/2026.)*
+- [x] **La 2FA est active** — sur GitHub **et** sur le compte Google. *(Idem.)*
+- [x] **Le dossier Drive n'est partagé avec personne.** *(Idem.)*
+- [x] 🔴 **Compte Google du transit — arbitrage E clos le 13/08/2026 : on reste sur le compte professionnel `xavier@allons-y.io`.** ⭐ **Motif de Xavier, et il est valable : il est en micro-entreprise, ce compte lui permet de passer la note en frais de société.** *(Le dispositif recommandait un compte personnel pour isoler des données de santé d'un espace lié à l'activité ; **l'objection reste écrite, elle est acceptée, pas levée.** Elle redeviendra un sujet si la structure change de forme, gagne un associé, un comptable avec accès, ou un administrateur Workspace.)*
+- [x] **Le dossier de transit s'appelle `kokoro`** *(13/08/2026)* — il ne portait plus que du journal quand il s'appelait `psy-journal`. **Un nom qui ment finit par tromper quelqu'un.**
+- [ ] **Kokoro lit `programme.json` et `bibliotheque/`, et écrit `reponses/`** — jalon K5
+
+> **Sauvegarde froide hors-ligne : sujet clos le 13/08/2026, à la demande de Xavier.** Il n'est pas rouvert.
+
+---
+
+## 7. Le dossier — format
+
+> 🔴 **NORMATIF.** Ce paragraphe définit le format de `psy/dossier/`. Les trois surfaces le lisent et l'écrivent. **Aucune surface n'a le droit d'inventer un format.**
+
+**Pourquoi il existe :** le dossier est la **source de vérité unique**. C'est lui — pas les conversations — qui rend le suivi longitudinal possible. Si son format dérive, la mémoire longitudinale se dégrade **en silence** : les tendances deviennent incalculables, les comparaisons faussées, et l'avantage n° 2 du dispositif disparaît.
+
+### 7.1 Les six règles invariables
+
+| # | Règle | Raison |
+|---|---|---|
+| **R1** | **Un fichier par événement.** Jamais de fichier partagé auquel on ajoute des lignes. | Deux appareils qui appendent au même fichier produisent un conflit. Un fichier par événement le rend **structurellement impossible**. ⚠️ **Renforcée par le transport retenu** : Google Drive accepte deux fichiers du même nom **sans rien signaler**. |
+| **R2** | **Append-only.** Un enregistrement daté n'est jamais réécrit ni supprimé. Une correction est un **ajout**. | C'est un dossier clinique. L'historique doit rester lisible, **y compris ce qui s'est révélé faux**. Le git log est l'audit. |
+| **R3** | **Le format suit l'auteur.** Ce que **Claude** écrit → Markdown + frontmatter YAML. Ce qu'une **application** écrit → JSON. | Chacun son format fiable. Pas de conversion, pas de format bâtard. |
+| **R4** | **Nommage `AAAA-MM-JJ` en préfixe, toujours.** | Le tri lexicographique **est** le tri chronologique. Aucun index à maintenir. |
+| **R5** | **Aucun champ obligatoire ne demande d'écrire ou de parler.** Tout ce qui est requis est un nombre ou un choix fermé. | Contrainte shutdown : le dossier doit rester alimentable quand le canal verbal est coupé. |
+| **R6** | ⭐ **On cote des comportements observables, pas des ressentis.** | Alexithymie probable + déficit intéroceptif. « Note ton anxiété sur 10 » demande d'utiliser une fonction perceptive déficitaire — même erreur que « écoute ta satiété ». Application directe de [§2.2](#22--la-règle-centrale--signal-interne-absent--structure-externe). |
+
+> **R6 est la règle la plus facile à enfreindre sans s'en apercevoir.** À chaque champ ajouté : *« Xavier peut-il répondre en observant ce qu'il a fait, ou doit-il introspecter ce qu'il a ressenti ? »* Si c'est la seconde, le champ est mal conçu.
+
+### 7.2 Arborescence
+
+```
+psy/dossier/
+  profil.md        fiche condensée — contexte PERMANENT, rechargé à chaque séance
+  etat.md          état COURANT — chantier en cours, traitement, questions ouvertes
+  journal/         check-ins quotidiens ....... JSON — AAAA-MM-JJ.json
+  reponses/        ce que Xavier a fait ....... JSON — AAAA-MM-JJ-HHMM-<id>.json
+  seances/         comptes-rendus de séance ... MD   — AAAA-MM-JJ-seance.md
+  crises/          épisodes de crise .......... JSON — AAAA-MM-JJ-HHMM-<type>.json
+  mesures/         échelles cotées ............ JSON — AAAA-MM-JJ-<echelle>.json
+  briefs/          briefs Dr Isorni ........... MD   — AAAA-MM-JJ-isorni.md
+  gabarits/        modèles vierges — à copier, jamais à remplir sur place
+```
+
+**`profil.md` et `etat.md` sont les deux seules exceptions à R2** : ce sont des documents vivants, réécrits. Leur historique est tenu par git, et chacun porte un journal de révisions en pied de page.
+
+**La distinction profil / état — à ne jamais confondre :**
+
+| | `profil.md` | `etat.md` |
+|---|---|---|
+| Contenu | Ce qui ne change pas | Ce qui change |
+| Exemples | TSA niveau 1, aphantasie, les 3 mécanismes de crise, ce qu'on ne dit jamais | Traitement en cours, poids, chantier ouvert, questions en attente |
+| Révision | Rare (nouveau diagnostic, nouvelle contrainte) | Hebdomadaire (clôture de séance) |
+
+Les deux se chargent **ensemble**, jamais l'un sans l'autre : le profil dit *qui est Xavier*, l'état dit *où on en est*.
+
+### 7.3 `journal/AAAA-MM-JJ.json` — check-in quotidien
+
+Un fichier par jour. **Cible : moins de 2 minutes, zéro saisie de texte obligatoire.**
+
+```json
+{
+  "date": "2026-08-13",
+  "source": "android",
+  "noyau": {
+    "shutdowns": 0,
+    "exposition_sociale": 1,
+    "retrait_sensoriel": 0,
+    "renoncements": 0,
+    "activites_investies": 2,
+    "sommeil_heures": 6.5,
+    "missions_actives": 3
+  },
+  "campagne": {},
+  "notes": null
+}
+```
+
+| Champ | Type | Question fermée | Justification clinique |
+|---|---|---|---|
+| `shutdowns` | entier ≥ 0 | « Combien de fois as-tu perdu la parole ou été incapable de traiter une demande ? » | ⭐ **Indicateur n° 1** — « la fréquence des pertes de parole est le meilleur indicateur de suivi » du burnout autistique (§10.5) |
+| `exposition_sociale` | 0-3 | « Combien d'heures d'interaction sociale non choisie ? » 0 = aucune · 1 = < 1 h · 2 = 1-3 h · 3 = > 3 h | Proxy comportemental du **camouflage**, qui prédit anxiété, dépression et épuisement indépendamment des traits autistiques. Mesure l'exposition, pas l'effort ressenti — R6 |
+| `retrait_sensoriel` | entier ≥ 0 | « Combien de fois as-tu dû te retirer, mettre un casque, baisser la lumière, quitter une pièce ? » | Charge sensorielle. Comptage d'actions, pas d'inconfort — R6 |
+| `renoncements` | entier ≥ 0 | « À combien de choses as-tu renoncé à cause de l'angoisse ? » | Ancre comportementale de l'anxiété : l'**évitement** est le critère D de l'agoraphobie, et il s'observe |
+| `activites_investies` | 0-3 | « Combien d'activités as-tu pu investir hors obligations ? » | Ancre comportementale de l'humeur. La **clinophilie** est le marqueur dépressif documenté chez Xavier — on mesure ce marqueur-là, pas « ton moral sur 10 » |
+| `sommeil_heures` | nombre ≥ 0 | « Combien d'heures de sommeil, réveils compris ? » | Critère C du TAG — et référence pour juger l'effet de la PPC |
+| `missions_actives` | entier ≥ 0 | « Combien de missions professionnelles en cours ? » | **Seule variable d'ajustement disponible** — pas la famille, pas le sommeil |
+
+**Ce que le noyau ne contient délibérément pas :** aucun champ « anxiété /10 », « humeur /10 », « fatigue /10 », « niveau de stress ». Tous violeraient R6.
+
+**Campagne** — champs temporaires liés au chantier ouvert, et seulement lui. Quand le chantier se ferme, ses champs sortent : **le journal ne grossit jamais indéfiniment.** Les champs actifs sont déclarés dans `etat.md`.
+
+```json
+"campagne": { "ppc_minutes": 0, "repas_servis_une_fois": 3, "activite_minutes": 0, "poids_kg": null }
+```
+
+| Champ | Type | Justification |
+|---|---|---|
+| `ppc_minutes` | entier ≥ 0 | ⭐ Donnée **objective, issue du télésuivi de l'appareil**, jamais d'une auto-évaluation — exactement l'instrument qu'appelle un déficit intéroceptif |
+| `repas_servis_une_fois` | entier 0-4 | On compte les repas **conformes à la structure**, jamais les calories |
+| `activite_minutes` | entier ≥ 0 | Prescription médicale. Sans impact, domicile |
+| `poids_kg` | nombre \| null | Hebdomadaire. `null` les autres jours. Cible 99-102,3 kg |
+
+**Règles de remplissage :**
+
+- ⭐ **Un jour sans check-in est un jour sans fichier.** Aucun rattrapage rétroactif, aucune relance, aucune trace de manquement. **L'absence de fichier n'est pas une donnée négative — elle n'est pas une donnée du tout**, et un calcul de médiane ne doit jamais la compter comme un zéro.
+- Un champ auquel Xavier ne répond pas est écrit `null`. **`null` ≠ `0`.**
+- `notes` est **toujours** facultatif et **toujours** en dernier.
+- `source` : `"claude-code"` | `"android"` | `"web"`.
+- ⚠️ **Une seule surface écrit le journal un jour donné.** Vérifier avant d'écrire ; jamais de rattrapage.
+
+> ⚠️ **Interdit dans le journal, en toute circonstance :** compteur de régularité, série, pourcentage d'objectif, moyenne mobile affichée à Xavier, rappel de manquement, jugement calorique. **Un compteur est une charge.**
+
+### 7.4 `reponses/AAAA-MM-JJ-HHMM-<id>.json` — ce que Xavier a fait
+
+Écrit par Kokoro, un fichier par étape faite. Format défini au [§8.5](#85-ce-que-kokoro-renvoie).
+
+> ⭐ **`arrete_avant_la_fin` n'est pas un échec et ne se commente nulle part.** Une étape non faite ne produit aucun fichier — **et ce n'est pas une donnée**.
+
+### 7.5 `crises/AAAA-MM-JJ-HHMM-<type>.json`
+
+> 🔴 **La règle la plus importante du dossier : les trois mécanismes ne se confondent jamais.** Le champ `type` n'a pas de valeur par défaut et ne peut pas être laissé vide.
+
+```json
+{
+  "horodatage": "2026-08-13T14:32:00+02:00",
+  "type": "vasovagal",
+  "contexte": "medical",
+  "declencheur": "pose de cathéter",
+  "duree_minutes": 8,
+  "parade_utilisee": "tension_appliquee",
+  "parade_efficace": true,
+  "perte_de_connaissance": false,
+  "source": "claude-code",
+  "notes": null
+}
+```
+
+| Champ | Valeurs | Notes |
+|---|---|---|
+| `type` | `panique` \| `vasovagal` \| `shutdown` \| `indetermine` | **Obligatoire.** `indetermine` est légitime — mieux vaut « je ne sais pas » qu'un type inventé. Le tri se fait après, à froid |
+| `contexte` | `transport` \| `foule` \| `lieu_clos` \| `medical` \| `social` \| `conflit` \| `domicile` \| `autre` | |
+| `parade_utilisee` | `tension_appliquee` \| `respiration` \| `retrait_sensoriel` \| `mot_code` \| `sortie_situation` \| `aucune` | `tension_appliquee` **uniquement** pour le vasovagal. `mot_code` uniquement pour le shutdown |
+| `perte_de_connaissance` | booléen | **Discriminant capital** : la panique ne fait pratiquement jamais perdre connaissance ; le vasovagal, si. Un `true` sur un épisode typé `panique` **doit** déclencher une révision du typage en séance |
+
+**Escalade :** si l'épisode comporte une idéation suicidaire ou une détresse aiguë, **le fichier s'écrit après le protocole de crise, jamais avant.**
+
+### 7.6 `seances/AAAA-MM-JJ-seance.md`
+
+```markdown
+---
+date: 2026-08-13
+duree_minutes: 52
+cible: ppc-desensibilisation
+mesures_passees: [vviq]
+palier_atteint: 2
+programme_publie: 4
+supervision: 2026-08-13-programme-v4
+prochaine_seance: 2026-08-16
+matiere_ouverte: false
+---
+
+## Ouverture
+## Travail
+## Clôture
+## Décisions
+## Repris à la prochaine séance
+```
+
+| Champ | Notes |
+|---|---|
+| `cible` | **Une seule cible par séance.** Identifiants : `ppc-desensibilisation`, `alimentation-structure`, `agoraphobie-exposition`, `tension-appliquee`, `shutdown-protocole`, `alexithymie-nommage`, `camouflage-pacing`, `tag-ruminations`, `deuil-ainee` |
+| `palier_atteint` | Pour les cibles à paliers. `null` sinon |
+| `programme_publie` 🆕 | Version du programme publiée en clôture, ou `null` si rien n'a été publié |
+| `supervision` 🆕 | Fichier de supervision qui a visé cette publication. **Obligatoire si `programme_publie` n'est pas `null`** |
+| `matiere_ouverte` | ⚠️ **Doit être `false` en fin de séance.** `true` signifie qu'on a ouvert du matériel émotionnel sans le refermer. Si `true`, la séance suivante s'ouvre là-dessus, sans exception |
+
+**Règle de clôture non négociable :** aucune séance ne se termine sur du matériel ouvert. La section `## Clôture` est obligatoire et ne peut pas être vide.
+
+### 7.7 `mesures/AAAA-MM-JJ-<echelle>.json`
+
+Une passation = un fichier. Identifiants : `vviq`, `tas20`, `catq`, `bes`, `gad7`, `phq9`, `diva5`, `epworth`, `isi`, `maia`.
+
+```json
+{
+  "date": "2026-08-09",
+  "echelle": "vviq",
+  "version": "VVIQ-16-Zeman",
+  "score": 18,
+  "score_max": 80,
+  "seuil": { "valeur": 32, "sens": "en_dessous", "interpretation": "aphantasie" },
+  "sous_scores": null,
+  "reponses": [1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1],
+  "passation": "claude-code",
+  "notes": null
+}
+```
+
+- `version` porte **l'identification exacte de l'instrument, sens de cotation compris.** Le VVIQ le démontre : Marks (1973) cote à l'envers, la convention dite « de Zeman » cote 1 = aucune image. **Un même score lu avec la mauvaise convention inverse la conclusion.**
+- `reponses` conserve **toujours** les réponses item par item, **et en compte autant que l'instrument a d'items**. ⭐ **Un score seul n'est pas une mesure, c'est un résumé** — le rapport n'a pu re-coter l'AQ et l'EQ que parce que les réponses brutes existaient.
+- `seuil.sens` : `au_dessus` | `en_dessous`.
+
+### 7.8 `briefs/AAAA-MM-JJ-isorni.md`
+
+Une page, format médecin : dense, factuel, sans interprétation gratuite.
+
+**Frontmatter :** `date`, `consultation_prevue`, `periode_couverte`, `supervise` *(fichier de supervision — obligatoire avant transmission)*, `transmis` *(booléen — **Xavier relit et décide, à chaque fois**)*.
+
+**Structure imposée :** Évolution chiffrée · Effets du traitement · Événements · **Questions à trancher** · Ce qui n'a pas changé.
+
+**Deux règles de calcul :** les chiffres sont **calculés depuis le journal, jamais estimés**, et le **nombre de jours renseignés figure à côté de chaque chiffre**.
+
+### 7.9 Ce que le dossier ne contient jamais
+
+| Interdit | Raison |
+|---|---|
+| Un conseil de modification de traitement | Non-substitution |
+| Un compteur de régularité, une série, un taux d'observance présenté comme une note | Réduire les charges, pas motiver. Le télésuivi PPC sert à **ajuster les réglages**, pas à noter le patient |
+| Une échelle introspective sans ancre comportementale | R6 |
+| Un champ obligatoire en texte libre | R5 |
+| Des données sur Chourouk ou les filles au-delà de ce qui concerne directement Xavier | Elles n'ont pas consenti à un dossier |
+
+### 7.10 Faire évoluer ce format
+
+Ajouter un champ est un acte de conception, pas une commodité. **Trois questions avant tout ajout :**
+
+1. **R6** — répond-on en observant, ou en introspectant ?
+2. **R5** — le champ est-il remplissable en shutdown ?
+3. **Coût** — qu'est-ce qu'on retire en échange ? Le journal a un budget de 2 minutes, et il est déjà dépensé.
+
+**Toute modification est annoncée à Xavier avant d'être appliquée**, et consignée au [§11](#11-journal-des-décisions).
+
+---
+
+## 8. Le programme — format
+
+> 🔴 **NORMATIF.** Contrat partagé entre Claude Psy et Kokoro. **v2.0 — 13/08/2026.**
+>
+> **Règle unique : Kokoro n'invente rien et ne décide rien.** Il affiche ce qu'on lui donne, et renvoie ce que Xavier a fait.
+
+### 8.1 Le circuit
+
+```
+Claude Psy ──écrit── psy/programme/programme.json + psy/programme/bibliotheque/
+                            │
+                    Claude Superviseur ── verdict: publiable   (§4.3, bloquant)
+                            │
+                     npm run publish
+                            ▼
+             Drive/programme.json + Drive/bibliotheque/
+                            ▼
+                         Kokoro
+                            │
+                    Drive/journal/ + Drive/reponses/
+                            │
+                       npm run sync
+                            ▼
+              psy/dossier/  ──lit── Claude Psy · Superviseur
+```
+
+**Le dépôt reste la source de vérité. Drive n'est qu'un tuyau.**
+
+### 8.2 Le fichier
+
+```json
+{
+  "version": 4,
+  "publie_le": "2026-08-13",
+  "supervision": "2026-08-13-programme-v4",
+  "etapes": [ … ]
+}
+```
+
+| Champ | Règle |
+|---|---|
+| `version` | Entier, **s'incrémente à chaque publication**. Kokoro compare avec la version qu'il a : s'il y a du nouveau, il affiche **une ligne discrète en haut** — **jamais une notification** |
+| `publie_le` | `AAAA-MM-JJ` |
+| `supervision` 🆕 | 🔴 **Obligatoire.** Nom du fichier de `psy/agent/supervisions/` (sans extension) qui vise **cette version**. Sans lui, `npm run publish` refuse ([§4.3](#43--la-supervision-est-bloquante-avant-publication)) |
+
+### 8.3 Une étape
+
+Champs communs, tous obligatoires sauf `duree_minutes` :
+
+| Champ | Valeurs |
+|---|---|
+| `id` | identifiant stable, `kebab-case`. ⚠️ **Ne change jamais** — c'est lui qui relie une réponse à son étape |
+| `titre` | ce qui s'affiche dans la liste |
+| `type` | `ecran` · `exercice` · `questionnaire` · `demarche` · `fiche` · ⭐ `seance-duo` |
+| `rubrique` 🆕 | `crise` · `therapie` · `bilan` · `documentation` — **c'est le groupement principal de l'écran d'accueil** ([§5.2](#52-ce-que-kokoro-contient)) |
+| `quand` | `aujourdhui` · `au_besoin` · `sans_date` |
+| `duree_minutes` | entier, ou absent si la durée n'est pas connue d'avance |
+
+#### `ecran` — ouvre une fonction déjà construite dans Kokoro
+
+```json
+{ "id": "check-in", "titre": "Check-in du jour", "type": "ecran", "rubrique": "therapie",
+  "quand": "aujourdhui", "duree_minutes": 2, "ecran": "check-in" }
+```
+
+Valeurs de `ecran` : `check-in` · `mot-code` · `tension-appliquee` · `phrase-soignant`.
+**Kokoro refuse un nom d'écran qu'il ne connaît pas** plutôt que d'afficher une ligne morte.
+
+#### `exercice` — un déroulé guidé au minuteur
+
+```json
+{ "id": "ppc-p1", "titre": "Masque tenu à la main", "type": "exercice", "rubrique": "therapie",
+  "quand": "aujourdhui", "duree_minutes": 5,
+  "consigne": "Masque contre le visage, sans sangles, machine éteinte, pendant une activité neutre.",
+  "minuteur_secondes": 300,
+  "sortie_libre": true }
+```
+
+`sortie_libre: true` affiche « je peux arrêter avant la fin, sans avoir à le justifier ».
+⭐ **C'est toujours `true`.** Le champ existe pour que ce soit écrit, pas pour être mis à `false`.
+
+#### `questionnaire` — des questions fermées, une par écran
+
+```json
+{ "id": "gad7", "titre": "Questionnaire GAD-7", "type": "questionnaire", "rubrique": "bilan",
+  "quand": "sans_date", "duree_minutes": 5,
+  "questions": [
+    { "id": "q1", "enonce": "…", "choix": [
+        { "valeur": 0, "libelle": "Jamais" },
+        { "valeur": 3, "libelle": "Presque tous les jours" } ] }
+  ] }
+```
+
+Toute question est un **choix fermé** ou un **compteur**. Aucune saisie de texte obligatoire, jamais.
+« Passer » écrit `null` — **qui n'est pas `0`**.
+
+> 🔴 **Le PHQ-9 ne se publie jamais** ([§5.7](#57-ce-qui-nentrera-jamais-dans-kokoro)).
+
+#### `demarche` — une chose à faire dans le monde réel
+
+```json
+{ "id": "ppc-releve", "titre": "Demander le relevé de télésuivi", "type": "demarche",
+  "rubrique": "therapie", "quand": "sans_date",
+  "detail": "Link Sommeil — heures par nuit, nombre de nuits, fuites, IAH résiduel." }
+```
+
+Renvoie `fait` ou rien. ⭐ **Pas encore fait n'est pas une donnée** : rien ne s'affiche, rien ne se compte.
+
+#### `fiche` — un texte à lire ou à montrer
+
+```json
+{ "id": "panique-13", "titre": "Les 13 symptômes", "type": "fiche", "rubrique": "documentation",
+  "quand": "au_besoin", "document": "panique-13-symptomes", "montrable": false }
+```
+
+Deux formes, exclusives l'une de l'autre :
+
+- **`texte`** — le contenu est dans le programme. Pour ce qui tient en quelques lignes.
+- **`document`** 🆕 — l'identifiant d'un fichier de la **bibliothèque** ([§8.6](#86-la-bibliothèque)), soit `bibliotheque/<document>.md`. Pour les fiches longues.
+
+`montrable: true` affiche le texte en plein écran, lisible par quelqu'un d'autre — la phrase pour le soignant, la fiche pour Chourouk.
+
+#### ⭐ `seance-duo` — un déroulé chronométré tenu par l'aide-au-patient *(13/08/2026)*
+
+```json
+{ "id": "stab-ancrage-1", "titre": "Ancrage corporel — à deux", "type": "seance-duo",
+  "rubrique": "therapie", "quand": "sans_date", "duree_minutes": 22,
+  "entrainement_requis": true,
+  "signal_arret": "Xavier lève la main ouverte. On s'arrête, sans rien demander.",
+  "avant": [
+    "Pièce calme, lumière baissée, porte fermée.",
+    "Le téléphone reste dans tes mains du début à la fin.",
+    "Relis les critères d'arrêt — bouton en bas, à tout moment."
+  ],
+  "sequence": [
+    { "pour": "aide",    "consigne": "Assieds-toi en face de lui, à un mètre.", "secondes": 30 },
+    { "pour": "patient", "consigne": "Pose les deux pieds à plat. Appuie tes talons dans le sol.", "secondes": 60 },
+    { "pour": "aide",    "consigne": "Ne parle pas pendant ce temps. Le minuteur t'avertit.", "secondes": 60 }
+  ],
+  "arret": [
+    "Il fait le signal d'arrêt → on s'arrête, on ne demande rien.",
+    "Il ne répond plus aux consignes → on s'arrête, c'est un shutdown, pas un refus.",
+    "Tu ne sais pas quoi faire → on s'arrête. Ne jamais improviser."
+  ],
+  "sortie_libre": true }
+```
+
+| Champ | Règle |
+|---|---|
+| `entrainement_requis` | 🔴 **Toujours `true`.** La première exécution réelle ne peut pas être la première fois que l'aide découvre le déroulé. Kokoro propose l'**entraînement** tant qu'il n'a pas été fait au moins une fois. |
+| `signal_arret` | 🔴 **Obligatoire, non vide, et rappelé à l'écran en permanence.** ⭐ **C'est le champ le plus important du type** : Xavier doit pouvoir arrêter **sans parler**, parce que c'est exactement ce qui tombe en premier. Le geste se convient **à froid**, jamais pendant. |
+| `avant` | Ce qui doit être vrai avant de commencer. L'aide coche, ou n'entre pas dans la séquence. |
+| `sequence` | Consignes ordonnées. `pour` vaut `aide` (elle fait) ou `patient` (elle lit à voix haute, **mot pour mot**). `secondes` est le temps tenu par l'appareil. |
+| `arret` | 🔴 **Obligatoire, au moins deux entrées, accessibles en un tap à tout moment.** ⭐ **La dernière est toujours « tu ne sais pas quoi faire → on s'arrête »** — l'aide n'improvise jamais. |
+| `sortie_libre` | `true`, comme partout. |
+
+> 🔴 **Ce que le type ne porte jamais** *(contrôle **C10**)* : un diagnostic, un score, une hypothèse, un compte rendu — **rien qui apprenne à l'aide quelque chose sur Xavier qu'il n'a pas décidé de partager**. Et aucune consigne qui **lui demande de juger** : « estime si ça va », « décide s'il faut continuer », « rassure-le ». **Une consigne qui demande un jugement clinique la met en faute quoi qu'elle fasse.**
+
+> ⭐ **Le mode entraînement, et pourquoi il compte autant que la séance.** C'est **la même séquence, jouée à blanc**, sans le matériel réel. Il renvoie `issue: "entrainement"` — **ce n'est pas une donnée clinique et rien ne s'en déduit**. C'est la même logique que l'essai à froid du mot-code du 10/08 : **la première fois que ça compte ne doit pas être la première fois que ça se fait.**
+
+### 8.4 L'écran d'accueil
+
+Groupé par **rubrique**, puis par **`quand`** : *aujourd'hui* · *quand j'en ai besoin* · *sans date*.
+**Aucun score, aucune progression, aucun historique, aucun palier atteint.**
+
+### 8.5 Ce que Kokoro renvoie
+
+Un fichier par étape faite, dans `reponses/` : `AAAA-MM-JJ-HHMM-<id>.json`
+
+```json
+{ "etape": "ppc-p1", "horodatage": "2026-08-13T18:04:00+02:00",
+  "issue": "termine", "reponses": null, "source": "android" }
+```
+
+`issue` : `termine` · `arrete_avant_la_fin` · `fait` · ⭐ `entrainement`.
+⭐ **`arrete_avant_la_fin` n'est pas un échec et ne se commente nulle part.**
+⭐ **`entrainement` n'est pas une donnée clinique** — il dit seulement que le déroulé a été répété à blanc. Rien ne s'en déduit sur Xavier.
+
+### 8.6 La bibliothèque
+
+**`psy/programme/bibliotheque/<id>.md`** — un fichier Markdown par document, publié tel quel vers Drive.
+
+> 🔴 **La règle qui vaut plus que toutes les autres ici : un document de la bibliothèque est *écrit pour Xavier*, il n'est pas *copié depuis* `psy/protocoles/`.**
+>
+> Un protocole clinique porte des diagnostics, des pronostics, des noms de praticiens, des hypothèses non tranchées et des réserves adressées à un professionnel. **Une fiche de bibliothèque porte ce qu'il y a à faire, et pourquoi.** C'est le contrôle **C9** du superviseur.
+
+**Ce qu'une fiche de bibliothèque ne contient jamais :** un diagnostic non encore dit à Xavier · un pronostic · un nom de praticien autre que ceux qu'il consulte · une hypothèse formulée comme un fait · une réserve destinée au Dr Isorni · **et tous les interdits du [§8.7](#87--les-interdits--vérifiés-à-la-publication-et-à-la-lecture)**.
+
+**Les fiches sont soumises aux mêmes vérifications que les étapes** : `npm run publish` lit chaque fichier de la bibliothèque et applique les sept familles d'interdits.
+
+### 8.7 🔴 Les interdits — vérifiés à la publication ET à la lecture
+
+**Les tests de Kokoro lisent les textes de l'app ; ces textes-ci n'y sont plus.** Sans double vérification, tous les garde-fous du dispositif deviennent contournables par du contenu, **en silence**.
+
+**Deux vérifications, deux réactions volontairement différentes :**
+
+- **`npm run publish` refuse la publication entière.** Sur le PC, on peut corriger — donc on corrige, on ne publie pas à moitié.
+- **Kokoro écarte la seule étape fautive** et affiche le reste. Sur le téléphone, on ne peut pas corriger, et perdre tout le programme pour une ligne serait pire.
+
+| # | Interdit | Pourquoi |
+|---|---|---|
+| 1 | « imagine », « visualise », « représente-toi », « lieu sûr » | Aphantasie mesurée — 18/80 |
+| 2 | « note … sur 10 », « ton niveau de », « à combien tu te sens » | R6 — on cote des comportements, pas des ressentis |
+| 3 | « jour 3 sur », « d'affilée », « série », « régularité », « % de l'objectif » | Zéro streak |
+| 4 | Tout numéro d'appel d'urgence, **3114 compris** | Un écran n'est pas un déclencheur d'escalade |
+| 5 | « as-tu besoin », « quand tu sens », « aux premiers signes » | Déclenchement sur repère externe, jamais sur un prodrome |
+| 6 | Tout ce qui touche à une dose, une molécule, un traitement | Non-substitution — ça part au brief |
+| 7 | « détends-toi », « respire lentement » sur une étape vasovagale | Délétère sur un vasovagal |
+
+### 8.8 Ce que le programme ne fait jamais
+
+1. **Notifier.** *(Seule exception : l'accès crise sur l'écran verrouillé — une porte, pas un rappel.)*
+2. **Compter d'un jour à l'autre.** Aucun palier atteint, aucun historique, aucune progression à l'écran. **Les paliers se cotent en séance, à partir du journal.**
+3. **Reprocher.** Une étape non faite disparaît de l'écran le lendemain **sans laisser de trace**.
+4. **Se publier hors séance.** Ce serait un changement d'interface non annoncé.
+
+---
+
+## 9. Feuille de route
+
+### Étape 0 — Socle minimal ✅ **close le 09/08/2026**
+- [x] Arborescence `psy/` · **format du dossier** ([§7](#7-le-dossier--format)) + gabarits
+- [x] **`profil.md` (permanent) + `etat.md` (courant)** — la distinction remplace la « fiche unique » prévue
+- [x] Skills `psy-seance` et `psy-journal`
+
+### Étape 1 — Versant somatique 🔴 *ouverte le 09/08/2026*
+- [x] Anthropométrie · SAOS requalifié en diagnostic constitué
+- [x] **Trois protocoles écrits** : PPC, alimentation, activité physique
+- [x] Skill `psy-hygiene`
+- [ ] 🔴 **Exécuter le palier 0 de la PPC** : récupérer le **relevé de télésuivi**, faire trancher l'**origine de la fuite (masque ou bouche ?)** — elle commande le choix d'interface —, essayer plusieurs interfaces, vérifier la prise en charge, demander une **consultation de reprise** au Dr Roisman, et **informer le Dr Isorni**, seul praticien encore dans l'ignorance
+- [~] **Dépister la perte de contrôle alimentaire** — instrument BES non obtenu ; **grille comportementale de substitution utilisable immédiatement**
+- [ ] Recueillir : historique pondéral, bilan hépatique de départ, bilan métabolique, **feu vert médical** pour l'activité
+- [ ] **Envoyer l'email au Dr Isorni** — rédigé, non envoyé
+
+### Étape 2 — Instrumentation du suivi ⏱️ *ouverte le 09/08/2026*
+- [x] **Instruments versés** (`psy/corpus/echelles/`) + plan de passation daté
+- [x] Skills `psy-bilan` et `psy-brief-isorni`
+- [x] 🔴 **Check-in quotidien démarré** (09/08), **passé sur Kokoro** (11/08)
+- [x] **VVIQ passé — 18/80, aphantasie confirmée**
+- [ ] **Premier brief Dr Isorni**, à écrire à la séance du **week-end du 29-30/08**
+- [ ] Passer les échelles restantes : **TAS-20** (16/08) · **CAT-Q + GAD-7/PHQ-9** (22-23/08) · **BES** dès obtention. Plafond 20 min par séance ; **l'échelle n'est jamais la cible de la séance**
+- [ ] ✈️ **Sécuriser l'ordonnance de venlafaxine pour le séjour** au 03/09. **Logistique, pas posologie**
+
+### Étape 3 — Outils de crise 🔴 *ouverte le 09/08/2026*
+- [x] Corpus + protocole **tension appliquée (Öst)** — ⭐ déclenchement sur **repères externes**
+- [x] **Protocole de crise câblé** — triage en 3 questions, sécurité avant mécanisme
+- [x] Skill `psy-crise` — **mode sans parole** opérationnel : choix numérotés, parce qu'**un chiffre est produisible en shutdown, une phrase non**
+- [x] **Mot-code convenu avec Chourouk** + **fiche explicative** écrite
+- [x] **Palier 1 de la tension appliquée démarré** (09/08)
+- [x] **Porté dans Kokoro** — K2 et K3
+
+### Étape 4 — TCC de l'agoraphobie
+- [x] **Psychoéducation des 13 symptômes** — avancée pour le vol du 07/09
+- [x] **Kit vol** — ⚠️ **ce n'est pas un programme d'exposition** et ça n'en tient pas lieu
 - [ ] Corpus exposition graduée adapté TSA
-- [ ] Paliers écrits + outil web desktop de suivi d'exposition
-- [x] **Psychoéducation des 13 symptômes** de l'attaque de panique → `psy/protocoles/panique-13-symptomes.md` — **avancée le 09/08/2026** pour le vol du 07/09
-- [x] **Kit vol** → `psy/protocoles/jour-de-vol.md` — séquence écrite, kit sensoriel, protocole shutdown minimal avec Chourouk. ⚠️ **Ce n'est pas un programme d'exposition** et ça n'en tient pas lieu
+- [ ] Paliers écrits → **publiés dans Kokoro**
 
-### Étape 5 — Kokoro *(Axe E)* 🏗️ *(ouverte le 10/08/2026 — plan de construction écrit)*
+### Étape 5 — Kokoro 🏗️ *ouverte le 10/08/2026* — ⭐ **priorité accélérée le 13/08/2026**
+- [x] **K0 → K4** — poste de travail, full-screen intent, noyau de crise, tension appliquée, check-in
+- [ ] 🔴 **K5 — le programme et la bibliothèque** *(en cours)*
+- [ ] 🆕 **K6 — la séance à deux** : type `seance-duo`, mode entraînement, signal d'arrêt, critères d'arrêt à un tap
+- [ ] **K7 — la présence** : overlay, visage, écran de diagnostic One UI
+- [ ] **Publier les échelles** comme questionnaires, rubrique `bilan` — **jamais le PHQ-9**
+- [ ] **Publier les démarches du palier 0 PPC** — elles y sont déjà ; c'est Kokoro qui les met sous la main
 
-> **Le séquençage et les critères de fin font foi dans `psy/android/PLAN-KOKORO.md`** (jalons K0 → K5), pas dans la liste ci-dessous. ⭐ **Décision structurante prise à l'ouverture : le premier livrable de Kokoro est l'écran de crise, pas le visage** — le mot-code avec Chourouk existe depuis le 09/08 et n'a aucun porteur, alors que la période 07/09-28/09 est déclarée à haut risque de shutdown. Deux autres décisions : **app unique multi-modules** (la question « une app par outil ou une app unique ? », ouverte au §3.1 et au §5, est tranchée) et **aucune base de données** — l'app écrit des fichiers JSON, R1/R2/R3 du schéma l'imposent. ⚠️ **Constat vérifié le 10/08 : aucun outillage Android n'est installé sur la machine** — le jalon K0 est l'installation de la chaîne de compilation, et une nuance est apportée au §5 ci-dessus (le **full-screen intent** n'est plus accordé par défaut depuis Android 14).
-
-- [ ] App compagnon : overlay, foreground service, `showWhenLocked`
-- [ ] Écran de diagnostic des réglages batterie One UI
-- [ ] Visage à trait minimal + états + transitions lentes
-- [ ] Migration du check-in quotidien sur Android
-- [ ] **App tension appliquée** — guidage des cycles de contraction, **utilisable en salle d'examen** *(déplacée depuis l'Étape 3 le 09/08/2026 — cf. §1.2.1 : elle doit être accessible en un geste depuis l'écran verrouillé, comme le bouton shutdown)*
-- [ ] **Écran de crise** — 🔴 **sans aucun numéro d'urgence** *(révisé le 10/08/2026)*. Il porte le **mot-code « shutdown » à Chourouk** (SMS, canal validé par elle le 10/08) et l'accès à la **tension appliquée** — les deux seules choses qui aient jamais servi. ⭐ **Le motif est clinique : une syncope vasovagale ne s'appelle pas, elle s'allonge** ; offrir un appel à la place de la bonne parade était une erreur d'orientation. Le 3114 subsiste dans la seule conduite d'escalade sur idéation suicidaire, jamais sur un écran
-
-### Étape 6 — Réouverture de l'EMDR ⏸️
-- [ ] Instrument de stimulation bilatérale (web desktop) — **peut être construit dès maintenant**
-- [ ] Réouverture du protocole **sous les critères du §3.1**, après avis du Dr Isorni
+### Étape 6 — Stabilisation à deux, puis réouverture de l'EMDR ⏸️
+- [ ] 🆕 **Convenir le signal d'arrêt** avec Chourouk *(arbitrage N)* et **lui demander si elle accepte le rôle** *(arbitrage M)*
+- [ ] 🆕 **Écrire la première séance à deux : la stabilisation non visuelle** *(arbitrage O)* — kit d'auto-apaisement corporel et sensoriel, **la brique qui manque depuis le 08/08**
+- [ ] Instrument de stimulation bilatérale (web desktop)
+- [ ] Réouverture de l'EMDR **sous les critères du [§3.6](#36-emdr--arbitrage-rendu--on-commence-par-la-tcc)**, après avis du Dr Isorni. ⚠️ **L'aide-au-patient ne déverrouille pas la phase 3** — elle lève une objection sur trois
 
 ### Transverse
-- [x] ~~**Rapport v2.1** — intégrer stéatose, déficit intéroceptif, conduite alimentaire~~ → **fait, et dépassé : le rapport est en v2.4** (v2.1 versant somatique · v2.2 NASH et cible 7-10 % · v2.3 SAOS sévère · v2.4 observance PPC réelle)
-- [x] **Skill `psy-superviseur`** → `.claude/skills/psy-superviseur/` (09/08/2026) — **le garde-fou anti-effet-miroir du §6 cesse d'être une intention.** 7 contrôles, sortie dans `psy/agent/supervisions/` (**hors `dossier/`** : une supervision porte sur le dispositif, pas sur le patient — donc aucune modification du `SCHEMA.md` n'est requise). Première passe versée : `supervisions/2026-08-09-supervision.md`
-- [x] **Arbitrages A2, A3, A4 de la supervision du 09/08 — rendus et exécutés le jour même.** A2 → `protocoles/fiche-chourouk.md` écrite **avant le départ**, le séjour étant la période à plus haut risque de shutdown du trimestre · A3 → l'app de tension appliquée **passe en Étape 5 (Android)**, §1.2.1 étant catégorique · A4 → `corpus/echelles/maia.md` ouverte, ⚠️ **items non obtenus, grille comportementale de substitution versée**
-- [ ] Récupérer et indexer les 4 corpus prioritaires (§1.5)
-- [ ] Rediscuter la **dette assumée** : psychologue en présentiel (§6.1)
+- [x] Rapport en **v2.4**
+- [x] Skill `psy-superviseur` — 8 contrôles, puis **10 et supervision bloquante** *(13/08/2026)*
+- [x] 🆕 **[`THESAURUS.md`](THESAURUS.md)** — un mot, une chose *(13/08/2026)*
+- [ ] Récupérer et indexer les **3 corpus prioritaires restants**
+- [ ] Étendre `protocoles/fiche-chourouk.md` au rôle d'**aide-au-patient**
+
+### ⏱️ Les deux échéances qui structurent le trimestre
+
+| Date | Événement | Conséquences |
+|---|---|---|
+| **03/09/2026, 12h30** | **Consultation Dr Isorni** | **La dernière avant fin septembre.** Brief à écrire au week-end du 29-30/08, email à envoyer **avant** — un créneau ne suffit pas à découvrir un SAOS sévère, une NASH et six questions à la fois |
+| **07/09/2026** | **Départ en Tunisie, 3 semaines ou plus** | ⭐ **Un tiers du trimestre.** Le palier 0 PPC doit être bouclé avant (ce sont des appels). La PPC part en Tunisie — **port au niveau atteint, sans progression de palier**. ⭐ **Aucun palier ne progresse pendant le séjour, et on redescend d'un palier à la reprise, sur les trois chantiers** — décidé maintenant, pas subi sur place : décider avant est précisément ce qui empêche de le vivre comme un échec. ⚠️ **Le voyage est une exposition agoraphobique majeure.** ✅ **Première période sans mission professionnelle depuis longtemps** : la seule variable d'ajustement du dossier tombe à zéro — **observer si les shutdowns baissent vaudra plus que n'importe quelle échelle** |
 
 ---
 
-## 8. Journal du brainstorming
+## 10. Arbitrages ouverts
 
-| Date | Décisions prises |
+### 10.1 Ouverts
+
+| # | Question | Recommandation |
+|---|---|---|
+| **K** | **Psychologue en présentiel** — dette assumée. ⭐ **Reformulé le 13/08/2026** : l'aide-au-patient couvre désormais **la présence et l'exécution d'un déroulé** ; **elle ne couvre pas le jugement clinique en situation.** La question devient donc : *un clinicien reste-t-il nécessaire pour l'EMDR encadré et pour valider l'acquisition de la tension appliquée ?* | ⚠️ **Oui, pour ces deux-là.** Le reste — stabilisation, exposition accompagnée — passe par la séance à deux. La dette **se réduit**, elle ne disparaît pas ([§3.6](#36-emdr--arbitrage-rendu--on-commence-par-la-tcc)) |
+| **M** 🆕 | 🔴 **Chourouk accepte-t-elle le rôle d'aide-au-patient ?** Tenir le téléphone d'une séance thérapeutique est **un engagement d'une autre nature** que recevoir un mot-code | ⭐ **À lui demander explicitement, à froid, avant d'écrire la moindre séquence.** Elle doit savoir ce que ça demande, et qu'elle peut refuser à tout moment **sans justification**. La fiche `protocoles/fiche-chourouk.md` est à étendre |
+| **N** 🆕 | **Le signal d'arrêt de Xavier** — le geste par lequel il arrête une séance à deux **sans parler** | ⭐ **À convenir à froid, avec Chourouk, avant la première séance.** Un geste franc, impossible à confondre avec autre chose. **Sans lui, aucune séance à deux ne démarre** — c'est un champ obligatoire du format |
+| **O** 🆕 | **Quelle est la première séance à deux ?** | ⭐ **La stabilisation non visuelle** (ancrage corporel et sensoriel). C'est la phase 1 de [§3.6](#36-emdr--arbitrage-rendu--on-commence-par-la-tcc), elle ne touche aucun matériel traumatique, et **c'est la brique qui manque depuis le 08/08** |
+
+### 10.2 Clos
+
+| # | Question | Arbitrage |
+|---|---|---|
+| **E** | Compte Google du transit | ✅ **13/08/2026 — on reste sur `xavier@allons-y.io`.** Micro-entreprise : la note passe en frais de société. Objection du dispositif **conservée** au [§6.6](#66-état-des-conditions--vérifié-le-13082026), acceptée et non levée |
+| ~~**J**~~ | ~~Sauvegarde froide hors-ligne~~ | ❌ **Clos le 13/08/2026 à la demande de Xavier. Ne pas rouvrir.** |
+| **L** | La bibliothèque remplace-t-elle `psy/protocoles/` ? | ✅ **Non** *(13/08/2026)*. Deux lecteurs différents ; fusionner ferait entrer du contenu clinique brut dans le téléphone — ce que **C9** traque |
+| **P** | Un bilan dans Kokoro | ✅ **Un texte daté écrit en séance, jamais un graphique calculé par l'app** *(13/08/2026)*. C'est ce qui permet « ses bilans dans la main » sans casser « aucun historique à l'écran » |
+| **Q** | Les échelles passent-elles par Kokoro ? | ✅ **Oui** *(13/08/2026)* — VVIQ, TAS-20, CAT-Q, GAD-7, BES, MAIA. 🔴 **Le PHQ-9 reste dehors** : seul instrument porteur d'un déclencheur d'escalade ([§3.9](#39-les-échelles)) |
+| **R** | Priorité de construction de Kokoro | ✅ **On accélère** *(13/08/2026)*. Depuis K5, **Kokoro ne concurrence plus le palier 0 — il le porte.** Ce qui ne bouge pas : la date du brief, et `ppc_minutes` comme indicateur qui tranche ([§5.4](#54-les-jalons)) |
+
+---
+
+## 11. Journal des décisions
+
+| Date | Décisions |
 |---|---|
-| **10/08/2026** | 🔴 **Les numéros d'appel d'urgence sortent du dispositif — décision de Xavier, et elle corrige une faute de conception.** 15, 112 et **114** sont retirés des 22 fichiers vivants qui les portaient ; **le 3114 est conservé**, sur le seul déclencheur de l'idéation suicidaire, **jamais affiché en ouverture**. ⭐ **Le motif principal est clinique, et il est de la même famille que la règle §9.19 : une syncope vasovagale ne s'appelle pas, elle s'allonge.** Le dispositif proposait un appel là où la parade est la **tension appliquée** — c'était une **erreur d'orientation présentée comme une sécurité supplémentaire**. S'y ajoutent deux faits que Xavier apporte et que rien dans le dossier ne contredisait : **aucun de ces numéros n'a jamais servi**, et leur affichage permanent était **anxiogène** sur un profil TAG — un dispositif d'urgence omniprésent entretient ce qu'il prétend couvrir. 📌 **Point de méthode : la demande a été instruite avant d'être exécutée**, parce qu'elle était ambiguë sur un point qui compte — sa justification portait sur le vasovagal, mais sa formulation couvrait aussi le câblage de l'idéation suicidaire (item 9 du PHQ-9, escalade de niveau 3). Arbitrage de Xavier : **retirer les numéros d'appel, garder le 3114 sur son déclencheur.** ✅ **Trois effets de bord favorables** : la **question 12 du brief Isorni devient caduque** — deuxième créneau de consultation économisé après la question 11 · le protocole de crise devient **identique en France et en Tunisie**, il n'y a plus de liste de numéros à préparer avant le 07/09 · l'écran de crise de Kokoro se simplifie. ⚠️ **Ce qui n'a pas bougé, et qui devait ne pas bouger : l'escalade reste non contournable, et la question de sécurité reste posée en premier.** Ce qui a été retiré, ce sont des numéros — pas une conduite à tenir. |
-| **10/08/2026** | 🏗️ **Étape 5 ouverte — le plan de construction des applications est écrit** (`psy/android/PLAN-KOKORO.md`, jalons K0 → K6). ⭐ **Décision structurante : le premier livrable de Kokoro n'est pas le visage, c'est le noyau de crise.** Le mot-code « shutdown » est convenu avec Chourouk depuis le 09/08 et **n'a aucun porteur** : parole coupée, il faut aujourd'hui déverrouiller, ouvrir une messagerie, trouver un contact et écrire — quatre gestes, dont un impossible, et la période 07/09-28/09 est déclarée à haut risque de shutdown. **Deux autres questions ouvertes du plan sont refermées** : **app unique multi-modules** (§3.1 et §5 la laissaient ouverte, §1.2.1 l'avait déjà tranchée de fait — trois apps sont trois icônes à retrouver au pire moment) et **aucune base de données** — l'app écrit des fichiers JSON, R1/R2/R3 du schéma l'imposent, une base dupliquerait la source de vérité. ✅ **Arbitrage de Xavier : le full-screen intent devient le jalon K1**, juste après l'installation du poste de travail — c'est le point techniquement le plus risqué du projet, donc celui qu'il faut lever avant de construire dessus. ⚠️ **Deux faits vérifiés sur la machine, et le second corrige le §5 de ce document** : **aucun outillage Android n'est installé** (ni JDK, ni SDK, ni `adb` — K0 est l'installation, pas une formalité) ; et le **full-screen intent n'est plus accordé par défaut depuis Android 14**, alors que le §5 le donnait pour acquis (« ✅ »). ✅ **Chourouk valide le canal SMS du mot-code** — le seul point du plan applicatif qui dépendait d'un tiers. |
-| **09/08/2026** | 🪞 **`psy-superviseur` écrit — et il trouve une faute dans le dispositif en première passe.** Le §6 déclarait depuis le début qu'« un psy virtuel toujours d'accord serait nocif » et posait le rôle comme garde-fou ; il est resté « non planifié » pendant que le dispositif produisait dix-neuf documents doctrinaux. ⭐ **Le risque qu'il traite est structurel et vaut d'être nommé une fois pour toutes : presque toutes les sources de ce dossier sont écrites par l'instance qui les consomme.** Le rapport, le PLAN, les fiches, les protocoles, les sept skills — tous générés par Claude, tous se citant les uns les autres comme s'ils faisaient autorité. Les seules sources primaires sont l'évaluation Saley, le certificat Isorni, les questionnaires bruts, les trois courriers Roisman, la biopsie et le DSM-5. **Un dispositif qui perd cette distinction confond sa propre cohérence avec la vérité.** ✅ **Décision de conception : la supervision n'écrit pas dans `psy/dossier/`** mais dans `psy/agent/supervisions/` — elle porte sur le dispositif, pas sur le patient ; corollaire utile, aucune modification du schéma normatif n'est requise pour ouvrir le rôle. 🔴 **Première passe, quatre constats, dont un bloquant et il est ironique : `psy-seance` instruisait « on ne passe pas au palier suivant tant que le précédent n'est pas confortable ».** C'est **mot pour mot** la faute R6 que le dispositif se félicitait d'avoir corrigée dans le rapport §10.8 le matin même. Elle a survécu à l'écriture des trois protocoles (qui l'ont corrigée chez eux), à l'audit de cohérence, et à l'écriture de `psy-hygiene` (qui l'interdit explicitement) — **dans le skill qui conduit toute séance de fond, donc celui qui décide effectivement des passages de palier.** Corrigé après constat, jamais en silence. ⚠️ **Trois autres constats** : la **fiche explicative pour Chourouk** est déclarée dans quatre documents et n'existe nulle part (même forme que le défaut du protocole de crise) · l'**app de tension appliquée** est en Étape 3 sans surface alors que §1.2.1 impose Android « sans discussion possible » · ⭐ **prolifération — 19 documents doctrinaux contre 1 acte exécuté** (le VVIQ) : `journal/` 0, `seances/` 0, `briefs/` 0, aucun palier entamé. **Ce n'est pas une critique de rythme, c'est un risque daté** : le brief du 29-30/08 tirera ses chiffres d'un répertoire vide, et la consultation du 03/09 est la dernière avant fin septembre. 📌 **Objection de fond versée : l'aphantasie a été tenue pour acquise pendant deux jours avant d'être mesurée** — le VVIQ l'a confirmée, mais un superviseur n'a pas le droit de noter le processus sur le résultat. **Deux caractéristiques sont aujourd'hui dans ce même statut** : l'alexithymie (TAS-20 le 16/08) et le **déficit intéroceptif — brique de la règle §9.19, la plus citée du dossier, et la seule sans instrument** (le MAIA est nommé deux fois, versé zéro). |
-| **09/08/2026** | ⚙️ **Les quatre rôles manquants sont écrits — le dispositif cesse d'être un classeur de fiches.** `psy-crise`, `psy-bilan`, `psy-brief-isorni`, `psy-hygiene` rejoignent `psy-seance` et `psy-journal` dans `.claude/skills/`. **Constat de départ, et il vaut d'être nommé : les trois étapes ouvertes avaient produit des protocoles, des instruments et des gabarits — et aucun exécutant.** Un protocole de crise sans skill de crise est un document que personne n'ouvre au moment où il sert ; des échelles versées sans skill de passation sont un corpus qu'on ne fait pas passer ; un gabarit de brief sans skill de brief est un tableau vide à quinze jours d'une consultation qui ne se représentera pas avant fin septembre. ⭐ **Quatre décisions de conception prises à l'écriture, aucune n'était dans les fiches.** (1) 🔴 **`psy-crise` porte la seule exception au premier invariant du dispositif** — « charger `profil.md` + `etat.md` avant d'agir » vaut partout **sauf en crise**, où les numéros s'affichent d'abord. Lire deux fiches prend du temps, et le temps est exactement ce qui manque ; un contexte chargé n'a jamais aidé personne pendant les trente premières secondes. L'exception est **écrite**, pas déduite. Le skill ajoute par ailleurs un **mode sans parole opérationnel** que la fiche décrivait sans l'outiller : bascule sur des choix numérotés — **un chiffre est produisible en shutdown, une phrase non.** (2) ⭐ **`psy-hygiene` compte le critère de passage au lieu de le demander.** « Tu te sens prêt à monter d'un palier ? » est une question intéroceptive posée à quelqu'un dont l'intéroception est déficitaire — cinquième instance de la règle §9.19, et elle serait passée inaperçue puisque la fiche PPC avait déjà converti ses critères en comptages : **rien n'empêchait le skill de reposer la question en clair au moment de trancher.** Le critère se vérifie dans les `journal/*.json`, et **si la donnée manque, on ne passe pas** — on ne comble pas par un souvenir. (3) **`psy-bilan` interdit de restituer un instrument de mémoire** — la règle qui avait bloqué le BES le matin même devient une règle de conduite générale, pas une exception ponctuelle : un item mal restitué produit un score faux, donc **faussement rassurant**, le pire résultat possible ici. (4) **`psy-brief-isorni` interdit de compter un jour sans check-in comme un zéro.** Le schéma disait déjà « un jour sans check-in est un jour sans fichier, ce n'est pas une donnée négative » ; **au moment de calculer une médiane, c'est précisément l'erreur qu'on commet sans y penser** — d'où l'obligation d'écrire le nombre de jours renseignés à côté de chaque chiffre. S'y ajoute la frontière de non-substitution rendue opérationnelle : le brief **pose** les questions, il n'y répond jamais, **et « ne faudrait-il pas envisager… ? » est une proposition déguisée.** ✅ **Reste `psy-superviseur`** — le garde-fou anti-effet-miroir, et **le seul rôle dont l'absence ne se voit pas, par construction.** |
-| **09/08/2026** | 🔧 **Audit de cohérence du dispositif — aucun fait clinique modifié, dix-sept incohérences corrigées.** ⭐ **La plus grave, et elle était invisible : le protocole de crise avait deux domiciles, et toutes les surfaces pointaient vers le mauvais.** L'Étape 3 avait écrit `protocoles/crise-escalade.md` — triage, escalade, et surtout la découverte que **tous les numéros d'urgence français exigent de parler**, avec le **114 par SMS** en parade. Mais `psy-seance`, `psy-journal`, le corpus des échelles, le protocole PPC et la carte `psy/README.md` renvoyaient tous encore aux huit lignes de `profil.md` §4, **qui n'offrent que le 3114 et le 15 — deux numéros vocaux.** Autrement dit : le dispositif avait identifié que son protocole d'urgence était inutilisable en shutdown, avait écrit la parade, **et continuait à servir l'ancienne version à toutes ses surfaces.** Un défaut de câblage, pas de conception — mais il portait exactement sur le cas que la fiche avait été écrite pour couvrir. `profil.md` §4 est désormais déclaré **résumé**, la fiche fait foi, et les deux portent la mention des voies sans parole. ⚠️ **Deuxième défaut de même nature :** `psy-seance` instruisait de trancher tout doute clinique sur le rapport **v2.3** — la version que la v2.4 corrige précisément sur l'observance de la PPC. Une séance conduite ce jour-là aurait pu déclarer la PPC « non utilisée » devant Xavier, ce qui est faux et ce qui aurait sapé le chantier n° 1. **Corrigé.** ✅ Reste : trois fichiers annonçaient « Étape 1 ouverte » quand trois étapes le sont ; `SCHEMA.md` passe en **v1.1** (son exemple VVIQ portait `"VVIQ-2"` avec un `score_max` de 80, alors que le VVIQ-2 compte 32 items et plafonne à 160 — écart signalé à l'Étape 2, annoncé, **désormais appliqué** conformément au §9) ; deux renvois pointaient vers `Biopsie hépatique - Dr Bouarioua.md`, fichier fusionné le 08/08 et donc inexistant ; l'avertissement d'en-tête déclarait §4.4 et §4.5 périmées **en oubliant §4.1**, qui décrit encore une stéatose simple là où l'histologie dit NASH ; §1.3, §5 et §6 portaient des statuts « à concevoir » ou « en discussion » sur des points tranchés, §5 listant même comme « questions ouvertes » le nom et le graphisme **décidés vingt lignes plus haut**. 📌 **Choix de méthode assumé :** les entrées de ce journal et les tables de version des fiches **n'ont pas été réécrites**, y compris quand elles citent des faits corrigés depuis — R2 du schéma du dossier, l'historique reste lisible, **y compris ce qui s'est révélé faux**. Seuls les **pointeurs vivants** ont été corrigés. |
-| **09/08/2026** | 🔴 **Étape 3 ouverte — les deux protocoles de crise écrivables sont écrits.** (1) **`crise-escalade.md`** : le protocole de crise était déclaré « câblé en dur, non contournable » dans six documents et **n'existait nulle part comme fiche** — il vivait en huit lignes de `profil.md` §4. Il a désormais un **triage en trois questions fermées**, dont la première décision de conception est que **la question de sécurité passe avant la question du mécanisme** : typer un épisode pendant qu'une idéation court, c'est faire de la nosologie au lieu de porter secours. ⭐ **Découverte non prévue au plan, et c'est la plus importante de l'étape : tous les numéros d'urgence français sont des numéros de téléphone.** Le 3114 et le 15 demandent de **parler** — or le shutdown coupe précisément le canal verbal. **Le moment où Xavier a le plus besoin d'aide est celui où le dispositif d'aide standard lui est structurellement inaccessible.** Trois voies sans parole sont versées, dont le **114 (urgences par SMS)**, avec sa réserve honnête : il est officiellement destiné aux personnes sourdes ou aphasiques, l'usage en shutdown est défendable mais doit être **vérifié auprès du Dr Isorni** plutôt que découvert en situation. **Conséquence câblée pour Kokoro (Étape 5) : l'écran de crise doit offrir le SMS pré-rempli au même rang que l'appel** — un écran qui n'offre que des appels est inutilisable exactement quand il sert. ✈️ Ajout : le 3114, le 15 et le 114 **ne fonctionnent pas depuis la Tunisie** — numéros de substitution à préparer avant le 07/09. (2) **`tension-appliquee.md`** + corpus priorité n° 1 versé (Öst & Sterner 1987, Öst *et al.* 1991). ⭐ **Quatrième instance de la règle §9.19, et elle était invisible :** le protocole d'Öst prescrit de déclencher la tension « dès les premiers signes » — pâleur, sueur froide, nausée — c'est-à-dire **sur la détection d'une chute de tension artérielle, un signal interne**, chez quelqu'un dont le déficit intéroceptif est confirmé. Appliqué tel quel, il aurait échoué, et l'échec aurait été lu comme un manque d'application. **Remplacé par un déclenchement sur repères externes et au chronomètre** — franchir la porte, s'asseoir, voir le plateau —, avec la règle explicite : *on ne se demande jamais « est-ce que j'en ai besoin là ? »*, puisque répondre exigerait la perception qui manque. ✅ **Séquençage préservé** : l'acquisition à froid est 3 min/jour sans exposition ni changement d'habitude — elle **ne consomme pas** la règle « un seul chantier à la fois », la PPC reste le chantier n° 1, et le palier « vrai geste médical » est explicitement hors fiche. ⚠️ **Point de sécurité versé au brief** : la contraction élève transitoirement la tension artérielle, et une vigilance tensionnelle est déjà notée sous venlafaxine à IMC 35. |
-| **09/08/2026** | 🔴 **Étape 2 ouverte — les instruments de mesure sont versés** (`psy/corpus/echelles/`). Constat de départ : `psy/dossier/journal/` était **vide** et `psy/corpus/` ne contenait qu'un README — **rien de l'instrumentation n'existait**, alors que l'item « passer les échelles » supposait des instruments qui n'avaient jamais été récupérés. Versés complets : **VVIQ**, **TAS-20**, **CAT-Q**, **GAD-7/PHQ-9** — items, cotation, seuils, et pour chacun la rubrique obligatoire « ce qu'elle ne dit pas ». ⭐ **Décision de conception : R6 ne s'applique pas aux échelles validées, et il faut le dire explicitement.** Le journal quotidien reste strictement comportemental ; une échelle est un autre objet — une passation datée, avec un seuil publié, dont la validation psychométrique remplace l'ancre comportementale. **Corollaire non négociable, écrit dans chaque fiche : chez Xavier, un score élevé est informatif, un score bas ne clôt aucune question** — l'alexithymie et le déficit intéroceptif sont précisément une difficulté à répondre à ce type de question. ⚠️ **Trois points durs rencontrés et tranchés.** (1) **Le BES n'a pas pu être obtenu** : ses 16 items pondérés ne sont pas librement diffusés et une restitution approximative aurait produit un score faux — donc faussement rassurant, le pire résultat possible ici. Refus d'inventer ; à la place, une **grille comportementale de 5 questions** utilisable immédiatement, dont la question décisive — *« combien de fois t'es-tu arrêté de manger alors qu'il restait de la nourriture disponible ? »* — est **plus informative qu'un score BES** : un zéro y démontre que ce qui arrête le repas est l'épuisement du stock et jamais un signal interne. (2) 🔴 **L'item 9 du PHQ-9 interroge l'idéation suicidaire** : conduite câblée — il se pose **en dernier**, toute réponse ≥ 1 **interrompt la passation** et déclenche le 3114, le fichier `mesures/` s'écrit après. (3) ⭐ **Le PHQ-9 n'est pas interprétable comme une mesure de l'humeur chez Xavier aujourd'hui** : quatre de ses neuf items (sommeil, fatigue, concentration, ralentissement) sont **directement produits par un SAOS sévère insuffisamment traité** et peuvent à eux seuls porter le score en zone « modérée » sans dépression. **La réserve doit figurer au brief** — sans quoi le chiffre induira en erreur le seul praticien qui ignore encore le diagnostic. 📌 **Écart signalé, non corrigé :** l'exemple du `SCHEMA.md` §6 porte `"VVIQ-2"` avec un `score_max` de 80, alors que le VVIQ-2 compte 32 items et plafonne à 160 ; la version retenue est le **VVIQ 16 items /80**. Le schéma étant normatif, sa correction s'annonce avant de s'appliquer. |
-| **09/08/2026** | ✅ **Trois décisions de Xavier, qui débloquent le kit vol.** (1) ⭐ **Le mot-code shutdown est convenu avec Chourouk : « shutdown ».** C'est la première brique d'Étape 3 réellement en place, et la plus rentable du dossier — elle n'a coûté qu'une conversation et elle est utilisable en aéroport, en conflit, partout. Restent le bouton Android (Étape 5) et la fiche explicative pour Chourouk. (2) **La PPC part en Tunisie** : le séjour cesse d'être trois semaines perdues pour le chantier n° 1 — le port continue au niveau atteint, **sans progression de palier**, un environnement inconnu n'étant pas un endroit où monter d'un palier d'exposition. (3) **Alprazolam prévu pour le vol** — molécule **déjà prescrite « si besoin »**, donc son emploi n'est pas une modification de traitement ; mais le **point de vigilance benzodiazépine / SAOS sévère n'a jamais été instruit**, et il porte sur ce médicament précisément. Question 10 du brief, arbitrage au Dr Isorni le 03/09 — **avec un élément nouveau à lui donner : la PPC sera utilisée pendant le séjour**. Le dispositif ne se prononce pas. |
-| **09/08/2026** | ⏱️ **Deux dates entrent au dossier et fixent l'échéancier** : **consultation Dr Isorni le jeudi 03/09/2026 à 12h30**, **départ en vacances en Tunisie le 07/09/2026**. **Quatre conséquences.** (1) ⭐ **Le check-in quotidien devient urgent** : 25 jours de données observées avant la consultation, ou un brief de souvenirs — c'est tout l'écart entre le dispositif et ce qui existait avant. (2) **Le brief s'écrit à la séance du 29-30/08**, et **l'email part avant la consultation** : un créneau ne suffit pas à découvrir un SAOS sévère, une NASH et six questions simultanément. (3) **Le palier 0 de la PPC doit être bouclé avant le départ** — ce sont des appels, ils ne se passent pas depuis la Tunisie ; s'y ajoute la question du transport de l'appareil (cabine, tension, humidificateur). (4) ⭐ **La pause des vacances est décidée maintenant, pas subie sur place** : aucun palier ne progresse pendant le séjour, et **on redescend d'un palier à la reprise, sur les trois chantiers** — règle écrite à l'avance, parce que décider avant est précisément ce qui empêche de le vivre comme un échec. ⚠️ **Deux points de vigilance** : la consultation tombe **4 jours avant le départ**, donc c'est la fenêtre pour sécuriser l'ordonnance de venlafaxine du séjour (logistique, jamais posologie) ; et **le voyage est une exposition agoraphobique majeure** — avion, aéroport, foule, lieu clos. ✅ **Arbitrage rendu : kit vol minimal**, deux briques d'Étape 4 avancées (`panique-13-symptomes.md`, `jour-de-vol.md`) — **et pas de programme d'exposition**, qui entrerait en concurrence directe avec le chantier PPC en violant la règle « un changement à la fois ». ⚠️ **Durée du séjour : 3 semaines ou plus** — ce n'est pas une parenthèse, c'est un tiers du trimestre : la consultation du 03/09 est **la dernière avant fin septembre**, la question du transport de la PPC cesse d'être secondaire (3 semaines sans appareil = 3 semaines de boucle sommeil→poids→foie), et le séjour est **la première période sans mission professionnelle depuis longtemps** — la seule variable d'ajustement du dossier tombe à zéro : **observer si les shutdowns baissent vaudra plus que n'importe quelle échelle.** |
-| **09/08/2026** | 🔴 **Consultation Roisman du 04/05/2026 versée → rapport v2.4.** Document arrivé après l'écriture des protocoles, et qui **corrige trois faits** posés en v2.3 : (1) la PPC n'est pas inutilisée, elle est **utilisée de façon très irrégulière** ; (2) le Dr Roisman **sait** — il a revu Xavier, documenté les causes (**fuites au masque, toux sèche**), installé l'humidificateur, resserré la pression à 6-12, activé l'**EPR 2**, renouvelé la prise en charge, et « **remotivé le patient** » ; (3) ⭐ **IAH résiduel < 6/h sous appareil** — l'efficacité est démontrée sur ses propres nuits, la question de l'utilité est close. **Trois conséquences pour le dispositif :** le SAOS est requalifié d'« non traité » en « **insuffisamment traité** » partout ; le **palier 0 du protocole PPC est entièrement réécrit** (l'inconnue n'est plus la machine mais **l'origine de la fuite** — masque ou bouche —, qui commande le choix d'interface, et dont une des parades, le masque facial, **augmenterait** le contact facial) ; une **règle d'entrée dans l'échelle** est ajoutée, puisqu'il a déjà porté le masque la nuit. ⚠️ **Le trou de coordination n'est pas où on le croyait** : il n'y a rien à révéler au pneumologue — **les deux courriers sont partis au seul Dr Fournier, et c'est le psychiatre qui ignore tout**. ⭐ **Confirmation clinique de la thèse du §9.23, en conditions réelles** : devant l'intolérance, la réponse standard a été de remotiver ; trois mois plus tard l'usage reste irrégulier. On ne remotive pas quelqu'un dont les renforçateurs fonctionnent — on lui donne une procédure. |
-| **09/08/2026** | 🔴 **Étape 1 ouverte — les trois protocoles de l'Axe D sont écrits** : `ppc-desensibilisation.md`, `alimentation-structure-externe.md`, `activite-physique-sans-impact.md`. ⚠️ **L'Étape 1 du plan a dû être révisée avant d'être exécutée** : sa rédaction datait de la v2.0 du rapport et demandait encore un *dépistage* du SAOS (diagnostiqué depuis) avec une cible de −5,5 kg (portée à **−7,7/−11 kg** en v2.2). **La PPC devient la cible n° 1 de l'étape.** ⭐ **Premier cas où le socle corrige le rapport** : le critère de passage des paliers PPC du §10.8 (« confortable plusieurs jours de suite ») viole la règle R6 — « confortable » est un ressenti. Converti en comptage comportemental, plus un **palier intermédiaire ajouté** (allongé éveillé) entre « assis » et « sieste », le saut étant trop grand à 5/5 de peur des lieux clos. ✅ **Règle de séquençage posée** : les paliers 0 (logistique, sans changement d'habitude) peuvent courir en parallèle ; à partir du palier 1, **un seul chantier progresse à la fois**. ✅ **Deux points de méthode assumés** : la BES interroge des ressentis (tension avec R6) — on la passe quand même, mais un score bas ne clôt pas la question à lui seul ; l'intensité d'effort est repérée par le **test de la phrase** (comportemental) et non par une échelle d'effort perçu. |
-| **09/08/2026** | ✅ **Étape 0 exécutée — le socle existe.** Arborescence `psy/`, **schéma du dossier** (`psy/dossier/SCHEMA.md`, normatif) + 5 gabarits, **fiche de profil condensée** (`profil.md`) **et état courant** (`etat.md`) — la distinction permanent/courant est nouvelle et remplace la « fiche unique » prévue —, skills **`psy-seance`** et **`psy-journal`** dans `.claude/skills/`. ⭐ **Décision de conception structurante : on cote des comportements observables, pas des ressentis** (règle R6) — le journal compte des shutdowns, des retraits sensoriels, des renoncements et des activités investies ; **aucune échelle introspective**, parce que demander « note ton anxiété sur 10 » à quelqu'un d'alexithymique avec déficit intéroceptif est la même erreur que « écoute ta satiété ». ✅ **Données** : dossier **versionné dans le dépôt privé** (traçabilité clinique) — arbitrage assumé qui contredit partiellement le §6, conditions et porte de sortie documentées ; **Syncthing P2P** retenu pour le transport PC↔Android, installation à l'Étape 5. ⚠️ **Correction au plan** : les skills vont dans `.claude/skills/`, pas dans `psy/agent/` (Claude Code ne les découvre que là). |
-| 08/08/2026 | **Tour 1 de questions.** ✅ Ordre de construction : **Axe A (cerveau clinique) d'abord**. ✅ Architecture : **hybride Claude Code (PC) + app Android**, synchronisés par le dossier. ✅ Données : **locales, repo privé + synchro chiffrée PC↔téléphone**. ✅ Posture : **directe, littérale, clinique**, avec droit de contredire. Identification du levier décisif face à un psy humain : **l'absence de coût de camouflage** (§1.1). |
-| 08/08/2026 | 🔴 **SAOS SÉVÈRE NON TRAITÉ — le fait le plus important du dossier à ce jour.** Polysomnographie du Dr Roisman versée : **IAH 35/h, 61 micro-éveils/h, SP 7,2 %, Épworth 14, ISI 20, MPJ 31/h**. Diagnostiqué le **19/01/2026**, PPC prescrite — **non utilisée**. Jamais transmis au psychiatre (courrier adressé à la généraliste). → Rapport **v2.3** : §6.6 et §10.8 créées, §6.3/§9.17/§9.21 révisés, §9.23 ajouté. **Trois conséquences pour le dispositif :** (1) l'Axe D gagne un levier majeur — la privation de sommeil dérègle ghréline/leptine, donc le SAOS **aggrave le déficit de satiété déjà présent** : boucle SAOS→poids→SAOS documentée par +6 kg en 9 mois ; (2) **l'exposition graduée devient l'outil n° 1** — la désensibilisation à la PPC *est* une exposition graduée, donc le même outil sert au masque et aux transports ; (3) **la coordination inter-praticiens devient une fonction du dispositif** — six médecins, aucune vue d'ensemble. Email au Dr Isorni rédigé (`20260808 Email au Dr Isorni.md`). |
-| 08/08/2026 | **Rapport passé en v2.1 + sourçage bibliographique vérifié.** 11 sections du rapport touchées ; §6.5 (conduite alimentaire et déficit intéroceptif) et §10.7 (versant somatique) créées ; enseignements 19 à 22 ajoutés. Recherches en ligne effectuées → **correction d'une imprécision** : la fourchette « 3-5 % » ne vaut que pour les MASLD de **poids normal** ; en obésité, la cible EASL-EASD-EASO 2024 est **≥ 5 %** (le chiffre final, 104,5 kg, est inchangé). Toutes les références v2.1 disposent désormais de liens vérifiés. |
-| 08/08/2026 | **Données anthropométriques reçues : 1,77 m · 110 kg · IMC 35,1 (obésité de classe II).** ⭐ Cadrage de l'objectif : Xavier n'ayant **ni stéatohépatite ni fibrose**, le seuil utile est **≥ 5 %, soit ≈ 5,5 kg** — pas les 7-10 % qui visent des lésions qu'il n'a pas. **Première marche : −5,5 kg → 104,5 kg.** ⚠️ **Hypothèse nouvelle : SAOS** (§4.5) — IMC 35 + sommeil fragmenté ; recouvre la fatigue, l'irritabilité et surtout la **« distractibilité »** du certificat Isorni, qui gagne une **4e hypothèse différentielle jamais envisagée** ; à éliminer **avant** le DIVA-5, et aggrave la stéatose par hypoxie intermittente. Examen sans aiguille, donc compatible phobie sang-injection. ⚠️ Bémol ajouté sur la surveillance tensionnelle sous venlafaxine à IMC 35. Activité physique recadrée : **sans impact** à 110 kg. |
-| 08/08/2026 | **Tour 7 — clôture du brainstorming.** ✅ Le compagnon s'appelle **Kokoro (心)** — cœur-esprit indissociés, racine de 心理学 « psychologie » ; nomme l'objet du soin, pas une promesse de résultat. ✅ Graphisme : **trait minimal, ligne claire**. ✅ **Feuille de route en 7 étapes** arrêtée (§7). ❓ Poids/taille toujours manquants — bloquant pour l'étape 1. |
-| 08/08/2026 | **Tour 6 de questions.** ✅ Corpus prioritaires validés : **tension appliquée (Öst)**, **TCC alimentaire + intéroception**, **TCC agoraphobie**, **HAS**. ✅ Compagnon au repos : **il respire, rien d'autre** — la charge mesurée reste consultable en un tap, jamais imposée (§5). ❓ Nom : registre kawaï écarté au profit d'un **registre « psy »** — nouvelle série à proposer. |
-| 08/08/2026 | **Tour 5 de questions.** ✅ Séquençage : **Axe A minimal, puis Axe D à fond**. ✅ Architecture : **trois surfaces** — Claude Code (séances), **web desktop** (outils de séance, TypeScript strict), **app Android compagnon unique** (quotidien + crise). Critère de répartition figé : *ce qui doit être là au moment où ça arrive → Android ; ce qui demande de la surface et du calme → desktop* (§1.2.1). Le desktop est validé **cliniquement** et pas seulement ergonomiquement : la stimulation bilatérale exige une amplitude oculaire impossible sur mobile. ✅ Séance de fond : **week-end en journée**. ✅ Personnage : **nom japonais, registre kawaï assumé**. ❓ Poids/taille toujours manquants. |
-| 08/08/2026 | **Tour 4 de questions — tour le plus déterminant à ce jour.** 🔴 **Stéatose hépatique confirmée par biopsie** (courriel Dr Leila Bouarioua, hépato-gastro-entérologue) : liée au surpoids, **sans fibrose**, sans surveillance, **perte de poids impérative** ; psychotropes non imputables. → Source versée : `ressources/xavier/Biopsie hépatique - Dr Bouarioua.md`. **L'Axe D change de statut : prescription médicale, plus hygiène de vie** — passe en priorité haute. ⭐ **Absence de perception de la satiété confirmée directement** → déficit intéroceptif, extension corporelle de l'alexithymie ; d'où la **règle de conception centrale du dispositif : signal interne absent → structure externe, jamais volonté** (§4.2). ✅ EMDR : **arbitrage rendu — on commence par la TCC** ; EMDR réduit à l'instrument, retraitement suspendu (§3.1). ✅ Rapport : **v2.1 après collecte complémentaire**. ❓ Perte de contrôle alimentaire : non tranchée (« je ne perçois pas bien ») → à mesurer. |
-| 08/08/2026 | **Tour 3 de questions.** ✅ Hygiène de vie : 3 points dégradés — activité nulle, sommeil fragmenté, **apport alimentaire doublé**. → ⚠️ **Élément clinique nouveau, absent de tout le dossier** : hypothèse principale = déficit intéroceptif (satiété), pendant corporel de l'alexithymie (§4.1) ; ⚠️ **question à poser au médecin** : lien possible avec la biopsie hépatique de juillet 2026, d'indication inconnue (§4.2). ✅ Compagnon : **personnage nommé, expressif, muet** (texte uniquement — lisible en shutdown). ✅ Stack : **Kotlin natif + Compose**. ⚠️ EMDR : protocole complet auto-guidé demandé → **objection argumentée et contre-proposition en 4 phases** avec critères de déverrouillage chiffrés (§3.1) — **arbitrage en attente**. |
-| 08/08/2026 | **Tour 2 de questions.** ✅ Cadence : **séance de fond hebdomadaire + check-in quotidien léger**. ✅ Proactivité : **opportuniste** — tension avec l'intolérance à l'imprévu identifiée et résolue par « timing variable, forme invariable, refus à coût nul » (§2.4). ✅ Téléphone : **Samsung Galaxy / One UI** (réglages batterie à câbler, §5). ✅ Tiers : **Dr Isorni** (briefs mensuels) + **Chourouk** (protocole shutdown) ; psychologue en présentiel écarté → **dette assumée** notée au §6.1. |
+| **13/08/2026** *(soir)* | ⭐ **Un cinquième persona entre dans le dispositif : l'aide-au-patient.** Kokoro intègre les **séances à deux** — un déroulé **chronométré**, tenu par une personne qui **ne fait que ce que l'écran affiche**. Aujourd'hui : **Chourouk**. ⭐ **Le motif est encore la règle §9.19, et c'est ce qui rend l'idée juste plutôt que seulement pratique :** certaines thérapies ne se conduisent pas seul, et *« demande de l'aide au bon moment »* est **inapplicable chez quelqu'un dont la parole tombe sous surcharge** — même faute que « écoute ta satiété ». **La parade est une structure externe, et ici la structure est une personne qui a le déroulé sous les yeux et n'a rien à décider.** 🔴 **Trois garde-fous nés avec le type, et aucun n'est optionnel** : le **signal d'arrêt** — un geste convenu à froid par lequel Xavier arrête **sans parler**, rappelé à l'écran en permanence, **champ obligatoire du format** · les **critères d'arrêt** accessibles en un tap, dont le dernier est toujours *« tu ne sais pas quoi faire → on s'arrête »* · le **mode entraînement**, obligatoire avant la première fois — **même logique que l'essai à froid du mot-code : la première fois que ça compte ne doit pas être la première fois que ça se fait.** 🔴 **Un dixième contrôle apparaît — C10, contenu adressé à l'aide-au-patient.** Le dispositif gagne une **quatrième sortie** : ce que Chourouk lit sur l'écran. Deux fautes à traquer : lui **apprendre** quelque chose sur Xavier qu'il n'a pas décidé de partager (diagnostic, score, hypothèse), et lui **demander de juger** — *« estime si ça va »*, *« décide s'il faut continuer »*. ⭐ **Une consigne qui demande un jugement clinique la met en faute quoi qu'elle fasse.** ⚠️ **Ce que l'aide-au-patient change à l'arbitrage EMDR, dit précisément parce que la tentation de lire « quelqu'un est là, donc on peut y aller » est forte :** elle lève **une** des trois objections du 08/08 — l'abréaction sans filet, la vraie, celle où **en shutdown on ne peut plus demander d'aide**. **Les deux autres restent entières** : la fenêtre de surcharge et la titration du traitement ne se corrigent pas par une présence. **Les critères de déverrouillage de la phase 3 ne bougent pas.** Ce qu'elle rend possible **aujourd'hui**, c'est la **phase 1** — et c'est déjà la moitié de ce que l'arbitrage K attendait d'un psychologue en présentiel. 📖 **[`THESAURUS.md`](THESAURUS.md) créé, à la demande de Xavier** — un mot, une chose. Il fixe les cinq personas, les six objets de contenu (⭐ **corpus ≠ protocole ≠ fiche de bibliothèque**, distingués par une seule question : *écrit pour qui ?*), et **signale plutôt que masque la seule ambiguïté du projet** : « étape » a deux sens, celui de la feuille de route et celui du programme. ⭐ **Les échelles passent par Kokoro** — VVIQ, TAS-20, CAT-Q, GAD-7, BES, MAIA, en rubrique `bilan`. **Pas seulement commode : une passation en conversation demande de tenir un fil, de suivre le rythme d'un autre et de répondre à voix haute — trois charges que le format fermé supprime.** 🔴 **Le PHQ-9 reste dehors**, et **la cotation n'entre pas dans l'app** : l'écran ne montre jamais un score ni un seuil. 🔴 **Arbitrage E clos : on reste sur le compte Google professionnel** — micro-entreprise, la note passe en frais de société. **L'objection du dispositif reste écrite, acceptée et non levée** ; elle redeviendra un sujet si la structure gagne un associé, un comptable ou un administrateur. **Le dossier de transit est renommé `kokoro`** — il ne portait plus que du journal sous le nom `psy-journal`, et **un nom qui ment finit par tromper quelqu'un**. ✅ **Les trois conditions de sécurité sont vérifiées par Xavier** : dépôt privé, 2FA active des deux côtés, Drive non partagé. ❌ **La sauvegarde froide hors-ligne est close, à sa demande.** *(Le dispositif note une fois, sans y revenir, que la connectivité à l'étranger et la perte de compte sont deux risques distincts.)* ⭐ **La règle de priorité du 10/08 est révisée, pas supprimée** : *« on avance sur Kokoro »*. **Elle tient debout parce que depuis K5, Kokoro ne concurrence plus le palier 0 — il le porte** : les six démarches y sont déjà des étapes. **Ce qui ne bouge pas** : la date du brief (29-30/08), le fait que Kokoro affiche les appels sans les passer, et ⭐ **`ppc_minutes` comme indicateur qui tranche — tant qu'il est à 0, le contrôle C7 reste ouvert.** 📌 **Un défaut de la refonte du matin, trouvé et corrigé le soir : la règle « le développement passe après le palier 0 et le brief » n'avait pas survécu à l'absorption des cinq documents**, alors que `etat.md` la citait sept fois. **C'est exactement C3** — et elle a été restaurée avant d'être révisée, pas après. |
+| **13/08/2026** *(matin)* | ⭐ **La vision passe à quatre personas, et ce document devient le document unique du projet.** **Claude Psy** (le praticien, six skills) · **Claude Superviseur** (la contre-expertise) · **Kokoro** (le compagnon : protéger, accompagner, éduquer, réconforter) · **Xavier** (le patient). 📐 **Cinq documents sont absorbés et supprimés** — `psy/SYNCHRO.md`, `psy/agent/README.md`, `psy/android/PLAN-KOKORO.md`, `psy/programme/FORMAT.md`, `psy/dossier/SCHEMA.md`. **Il n'y a plus qu'un endroit où lire la doctrine, et un seul où la modifier** ; la doctrine se partageait jusqu'ici entre six fichiers qui se citaient mutuellement, et l'audit du 09/08 avait déjà montré ce que ça coûte (le protocole de crise avait deux domiciles, toutes les surfaces pointaient vers le mauvais). ⚠️ **Conséquence assumée : ce document cesse d'être un journal de conception.** Les trois sections que la v1.2 conservait sciemment périmées — stéatose simple au lieu de NASH, cible ≥ 5 % au lieu de 7-10 %, SAOS présenté comme une hypothèse à dépister — **sont corrigées** : un document unique n'a pas le droit de porter un fait qu'il sait faux. Ce qu'elles disaient est ci-dessous, pour mémoire. 🔴 **La supervision devient bloquante avant publication** *(arbitrage de Xavier)* : rien n'atteint Xavier ni le Dr Isorni sans une passe du superviseur qui porte **explicitement sur la version qui sort**. ⭐ **Et elle est câblée, pas déclarée** — `programme.json` porte un champ `supervision` obligatoire, `npm run publish` refuse si le fichier manque, si sa version ne correspond pas, ou si son verdict n'est pas `publiable`. **C'est le contrôle C3 appliqué à lui-même** : le dispositif venait d'ajouter un invariant, il l'a câblé dans la foulée plutôt que de l'écrire trois fois. Un neuvième contrôle apparaît — **C9, contenu non dérivé**. 🔴 **Le périmètre Drive s'élargit à tout le contenu échangé, dans les deux sens** — arbitrage neuf, tracé au §6.3 comme le §2.2 de l'ancien SYNCHRO l'exigeait. Descendent : `programme.json` **et la bibliothèque** ; remontent : `journal/` et `reponses/`. **Ce que ça élargit, dit franchement : ce ne sont plus des compteurs ni même des libellés, ce sont des fiches thérapeutiques entières.** Ni compte rendu, ni mesure, ni diagnostic, ni idéation ne transitent — la liste de ce qui reste au PC est fermée. **Xavier a arbitré en connaissance de cause : « c'est assumé »** ; le contre-argument reste écrit, il est accepté, pas levé. ⭐ **Le fait clinique qui commande tout ça, et c'est Xavier qui l'apporte :** *« j'aurais beaucoup plus de facilité de suivre mes protocoles, désensibilisations, etc. si c'est sur mon mobile avec Kokoro »*. **Ce n'est pas une préférence d'interface, c'est la sixième instance de la règle §9.19** : un protocole rangé dans un dépôt demande de se souvenir qu'il existe — donc d'avoir le signal qui dit « c'est le moment ». **Un protocole dans la main est une structure externe.** D'où la **bibliothèque** : Kokoro cesse de porter des fonctions et porte **toute la documentation accessible au patient**, groupée en quatre rubriques (`crise` · `therapie` · `bilan` · `documentation`). 🔴 **Le point dur de la bibliothèque est nommé avant d'être rencontré : une fiche est *écrite pour Xavier*, jamais *copiée depuis* `psy/protocoles/`** — un protocole porte des diagnostics, des pronostics et des réserves adressées à un professionnel. C'est C9, et c'est la raison pour laquelle `psy/protocoles/` **ne disparaît pas** au profit de la bibliothèque (arbitrage L). ⭐ **Un bilan dans Kokoro est un texte daté écrit en séance, jamais un graphique calculé par l'app** — c'est ce qui permet de satisfaire « Xavier a ses bilans dans la main » sans toucher à l'invariant « aucun historique, aucune progression à l'écran ». |
+| **12/08/2026** | ⭐ **Kokoro cesse d'être une app à fonctions et devient le porteur de la thérapie.** Claude Psy écrit `programme.json`, Kokoro l'affiche — **ajouter une étape cesse d'être un acte de développement pour devenir un acte clinique**, fait en séance. ✅ Moitié PC écrite et vérifiée : `npm run publish` refuse la publication entière si une étape enfreint un invariant, **testé sur 9 pièges, les 9 attrapés**. 🔴 **Le point dur nommé : les garde-fous câblés en tests devenaient contournables par du contenu, en silence** — d'où la double garde. ❌ **L'interpellation est supprimée** — *« tant que Xavier ne vient pas vers Kokoro, Kokoro ne lui notifie de rien »*. 📌 **Ce n'est pas une perte** : Android rétrograde déjà un full-screen intent en bannière dès que le téléphone est en usage — la décision aligne l'intention sur ce que la plateforme garantissait. ⭐ **La présence devient le dernier jalon** : le workflow d'abord, le visage ensuite. 🔗 **Le Drive porte le contenu vivant dans les deux sens** — `programme.json` descend, `reponses/` remontent. |
+| **11/08/2026** | ✅ **Le check-in quotidien passe sur le téléphone, et un vrai check-in est arrivé au dossier** — 11 champs en compteurs et choix fermés, énoncés mot pour mot du skill, **aucune saisie de texte**, format identique au gabarit. 🔴 **Syncthing est écarté, le transport passe par Google Drive** — arbitrage de Xavier rendu **après objection argumentée et maintien de la décision**, objection conservée entière. ⭐ **Réduction de surface appliquée d'office : seul `journal/` transite.** ✅ **SAF retenu** — un dossier désigné, **aucune permission au manifeste**. ⚠️ **Une objection du dispositif s'est révélée fausse** (Drive *est* sélectionnable) et 🔴 **une autre pire que prévu** : **Drive accepte deux fichiers du même nom** sans rien dire — garde doublée le jour même. ⏳ **Le critère de fin exigeait un check-in réel** : un check-in fabriqué depuis le PC aurait été une **donnée clinique fausse**. |
+| **10/08/2026** | 🔴 **Les numéros d'appel d'urgence sortent du dispositif — décision de Xavier, et elle corrige une faute de conception.** 15, 112 et 114 retirés des 22 fichiers qui les portaient ; **le 3114 conservé**, sur le seul déclencheur de l'idéation suicidaire. ⭐ **Le motif principal est clinique, et il est de la même famille que la règle §9.19 : une syncope vasovagale ne s'appelle pas, elle s'allonge.** Le dispositif proposait un appel là où la parade est la tension appliquée — **une erreur d'orientation présentée comme une sécurité supplémentaire**. S'y ajoutent deux faits que rien ne contredisait : aucun de ces numéros n'a jamais servi, et leur affichage permanent était **anxiogène** sur un profil TAG. 📌 **La demande a été instruite avant d'être exécutée**, sa formulation couvrant aussi le câblage de l'idéation suicidaire. ⚡ **K0, K1 et K2 franchis le même jour** : poste de travail, **full-screen intent levé** (le point le plus risqué du projet), **noyau de crise** — et ⭐ **le mot-code envoyé pour de vrai, téléphone verrouillé, Chourouk confirmant la réception, l'essai fait à froid en la prévenant.** ✅ **K3 construit** : la tension appliquée cesse d'être un minuteur et devient un guidage sur **quatre repères externes** — ⭐ **on ne déclenche plus sur une sensation, on déclenche sur un fait extérieur.** |
+| **09/08/2026** | 🪞 **`psy-superviseur` écrit — et il trouve une faute en première passe.** ⭐ **Le risque qu'il traite est structurel : presque toutes les sources de ce dossier sont écrites par l'instance qui les consomme.** 🔴 **Constat bloquant, et il est ironique : `psy-seance` instruisait « on ne passe pas au palier suivant tant que le précédent n'est pas confortable »** — **mot pour mot** la faute R6 que le dispositif se félicitait d'avoir corrigée le matin même, dans le skill qui décide effectivement des passages de palier. ⚠️ **Trois autres constats** : la fiche pour Chourouk déclarée dans quatre documents et existant nulle part · l'app de tension appliquée sans surface · ⭐ **prolifération — 19 documents doctrinaux contre 1 acte exécuté**. 📌 **Objection de fond : l'aphantasie a été tenue pour acquise deux jours avant d'être mesurée** — le VVIQ l'a confirmée, **mais un superviseur n'a pas le droit de noter le processus sur le résultat**. ⚙️ **Les quatre rôles manquants écrits — le dispositif cesse d'être un classeur de fiches** : les trois étapes ouvertes avaient produit des protocoles, des instruments et des gabarits, **et aucun exécutant**. 🔧 **Audit de cohérence : dix-sept incohérences corrigées, aucun fait clinique modifié.** ⭐ **La plus grave était invisible : le protocole de crise avait deux domiciles, et toutes les surfaces pointaient vers le mauvais** — le dispositif avait identifié que son protocole d'urgence était inutilisable en shutdown, avait écrit la parade, **et continuait à servir l'ancienne version à toutes ses surfaces.** 🔴 **Étapes 1, 2 et 3 ouvertes** : protocoles somatiques, instruments de mesure, outils de crise. ⭐ **Premier cas où le socle corrige le rapport** : « confortable plusieurs jours de suite » est un ressenti — converti en comptage, avec un **palier intermédiaire ajouté**. ⭐ **Quatrième instance de la règle §9.19, invisible jusque-là :** le protocole d'Öst déclenche « aux premiers signes » — **un signal interne**, chez quelqu'un dont le déficit intéroceptif est confirmé. Appliqué tel quel il aurait échoué, **et l'échec aurait été lu comme un manque d'application.** ⏱️ **Deux dates entrent au dossier et fixent l'échéancier** : consultation du 03/09, départ du 07/09. |
+| **08/08/2026** | 🔴 **SAOS sévère — le fait le plus important du dossier.** IAH 35/h, diagnostiqué le 19/01/2026, PPC prescrite. **Jamais transmis au psychiatre** (courrier adressé à la seule généraliste). Trois conséquences : le versant somatique gagne un levier majeur (le SAOS **aggrave le déficit de satiété** par dérèglement ghréline/leptine) · **l'exposition graduée devient l'outil n° 1** — la désensibilisation à la PPC *est* une exposition graduée · **la coordination inter-praticiens devient une fonction du dispositif** : six médecins, aucune vue d'ensemble. 🔴 **Atteinte hépatique confirmée par biopsie.** ⭐ **Absence de perception de la satiété confirmée directement** → déficit intéroceptif, extension corporelle de l'alexithymie → **la règle centrale du dispositif : signal interne absent → structure externe, jamais volonté.** ✅ **EMDR : on commence par la TCC**, retraitement suspendu. ✅ **Brainstorming clos en 7 tours** : trois surfaces, séance hebdomadaire + check-in quotidien, **Kokoro (心)**, trait minimal, Kotlin natif, données locales + dépôt privé. |
+| **Pour mémoire — trois faits que ce document a portés puis corrigés** | 📌 **R2 s'applique aussi à la doctrine.** (1) L'atteinte hépatique a été décrite comme une **stéatose simple sans surveillance particulière**, d'après le seul courriel de la Dr Bouarioua — **l'histologie a tranché autrement : NASH sans fibrose**. (2) La cible de perte de poids a été posée à **≥ 5 %, ≈ 5,5 kg → 104,5 kg**, au motif que les seuils hauts visent des lésions que Xavier n'avait pas — **la NASH est précisément une de ces lésions ; cible portée à 7-10 %, soit 99-102,3 kg**. (3) Le SAOS a figuré comme **hypothèse à dépister** — c'était un **diagnostic sévère constitué depuis sept mois**, et la v2.3 puis la v2.4 ont encore corrigé son observance (« non utilisée » → **« utilisée de façon très irrégulière »**, avec **IAH résiduel < 6/h sous appareil** : l'efficacité est démontrée, seul le port manque). ⭐ **Ce qu'il faut retenir de la troisième, et qui vaut au-delà d'elle** : devant l'intolérance, la réponse standard du pneumologue a été « je remotive le patient » ; trois mois plus tard l'usage restait irrégulier. **On ne remotive pas quelqu'un dont les renforçateurs fonctionnent — on lui donne une procédure.** |

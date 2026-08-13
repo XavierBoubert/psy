@@ -1,6 +1,6 @@
 # `corpus/` — référentiels cliniques indexés
 
-Sources sur lesquelles le dispositif appuie ses affirmations. Règle : **toute affirmation clinique est adossée à une source citable** (PLAN §1.1, levier n° 6).
+Sources sur lesquelles le dispositif appuie ses affirmations. Règle : **toute affirmation clinique est adossée à une source citable** (`PLAN.md` §3.1, levier n° 6).
 
 ## Les quatre corpus prioritaires — validés, à récupérer
 
@@ -23,7 +23,7 @@ Sources sur lesquelles le dispositif appuie ses affirmations. Règle : **toute a
 
 | Corpus | Statut |
 |---|---|
-| Protocole EMDR — stimulations bilatérales non visuelles | ⏸️ reporté avec l'axe EMDR (PLAN §3.1) |
+| Protocole EMDR — stimulations bilatérales non visuelles | ⏸️ reporté avec l'axe EMDR (`PLAN.md` §3.6) |
 | ACT / défusion cognitive | ❓ à évaluer pour le TAG — **vérifier la compatibilité avec l'aphantasie** avant de retenir |
 | CIM-11 | ❓ optionnel |
 

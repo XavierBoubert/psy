@@ -3,7 +3,7 @@
 **Statut :** créé le 09/08/2026 — **ouverture de l'Étape 2 du PLAN** (Instrumentation du suivi, Axe B).
 **Objet :** les instruments que le dispositif fait passer à Xavier. Un fichier par échelle : items, cotation, seuils, ce que l'échelle **ne dit pas**, et provenance.
 
-> Une passation produit **un fichier dans `psy/dossier/mesures/AAAA-MM-JJ-<echelle>.json`**, conforme au `SCHEMA.md` §6. **Les réponses item par item sont conservées, toujours.** Un score seul n'est pas une mesure, c'est un résumé — c'est parce que les réponses brutes de l'AQ et de l'EQ existaient que le rapport a pu les re-coter et démontrer que le « manque d'empathie » de Xavier est un déficit de décodage, pas un désintérêt (rapport §5, §9.1).
+> Une passation produit **un fichier dans `psy/dossier/mesures/AAAA-MM-JJ-<echelle>.json`**, conforme au `PLAN.md` §7.7. **Les réponses item par item sont conservées, toujours.** Un score seul n'est pas une mesure, c'est un résumé — c'est parce que les réponses brutes de l'AQ et de l'EQ existaient que le rapport a pu les re-coter et démontrer que le « manque d'empathie » de Xavier est un déficit de décodage, pas un désintérêt (rapport §5, §9.1).
 
 ---
 
@@ -22,7 +22,7 @@ La règle **R6** du schéma du dossier interdit de coter des ressentis : *« on 
 
 **Deux règles qui en découlent, non négociables :**
 
-1. **Aucun score d'échelle n'entre dans le journal quotidien.** Le journal reste comportemental (`SCHEMA.md` §3.1). Les échelles vivent dans `mesures/`, et nulle part ailleurs.
+1. **Aucun score d'échelle n'entre dans le journal quotidien.** Le journal reste comportemental (`PLAN.md` §7.3). Les échelles vivent dans `mesures/`, et nulle part ailleurs.
 2. ⭐ **Chez Xavier, un score bas sur une échelle introspective ne prouve rien.** *(⚠️ **Une exception documentée : le BES**, dont la psychométrie dit l'inverse — VPN 97,4 %, VPP 37,5 %. Cf. [`bes.md`](bes.md) §2.2 : les deux considérations se croisent au lieu de s'annuler, et c'est la grille comportementale qui départage.)* L'alexithymie et le déficit intéroceptif sont précisément une **difficulté à répondre à ce type de question**. Un score qui minimise (peu d'anxiété déclarée, peu de perte de contrôle alimentaire déclarée) peut refléter le déficit de perception, pas l'absence du phénomène. **Un score élevé est informatif ; un score bas ne clôt aucune question à lui seul.** Cette réserve est écrite dans chaque fiche et doit être reportée dans le brief au Dr Isorni.
 
 ---

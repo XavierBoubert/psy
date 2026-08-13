@@ -132,7 +132,7 @@ Et tant que 61 micro-éveils par heure fragmentent chaque nuit, **aucune évalua
 |---|---|---|
 | Minutes d'utilisation | `journal/AAAA-MM-JJ.json` → `campagne.ppc_minutes` | Entier ≥ 0. **Donnée du télésuivi de l'appareil quand elle existe**, pas une estimation. |
 | Palier en cours | `seances/AAAA-MM-JJ-seance.md` → frontmatter `palier_atteint` | 0 à 6 |
-| Panique survenue pendant une séance | `crises/AAAA-MM-JJ-HHMM-panique.json` | Cf. `SCHEMA.md` §4 |
+| Panique survenue pendant une séance | `crises/AAAA-MM-JJ-HHMM-panique.json` | Cf. `PLAN.md` §7.5 |
 | Réponses du prestataire (interfaces, réglages, prise en charge) | Compte-rendu de séance, section `## Décisions` | — |
 | Observance et IAH résiduel du télésuivi | `etat.md` § Chiffres de référence | Mis à jour à la clôture de séance |
 

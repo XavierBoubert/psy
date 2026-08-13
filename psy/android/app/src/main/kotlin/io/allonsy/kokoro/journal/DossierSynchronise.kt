@@ -12,14 +12,14 @@ private const val SOUS_DOSSIER = "journal"
 private const val MIME_JSON = "application/json"
 
 /**
- * Accès au dossier synchronisé — arbitrage D du `PLAN-KOKORO.md` §9, tranché ici en
+ * Accès au dossier synchronisé — arbitrage tranché le 11/08/2026 (`PLAN.md` §5.5), retenu ici en
  * faveur du **Storage Access Framework** plutôt que de `MANAGE_EXTERNAL_STORAGE` :
  * Xavier désigne une fois le dossier `psy/dossier` partagé par Syncthing, et Kokoro
  * n'obtient de droit que sur celui-là. Aucune permission n'entre au manifeste, et
  * l'app ne peut pas lire le reste du téléphone.
  *
  * Kokoro écrit des fichiers, pas une base : la source de vérité reste le dossier
- * (`PLAN-KOKORO.md` §3.3). Rien n'est mis en cache ici.
+ * (`PLAN.md` §5.1 — aucune base de données). Rien n'est mis en cache ici.
  */
 fun intentChoisirDossier(): Intent =
     Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)

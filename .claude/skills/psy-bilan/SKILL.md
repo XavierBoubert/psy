@@ -1,12 +1,20 @@
 ---
 name: psy-bilan
-description: Passation et cotation d'une échelle validée avec Xavier — VVIQ, TAS-20, CAT-Q, GAD-7, PHQ-9, BES (grille comportementale), DIVA-5. Lit les items dans psy/corpus/echelles/, écrit une passation par fichier dans psy/dossier/mesures/AAAA-MM-JJ-<echelle>.json, réponses item par item. Utiliser quand Xavier dit « on passe le VVIQ », « une échelle », « le bilan », « le questionnaire », ou quand une séance prévoit une passation au plan de `psy/corpus/echelles/README.md` §3.
+description: Passation et cotation d'une échelle validée avec Xavier — VVIQ, TAS-20, CAT-Q, GAD-7, PHQ-9, BES (grille comportementale), MAIA, DIVA-5. Passation en conversation, OU cotation d'une passation revenue de Kokoro (les échelles y sont publiées depuis le 13/08/2026, sauf le PHQ-9). Lit les items dans psy/corpus/echelles/, écrit une passation par fichier dans psy/dossier/mesures/AAAA-MM-JJ-<echelle>.json, réponses item par item. Utiliser quand Xavier dit « on passe le VVIQ », « une échelle », « le bilan », « le questionnaire », ou quand une séance prévoit une passation au plan de `psy/corpus/echelles/README.md` §3.
 ---
 
 # psy-bilan — passation et cotation d'une échelle
 
 **Une passation = un fichier. Les réponses item par item sont conservées, toujours.**
-Un score seul n'est pas une mesure, c'est un résumé (`SCHEMA.md` §6).
+Un score seul n'est pas une mesure, c'est un résumé (`PLAN.md` §7.7).
+
+> ⭐ **Depuis le 13/08/2026, les échelles se passent dans Kokoro** *(arbitrage de Xavier)* — publiées en séance comme `questionnaire`, rubrique `bilan` : **VVIQ · TAS-20 · CAT-Q · GAD-7 · BES · MAIA**.
+>
+> **Ce n'est pas seulement commode.** Une passation en conversation demande de tenir un fil, de suivre le rythme de quelqu'un d'autre et de répondre à voix haute — **trois charges que le format fermé de Kokoro supprime** : une question par écran, des choix fermés, « passer » écrit `null`, et **on peut s'arrêter au milieu sans le justifier**.
+>
+> 🔴 **Deux choses ne bougent pas.** (1) **Le PHQ-9 se passe ici, en conversation, jamais dans Kokoro** — c'est le seul instrument porteur d'un déclencheur d'escalade (§3 ci-dessous). (2) ⭐ **La cotation reste ici.** Kokoro renvoie les réponses item par item dans `reponses/` ; **il n'affiche jamais un score, un seuil ni une interprétation.** Le fichier `mesures/` s'écrit **en séance**, à partir de ces réponses.
+>
+> **Ce skill garde donc deux modes :** la passation en conversation *(PHQ-9, DIVA-5, toute échelle non publiée)*, et la **cotation d'une passation revenue de Kokoro**. Les règles ci-dessous valent pour les deux.
 
 ---
 

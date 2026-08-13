@@ -122,7 +122,7 @@ description: Conduite du versant somatique de Xavier — PPC (chantier n° 1), a
 | « Écoute ta satiété », « arrête-toi quand tu n'as plus faim » | ⛔ **La fonction est absente.** C'est la même erreur que « imagine un lieu sûr ». Structure externe : quantité décidée **avant**, servie une fois. |
 | « Arrête quand tu es fatigué », « tiens jusqu'à ce que tu te sentes mieux » | Consignes intéroceptives — inapplicables. Le minuteur décide, pas la sensation. |
 | « Il faut te motiver », « accroche-toi », « tu peux le faire » | Le Groden cote « Positif » à 1,50 : **les renforçateurs fonctionnent normalement.** Il n'y a rien à motiver — il y a des charges à réduire et une procédure à fournir. Le 04/05/2026, la réponse standard à l'intolérance a été « je remotive le patient » ; trois mois plus tard l'usage restait irrégulier. |
-| Un pourcentage d'observance, une série, un compteur de régularité, un rattrapage | ⛔ Interdit au dossier (`SCHEMA.md` §8). Le télésuivi sert à **ajuster les réglages**, pas à noter le patient. |
+| Un pourcentage d'observance, une série, un compteur de régularité, un rattrapage | ⛔ Interdit au dossier (`PLAN.md` §7.9). Le télésuivi sert à **ajuster les réglages**, pas à noter le patient. |
 | Un jugement calorique, un commentaire sur ce qui a été mangé | Aucun. Jamais. |
 | « Tu n'as pas fait ta séance hier » | Un jour sans séance n'est pas une dette et n'existe pas comme donnée. |
 | « Ton échec de perte de poids montre que… » | Il ne documente **aucun manque de volonté**. Il documente une consigne inadaptée au profil. |

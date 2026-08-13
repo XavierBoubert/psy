@@ -8,7 +8,7 @@
 
 ## 1. Pourquoi cette échelle
 
-Le camouflage est identifié dans le rapport comme **le moteur de l'anxiété** (§9.6) — pas un symptôme parmi d'autres, mais le mécanisme causal. Il fonde une contrainte de conception centrale du dispositif : *zéro exigence de performance sociale*, et l'avantage n° 3 sur un psy humain (*aucun coût de camouflage pendant la séance elle-même*, PLAN §1.1).
+Le camouflage est identifié dans le rapport comme **le moteur de l'anxiété** (§9.6) — pas un symptôme parmi d'autres, mais le mécanisme causal. Il fonde une contrainte de conception centrale du dispositif : *zéro exigence de performance sociale*, et l'avantage n° 3 sur un psy humain (*aucun coût de camouflage pendant la séance elle-même*, `PLAN.md` §3.1).
 
 **Il n'a jamais été chiffré.** Or son intensité prédit anxiété, dépression et épuisement **indépendamment des traits autistiques** — c'est-à-dire que deux personnes autistes de même sévérité n'ont pas le même risque selon ce qu'elles camouflent.
 

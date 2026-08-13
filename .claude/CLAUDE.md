@@ -2,23 +2,40 @@
 
 ## Objectif principal
 
-Créer un **psychologue/psychiatre virtuel basé sur Claude, spécifiquement conçu pour Xavier** — un dispositif complet, pas un chatbot :
+Créer un **psychologue/psychiatre virtuel basé sur Claude, spécifiquement conçu pour Xavier** — un dispositif complet, pas un chatbot.
 
-1. **Expertise** — une compétence clinique supérieure à celle d'un psy français généraliste sur le profil exact de Xavier (TSA niveau 1, agoraphobie, phobie sang-injection-accident, TAG, aphantasie, camouflage, shutdowns).
-2. **Suivi** — un accompagnement psychologique et psychiatrique continu, **en complément du Dr Isorni et jamais en substitution** (aucun conseil de modification de traitement ; protocole de crise câblé, 3114).
-3. **Thérapies** — un programme thérapeutique structuré, outillé par des applications sur mesure (EMDR à stimulations bilatérales, tension appliquée, exposition graduée, etc.).
-4. **Hygiène de vie** — un programme d'activité physique, d'alimentation, de sommeil et de récupération adapté à ses contraintes.
-5. **Présence** — **Kokoro (心)**, un visage numérique sur Android, en surimpression permanente, pour un suivi en temps réel.
+> 📐 **Toute la doctrine du dispositif tient dans un seul document : [`PLAN.md`](../PLAN.md) (v2.0, 13/08/2026).** Il a absorbé les cinq documents qui se la partageaient — `SYNCHRO.md`, `agent/README.md`, `PLAN-KOKORO.md`, `programme/FORMAT.md`, `dossier/SCHEMA.md`, tous supprimés. **Il n'y a plus qu'un endroit où lire ce que le dispositif est, et un seul où le modifier.**
+>
+> 📖 **Le vocabulaire fait foi dans [`THESAURUS.md`](../THESAURUS.md)** *(normatif)* — **un mot, une chose.** À lire avant d'employer « protocole », « thérapie », « programme », « fiche », « étape », « palier », « chantier » ou « cible » : ils ne sont **pas** interchangeables. Un besoin qui n'entre dans aucune case s'ajoute au thésaurus **avant** d'être écrit ailleurs.
 
-**Phase 1 (terminée)** : diagnostic établi à partir de `ressources/xavier/` et `ressources/spécialisées/` → `ressources/xavier/Rapport psychiatrique et psychologique.md` (**v2.4**), document de référence du profil.
-**Phase 2 (en cours)** : conception et construction du dispositif → `PLAN.md` (plan) et `psy/` (réalisation). **Étape 0 — socle minimal : close (09/08/2026). Étape 1 — Axe D (prescription médicale) : ouverte, les trois protocoles sont écrits dans `psy/protocoles/`. Étape 2 — instrumentation du suivi : ouverte (09/08/2026), les instruments de mesure sont versés dans `psy/corpus/echelles/`, le check-in quotidien démarre. Étape 3 — outils de crise : ouverte (09/08/2026), `psy/protocoles/crise-escalade.md` (protocole câblé, 3114) et `psy/protocoles/tension-appliquee.md` sont écrits.**
+### ⭐ Cinq personas *(13/08/2026)*
+
+| Persona | Ce qu'il est | Ce qu'il ne fait jamais |
+|---|---|---|
+| **Claude Psy** — les 6 skills cliniques | **Le psychiatre et le psychologue.** Une séance de fond par semaine. **Il construit tout le contenu** : protocoles, désensibilisations, bilans, questionnaires, briefs, programme. Il le donne à Kokoro | Prescrire · conseiller une modification de traitement · **publier sans supervision** · publier hors séance |
+| **Claude Superviseur** — `psy-superviseur` | **Le superviseur du psy.** Il supervise **Claude, jamais Xavier**. 🔴 **Il supervise chaque contenu que Claude Psy produit, et sa passe est bloquante avant publication** | Écrire dans `dossier/` · modifier ou publier le programme · noter Xavier |
+| **Kokoro (心)** — `psy/android/` | **Le compagnon du patient.** Il porte **toute la documentation accessible à Xavier** : bilans, questionnaires, thérapies, protocoles. Quatre rôles : **protéger · accompagner · éduquer · réconforter** | Décider · interpréter · calculer une progression · ⭐ **venir vers Xavier** |
+| ⭐ **L'aide-au-patient** *(nouveau)* | **La personne qui tient le téléphone** pendant une **séance à deux** et exécute les consignes chronométrées de Kokoro. Aujourd'hui : **Chourouk**. C'est un **rôle**, pas une personne | ❌ **Improviser, juger, interpréter, rassurer hors script.** 🔴 **Elle n'est pas thérapeute** — tout ce qui demande un jugement clinique est hors de son rôle |
+| **Xavier** | **Le patient.** Pas un utilisateur à engager | — |
+
+> 🔴 **La séance à deux met une tierce personne dans la boucle — trois garde-fous, aucun optionnel** *(`PLAN.md` §8.3)* : le **signal d'arrêt** (un geste convenu à froid, par lequel Xavier arrête **sans parler**, rappelé à l'écran en permanence) · les **critères d'arrêt** en un tap, dont le dernier est toujours *« tu ne sais pas quoi faire → on s'arrête »* · le **mode entraînement**, obligatoire avant la première fois. **Les trois sont vérifiés mécaniquement par `npm run publish`.**
+>
+> 🔴 **Rien de ce que l'aide lit ne lui apprend quelque chose sur Xavier qu'il n'a pas décidé de partager** — ni diagnostic, ni score, ni hypothèse. **Elle lit des consignes, pas un dossier.** C'est le contrôle **C10**.
+
+> ⭐ **Kokoro ne vient jamais vers Xavier.** Aucune notification, aucune relance, aucun reproche. **Xavier vient à lui, et y trouve tout.** *(Seule exception : l'accès crise sur l'écran verrouillé — une porte, pas un rappel.)*
+>
+> ⭐ **Le fait clinique qui commande la vision, apporté par Xavier le 13/08/2026 :** *« j'aurais beaucoup plus de facilité de suivre mes protocoles, désensibilisations, etc. si c'est sur mon mobile avec Kokoro »*. **Ce n'est pas une préférence d'interface** — un protocole rangé dans un dépôt demande de se souvenir qu'il existe ; **un protocole dans la main est une structure externe.** Sixième instance de la règle §9.19.
+
+**Phase 1 (terminée)** : diagnostic → `ressources/xavier/Rapport psychiatrique et psychologique.md` (**v2.4**), document de référence du profil.
+**Phase 2 (en cours)** : construction du dispositif → `PLAN.md` §9. **Étape 0 close · Étapes 1, 2, 3 et 5 ouvertes.** Jalon en cours : **K5 — Kokoro lit le programme et la bibliothèque**.
 
 > **Chantier n° 1 en cours : la reprise de la PPC par désensibilisation** (SAOS sévère **insuffisamment traité** — usage très irrégulier, IAH résiduel < 6/h sous appareil). Fiche : `psy/protocoles/ppc-desensibilisation.md`. Les deux autres — alimentation à structure externe, activité physique sans impact — sont écrites et démarrent après. **À partir du palier 1, un seul chantier progresse à la fois.**
 >
 > ⏱️ **Deux échéances structurent le trimestre** : **consultation Dr Isorni le 03/09/2026 à 12h30** (la dernière avant fin septembre) et **départ en Tunisie le 07/09/2026 pour 3 semaines ou plus**. Détail et conséquences : `psy/dossier/etat.md` §1.
 
 > **Avant toute intervention clinique** (séance, check-in, brief, protocole, outil), charger **`psy/dossier/profil.md`** (contexte permanent) **et `psy/dossier/etat.md`** (état courant), ensemble et jamais l'un sans l'autre. En cas de doute clinique, la source qui fait foi est le rapport v2.4, pas la fiche.
-> **Avant d'écrire quoi que ce soit dans `psy/dossier/`**, lire **`psy/dossier/SCHEMA.md`** — il est normatif ; aucune surface n'a le droit d'inventer un format.
+> **Avant d'écrire quoi que ce soit dans `psy/dossier/`**, lire **`PLAN.md` §7** — il est normatif ; aucune surface n'a le droit d'inventer un format.
+> **Avant d'écrire dans `psy/programme/`**, lire **`PLAN.md` §8** — normatif également.
 
 ### Contraintes de conception non négociables (issues du rapport v2.4)
 
@@ -31,21 +48,32 @@ Créer un **psychologue/psychiatre virtuel basé sur Claude, spécifiquement con
 - **Rigidité / routines** → la prévisibilité est une fonctionnalité : aucun changement d'interface non annoncé.
 - **Deux mécanismes de crise distincts** → panique (exposition/respiration) ≠ vasovagal (tension appliquée) ; ne jamais les confondre. *(Un troisième, le shutdown, a sa propre parade : mot-code, retrait, reprise différée.)*
 - ⭐ **Signal interne absent → structure externe** (règle centrale, §9.19) → ne jamais demander à Xavier de s'appuyer sur une perception qui lui manque (satiété, fatigue, tension, émotion). Trois échecs documentés — « imaginez un lieu sûr », « écoutez votre satiété », « portez le masque toute la nuit » — relevaient de la conception, pas de la volonté.
-- ⭐ **On cote des comportements observables, pas des ressentis** (règle R6 du schéma du dossier) → jamais « note ton anxiété sur 10 » ; toujours une ancre comportementale (« à combien de choses as-tu renoncé ? »).
+- ⭐ **On cote des comportements observables, pas des ressentis** (règle R6, `PLAN.md` §7.1) → jamais « note ton anxiété sur 10 » ; toujours une ancre comportementale (« à combien de choses as-tu renoncé ? »).
 - **Poser les questions sur les états internes explicitement et de façon fermée** (§9.20) → l'absence de plainte n'est pas une absence de problème.
 
 Compétences (skills) : `ay-typescript` (patterns de typage), `ay-functional` (immutabilité, composition), `ay-refactor` (méthodologie de refactoring), `ay-api` (design REST / interfaces), `ay-12factor` (services déployables), `/ay-teach [topic]` (apprentissage structuré).
 
-### Données de santé — arbitrages actés (09/08, 11/08 et 12/08/2026)
+### Données de santé — arbitrages actés (09/08, 11/08, 12/08 et 13/08/2026)
 
-Le dossier médical et la mémoire longitudinale sont **versionnés dans le dépôt privé `github.com/XavierBoubert/psy`**. Décision de Xavier en connaissance de cause : elle assouplit sciemment la règle « rien ne part vers un tiers » du PLAN §6, en échange de la traçabilité clinique et de la sauvegarde hors-machine.
+**Deux mécanismes, deux rôles distincts.** Détail complet, objections conservées et porte de sortie : **`PLAN.md` §6**.
 
-⚠️ **~~Syncthing~~ est écarté depuis le 11/08/2026** — le transport PC ↔ téléphone passe par **Google Drive**, second tiers, arbitré après objection du dispositif. ⭐ **Étendu le 12/08/2026 aux deux sens** : `journal/` et `reponses/` remontent, `programme.json` descend. **Rien d'autre du dossier ne transite** — ni profil, ni état, ni séances, ni crises, ni mesures, ni briefs. Détail et objections conservées : `psy/SYNCHRO.md` §2.2 et §2.3.
+| Mécanisme | Rôle | Périmètre |
+|---|---|---|
+| **Dépôt git privé** `github.com/XavierBoubert/psy` | ⭐ **Historique, archive, source de vérité** | Tout le dépôt |
+| **Google Drive** | ⭐ **Le contenu vivant, dans les deux sens** | 🔴 **Étendu le 13/08/2026** — descendent `programme.json` **et la bibliothèque** ; remontent `journal/` et `reponses/` |
 
+⚠️ **~~Syncthing~~ est écarté depuis le 11/08/2026**, après objection du dispositif et maintien de la décision de Xavier.
+
+- 🔴 **Le critère du périmètre Drive est fonctionnel, pas clinique : transite ce dont Kokoro a besoin, et ce que Kokoro produit et dont les Claude ont besoin. Rien d'autre.** Ne transitent **jamais** : `profil.md` · `etat.md` · `seances/` · `crises/` · `mesures/` · `briefs/` · `gabarits/` · `supervisions/` · `corpus/` · `protocoles/` bruts · `ressources/` · le code · `.git`.
+- ⭐ **Le contenu publié est *dérivé*, jamais *extrait*.** Le programme porte ce qu'il y a **à faire**, jamais ce qui a été constaté, mesuré ou diagnostiqué. Une fiche de bibliothèque est **écrite pour Xavier**, jamais copiée depuis `psy/protocoles/` (contrôle **C9** du superviseur).
+- ✅ **Aucun fichier n'a deux auteurs** — condition de l'arbitrage, pas une observation.
+- 🔴 **Tout ce qui passe par Drive est versé au dépôt et versionné.** Drive n'est jamais la seule copie. **Ne jamais faire pointer Drive sur `c:\p\psy`.**
 - **Conditions** : dépôt privé · 2FA + clé SSH · aucun fork, collaborateur ni GitHub Action ayant accès au contenu · **2FA sur le compte Google**, dossier Drive **jamais partagé**, aucune application tierce autorisée dessus.
 - **Hors GitHub, hors Google Drive et hors appels à Claude, aucune donnée ne part vers un tiers** — pas de cloud santé, pas de service d'analyse externe, pas de télémétrie. Ne jamais proposer d'en ajouter.
-- ⚠️ **Toute extension du périmètre transporté est un arbitrage neuf**, tracé dans `SYNCHRO.md` — jamais une continuation du précédent.
-- **Porte de sortie** si l'arbitrage est révisé : `git-crypt` / `age` sur `psy/dossier/` et `ressources/xavier/`. Détail : `psy/SYNCHRO.md` §2.
+- ⚠️ **Toute extension du périmètre transporté est un arbitrage neuf**, tracé dans `PLAN.md` §6.3 — jamais une continuation du précédent.
+- ✅ **Vérifié le 13/08/2026** : dépôt privé · 2FA active sur GitHub **et** sur le compte Google · dossier Drive **non partagé**.
+- ✅ **Le compte Google du transit reste `xavier@allons-y.io`** *(arbitrage clos le 13/08/2026)* — micro-entreprise, la note passe en frais de société. **L'objection du dispositif reste écrite au `PLAN.md` §6.6, acceptée et non levée.** Le dossier de transit s'appelle **`kokoro`**.
+- ❌ **Sauvegarde froide hors-ligne : sujet clos le 13/08/2026 à la demande de Xavier. Ne pas le rouvrir.**
 
 ## Langue
 
@@ -55,16 +83,15 @@ Toujours communiquer avec l'utilisateur en français.
 
 | Répertoire | Objet |
 |-----------|---------|
-| `PLAN.md` (racine) | **Plan de conception du dispositif** (v1.2, brainstorming clos en 7 tours) : 5 axes + axe transversal sécurité/éthique, contraintes de conception, architecture à trois surfaces, feuille de route en 7 étapes, journal des décisions. ⚠️ **Journal de conception, pas document courant** — §4.1, §4.4 et §4.5 sont périmées et conservées telles quelles ; seule la feuille de route §7 est tenue à jour |
-| **`psy/`** | **Le dispositif lui-même** (réalisation du PLAN). Carte d'entrée : `psy/README.md` |
-| **`psy/dossier/`** ⭐ | **Mémoire longitudinale — source de vérité unique**, lue et écrite par les trois surfaces. Contient `SCHEMA.md` (**normatif**), `profil.md` (permanent), `etat.md` (courant), `gabarits/`, et les répertoires `journal/` `seances/` `crises/` `mesures/` `briefs/` |
-| `psy/agent/` | Note d'aiguillage + table des rôles. **Les skills vivent dans `.claude/skills/psy-*`** — Claude Code ne les découvre que là |
-| `psy/corpus/` | Référentiels cliniques indexés. **`corpus/echelles/` ⭐ — instruments de mesure : VVIQ, TAS-20, CAT-Q, GAD-7/PHQ-9 (complets), BES (partiel + grille comportementale de substitution).** Les 4 corpus thérapeutiques prioritaires restent à récupérer |
-| `psy/protocoles/` | Protocoles thérapeutiques opérationnels — fiches actionnables |
-| `psy/web/` | Outils de séance desktop — TypeScript strict *(⏸️ Étape 3-4)* |
-| `psy/android/` | Kokoro (心) — compagnon permanent, Kotlin + Compose. **Étape 5 ouverte**, séquençage dans `PLAN-KOKORO.md` (K0 → K6). ✅ **K0, K1 et K2 franchis le 10/08/2026.** ⚡ K1 : le full-screen intent fonctionne (verrouillé, écran éteint, sans son ni vibration) — le point le plus risqué du projet est levé. 🔴 **K2 : le mot-code a un porteur** — notification d'accès sur l'écran verrouillé → écran à deux boutons (**mot-code à Chourouk** · **tension appliquée**, minuteur nu) → SMS « shutdown » composé et prêt, **`deviceLocked=1` de bout en bout, sans réseau data**. ✅ **Sans réserve : le mot-code a été envoyé pour de vrai, téléphone verrouillé, depuis la notification, et Chourouk a confirmé la réception** — l'essai a été fait **à froid, en la prévenant**. La voie sans parole de `crise-escalade.md` §4 est **essayée**, pas seulement écrite. ✅ **K3 construit — la tension appliquée est guidée sur les quatre repères externes de `tension-appliquee.md` §2** (porte · fauteuil · plateau-garrot-aiguille en cycles enchaînés · après-geste puis 5 min assis), avec la **phrase pour le soignant** (montrable) et les **critères d'arrêt** ; vérifié écran éteint au départ, `deviceLocked=1`, sans son, sans permission nouvelle. ⏳ **Son critère de fin reste ouvert : un bloc en salle d'attente réelle.** ✅ **K4 franchi le 11/08/2026 — le check-in quotidien se fait sur le téléphone**, et un **vrai check-in est arrivé au dossier** (`journal/2026-08-11.json`, `"source": "android"`) : 11 champs en compteurs et choix fermés, énoncés mot pour mot du skill `psy-journal`, **aucune saisie de texte requise**, fichier **identique au gabarit** du dossier (`"source": "android"`). Écriture par **SAF** sur un dossier désigné une fois — **aucune permission nouvelle**, toujours ni `INTERNET` ni SDK tiers. 🔴 **Transport par Google Drive** (`SYNCHRO.md` §2.2). ⚠️ **Conduite câblée dans `psy-journal` §5.1 : une seule surface écrit le journal un jour donné — vérifier avant d'écrire, jamais de rattrapage.** 🔴 **Jalon en cours — K5, le programme** *(12/08/2026)* : **Kokoro cesse d'être une app à fonctions et devient le porteur de la thérapie** écrite par Claude Psy dans `psy/programme/`. ✅ Moitié PC écrite et vérifiée (`npm run publish`) ; Kokoro ne lit pas encore. ❌ **L'interpellation (ex-K6) est supprimée — Kokoro ne notifie de rien** ; la présence devient **K6** |
-| **`psy/programme/`** ⭐ | **La thérapie telle que Kokoro l'affiche à Xavier.** `FORMAT.md` (**normatif**, contrat partagé) + `programme.json`. ⭐ **Écrit par Claude Psy, et uniquement à la clôture d'une séance** — publier hors séance est un changement d'interface non annoncé. Cinq types d'étapes : `ecran` · `exercice` · `questionnaire` · `demarche` · `fiche`. 🔴 **Les garde-fous du dispositif ne sont plus dans le code de l'app mais dans ce contenu** : `npm run publish` refuse toute étape portant visualisation, cotation de ressenti, streak, numéro d'urgence, prodrome, traitement ou relaxation vasovagale |
-| `psy/SYNCHRO.md` | **Synchronisation et sécurité des données (v2.1)** : dépôt privé (historique) + 🔴 **Google Drive** (transport **dans les deux sens**). ⚠️ **Syncthing est écarté depuis le 11/08/2026** — arbitrage de Xavier rendu **après objection du dispositif**, l'objection est conservée entière au §2.2. ⭐ **Transitent : `journal/`, `programme.json` (PC→Android), `reponses/` (Android→PC)** — extension arbitrée le 12/08/2026 et tracée au §2.3 ; **rien d'autre du dossier ne quitte le PC** (ni profil, ni état, ni séances, ni crises, ni mesures, ni briefs). **Le dossier Drive est hors dépôt** : `npm run sync` copie vers `psy/dossier/` **sans jamais écraser** |
+| **`PLAN.md`** (racine) ⭐ | 🔴 **Document unique du projet** (v2.0, 13/08/2026), **document courant et non journal de conception**. §1 les cinq personas · §2 les contraintes de Xavier · §3 Claude Psy · **§4 le Superviseur (normatif)** · §5 Kokoro · **§6 le contenu et Google Drive (normatif)** · **§7 le format du dossier (normatif)** · **§8 le format du programme (normatif)** · §9 feuille de route · §10 arbitrages ouverts · §11 journal des décisions |
+| **`psy/`** | **Le dispositif lui-même.** Carte d'entrée : `psy/README.md` |
+| **`psy/dossier/`** ⭐ | **Mémoire longitudinale — source de vérité unique.** `profil.md` (permanent), `etat.md` (courant), `gabarits/`, et les répertoires `journal/` `reponses/` `seances/` `crises/` `mesures/` `briefs/`. **Format : `PLAN.md` §7 (normatif)** |
+| **`psy/programme/`** ⭐ | **La thérapie telle que Kokoro l'affiche à Xavier.** `programme.json` + **`bibliotheque/`** — la documentation accessible au patient. **Format : `PLAN.md` §8 (normatif)**. ⭐ **Écrit par Claude Psy, publié uniquement à la clôture d'une séance et uniquement après supervision.** Quatre rubriques : `crise` · `therapie` · `bilan` · `documentation` |
+| `psy/agent/` | `supervisions/` — sorties du Superviseur, **hors `dossier/`**. **Les skills vivent dans `.claude/skills/psy-*`** — Claude Code ne les découvre que là |
+| `psy/corpus/` | Référentiels cliniques indexés. **`corpus/echelles/` ⭐ — VVIQ, TAS-20, CAT-Q, GAD-7/PHQ-9 (complets), BES et MAIA (partiels + grilles comportementales de substitution).** 3 des 4 corpus thérapeutiques prioritaires restent à récupérer |
+| `psy/protocoles/` | Protocoles thérapeutiques opérationnels — **écrits pour le praticien** (réserves, hypothèses, frontières de non-substitution). ⚠️ **Ne jamais les copier tels quels dans `programme/bibliotheque/`** : celle-ci est écrite pour Xavier |
+| `psy/web/` | Outils de séance desktop — TypeScript strict *(⏸️ après K5 ; premier livrable : schémas Zod des §7 et §8)* |
+| `psy/android/` | **Kokoro (心)** — Kotlin + Compose, Galaxy S22 / One UI, sideloadée. ✅ **K0 → K4 franchis** : poste de travail · **full-screen intent levé** · **noyau de crise** (mot-code envoyé pour de vrai, verrouillé, Chourouk a confirmé, essai fait **à froid**) · **tension appliquée guidée sur repères externes** · **check-in quotidien sur le téléphone**. 🔴 **K5 en cours** — Kokoro lit `programme.json` et `bibliotheque/`, écrit `reponses/`. ⏸️ **K6 — la présence** (overlay, visage, diagnostic One UI). ❌ **L'interpellation est supprimée : Kokoro ne notifie de rien.** Jalons et points durs : `PLAN.md` §5 |
 | `ressources/originales/` | Documents source bruts (ex. PDF) |
 | `ressources/spécialisées/` | Documents convertis, utilisés comme entrées pour Claude |
 | `ressources/xavier/` | Ressources du profil de Xavier (celui qui prompt), utilisées pour établir son diagnostic et créer un psychologue adapté à lui |
@@ -77,18 +104,25 @@ Toujours communiquer avec l'utilisateur en français.
 | `psy-seance` | Séance de fond hebdomadaire — ouverture / travail (une seule cible) / clôture obligatoire / compte-rendu dans `psy/dossier/seances/`. ⭐ **Battement hebdomadaire du dispositif** : `npm run sync` **avant** de lire le dossier, bilan de la semaine à l'ouverture, `npm run publish` en clôture. **C'est la seule fenêtre d'écriture du programme** — entre deux séances, l'écran de Xavier ne change pas | ✅ |
 | `psy-journal` | Check-in quotidien — 7 questions fermées, < 2 min, aucune saisie de texte obligatoire → `psy/dossier/journal/AAAA-MM-JJ.json` | ✅ |
 | `psy-crise` | **Triage de crise** — sécurité avant mécanisme, panique / vasovagal / shutdown, escalade 3114 et voies sans parole. ⭐ **Seule exception au chargement de contexte : la question de sécurité se pose avant la lecture du dossier** | ✅ |
-| `psy-bilan` | Passation et cotation d'une échelle → `psy/dossier/mesures/` — items lus dans `psy/corpus/echelles/`, **jamais restitués de mémoire** ; item 9 du PHQ-9 câblé sur le protocole de crise | ✅ |
+| `psy-bilan` | Passation et cotation d'une échelle → `psy/dossier/mesures/` — items lus dans `psy/corpus/echelles/`, **jamais restitués de mémoire** ; item 9 du PHQ-9 câblé sur le protocole de crise. ⭐ **Depuis le 13/08/2026, les échelles se passent dans Kokoro** (rubrique `bilan`) — **sauf le PHQ-9**, et **la cotation reste en séance : l'app n'affiche jamais un score** | ✅ |
 | `psy-brief-isorni` | Brief d'une page avant consultation → `psy/dossier/briefs/`, `transmis: false` — chiffres calculés depuis le journal, réserves obligatoires, **aucune proposition pharmacologique** | ✅ |
 | `psy-hygiene` | Versant somatique (PPC, alimentation, activité) — ⭐ **le passage de palier se compte dans le journal, il ne se demande pas** | ✅ |
-| `psy-superviseur` | **Contre-expertise du dispositif** — supervise **Claude, pas Xavier** : sources circulaires, faits périmés, invariants déclarés non câblés, dérive R6, effet miroir, autorité fabriquée, prolifération, ⭐ **programme désynchronisé du dossier (C8)** → `psy/agent/supervisions/` (hors `dossier/`). **Ne modifie ni ne publie jamais le programme** — il constate, la correction est un acte séparé | ✅ |
+| `psy-superviseur` | **Contre-expertise du dispositif** — supervise **Claude, pas Xavier**. **10 contrôles** : source circulaire, fait périmé, invariant déclaré non câblé, dérive R6, effet miroir, autorité fabriquée, prolifération, programme désynchronisé (C8), ⭐ **contenu non dérivé (C9)**, ⭐ **contenu adressé à l'aide-au-patient (C10)** → `psy/agent/supervisions/` (hors `dossier/`). **Ne modifie ni ne publie jamais** — il constate, la correction est un acte séparé | ✅ **v3** |
 
-### ⭐ Les trois rôles — qui parle à qui *(12/08/2026)*
+### 🔴 La supervision est bloquante avant publication *(13/08/2026)*
 
-> **Claude Psy** (les 6 skills cliniques) est **le psy de Xavier** : il monte la thérapie et la publie dans Kokoro **à la clôture de séance, jamais ailleurs**.
-> **`psy-superviseur`** est **le superviseur du psy** — il supervise Claude, jamais Xavier.
-> **Kokoro** est **le compagnon aidant** : il protège (crise, mot-code, tension appliquée) et **guide** (le programme). ⭐ **Il ne vient jamais vers Xavier** — aucune notification, aucune relance, aucun reproche ; Xavier vient à lui et y trouve tout. *(Seule exception : l'accès crise sur l'écran verrouillé — une porte, pas un rappel.)*
+**Rien n'atteint Xavier ni le Dr Isorni sans une passe du Superviseur qui porte explicitement sur la version qui sort.** Détail : `PLAN.md` §4.3.
 
-**Deux moments où une erreur sort du dispositif et atteint quelqu'un** — donc deux points de contrôle : le **brief** (vers le Dr Isorni) et le **programme publié** (vers Xavier, **sans intermédiaire pour objecter**). Le second est contrôlé **mécaniquement à chaque publication** (`npm run publish`) et **humainement** par le superviseur avant chaque brief et une fois par mois. Schéma : `psy/agent/README.md`.
+**Quatre points où une erreur sort du dispositif** — donc quatre contrôles :
+
+| Sortie | Vers qui | Contrôle |
+|---|---|---|
+| **Le programme publié** | Xavier, **sans intermédiaire pour objecter** | `npm run publish` (mécanique) **+ supervision bloquante** |
+| **La bibliothèque publiée** | Xavier, idem | Identique |
+| ⭐ **Les consignes de séance à deux** | **L'aide-au-patient** | Identique, **plus C10** |
+| **Le brief** | Le Dr Isorni | **Supervision bloquante** + Xavier relit et décide de transmettre |
+
+⭐ **Et c'est câblé, pas déclaré** : `programme.json` porte un champ `supervision` **obligatoire** ; `npm run publish` refuse si le fichier manque, si sa version ne correspond pas à celle du programme, ou si son verdict n'est pas `publiable`. **Un refus se corrige, il ne se contourne pas** — aucune option de forçage n'existe, et il ne doit jamais en exister une.
 
 **Invariants de tout skill du dispositif** : charger `profil.md` + `etat.md` avant d'agir · **non-substitution** (aucun conseil de modification de traitement, jamais, même sous forme interrogative — ça part au brief Dr Isorni) · **protocole de crise câblé** (3114, non contournable) · aucune visualisation · utilisable sans parler ni écrire · zéro streak ni compteur de régularité · annoncer avant de faire.
 
@@ -146,8 +180,8 @@ Exécuter depuis le répertoire racine (`npm run <name> -- <args>`). Les argumen
 | `pdf-to-markdown` | Convertit un fichier PDF en Markdown. Usage : `npm run pdf-to-markdown -- <source.pdf> <destination.md>` |
 | `docx-to-markdown` | Convertit un fichier DOCX en Markdown. Usage : `npm run docx-to-markdown -- <source.docx> <destination.md>` |
 | `markdown-to-pdf` | Convertit un fichier Markdown en PDF (rendu via Puppeteer/Chromium headless). Usage : `npm run markdown-to-pdf -- <source.md> <destination.pdf>` |
-| `programme-publish` | ⭐ **Publie la thérapie vers Kokoro.** Raccourci : **`npm run publish`** *(chemin Drive câblé)* · forme longue : `npm run programme-publish -- <dossier-de-transit>`. Lit `psy/programme/programme.json`, le valide au `FORMAT.md`, et 🔴 **refuse la publication entière** si une étape enfreint un invariant — visualisation, cotation de ressenti, streak, numéro d'urgence, déclenchement sur prodrome, contenu touchant au traitement, relaxation sur vasovagal. **Ne se lance qu'à la clôture d'une séance.** Un refus se corrige, il ne se contourne pas |
-| `journal-ingest` | ⭐ **Verse les check-ins écrits par Kokoro dans le dossier.** Raccourci : **`npm run sync`** *(chemin du transit Drive déjà câblé)* · forme longue : `npm run journal-ingest -- <dossier-de-transit>`. **N'écrase jamais un fichier existant** (R2), valide chaque fichier au schéma, et signale tout nom hors convention — **un doublon Drive ne se supprime jamais sans être lu : c'est une donnée clinique** |
+| `programme-publish` | ⭐ **Publie la thérapie et la bibliothèque vers Kokoro.** Raccourci : **`npm run publish`** *(chemin Drive câblé)* · forme longue : `npm run programme-publish -- <dossier-de-transit>`. Valide `programme.json` et `bibliotheque/*.md` au **`PLAN.md` §8**, 🔴 **vérifie la supervision** (`PLAN.md` §4.3), et **refuse la publication entière** si une étape ou une fiche enfreint un invariant — visualisation, cotation de ressenti, streak, numéro d'urgence, prodrome, traitement, relaxation sur vasovagal. **Ne se lance qu'à la clôture d'une séance.** Un refus se corrige, il ne se contourne pas |
+| `contenu-sync` | ⭐ **Verse dans le dossier tout ce que Kokoro a écrit** — `journal/` **et `reponses/`**. Raccourci : **`npm run sync`** *(chemin du transit Drive câblé)* · forme longue : `npm run contenu-sync -- <dossier-de-transit>`. **N'écrase jamais un fichier existant** (R2), valide chaque fichier au **`PLAN.md` §7**, et signale tout nom hors convention — **un doublon Drive ne se supprime jamais sans être lu : c'est une donnée clinique** |
 
 ## Contraintes
 

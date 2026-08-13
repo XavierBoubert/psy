@@ -98,7 +98,7 @@ Copier `psy/dossier/gabarits/journal.json` → `psy/dossier/journal/AAAA-MM-JJ.j
 
 ### 5.1 ⭐ Une seule surface écrit le journal un jour donné *(depuis le 11/08/2026)*
 
-Kokoro (K4) sait écrire le check-in depuis le téléphone, avec `"source": "android"`. **Deux surfaces qui écrivent le même jour écrivent le même nom de fichier** (R4) — et Google Drive, qui assure le transport, **accepte deux fichiers du même nom sans le signaler** (`SYNCHRO.md` §2.2).
+Kokoro (K4) sait écrire le check-in depuis le téléphone, avec `"source": "android"`. **Deux surfaces qui écrivent le même jour écrivent le même nom de fichier** (R4) — et Google Drive, qui assure le transport, **accepte deux fichiers du même nom sans le signaler** (`PLAN.md` §6.3).
 
 **Conduite, sans exception :**
 
@@ -121,7 +121,9 @@ Puis **s'arrêter**. Pas de synthèse, pas de conseil, pas de « pense à… »,
 
 > « Je te signale une chose, avec la raison : **3 shutdowns cette semaine contre 0 la précédente**. On peut en parler à la prochaine séance, ou pas. Dis juste "pas maintenant" si tu préfères — ça ne redemandera rien. »
 
-Format invariable : **une phrase, une raison chiffrée et explicite, un refus qui coûte un geste et zéro justification.** Plafond : **1 sollicitation par jour, 3 par semaine** (PLAN §2.4). Jamais de question ouverte, jamais de relance.
+Format invariable : **une phrase, une raison chiffrée et explicite, un refus qui coûte un geste et zéro justification.** Jamais de question ouverte, jamais de relance.
+
+> 🔴 **Cette phrase ne se dit que dans une conversation que Xavier a ouverte lui-même, et elle ne quitte jamais cette conversation.** Elle n'est **pas** une interpellation : le dispositif ne va jamais chercher Xavier. **Kokoro ne la porte pas et ne la portera jamais** — il ne notifie de rien (`PLAN.md` §5.7). L'interpellation opportuniste plafonnée à 1/jour et 3/semaine, prévue au plan d'origine, **a été supprimée le 12/08/2026**.
 
 ---
 

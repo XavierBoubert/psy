@@ -1,11 +1,13 @@
 {
   "version": 1,
   "publie_le": "2026-08-12",
+  "supervision": null,
   "etapes": [
     {
       "id": "check-in",
       "titre": "Check-in du jour",
       "type": "ecran",
+      "rubrique": "therapie",
       "quand": "aujourdhui",
       "duree_minutes": 2,
       "ecran": "check-in"
@@ -14,6 +16,7 @@
       "id": "mot-code",
       "titre": "Mot-code à Chourouk",
       "type": "ecran",
+      "rubrique": "crise",
       "quand": "au_besoin",
       "ecran": "mot-code"
     },
@@ -21,6 +24,7 @@
       "id": "tension-appliquee",
       "titre": "Tension appliquée",
       "type": "ecran",
+      "rubrique": "crise",
       "quand": "au_besoin",
       "ecran": "tension-appliquee"
     },
@@ -28,6 +32,7 @@
       "id": "phrase-soignant",
       "titre": "La phrase pour le soignant",
       "type": "ecran",
+      "rubrique": "crise",
       "quand": "au_besoin",
       "ecran": "phrase-soignant"
     },
@@ -35,6 +40,7 @@
       "id": "ppc-releve",
       "titre": "Demander le relevé de télésuivi",
       "type": "demarche",
+      "rubrique": "therapie",
       "quand": "sans_date",
       "detail": "Link Sommeil, sur les 3 derniers mois : heures par nuit, nombre de nuits utilisées, fuites, IAH résiduel. Des chiffres, pas une impression."
     },
@@ -42,6 +48,7 @@
       "id": "ppc-origine-fuite",
       "titre": "Faire trancher : fuite au masque, ou à la bouche ?",
       "type": "demarche",
+      "rubrique": "therapie",
       "quand": "sans_date",
       "detail": "Le télésuivi distingue les deux. Cette réponse commande le choix d'interface, elle passe avant lui. Réponse écrite du prestataire."
     },
@@ -49,6 +56,7 @@
       "id": "ppc-interfaces",
       "titre": "Demander un essai de plusieurs interfaces",
       "type": "demarche",
+      "rubrique": "therapie",
       "quand": "sans_date",
       "detail": "Après la réponse sur l'origine de la fuite. Si la fuite est au masque, le narinaire est autorisé par la prescription. Au moins deux interfaces à essayer à domicile."
     },
@@ -56,6 +64,7 @@
       "id": "ppc-prise-en-charge",
       "titre": "Demander où en est la prise en charge",
       "type": "demarche",
+      "rubrique": "therapie",
       "quand": "sans_date",
       "detail": "Trois mois après son renouvellement. Le seuil qui conditionne le remboursement se demande au prestataire, il ne se suppose pas."
     },
@@ -63,6 +72,7 @@
       "id": "ppc-consultation-roisman",
       "titre": "Demander une consultation de reprise au Dr Roisman",
       "type": "demarche",
+      "rubrique": "therapie",
       "quand": "sans_date",
       "detail": "En annonçant que la reprise se fera par paliers écrits. Solliciter le pneumologue après trois mois d'usage irrégulier n'est pas un aveu d'échec : c'est la démarche normale."
     },
@@ -70,6 +80,7 @@
       "id": "ppc-voyage",
       "titre": "Demander comment emporter l'appareil en Tunisie",
       "type": "demarche",
+      "rubrique": "therapie",
       "quand": "sans_date",
       "detail": "Départ le 07/09. Bagage cabine (l'appareil est un matériel médical, généralement hors franchise sur présentation de l'ordonnance), adaptateur et tension, eau de l'humidificateur. Réponse écrite avant le départ."
     },
@@ -77,6 +88,7 @@
       "id": "email-isorni",
       "titre": "Envoyer l'email préparé au Dr Isorni",
       "type": "demarche",
+      "rubrique": "therapie",
       "quand": "sans_date",
       "detail": "Le brouillon est prêt dans le dossier. Il a vocation à partir avant la consultation du 03/09, pour qu'il arrive préparé — pas à être lu sur place."
     }

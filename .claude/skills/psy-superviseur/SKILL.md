@@ -1,6 +1,6 @@
 ---
 name: psy-superviseur
-description: Contre-expertise du dispositif lui-même — challenge les conclusions de Claude, traque l'effet miroir, les sources circulaires, les faits périmés propagés et les invariants déclarés mais non câblés. Écrit psy/agent/supervisions/AAAA-MM-JJ-supervision.md. Utiliser quand Xavier dit « supervision », « contre-expertise », « challenge », « est-ce qu'on se trompe ? », avant un brief au Dr Isorni, après une salve de production documentaire, ou au moins une fois par mois.
+description: Contre-expertise du dispositif lui-même — challenge les conclusions de Claude, traque l'effet miroir, les sources circulaires, les faits périmés propagés et les invariants déclarés mais non câblés. Écrit psy/agent/supervisions/. OBLIGATOIRE ET BLOQUANT avant toute publication du programme ou de la bibliothèque vers Kokoro, et avant toute transmission d'un brief au Dr Isorni. Utiliser aussi quand Xavier dit « supervision », « contre-expertise », « challenge », « est-ce qu'on se trompe ? », après une salve de production documentaire, ou au moins une fois par mois.
 ---
 
 # psy-superviseur — contre-expertise du dispositif
@@ -18,7 +18,7 @@ description: Contre-expertise du dispositif lui-même — challenge les conclusi
 1. `psy/dossier/profil.md`, `psy/dossier/etat.md`.
 2. **La dernière supervision** dans `psy/agent/supervisions/`, s'il y en a une — pour ne pas re-signaler ce qui a été arbitré.
 3. **Le périmètre demandé** : soit tout le dispositif, soit ce qui a bougé depuis la dernière supervision (`git log`).
-4. **`psy/programme/programme.json`** — ce que Kokoro affiche aujourd'hui à Xavier. À lire **contre** le dossier, jamais seul : c'est tout l'objet de C8.
+4. **`psy/programme/programme.json` et `psy/programme/bibliotheque/`** — ce que Kokoro affiche aujourd'hui à Xavier **et à l'aide-au-patient**. À lire **contre** le dossier, jamais seuls : c'est tout l'objet de C8, C9 et C10.
 
 **Différence de posture, à tenir :** les autres skills chargent le dossier pour s'y **conformer**. Celui-ci le charge pour le **mettre en doute**. Il lit un renvoi `§9.19` en se demandant *est-ce que le §9.19 dit vraiment ça ?*, pas en le tenant pour acquis.
 
@@ -26,7 +26,7 @@ description: Contre-expertise du dispositif lui-même — challenge les conclusi
 
 ---
 
-## 1. Les huit contrôles
+## 1. Les dix contrôles
 
 | # | Contrôle | Ce qu'on cherche | Symptôme déjà observé |
 |---|---|---|---|
@@ -38,12 +38,14 @@ description: Contre-expertise du dispositif lui-même — challenge les conclusi
 | **C6** | **Autorité fabriquée** | Un chiffre, un seuil ou une recommandation présentés comme établis sans référence vérifiable. Une norme citée de mémoire. Une traduction non validée dont la réserve a disparu en route. | Le BES a été **refusé** plutôt qu'approximé — c'est le comportement correct. Vérifier qu'il est constant. |
 | **C7** | **Prolifération** | Le dispositif produit-il plus de doctrine qu'il n'exécute ? Compter : combien de fiches écrites, combien de fois appliquées. | Au 09/08/2026 : 7 protocoles, 5 corpus d'échelles, 7 skills — **1 mesure passée, 0 check-in, 0 palier entamé.** |
 | **C8** | ⭐ **Programme désynchronisé** | `psy/programme/programme.json` est une **copie** de ce que le dossier a décidé. Une copie périme. Chercher : une étape encore affichée alors que le dossier la dit faite · une décision de séance jamais publiée · un palier écrit au compte-rendu et absent du programme · un `id` réutilisé pour autre chose. | **Mode de défaillance créé le 12/08/2026** — c'est C2 (fait périmé) appliqué à une surface que Xavier consulte **sans intermédiaire**. |
+| **C9** 🆕 | 🔴 **Contenu non dérivé** | Une fiche de `psy/programme/bibliotheque/` qui est une **copie** d'un document clinique au lieu d'une **réécriture pour Xavier**. Chercher : un diagnostic qui ne lui a pas encore été dit · un pronostic · un nom de praticien qu'il ne consulte pas · une hypothèse formulée comme un fait · une réserve destinée au Dr Isorni · une phrase reprise mot pour mot de `psy/protocoles/`. | **Mode de défaillance créé le 13/08/2026** avec la bibliothèque. ⭐ **Le raccourci est tentant et c'est ce qui le rend dangereux** : le protocole existe déjà, il est bon, il suffirait de le copier. Il est écrit **pour un praticien**. |
+| **C10** 🆕 | 🔴 **Contenu adressé à l'aide-au-patient** | Une consigne de `seance-duo` qui **apprend à Chourouk** quelque chose sur Xavier — diagnostic, score, hypothèse, compte rendu — ou qui **lui demande un jugement clinique** : « estime si ça va », « décide s'il faut continuer », « rassure-le ». Vérifier aussi, sur **chaque** séquence : le **signal d'arrêt** est-il rappelé ? les **critères d'arrêt** sont-ils accessibles ? l'**entraînement** est-il exigé avant la première fois ? | **Mode de défaillance créé le 13/08/2026** avec la séance à deux. ⭐ **Elle lit des consignes, pas un dossier — et elle n'est pas thérapeute.** Une consigne qui lui demande de juger la met en faute quoi qu'elle fasse. |
 
 ---
 
 ## 2. 🔴 C5 — l'effet miroir, et comment on le mesure au lieu de l'affirmer
 
-**Un psy virtuel toujours d'accord est nocif** (PLAN §6). Mais « je dois pouvoir contredire » est une intention, et les intentions ne s'auditent pas. **Trois mesures observables :**
+**Un psy virtuel toujours d'accord est nocif** (`PLAN.md` §1.7). Mais « je dois pouvoir contredire » est une intention, et les intentions ne s'auditent pas. **Trois mesures observables :**
 
 1. **Compter les objections tracées** — dans `seances/*.md` (`## Décisions`), dans les journaux du PLAN, dans les fiches. Une objection est un désaccord **argumenté et daté**, pas une nuance.
 2. **Regarder sur quoi elles portent.** Objecter sur un point sans enjeu pendant qu'on acquiesce sur tout ce qui compte est **la forme sophistiquée de l'effet miroir**, pas son contraire.
@@ -71,9 +73,15 @@ description: Contre-expertise du dispositif lui-même — challenge les conclusi
 
 ## 4. Sortie — un fichier, hors du dossier clinique
 
-**`psy/agent/supervisions/AAAA-MM-JJ-supervision.md`.**
+**Deux noms, selon l'objet :**
 
-> **Décision de conception, à ne pas défaire :** la supervision **n'écrit pas dans `psy/dossier/`.** Le dossier est la mémoire longitudinale **de Xavier** ; une supervision porte sur le **dispositif**. Y verser des constats d'ingénierie mélangerait deux objets et ferait grossir un dossier clinique de matière qui n'y a pas sa place (`SCHEMA.md` §8). Corollaire utile : `SCHEMA.md` ne gouverne pas ce fichier, donc **aucune modification du schéma n'est requise pour ouvrir ce rôle**.
+| Objet | Fichier | Frontmatter |
+|---|---|---|
+| Une passe générale | `psy/agent/supervisions/AAAA-MM-JJ-supervision.md` | celui ci-dessous |
+| 🔴 **Une passe de publication** | `psy/agent/supervisions/AAAA-MM-JJ-programme-vN.md` | **celui du §5.1** — `porte_sur`, `version`, `verdict` sont **lus par `npm run publish`** |
+| 🔴 **Une passe de brief** | `psy/agent/supervisions/AAAA-MM-JJ-brief.md` | `porte_sur: brief`, `verdict` |
+
+> **Décision de conception, à ne pas défaire :** la supervision **n'écrit pas dans `psy/dossier/`.** Le dossier est la mémoire longitudinale **de Xavier** ; une supervision porte sur le **dispositif**. Y verser des constats d'ingénierie mélangerait deux objets et ferait grossir un dossier clinique de matière qui n'y a pas sa place (`PLAN.md` §7.9). Corollaire utile : le format du dossier ne gouverne pas ce fichier, donc **aucune modification du `PLAN.md` §7 n'est requise pour ouvrir ce rôle**.
 
 **Structure imposée :**
 
@@ -85,7 +93,7 @@ constats: <n>
 bloquants: <n>
 ---
 
-## Constats            un tableau : # · contrôle (C1-C7) · fait vérifié · où · gravité
+## Constats            un tableau : # · contrôle (C1-C10) · fait vérifié · où · gravité
 ## Ce qui tient        ce qui a été vérifié et qui est solide — obligatoire, cf. ci-dessous
 ## Objections de fond  les désaccords argumentés, s'il y en a
 ## Arbitrages demandés ce qui revient à Xavier, formulé en question fermée
@@ -97,30 +105,62 @@ bloquants: <n>
 
 ---
 
-## 5. Cadence — où ce rôle s'insère dans les process
+## 5. 🔴 La supervision est bloquante avant publication *(13/08/2026)*
 
-Le dispositif a **deux moments où une erreur sort et atteint quelqu'un**. Ce sont les deux points de contrôle obligatoires :
+**Arbitrage de Xavier : rien n'atteint Xavier ni le Dr Isorni sans une passe de ce rôle qui porte explicitement sur la version qui sort.** *(`PLAN.md` §4.3.)*
+
+**Trois sorties, trois contrôles obligatoires :**
 
 | Sortie | Vers qui | Contrôle |
 |---|---|---|
-| **Le brief** | le Dr Isorni — **un praticien**, qui peut agir dessus | Supervision **obligatoire avant transmission** |
-| ⭐ **Le programme publié** | **Xavier, sur son téléphone, sans intermédiaire** — il n'y a plus de conversation où objecter | **Double** : mécanique à chaque publication, humaine à la cadence ci-dessous |
+| ⭐ **Le programme publié** | **Xavier, sur son téléphone, sans intermédiaire** — il n'y a plus de conversation où objecter | **Double, et bloquant** : mécanique (`npm run publish`) + cette passe |
+| ⭐ **La bibliothèque publiée** | Xavier, idem | Identique — **C9 s'applique ici en premier** |
+| **Le brief** | le Dr Isorni — **un praticien**, qui peut agir dessus | **Bloquant avant transmission.** Xavier relit et décide **ensuite** : la supervision ne remplace pas son arbitrage, elle le précède |
+
+### 5.1 La passe de publication — comment elle se rend
+
+**Elle porte un numéro de version, et c'est ce qui la rend non contournable.**
+
+1. Lire `psy/programme/programme.json` (champ `version`) et **tous** les fichiers de `psy/programme/bibliotheque/`.
+2. Les lire **contre `etat.md` et les comptes-rendus de séance** — jamais seuls : c'est tout l'objet de C8.
+3. Appliquer les dix contrôles, **C8 et C9 en priorité**.
+4. Écrire `psy/agent/supervisions/AAAA-MM-JJ-programme-vN.md` avec ce frontmatter exact :
+
+```yaml
+---
+date: AAAA-MM-JJ
+porte_sur: programme
+version: <le numéro de version du programme, à l'identique>
+verdict: publiable        # publiable | refuse
+controles: [C1, C2, C3, C4, C5, C6, C7, C8, C9, C10]
+---
+```
+
+5. Renseigner le champ `supervision` de `programme.json` avec le **nom de ce fichier, sans extension**.
+
+**`npm run publish` refuse** si le champ manque, si le fichier n'existe pas, si sa `version` ne correspond pas à celle du programme, ou si son `verdict` n'est pas `publiable`.
+
+> ⭐ **Ce que ce câblage garantit vraiment : on ne peut pas publier une version supervisée hier.** Republier après une correction impose une passe nouvelle — c'est le but, pas un effet de bord.
+
+> 🔴 **Un refus se corrige, il ne se contourne pas.** Il n'existe aucune option de forçage, et **il ne doit jamais en exister une** — ni dans le script, ni sous forme de « exception cette fois ». Le jour où un contournement est proposé, la réponse est non.
+
+### 5.2 ⚠️ Le risque de cette règle, à nommer plutôt qu'à ignorer
+
+**Un contrôle obligatoire à chaque publication peut devenir une formalité vide en trois semaines** — et une case cochée sans lecture est **pire** que pas de case du tout, parce qu'elle donne l'illusion d'une vérification. **C7 (prolifération) s'applique au superviseur lui-même.**
+
+**Trois gardes contre ça :**
+
+- **Le verdict `refuse` doit rester une option réelle.** Une série de `publiable` sans aucun `refuse` sur plusieurs mois est en soi un symptôme de C5, et se signale comme tel.
+- **La section « Ce qui tient » nomme ce qui a été *effectivement relu*** — pas ce qui a été survolé. Si une fiche n'a pas été lue, elle ne figure pas.
+- ⭐ **Ne pas refaire le travail du script.** Visualisation, cotation de ressenti, streak, numéro d'urgence, prodrome, traitement, relaxation vasovagale : `npm run publish` les attrape déjà, **il ne fatigue pas et ne s'habitue pas**. **Ce que le superviseur regarde, c'est ce que le script ne peut pas voir :** une étape conforme mot à mot et **fausse cliniquement** · un programme qui a cessé de correspondre au dossier (C8) · **une fiche recopiée d'un protocole** (C9) · un dispositif qui publie sans que rien n'avance (C7) · ⭐ **un programme qui ne contient jamais rien que Xavier n'ait déjà demandé** (C5 — l'effet miroir a désormais une surface où il se voit très bien).
+
+### 5.3 Les autres passes — non bloquantes
 
 | Quand | Périmètre |
 |---|---|
-| **Avant chaque brief au Dr Isorni** | Les chiffres et les réserves du brief. **C'est le moment où une erreur sort du dispositif et atteint un praticien.** |
 | **Après une salve de production** (≥ 3 fiches ou skills dans la journée) | Ce qui vient d'être écrit — c'est là que les pointeurs se désynchronisent |
-| **Au moins une fois par mois** | Tout, **C8 compris** : relire le programme publié contre le dossier |
+| **Au moins une fois par mois** | Tout le dispositif, `PLAN.md` compris |
 | **À la demande de Xavier** | Ce qu'il désigne |
-
-### 🔴 Ce que la supervision du programme ne fait PAS — et pourquoi c'est délibéré
-
-**Le superviseur ne relit pas chaque publication hebdomadaire.** Deux raisons, et la seconde est la vraie :
-
-1. `npm run publish` fait déjà le **contrôle mécanique** à chaque fois — visualisation, cotation de ressenti, streak, numéro d'urgence, prodrome, traitement, relaxation sur vasovagal. Ce contrôle-là n'a pas besoin d'un rôle : il est dans le script, il ne fatigue pas, il ne s'habitue pas.
-2. ⚠️ **Un contrôle hebdomadaire obligatoire deviendrait une formalité vide en trois semaines** — et une case cochée sans lecture est pire que pas de case du tout, parce qu'elle donne l'illusion d'une vérification. C7 (prolifération) s'applique au superviseur lui-même.
-
-**Ce que le superviseur regarde, c'est ce que le script ne peut pas voir :** une étape conforme mot à mot et fausse cliniquement · un programme qui a cessé de correspondre au dossier (C8) · un dispositif qui publie des étapes sans que rien n'avance (C7) · ⭐ **un programme qui ne contient jamais rien que Xavier n'ait déjà demandé** (C5 — l'effet miroir a désormais une surface où il se voit très bien).
 
 ---
 

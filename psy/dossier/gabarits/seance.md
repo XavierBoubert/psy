@@ -4,6 +4,8 @@ duree_minutes: null
 cible: null
 mesures_passees: []
 palier_atteint: null
+programme_publie: null
+supervision: null
 prochaine_seance: AAAA-MM-JJ
 matiere_ouverte: false
 ---

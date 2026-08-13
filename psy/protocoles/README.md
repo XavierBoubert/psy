@@ -2,6 +2,13 @@
 
 Différence avec `corpus/` : le corpus est la **littérature**, le protocole est la **fiche qu'on applique**, déjà adaptée au profil de Xavier. Un protocole se lit en séance ou en crise, pas avant.
 
+> 🔴 **Différence avec `programme/bibliotheque/`, et elle est la plus importante à tenir** *(13/08/2026)*.
+>
+> **Un protocole est écrit pour le praticien** : il porte des diagnostics, des pronostics, des noms de praticiens, des hypothèses non tranchées et des réserves adressées à un professionnel.
+> **Une fiche de bibliothèque est écrite pour Xavier** : elle porte ce qu'il y a à faire, et pourquoi.
+>
+> ⚠️ **Ne jamais copier un protocole dans la bibliothèque.** On le **réécrit**. C'est le contrôle **C9** du Superviseur ([`../../PLAN.md` §4.2](../../PLAN.md#42-les-dix-contrôles)), et c'est la raison pour laquelle ce répertoire ne disparaît pas au profit de la bibliothèque.
+
 ## Format imposé
 
 Une fiche = un fichier. Elle contient, dans cet ordre : **quand l'utiliser** · **quand ne PAS l'utiliser** · les **paliers écrits à l'avance** avec leur critère de passage · les **critères d'arrêt** · ce qui se trace au dossier.
