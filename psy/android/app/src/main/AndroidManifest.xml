@@ -52,6 +52,13 @@
             android:theme="@style/Theme.Kokoro"
             android:turnScreenOn="true" />
 
+        <activity
+            android:name=".corps.AtelierActivity"
+            android:exported="false"
+            android:label="@string/corps_titre"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Kokoro" />
+
         <receiver
             android:name=".alerte.DeclencheurAlerte"
             android:exported="false" />

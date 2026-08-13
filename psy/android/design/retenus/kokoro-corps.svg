@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Kokoro — le corps, posture `repos`, expression `neutre`.
+
+  Spécification : ../CORPS.md. Onze pièces, une par groupe nommé, chacune une forme fermée simple.
+  Le chemin de chaque pièce est écrit dans son repère local, origine = pivot ; le placement est
+  porté par le `transform` du groupe. Faire tourner un bras, c'est changer son `rotate`, rien d'autre.
+
+  Les huit tracés de visage sont en `defs` : une expression est un échange de trois formes (§3, §9).
+
+  ⚠️ Ce fichier et `app/src/main/kotlin/io/allonsy/kokoro/corps/Geometrie.kt` portent les mêmes
+  chemins. `CorpsInvariantsTest` échoue si l'un des deux dérive.
+
+  Palette claire (§4) — fond #F4F1EA, à peindre par la page, pas par ce fichier.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 201" width="240" height="201">
+  <title>Kokoro — repos</title>
+
+  <defs>
+    <path id="oeil-ovale" d="M 0 -4.8 Q 3.4 -4.8 3.4 0 Q 3.4 4.8 0 4.8 Q -3.4 4.8 -3.4 0 Q -3.4 -4.8 0 -4.8 Z" />
+    <path id="oeil-trait" d="M -4.4 0 L 4.4 0" />
+    <path id="oeil-arc-haut" d="M -4.8 2 Q 0 -3 4.8 2" />
+    <path id="oeil-arc-bas" d="M -4.8 -2 Q 0 3 4.8 -2" />
+    <path id="bouche-trait" d="M -10 0 L 10 0" />
+    <path id="bouche-barre" d="M -7 0 L 7 0" />
+    <path id="bouche-arc" d="M -6.5 -2 Q 0 4 6.5 -2" />
+    <path id="bouche-courte" d="M -6 0 L 6 0" />
+  </defs>
+
+  <g id="kokoro"
+     fill="#FBF9F5"
+     stroke="#2B2F33"
+     stroke-width="2.896"
+     stroke-linecap="round"
+     stroke-linejoin="round">
+
+    <g id="pied-g" transform="translate(110 184)">
+      <path d="M -1.5 -7.5 L 1.5 -7.5 Q 9 -7.5 9 0 Q 9 7.5 1.5 7.5 L -1.5 7.5 Q -9 7.5 -9 0 Q -9 -7.5 -1.5 -7.5 Z" />
+    </g>
+    <g id="pied-d" transform="translate(130 184)">
+      <path d="M -1.5 -7.5 L 1.5 -7.5 Q 9 -7.5 9 0 Q 9 7.5 1.5 7.5 L -1.5 7.5 Q -9 7.5 -9 0 Q -9 -7.5 -1.5 -7.5 Z" />
+    </g>
+
+    <!-- Pivot à l'épaule. `rotate` va de 0 (le long du corps) à 90 (tendu à l'horizontale). Jamais au-delà. -->
+    <g id="bras-g" transform="translate(76 114) rotate(8)">
+      <path d="M -8 8 Q -8 0 0 0 Q 8 0 8 8 L 8 46 Q 8 54 0 54 Q -8 54 -8 46 Z" />
+    </g>
+    <g id="bras-d" transform="translate(164 114) rotate(-8)">
+      <path d="M -8 8 Q -8 0 0 0 Q 8 0 8 8 L 8 46 Q 8 54 0 54 Q -8 54 -8 46 Z" />
+    </g>
+
+    <!-- Le corps respire autour de sa base : scale(0.99..1, 1..1.02) avec transform-origin 120 171. -->
+    <g id="corps" transform="translate(120 171)">
+      <path d="M -11 -69 L 11 -69 Q 33 -69 33 -47 L 33 -22 Q 33 0 11 0 L -11 0 Q -33 0 -33 -22 L -33 -47 Q -33 -69 -11 -69 Z" />
+    </g>
+    <g id="plaque" transform="translate(120 136)">
+      <path fill="#8FA99B" d="M -6 -13 L 6 -13 Q 13 -13 13 -6 L 13 6 Q 13 13 6 13 L -6 13 Q -13 13 -13 6 L -13 -6 Q -13 -13 -6 -13 Z" />
+    </g>
+
+    <g id="tete" transform="translate(120 53)">
+      <path d="M -34 -43 L 34 -43 Q 60 -43 60 -17 L 60 17 Q 60 43 34 43 L -34 43 Q -60 43 -60 17 L -60 -17 Q -60 -43 -34 -43 Z" />
+    </g>
+    <g id="panneau" transform="translate(120 55)">
+      <path fill="#E6E2DA" d="M -29 -28.5 L 29 -28.5 Q 47 -28.5 47 -10.5 L 47 10.5 Q 47 28.5 29 28.5 L -29 28.5 Q -47 28.5 -47 10.5 L -47 -10.5 Q -47 -28.5 -29 -28.5 Z" />
+    </g>
+
+    <!-- Le visage. Éteindre le panneau, c'est retirer ce groupe : postures `cote-a-cote` et `retrait`. -->
+    <g id="visage" fill="none" stroke="#2B2F33">
+      <use id="oeil-g" href="#oeil-ovale" x="100" y="52" fill="#2B2F33" stroke="none" />
+      <use id="oeil-d" href="#oeil-ovale" x="140" y="52" fill="#2B2F33" stroke="none" />
+      <use id="bouche" href="#bouche-trait" x="120" y="75" />
+    </g>
+  </g>
+</svg>

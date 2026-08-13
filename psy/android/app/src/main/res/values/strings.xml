@@ -165,6 +165,42 @@
     <string name="controle_action_acces">Réafficher la notification d\'accès</string>
     <string name="controle_action_ouvrir_crise">Ouvrir l\'écran de crise</string>
 
+    <string name="controle_section_corps">Le corps de Kokoro</string>
+    <string name="controle_corps_explication">Le personnage est dessiné en vectoriel, pièce par pièce. Il se règle ici et n\'apparaît sur aucun écran de la thérapie.</string>
+    <string name="controle_action_corps">Ouvrir l\'atelier du corps</string>
+
+    <string name="corps_titre">Atelier du corps</string>
+    <string name="corps_sous_titre">Écran de mise au point du personnage. On y cherche ce que Kokoro fait — rien n\'y est arrêté.</string>
+    <string name="corps_section_posture">Posture</string>
+    <string name="corps_section_expression">Expression</string>
+    <string name="corps_section_bras">Bras</string>
+    <string name="corps_bras_posture">ceux de la posture</string>
+    <string name="corps_bras_0">0°</string>
+    <string name="corps_bras_45">45°</string>
+    <string name="corps_bras_90">90°</string>
+    <string name="corps_bras_135">135°</string>
+    <string name="corps_bras_180">180°</string>
+    <string name="corps_section_vol">Déplacement de la racine</string>
+    <string name="corps_section_palette">Palette</string>
+    <string name="corps_posture_repos">repos</string>
+    <string name="corps_posture_present">présent</string>
+    <string name="corps_posture_montre_gauche">montre à gauche</string>
+    <string name="corps_posture_montre_droite">montre à droite</string>
+    <string name="corps_posture_cote_a_cote">côte à côte</string>
+    <string name="corps_posture_retrait">retrait</string>
+    <string name="corps_expression_posture">celle de la posture</string>
+    <string name="corps_expression_neutre">neutre</string>
+    <string name="corps_expression_attentif">attentif</string>
+    <string name="corps_expression_chaleureux">chaleureux</string>
+    <string name="corps_expression_clignement">clignement</string>
+    <string name="corps_expression_veille">veille</string>
+    <string name="corps_expression_de_cote">de côté</string>
+    <string name="corps_vol_aucun">posé</string>
+    <string name="corps_vol_flottement">flottement</string>
+    <string name="corps_vol_traversee">traversée</string>
+    <string name="corps_palette_sombre">sombre</string>
+    <string name="corps_palette_claire">claire</string>
+
     <string name="controle_section_test">Test K1</string>
     <string name="controle_consigne_test">Test : appuie sur le bouton, puis éteins l\'écran avec le bouton latéral. Au bout de 20 secondes, l\'écran doit se rallumer sur Kokoro, sans aucun son ni vibration.</string>
     <string name="controle_action_test">Déclencher le test dans 20 secondes</string>

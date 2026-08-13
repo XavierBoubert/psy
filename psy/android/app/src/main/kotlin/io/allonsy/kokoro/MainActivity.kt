@@ -42,6 +42,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import io.allonsy.kokoro.alerte.creerCanalAlerte
 import io.allonsy.kokoro.alerte.programmerAlerteTest
+import io.allonsy.kokoro.corps.AtelierActivity
 import io.allonsy.kokoro.crise.CriseActivity
 import io.allonsy.kokoro.crise.creerCanalAcces
 import io.allonsy.kokoro.crise.publierAccesCrise
@@ -257,6 +258,12 @@ private fun EcranControle(
             Action(stringResource(R.string.controle_action_dossier), onClick = onChoisirDossier)
             Action(stringResource(R.string.controle_action_journal)) {
                 context.startActivity(Intent(context, JournalActivity::class.java))
+            }
+
+            Section(stringResource(R.string.controle_section_corps))
+            Explication(stringResource(R.string.controle_corps_explication))
+            Action(stringResource(R.string.controle_action_corps)) {
+                context.startActivity(Intent(context, AtelierActivity::class.java))
             }
 
             Section(stringResource(R.string.controle_section_test))
