@@ -1,0 +1,212 @@
+#!/usr/bin/env bash
+#
+# kokoro — compiler, tester et déployer sans noyer la sortie.
+#
+# Gradle et adb parlent beaucoup : un build réussi, c'est déjà 40 lignes, et un échec s'enterre
+# au milieu de centaines. Ce script renvoie **un verdict par étape**, et rien d'autre tant que
+# tout va bien ; en cas d'échec, il ne remonte que l'extrait qui l'explique — les erreurs du
+# compilateur, ou les tests tombés avec leur message d'assertion.
+#
+# 🔴 Le détail n'est jamais perdu : tout part dans build/kokoro.log, que `./kokoro journal` relit.
+#
+#   ./kokoro            tests, puis compilation, installation et ouverture
+#   ./kokoro test       tests unitaires seuls
+#   ./kokoro apk        compilation seule
+#   ./kokoro pose       compilation, installation, ouverture, contrôle de plantage
+#   ./kokoro journal    les dernières lignes du dernier build
+#   ./kokoro plantage   le tampon de plantage du téléphone
+#
+#   -v                  laisse Gradle parler comme d'habitude (pour creuser un cas tordu)
+
+set -uo pipefail
+
+RACINE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+JOURNAL="$RACINE/build/kokoro.log"
+APK="$RACINE/app/build/outputs/apk/debug/app-debug.apk"
+RESULTATS="$RACINE/app/build/test-results/testDebugUnitTest"
+
+PAQUET="io.allonsy.kokoro"
+ECRAN="$PAQUET/.MainActivity"
+
+# Une explication d'échec qui dépasse ça n'est plus une explication, c'est le journal.
+LIGNES_EXTRAIT=25
+
+cd "$RACINE" || exit 1
+
+# ————————————————————————————————————————————————————————————————————————————————————————————
+# Affichage — une ligne par étape, toujours au même format
+# ————————————————————————————————————————————————————————————————————————————————————————————
+
+etat() { printf '%-9s %s\n' "$1" "$2"; }
+
+echoue() {
+    etat "$1" "ÉCHEC"
+    expliquer
+    exit 1
+}
+
+# L'extrait qui explique : les erreurs du compilateur, sinon les tests tombés, sinon Gradle.
+expliquer() {
+    local extrait
+    extrait="$(erreurs_compilation)"
+    [ -z "$extrait" ] && extrait="$(tests_tombes)"
+    [ -z "$extrait" ] && extrait="$(souci_gradle)"
+    [ -n "$extrait" ] && printf '%s\n' "$extrait"
+    echo "— journal : ./kokoro journal"
+}
+
+erreurs_compilation() {
+    [ -f "$JOURNAL" ] || return 0
+    grep -E "^e: " "$JOURNAL" |
+        sed -E 's|^e: file:///.*/(app/src)|\1|' |
+        head -n "$LIGNES_EXTRAIT"
+}
+
+# Le journal Gradle ne donne que « <classe> > <test> FAILED » et le fichier fautif ; le message
+# d'assertion, lui, est dans le XML de résultats — et c'est le seul endroit qui dit **pourquoi**.
+tests_tombes() {
+    [ -d "$RESULTATS" ] || return 0
+    awk '
+        function attribut(ligne, cle,   valeur) {
+            if (match(ligne, cle "=\"[^\"]*\"") == 0) return ""
+            valeur = substr(ligne, RSTART + length(cle) + 2, RLENGTH - length(cle) - 3)
+            gsub(/&#10;|&#13;/, " ", valeur)
+            gsub(/&lt;/, "<", valeur); gsub(/&gt;/, ">", valeur)
+            gsub(/&quot;/, "\"", valeur); gsub(/&amp;/, "\\&", valeur)
+            return valeur
+        }
+        /<testcase / { nom = attribut($0, "name"); classe = attribut($0, "classname") }
+        /<(failure|error) / {
+            sub(/^.*\./, "", classe)
+            print classe " > " nom
+            print "  " substr(attribut($0, "message"), 1, 180)
+        }
+    ' "$RESULTATS"/*.xml 2>/dev/null | head -n "$LIGNES_EXTRAIT"
+}
+
+souci_gradle() {
+    [ -f "$JOURNAL" ] || return 0
+    sed -n '/^\* What went wrong:/,/^\* Try:/p' "$JOURNAL" | head -n 15
+}
+
+# ————————————————————————————————————————————————————————————————————————————————————————————
+# Gradle
+# ————————————————————————————————————————————————————————————————————————————————————————————
+
+lancer_gradle() {
+    mkdir -p "$(dirname "$JOURNAL")"
+    if [ "$VERBEUX" = 1 ]; then
+        ./gradlew --console=plain "$@" 2>&1 | tee "$JOURNAL"
+        return "${PIPESTATUS[0]}"
+    fi
+    ./gradlew --console=plain "$@" > "$JOURNAL" 2>&1
+}
+
+# Un test qui n'a pas été rejoué est un test dont rien n'a bougé — c'est une information, pas un
+# succès à réafficher comme neuf.
+resume_tests() {
+    local total
+    total="$(grep -ho 'tests="[0-9]*"' "$RESULTATS"/*.xml 2>/dev/null |
+        tr -dc '0-9\n' | awk '{somme += $1} END {print somme + 0}')"
+    case "$(grep -c "^> Task :app:testDebugUnitTest UP-TO-DATE" "$JOURNAL")" in
+        0) echo "$total tests" ;;
+        *) echo "$total tests (rien n'a bougé)" ;;
+    esac
+}
+
+etape_tests() {
+    lancer_gradle :app:testDebugUnitTest || echoue tests
+    etat tests "ok        $(resume_tests)"
+}
+
+etape_apk() {
+    lancer_gradle :app:assembleDebug || echoue apk
+    [ -f "$APK" ] || echoue apk
+    etat apk "ok        $(du -k "$APK" | awk '{printf "%.1f Mo", $1 / 1024}')"
+}
+
+# ————————————————————————————————————————————————————————————————————————————————————————————
+# Le téléphone
+# ————————————————————————————————————————————————————————————————————————————————————————————
+
+telephone() { adb devices | awk 'NR > 1 && $2 == "device" { print $1; exit }'; }
+
+resume() {
+    [ -f "$JOURNAL" ] || return 0
+    tail -n 40 "$JOURNAL"
+}
+
+# One UI refuse `am start` sur une activité non exportée : on ouvre l'écran de contrôle, et
+# l'atelier du corps se prend depuis là.
+etape_pose() {
+    local appareil modele
+    appareil="$(telephone)"
+    if [ -z "$appareil" ]; then
+        etat pose "AUCUN TÉLÉPHONE (adb devices)"
+        exit 1
+    fi
+    modele="$(adb -s "$appareil" shell getprop ro.product.model | tr -d '\r')"
+
+    if ! adb -s "$appareil" install -r -d "$APK" > "$JOURNAL.adb" 2>&1; then
+        etat pose "ÉCHEC"
+        tail -n 5 "$JOURNAL.adb"
+        exit 1
+    fi
+    etat pose "ok        $modele"
+
+    adb -s "$appareil" logcat -b crash -c > /dev/null 2>&1
+    adb -s "$appareil" shell am start -n "$ECRAN" > /dev/null 2>&1
+    attendre_ecran "$appareil" || { etat ouvert "PAS OUVERT"; exit 1; }
+
+    local chute
+    chute="$(adb -s "$appareil" logcat -b crash -d 2>/dev/null | grep -A8 -m1 "$PAQUET")"
+    if [ -n "$chute" ]; then
+        etat ouvert "PLANTAGE"
+        printf '%s\n' "$chute" | head -n 10
+        exit 1
+    fi
+    etat ouvert "MainActivity"
+}
+
+attendre_ecran() {
+    local essai
+    for essai in $(seq 1 12); do
+        if adb -s "$1" shell dumpsys activity activities 2>/dev/null |
+            grep -q "ResumedActivity.*$ECRAN"; then
+            return 0
+        fi
+        sleep 0.4
+    done
+    return 1
+}
+
+# ————————————————————————————————————————————————————————————————————————————————————————————
+
+VERBEUX=0
+COMMANDE=""
+for argument in "$@"; do
+    case "$argument" in
+        -v) VERBEUX=1 ;;
+        *) COMMANDE="$argument" ;;
+    esac
+done
+
+case "${COMMANDE:-tout}" in
+    tout)
+        etape_tests
+        etape_apk
+        etape_pose
+        ;;
+    test) etape_tests ;;
+    apk) etape_apk ;;
+    pose)
+        etape_apk
+        etape_pose
+        ;;
+    journal) resume ;;
+    plantage) adb logcat -b crash -d | tail -n 40 ;;
+    *)
+        echo "kokoro [tout|test|apk|pose|journal|plantage] [-v]"
+        exit 1
+        ;;
+esac

@@ -88,6 +88,26 @@ Transport : ~~Syncthing~~ → **Google Drive** depuis le 11/08/2026, étendu aux
 Depuis `psy/android/`, téléphone branché et débogage USB autorisé :
 
 ```bash
+./kokoro            # tests, compilation, installation, ouverture — trois lignes de sortie
+```
+
+| Commande | Ce qu'elle fait |
+|---|---|
+| `./kokoro` | Tout : tests unitaires, APK, installation, ouverture, contrôle de plantage |
+| `./kokoro test` | Tests unitaires seuls |
+| `./kokoro apk` | Compilation seule |
+| `./kokoro pose` | Compilation, installation, ouverture — sans repasser les tests |
+| `./kokoro journal` | Les dernières lignes du dernier build |
+| `./kokoro plantage` | Le tampon de plantage du téléphone |
+| `-v` | Laisse Gradle parler comme d'habitude, pour creuser un cas tordu |
+
+⭐ **Le script ne sort qu'un verdict par étape, et en cas d'échec, seulement l'extrait qui l'explique** — la ligne du compilateur, ou le test tombé avec son message d'assertion, tiré du XML de résultats *(le journal Gradle, lui, ne dit pas **pourquoi** un test tombe)*. **Rien n'est perdu pour autant :** tout part dans `build/kokoro.log`, que `./kokoro journal` relit. C'est ce qui rend une passe de vérification lisible d'un coup d'œil — pour Xavier comme pour Claude, dont chaque ligne de sortie coûte.
+
+⚠️ **`./kokoro pose` ouvre `MainActivity`, jamais un écran interne** : One UI refuse `am start` sur une activité non exportée. L'atelier du corps se prend depuis l'écran de contrôle, section **« Le corps de Kokoro »**.
+
+Les deux commandes brutes, si le script est indisponible :
+
+```bash
 ./gradlew assembleDebug
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```

@@ -25,11 +25,27 @@ sealed interface Posture {
 
 enum class Cote { GAUCHE, DROITE }
 
-/** Bras le long du corps, très légèrement écartés. */
-const val OUVERTURE_REPOS = 8f
+/**
+ * Le repos, c'est le dessin — zéro degré d'écart.
+ *
+ * La v1 écartait les bras de 8° parce qu'ils étaient dessinés à la verticale. La v2 les dessine
+ * déjà écartés : toute ouverture ajoutée par le rig part de là.
+ */
+const val OUVERTURE_REPOS = 0f
 
-/** Bras tendu à l'horizontale. Repère, pas borne : le pivot tourne librement. */
-const val OUVERTURE_HORIZONTALE = 90f
+/**
+ * Écart du bras par rapport à la verticale dans le dessin : l'axe qui joint le centre du bouchon
+ * d'épaule au centre du bouchon bas fait 19,5° avec la verticale.
+ */
+const val INCLINAISON_REPOS = 19.463f
+
+/**
+ * Bras amené à l'horizontale — **et pas plus haut.**
+ *
+ * 🔴 C'est le garde-fou 1 du §6 : le bras ne dépasse jamais la ligne des épaules. La borne se
+ * calcule depuis la pose dessinée, elle ne se choisit pas ; `CorpsInvariantsTest` la vérifie.
+ */
+const val OUVERTURE_HORIZONTALE = 90f - INCLINAISON_REPOS
 
 /** Bras entrouverts, utilisé par l'atelier quand le rig est en vol. */
 const val OUVERTURE_VOL = 40f

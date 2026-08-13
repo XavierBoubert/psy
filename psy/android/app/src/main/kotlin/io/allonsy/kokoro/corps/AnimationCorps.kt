@@ -30,7 +30,7 @@ const val RESPIRATION_MILLIS = 4_500
 const val TRANSITION_MILLIS = 800
 
 const val CLIGNEMENT_MILLIS = 200
-private const val CLIGNEMENT_FONDU_MILLIS = 80
+private const val CLIGNEMENT_MORPHING_MILLIS = 80
 private const val CLIGNEMENT_ATTENTE_MIN_MILLIS = 20_000L
 private const val CLIGNEMENT_ATTENTE_MAX_MILLIS = 45_000L
 
@@ -64,6 +64,8 @@ fun rigAnime(
     panneauAllume: Boolean = true,
     ouvertureBrasGauche: Float = OUVERTURE_REPOS,
     ouvertureBrasDroit: Float = OUVERTURE_REPOS,
+    orbitePiedGauche: Float = 0f,
+    orbitePiedDroit: Float = 0f,
     regard: Float = expression.regardParDefaut,
     echelle: Float = 1f,
     vol: Vol = Vol.AUCUN,
@@ -74,6 +76,8 @@ fun rigAnime(
     val mouvement = deplacementAnime(vol)
     val brasGauche by animateFloatAsState(ouvertureBrasGauche, transition(), label = "bras-gauche")
     val brasDroit by animateFloatAsState(ouvertureBrasDroit, transition(), label = "bras-droit")
+    val piedGauche by animateFloatAsState(orbitePiedGauche, transition(), label = "pied-gauche")
+    val piedDroit by animateFloatAsState(orbitePiedDroit, transition(), label = "pied-droit")
     val oeillade by animateFloatAsState(regard, transition(), label = "regard")
     val taille by animateFloatAsState(echelle, transition(), label = "echelle")
 
@@ -83,6 +87,8 @@ fun rigAnime(
         respiration = souffle,
         ouvertureBrasGauche = brasGauche,
         ouvertureBrasDroit = brasDroit,
+        orbitePiedGauche = piedGauche,
+        orbitePiedDroit = piedDroit,
         regard = oeillade,
         decalage = mouvement.decalage,
         inclinaison = mouvement.inclinaison,
@@ -119,7 +125,7 @@ private fun clignementAnime(expression: Expression, actif: Boolean): Boolean {
     return ferme
 }
 
-/** Les formes ne se déforment pas l'une vers l'autre : elles s'échangent en fondu. */
+/** Les formes se déforment l'une vers l'autre — le morphing est dans [MorphingVisage.kt][Contour]. */
 @Composable
 private fun visageAnime(cible: Expression): Visage {
     var visage by remember { mutableStateOf(Visage.de(cible)) }
@@ -131,14 +137,14 @@ private fun visageAnime(cible: Expression): Visage {
         progression.snapTo(0f)
         progression.animateTo(
             targetValue = 1f,
-            animationSpec = tween(dureeFondu(depuis, cible), easing = FastOutSlowInEasing),
+            animationSpec = tween(dureeMorphing(depuis, cible), easing = FastOutSlowInEasing),
         )
     }
     return visage.copy(progression = progression.value)
 }
 
-private fun dureeFondu(depuis: Expression, vers: Expression): Int = when {
-    depuis == Expression.CLIGNEMENT || vers == Expression.CLIGNEMENT -> CLIGNEMENT_FONDU_MILLIS
+private fun dureeMorphing(depuis: Expression, vers: Expression): Int = when {
+    depuis == Expression.CLIGNEMENT || vers == Expression.CLIGNEMENT -> CLIGNEMENT_MORPHING_MILLIS
     else -> TRANSITION_MILLIS
 }
 

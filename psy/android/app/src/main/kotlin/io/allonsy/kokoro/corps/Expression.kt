@@ -37,8 +37,9 @@ enum class Expression(
 const val REGARD_DESIGNATION = 5f
 
 /**
- * Une expression sortante et une expression entrante, avec l'avancement du fondu entre les deux.
- * Les formes ne se déforment pas l'une vers l'autre : elles s'échangent en fondu (§9).
+ * Une expression sortante, une expression entrante, et l'avancement de l'une vers l'autre.
+ * ⭐ **Les formes se déforment l'une vers l'autre** (§9) : à aucun instant deux visages ne sont
+ * dessinés l'un sur l'autre. La déformation est calculée par [Contour].
  */
 data class Visage(
     val depuis: Expression,

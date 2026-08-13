@@ -53,6 +53,7 @@ private fun EcranAtelier() {
     var posture by remember { mutableStateOf<Posture>(Posture.Repos) }
     var expressionForcee by remember { mutableStateOf<Expression?>(null) }
     var brasForces by remember { mutableStateOf<Float?>(null) }
+    var piedsForces by remember { mutableStateOf(0f) }
     var vol by remember { mutableStateOf(Vol.AUCUN) }
     var paletteClaire by remember { mutableStateOf(false) }
 
@@ -63,6 +64,8 @@ private fun EcranAtelier() {
         panneauAllume = expressionForcee != null || reglage.panneauAllume,
         ouvertureBrasGauche = brasForces ?: ouvertureEnVol(reglage.ouvertureBrasGauche, vol),
         ouvertureBrasDroit = brasForces ?: ouvertureEnVol(reglage.ouvertureBrasDroit, vol),
+        orbitePiedGauche = piedsForces,
+        orbitePiedDroit = piedsForces,
         regard = expressionForcee?.regardParDefaut ?: reglage.regard,
         echelle = reglage.echelle,
         vol = vol,
@@ -133,14 +136,24 @@ private fun EcranAtelier() {
             LigneChoix(
                 options = listOf(
                     stringResource(R.string.corps_bras_posture) to null,
-                    stringResource(R.string.corps_bras_0) to 0f,
-                    stringResource(R.string.corps_bras_45) to 45f,
-                    stringResource(R.string.corps_bras_90) to 90f,
-                    stringResource(R.string.corps_bras_135) to 135f,
-                    stringResource(R.string.corps_bras_180) to 180f,
+                    stringResource(R.string.corps_bras_repos) to OUVERTURE_REPOS,
+                    stringResource(R.string.corps_bras_mi_chemin) to OUVERTURE_HORIZONTALE / 2f,
+                    stringResource(R.string.corps_bras_horizontale) to OUVERTURE_HORIZONTALE,
+                    stringResource(R.string.corps_bras_repli) to -INCLINAISON_REPOS,
                 ),
                 selection = brasForces,
                 onChoix = { brasForces = it },
+            )
+
+            Section(stringResource(R.string.corps_section_pieds))
+            LigneChoix(
+                options = listOf(
+                    stringResource(R.string.corps_pieds_dessin) to 0f,
+                    stringResource(R.string.corps_pieds_serres) to -6f,
+                    stringResource(R.string.corps_pieds_ecartes) to 8f,
+                ),
+                selection = piedsForces,
+                onChoix = { piedsForces = it },
             )
 
             Section(stringResource(R.string.corps_section_vol))
