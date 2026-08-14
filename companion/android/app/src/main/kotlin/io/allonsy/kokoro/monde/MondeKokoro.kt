@@ -1,9 +1,13 @@
 package io.allonsy.kokoro.monde
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.VectorConverter
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
@@ -16,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -66,6 +71,9 @@ private const val TAILLE_KOKORO = 0.24f
  */
 private val PLACE_DE_KOKORO = BiasAlignment(horizontalBias = 0f, verticalBias = 0.62f)
 
+/** La montée d'une étape ouverte. Assez lente pour se voir, assez courte pour ne pas se subir. */
+private const val MONTEE_ETAPE_MS = 320
+
 /**
  * Le monde de Kokoro — cinq écrans, un décor continu, aucun bouton.
  *
@@ -85,9 +93,16 @@ private val PLACE_DE_KOKORO = BiasAlignment(horizontalBias = 0f, verticalBias = 
  * (`companion/README.md` §5 — jamais de mouvement à interpréter).
  */
 @Composable
-fun MondeKokoro(palette: PaletteDecor, modifier: Modifier = Modifier) {
+fun MondeKokoro(
+    palette: PaletteDecor,
+    onFonction: (Fonction) -> Unit,
+    onReglages: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     var ecran by remember { mutableStateOf(Ecran.CENTRE) }
     var taille by remember { mutableStateOf(IntSize.Zero) }
+    var ouverte by remember { mutableStateOf<Etape?>(null) }
+    var affichee by remember { mutableStateOf<Etape?>(null) }
     val vue = remember { mutableStateOf(Ecran.CENTRE.camera) }
     val pose = remember { mutableStateOf<Job?>(null) }
     val portee = rememberCoroutineScope()
@@ -96,8 +111,9 @@ fun MondeKokoro(palette: PaletteDecor, modifier: Modifier = Modifier) {
         modifier = modifier
             .fillMaxSize()
             .onSizeChanged { taille = it }
-            .pointerInput(taille) {
+            .pointerInput(taille, ouverte != null) {
                 if (taille.width == 0 || taille.height == 0) return@pointerInput
+                if (ouverte != null) return@pointerInput
 
                 suivreLeDoigt(
                     taille = taille,
@@ -133,37 +149,82 @@ fun MondeKokoro(palette: PaletteDecor, modifier: Modifier = Modifier) {
                             y = ((habitant.camera.y - vue.value.y) * taille.height).roundToInt(),
                         )
                     },
-                contentAlignment = PLACE_DE_KOKORO,
             ) {
-                ContenuEcran(habitant)
+                ContenuEcran(
+                    ecran = habitant,
+                    onOuvrir = { etape ->
+                        affichee = etape
+                        ouverte = etape
+                    },
+                    onFonction = onFonction,
+                    onReglages = onReglages,
+                )
             }
         }
+
+        EtapeOuverte(etape = affichee, visible = ouverte != null, onFermer = { ouverte = null })
     }
 }
 
 /**
- * Ce qu'il y a dans chaque écran.
- *
- * ⭐ **Quatre des cinq sont vides, et c'est l'état voulu pour l'instant** : le monde existe avant ce
- * qu'on y mettra. Ce qui les remplira — programme, bibliothèque, bilans — se décide en séance
- * (`companion/PROGRAMME.md`), pas ici.
+ * Ce qu'il y a dans chaque écran — **une rubrique par écran** (`companion/INTERFACE.md` §3).
  *
  * 🔴 **Kokoro garde les couleurs du SVG, jour et nuit** ([PALETTE_CLAIRE]) : il n'est pas posé sur
  * le fond de l'application, il est posé dans le décor. Le repeindre avec le ciel reviendrait à lui
  * donner une deuxième apparence à décoder — le décor change d'heure, lui non.
  */
 @Composable
-private fun ContenuEcran(ecran: Ecran) {
+private fun ContenuEcran(
+    ecran: Ecran,
+    onOuvrir: (Etape) -> Unit,
+    onFonction: (Fonction) -> Unit,
+    onReglages: () -> Unit,
+) {
     when (ecran) {
-        Ecran.CENTRE -> CorpsKokoro(
-            rig = rigAnime(Posture.Repos),
-            modifier = Modifier
-                .fillMaxHeight(TAILLE_KOKORO)
-                .aspectRatio(LARGEUR_VUE / HAUTEUR_VUE),
-            palette = PALETTE_CLAIRE,
+        Ecran.CENTRE -> Box(modifier = Modifier.fillMaxSize()) {
+            CorpsKokoro(
+                rig = rigAnime(Posture.Repos),
+                modifier = Modifier
+                    .align(PLACE_DE_KOKORO)
+                    .fillMaxHeight(TAILLE_KOKORO)
+                    .aspectRatio(LARGEUR_VUE / HAUTEUR_VUE),
+                palette = PALETTE_CLAIRE,
+            )
+            RoueDentee(onClic = onReglages, modifier = Modifier.align(Alignment.TopEnd))
+        }
+
+        Ecran.GAUCHE -> ContenuTherapie(
+            onOuvrir = { etape ->
+                when (val ouverture = etape.ouverture) {
+                    is Ouverture.Ecran -> onFonction(ouverture.fonction)
+                    is Ouverture.Detail -> onOuvrir(etape)
+                }
+            },
         )
 
-        Ecran.GAUCHE, Ecran.DROITE, Ecran.HAUT, Ecran.BAS -> Unit
+        Ecran.DROITE -> ContenuDocumentation()
+        Ecran.HAUT -> ContenuBilan()
+        Ecran.BAS -> ContenuCriseDuMonde(onFonction = onFonction)
+    }
+}
+
+/**
+ * L'étape ouverte, posée **au-dessus du monde entier** et non dans son écran : elle prend l'écran
+ * complet (§3.1), et tant qu'elle est là **la traversée est coupée** — sans quoi le monde
+ * continuerait de glisser derrière un panneau qui le cache.
+ *
+ * ⭐ **Elle monte en 320 ms et s'arrête.** Un panneau qui apparaît d'un coup se lit comme un
+ * changement d'application ; un panneau qui rebondit serait l'animation brusque interdite.
+ */
+@Composable
+private fun EtapeOuverte(etape: Etape?, visible: Boolean, onFermer: () -> Unit) {
+    val detail = (etape?.ouverture as? Ouverture.Detail)?.texte ?: return
+    AnimatedVisibility(
+        visible = visible,
+        enter = slideInVertically(animationSpec = tween(MONTEE_ETAPE_MS)) { hauteur -> hauteur },
+        exit = slideOutVertically(animationSpec = tween(MONTEE_ETAPE_MS)) { hauteur -> hauteur },
+    ) {
+        PanneauEtape(titre = etape.titre, detail = detail, onFermer = onFermer)
     }
 }
 

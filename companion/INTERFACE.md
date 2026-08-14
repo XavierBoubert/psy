@@ -1,12 +1,16 @@
 # Kokoro — l'interface du monde
 
-**v1 — 14/08/2026.** Le monde devient **l'interface principale** de l'app, et jusqu'à l'écran de veille.
+**v2 — 14/08/2026.** Le monde devient **l'interface principale** de l'app, et jusqu'à l'écran de veille.
+
+> 🔄 **v2 — le thème change, et lui seul.** Le verre dépoli de la v1 est abandonné au profit de **panneaux extrudés** (§4), après maquette. **Le rangement, les points durs, les onze décisions et tout le contenu sont inchangés** — seule la peau est réécrite, plus D6 qui la nommait et P4/P5 qui n'existaient qu'à cause du flou.
 
 > 📐 **Onze décisions tranchées par Xavier le 14/08/2026** — §5. Le décor est spécifié dans [`DECOR.md`](./DECOR.md), le personnage dans [`CORPS.md`](./CORPS.md), le contrat de contenu dans [`companion/PROGRAMME.md`](PROGRAMME.md) — **ce document ne fait que ranger** ce que ces trois-là ont décidé.
 >
 > 📌 **Il ne décide jamais quel contenu clinique existe.** Ça se décide en séance.
 >
 > ⏳ **Ce qui reste ouvert** — les bornes des nouveautés (§6.1), l'essai du fond d'écran vivant (§6.3), la cadence de l'entraînement en solo (§6.4), et le comportement du personnage, renvoyé à son propre brainstorm.
+>
+> 🏗️ **Écrit en Compose le 15/08/2026** — la matière (§4.1, §4.2) et les cinq écrans (§3) ; détail en **§7**. **Deux points ouverts ont été tranchés par Xavier pour que ça puisse être codé** : les pancartes gardent leurs deux couleurs *(§6.5, option B)*, et la police arrondie est **Varela Round** *(§4.3)*.
 
 ---
 
@@ -55,7 +59,9 @@
 
 ### 1.4 Ce qui n'entre dans aucun écran
 
-Aucun score · aucune progression · aucun historique · aucun palier atteint · aucun streak · aucune notification ni relance · aucun numéro d'urgence, **3114 compris** · le PHQ-9 · rien de `psy/outputs/dossier/` (profil, état, séances, mesures, briefs) · aucune police, aucun service, aucune image venus d'ailleurs.
+Aucun score · aucune progression · aucun historique · aucun palier atteint · aucun streak · aucune notification ni relance · aucun numéro d'urgence, **3114 compris** · le PHQ-9 · rien de `psy/outputs/dossier/` (profil, état, séances, mesures, briefs) · aucune police **distante**, aucun service, aucune image venus d'ailleurs **à l'exécution**.
+
+> ⭐ **Précision ouverte par la v2 :** la police arrondie de §4.3 est **embarquée dans l'APK**, donc hors ligne et figée à la compilation. **C'est exactement ce que la règle ci-dessus vise à garantir** — elle interdit qu'une ressource soit *allée chercher ailleurs pendant que Xavier s'en sert*, pas qu'elle vienne d'un tiers.
 
 ---
 
@@ -66,8 +72,8 @@ Aucun score · aucune progression · aucun historique · aucun palier atteint ·
 | 🔴 **P1** | **Un écran du haut ou du bas ne peut pas contenir de liste qui défile verticalement** — le glissement vertical est déjà pris par la traversée du monde. Sur la gauche et la droite, le vertical est libre : la butée y est franche, donc le geste n'y sert à rien d'autre | **Les deux contenus longs vont à gauche et à droite. Le haut et le bas ne portent que ce qui tient en un écran.** C'est ce qui a décidé le rangement du §3 |
 | **P2** | Les gestes système de One UI mordent les bords : volet de notifications en haut, retour à l'accueil en bas | Un geste de traversée verticale part **du milieu de l'écran**. À mesurer sur l'appareil |
 | **P3** | Le décor ne porte jamais de texte ([`DECOR.md`](./DECOR.md) §7) | Le texte est sur une **surface posée sur le décor**, jamais peint dessus |
-| 🔴 **P4** | ⭐ **Le flou du verre dépoli ne doit jamais venir du système.** `Window.setBackgroundBlurRadius` dépend d'un réglage Android que l'économiseur de batterie coupe — l'apparence changerait parce qu'un réglage étranger a bougé, **exactement ce que la doctrine interdit au thème sombre** | **Le flou se calcule dans notre propre rendu** (capture du décor en `GraphicsLayer` + `RenderEffect`), jamais par l'API de fenêtre. Voir §4 |
-| 🔴 **P5** | ⭐ **La lisibilité ne doit jamais dépendre de ce qui est derrière.** Un texte posé sur un décor flouté passe du feuillage sombre au ciel clair en glissant | **Une teinte constante par-dessus le flou**, opaque à ~60 %. Le flou fait la profondeur, la teinte fait le contraste. Les deux ne se remplacent pas |
+| ✅ **P4** | ⭐ **Le flou ne doit jamais venir du système.** `Window.setBackgroundBlurRadius` dépend d'un réglage Android que l'économiseur de batterie coupe — l'apparence changerait parce qu'un réglage étranger a bougé, **exactement ce que la doctrine interdit au thème sombre** | ✅ **Sans objet depuis §4 : il n'y a plus de flou du tout.** 🔴 **Le point reste écrit parce qu'il juge d'avance toute réintroduction** — une surface qui floute retombe sous P4, et devra calculer son flou elle-même |
+| ✅ **P5** | ⭐ **La lisibilité ne doit jamais dépendre de ce qui est derrière.** Un texte posé sur un décor flouté passe du feuillage sombre au ciel clair en glissant | ✅ **Réglé par l'opacité** : les panneaux de §4 sont pleins, le décor passe **entre** eux et jamais dessous. 🔴 **Le point reste écrit parce qu'il interdit toute surface semi-transparente portant du texte** |
 | **P6** | L'overlay de veille : `TYPE_APPLICATION_OVERLAY` ne passe pas au-dessus du keyguard sur Android récent | Piste retenue à essayer : **fond d'écran vivant** — §5, D8 |
 | 🔴 **P7** | ⭐ **La notification de crise est lue toute la journée** — elle est permanente sur l'écran verrouillé, et elle porte aujourd'hui les mots *mot-code* et *tension appliquée* trois fois : dans son texte et sur ses deux boutons. **Xavier, 14/08/2026 : « je lis toute la journée mot code et tension appliquée. Ça n'aide pas mes angoisses. »** | ⭐ **Quatrième instance du motif du 10/08** *(retrait des numéros d'urgence)* : **un secours affiché en permanence devient un rappel permanent du danger.** Voir **§6.2** |
 | **P8** | En face, la notification donne le mot-code **en un tap** depuis l'écran verrouillé, sur une activité éprouvée pour de vrai le 10/08 | Tout chemin qui passe par le monde ajoute un tap et un chargement **au pire moment**. Les deux exigences se concilient — **§6.2** |
@@ -104,48 +110,78 @@ Aucun score · aucune progression · aucun historique · aucun palier atteint ·
 ### 3.1 À quoi ressemble un écran de bord
 
 - **Un titre écrit en toutes lettres**, posé en haut et qui ne défile pas (**D11**).
-- **Les trois `quand` sont des sous-titres écrits** — *Aujourd'hui* · *Quand j'en ai besoin* · *Sans date*. 🔴 **Aucun code couleur, aucune pastille, aucun badge.**
+- **Les trois `quand` sont des sous-titres écrits** — *Aujourd'hui* · *Quand j'en ai besoin* · *Sans date*. 🔴 **Aucune pastille, aucun badge.** ⭐ **La couleur distingue les sections, elle ne les classe jamais** *(§6.5, tranché le 14/08/2026)* — 🔴 **et il reste interdit d'aligner la palette sur une échelle d'urgence** : aucune teinte ne doit pouvoir se lire comme *urgent*, *en retard* ou *important*.
 - **Une carte par étape** : le titre, la durée si elle est connue, rien d'autre. Pas de chevron, pas d'aperçu, pas de compteur.
 - **Le décor reste visible** autour et entre les cartes — on est toujours dans le même monde, jamais dans une autre application.
 - **Une étape ouverte prend l'écran entier** et se ferme d'un bouton écrit *Fermer*, jamais d'un geste : rien ne doit concurrencer la traversée.
 
 ---
 
-## 4. Le thème — verre dépoli *(D6)*
+## 4. Le thème — panneaux extrudés *(D6)*
 
-**Les surfaces sont du verre dépoli posé sur le paysage** : le décor se devine derrière, flouté, et continue de glisser en parallaxe pendant qu'on traverse. C'est la seule matière qui rende le parallaxe *visible à travers l'interface* au lieu de le masquer.
+**Les surfaces sont des panneaux opaques à gros contour posés sur le paysage** — le registre des interfaces de jeu kawaii. Le décor ne se voit plus *à travers* l'interface : **il se voit entre les panneaux.** C'est ce qui commande les écarts généreux entre les cartes — l'espace vide n'est pas de la respiration graphique, c'est là que passe le monde.
+
+> 📌 **Ce thème remplace le verre dépoli**, retenu le 14/08/2026 puis abandonné le même jour après maquette. **Le verre ne se réintroduit pas par morceaux** : une surface qui floute a repris l'ancien thème. La maquette du verre reste consultable en archive — [`ressources/maquette/index.html`](ressources/maquette/index.html) — et la maquette qui fait foi est [`ressources/maquette/kawaii.html`](ressources/maquette/kawaii.html).
 
 ### 4.1 La recette
 
+**Une seule recette de matière**, déclinée en couleur. Un panneau, c'est six couches empilées dans cet ordre :
+
 | | Jour | Nuit |
 |---|---|---|
-| Teinte du verre | `#F4F1EA` à **60 %** | `#16222C` à **62 %** |
-| Encre | `#20262B` | `#E6EBEE` |
-| Encre douce | `#59636B` | `#9AA8B2` |
-| Accent | ⭐ **la couleur de la plaque de poitrine de Kokoro**, et elle seule | idem |
-| Flou | **24 dp**, gaussien, sur la capture du décor uniquement | idem |
-| Liseré | 1 dp de blanc à 18 % sur le bord supérieur | 1 dp de blanc à 10 % |
+| Fond, dégradé haut → bas | `#FFF9F1` → `#FFE8D5` | `#473E5C` → `#37304A` |
+| Contour | `#6E5A54` — **brun, jamais noir** | `#2C2438` |
+| Épaisseur du trait de contour | **4 dp** | idem |
+| Reflet, `inset` sur le bord haut | blanc à **95 %**, 4 dp | blanc à **16 %** |
+| Creux, `inset` sur le bord bas | `#CEA082` à **32 %**, 7 dp | noir à **30 %** |
+| Épaisseur portée, sous le panneau | **7 dp**, couleur du contour | idem |
+| Ombre portée | 16 dp de flou, `#5C3E2E` à 38 % | noir à 52 % |
+| Rayon | **26 dp** | idem |
+| Encre | `#5C463E` | `#FBF4EC` |
+| Encre douce | `#9C8378` | `#B4A8C4` |
 
-- 🔴 **Flou et teinte sont deux choses différentes, et aucune ne remplace l'autre** (**P5**) : le flou donne la profondeur, la teinte garantit le contraste **quel que soit ce qui passe derrière**. Sans la teinte, un titre lisible sur le feuillage devient illisible sur le ciel trois centimètres plus loin.
-- 🔴 **Le flou est calculé par l'app, jamais par la fenêtre** (**P4**) — sinon l'économiseur de batterie change l'apparence sans prévenir.
-- **Repli prévu et écrit** : si le flou ne tient pas les 60 images/seconde pendant la traversée, on tombe sur **la teinte seule à 78 %**. C'est le même dessin, moins la profondeur — et c'est un choix qu'on fait une fois, pas un basculement à l'exécution.
+**Cinq couleurs, et il n'y en aura pas d'autres.** Chacune est un couple *(clair, sombre)* pour le dégradé :
+
+| | Jour | Nuit | Où |
+|---|---|---|---|
+| **Menthe** | `#7FD3B4` · `#52AE8D` | `#5FB79A` · `#3E8A72` | ruban *Thérapie*, bouton *Fait* |
+| **Pêche** | `#FFAB8E` · `#E8836A` | `#E08C74` · `#B96852` | pancartes de section |
+| **Lavande** | `#BFA8E6` · `#9A80C7` | `#A38CCB` · `#7E67A6` | ruban *Documentation* |
+| **Azur** | `#8CC6EF` · `#66A3D0` | `#6FA6CD` · `#4F82A9` | ruban *Crise* |
+| **Beurre** | `#FFD98F` · `#E8B75F` | `#E0BC77` · `#BC9750` | ruban *Bilan*, roue dentée, ornements |
+
+### 4.2 Les pièces
+
+- **Le titre d'un écran est un ruban** à bouts crantés, une couleur par écran, texte blanc gravé d'une ombre. Il ne défile pas (**D11**).
+- **Les sous-titres de `quand` sont des pancartes** pleines, texte blanc gravé.
+- **Une carte est un panneau**, dans la couleur neutre du fond. **Toutes les cartes sont identiques** — aucune n'est plus grande, plus vive ni marquée.
+- **Un bouton est le même panneau**, plein quand il agit *(menthe, azur, lavande)*, neutre quand il ferme.
+- **Les ornements** — étincelles, cœurs, rivets — sont **du décor pur**. 🔴 **Aucun n'est jamais porteur d'information**, et aucun ne se pose sur une carte de la liste : ils vivent sur les bandes de titre, les états vides et l'écran central.
+
+### 4.3 Les règles qui ne bougent pas
+
 - **La nuit suit la plage horaire du décor** ([`DECOR.md`](./DECOR.md) §5) — lue à l'arrivée, jamais sous les yeux, jamais le thème système.
-- **Rayon 20 dp, aucune ombre portée dure.**
-- **Typographie : la famille du système** (aucune police distante). Corps **18 sp**, titres **22 sp**, interligne large — lisible en shutdown, c'est-à-dire lisible quand on ne peut plus faire d'effort.
-- **Boutons pleine largeur, ≥ 64 dp, un par ligne**, libellé en toutes lettres.
-- **Le retour au toucher est immédiat mais sourd** : le verre s'assombrit d'un cran. Aucune onde, aucun rebond. *(La règle des ≥ 800 ms vaut pour les expressions du visage, pas pour l'accusé de réception d'un appui — un appui qui ne répond pas tout de suite se re-tape.)*
-- 🔴 **Aucun rouge, nulle part — écran de crise compris.** Le rouge est une alarme, et l'écran de crise doit faire l'inverse : **il se distingue en étant plus grand et plus vide, pas plus vif.**
-- **Aucune couleur d'état** : ni vert *fait*, ni orange *en retard*. Il n'y a pas de retard dans ce dispositif.
+- **Typographie : ✅ Varela Round, embarquée dans l'APK** *(tranché le 14/08/2026)*. ⚠️ **Android n'en garantit aucune** — c'est la seule police du dispositif. Licence SIL OFL 1.1, texte complet dans `android/app/licences/varela-round-OFL.txt`. ⚠️ **Elle n'a qu'une graisse** : le gras des rubans, pancartes et boutons pleins est **synthétisé par Android** — à regarder à l'œil sur l'appareil. Corps **18 sp**, titres **23 sp**, rubans **25 sp**, interligne large — lisible en shutdown, c'est-à-dire lisible quand on ne peut plus faire d'effort.
+- **Le gras est autorisé** sur les rubans, les pancartes et les boutons pleins — il fait partie de la matière. **Jamais dans un corps de texte.**
+- **Boutons pleine largeur, ≥ 66 dp, un par ligne**, libellé en toutes lettres.
+- ⭐ **Le retour au toucher est l'enfoncement du panneau** : il descend de ses 7 dp d'épaisseur, en **90 ms**, et s'arrête net. 🔴 **Aucun rebond, aucun dépassement, aucune onde** — un ressort qui repart au-delà de sa position est exactement l'animation brusque que les hypersensibilités interdisent. *(La règle des ≥ 800 ms vaut pour les expressions du visage, pas pour l'accusé de réception d'un appui — un appui qui ne répond pas tout de suite se re-tape.)*
+- 🔴 **Aucun rouge, nulle part — écran de crise compris.** Le rouge est une alarme, et l'écran de crise doit faire l'inverse : **il se distingue en étant plus grand et plus vide, pas plus vif.** ⭐ **La palette n'en contient pas** : c'est ce qui rend la règle tenable au lieu de la laisser à la vigilance.
+- ⭐ **Le vert de *Fait* confirme une action ; il n'a pas de contraire.** Il n'existe ni orange *en retard*, ni gris *pas fait*, ni rouge *raté* — **il n'y a pas de retard dans ce dispositif**, donc pas de couleur pour en parler.
+- 🔴 **Rien de ce que le style de jeu apporte d'habitude n'entre ici** : pas de barre de progression, pas de jauge, pas d'étoiles gagnées, pas de niveau, pas de série, pas de score, pas de pièce, pas de coffre. **C'est le seul rayon du registre où l'on ne prend rien** — et c'est délibéré : §1.4 ne s'assouplit pas parce que la peau change.
 
-### 4.2 Ce que ça coûte, dit franchement
+### 4.4 Ce que ça coûte, dit franchement
 
-Le flou se recalcule **à chaque image pendant la traversée**, puisque le décor bouge derrière. Sur le S22 c'est jouable ; ce n'est pas gratuit, et **la traversée est ce qu'il ne faut surtout pas rendre saccadée** — la fluidité du geste a coûté deux corrections le 14/08. **Ordre de construction imposé : le verre s'ajoute après que la traversée est fluide, et se mesure, pas s'estime.**
+**Le gain :** plus aucun flou, donc **P4 et P5 tombent** et la traversée ne porte plus de calcul par image. Le risque qui inquiétait le plus — rendre le geste saccadé — disparaît avec la matière qui le causait.
 
-### 4.3 L'écran de crise *(D7)*
+**Le prix :** ce style **ne se pose pas sur les composants Material.** Contours épais, épaisseur portée, rubans crantés et creux internes demandent un petit jeu de composables maison — `PanneauExtrude`, `Ruban`, `BoutonEpais`, `Pancarte` — écrits en `Modifier.drawBehind` avec des `Shape` personnalisées. **C'est du travail d'écriture, pas du travail de réglage** : à faire une fois, proprement, avant d'habiller le premier écran. Le verre, lui, tenait en trois `Modifier`.
+
+**Et une dépendance nouvelle :** la police arrondie doit être embarquée. Sans elle, il manque la moitié de l'effet.
+
+### 4.5 L'écran de crise *(D7)*
 
 **Même matière, structure inchangée.** Il garde ses trois boutons, son minuteur, ses critères d'arrêt, ses repères externes — on ne touche qu'à la peau.
 
-🔴 **Deux écarts assumés, et ils vont dans le même sens :** le verre y est **plus opaque** (≥ 85 %) et **sans flou**. La lisibilité y prime sur la profondeur, et rien de ce qui s'affiche au pire moment ne doit dépendre d'un calcul qui peut ramer.
+🔴 **L'écart assumé : c'est l'écran le moins décoré du monde.** Aucun ornement, aucune étincelle, aucun cœur, une seule couleur de bouton par fonction, texte à **21 sp** et boutons à **88 dp**. **En crise, la mignonnerie est du bruit** — et le principe de §4.3 vaut encore : il se distingue en étant plus grand et plus vide, pas plus vif.
 
 ---
 
@@ -158,12 +194,12 @@ Le flou se recalcule **à chaque image pendant la traversée**, puisque le déco
 | **D3** | Kokoro suit-il ? | ⏭️ **Il suivra l'interface — hors sujet ici, renvoyé à son propre brainstorm.** En attendant il reste au centre |
 | **D4** | L'écran de contrôle | ✅ **Une roue dentée en haut à droite de l'écran central.** ⚠️ **Exception assumée à « aucune icône seule »** : c'est le seul pictogramme universel du lot, et le centre n'a pas de place pour un mot. 🔴 **Jamais de pastille dessus** |
 | **D5** | Les nouveautés | ✅ **Sur l'écran central.** Bornes au §6.1 |
-| **D6** | Le thème | ✅ **Verre dépoli** (§4) |
-| **D7** | L'écran de crise | ✅ **Adapté à la matière, structure inchangée** (§4.3) |
+| **D6** | Le thème | ✅ **Panneaux extrudés, registre du GUI de jeu kawaii** (§4). ⚠️ **Corrige la décision du matin** : le verre dépoli avait été retenu, puis abandonné après maquette le même jour. **Le verre est archivé, il ne revient pas par morceaux** |
+| **D7** | L'écran de crise | ✅ **Adapté à la matière, structure inchangée** (§4.5) |
 | **D8** | L'overlay de veille | ✅ **À essayer — fond d'écran vivant** (§6.3) |
 | **D9** | Ce qu'on voit en veille | ✅ **Le décor et Kokoro qui respire, rien d'autre** |
-| **D10** | L'icône du lanceur, et la notification | ✅ **L'icône ouvre le monde.** 🔴 **La notification est muette : plus de boutons, et plus un mot de son contenu** — elle ouvre le monde **directement posé sur l'écran de crise, sans animation** (§6.2) |
-| **D11** | Le titre de l'écran | ✅ **Il ne défile pas.** *(La question posée était : quand on fait défiler la liste des étapes, le mot « Thérapie » part-il vers le haut avec elle ? Non — il reste posé sur une bande de verre en haut. Savoir où l'on est ne doit pas dépendre d'où l'on en est dans la liste.)* |
+| **D10** | L'icône du lanceur, et la notification | ✅ **L'icône ouvre le monde** — 🏗️ **câblé le 15/08/2026**, l'écran de contrôle est passé au bout de la roue dentée. 🔴 **La notification est muette : plus de boutons, et plus un mot de son contenu** — elle ouvre le monde **directement posé sur l'écran de crise, sans animation** (§6.2). ⏳ **Cette moitié-là n'est pas faite** |
+| **D11** | Le titre de l'écran | ✅ **Il ne défile pas.** *(La question posée était : quand on fait défiler la liste des étapes, le mot « Thérapie » part-il vers le haut avec elle ? Non — il reste posé sur sa bande en haut, sur son ruban. Savoir où l'on est ne doit pas dépendre d'où l'on en est dans la liste.)* |
 
 ---
 
@@ -233,8 +269,47 @@ L'écran central est le seul qui soit vide par doctrine. Y poser les nouveautés
 
 ⏳ **Un point reste ouvert : la cadence en entraînement.** Une séquence réelle tient 22 minutes, dont des silences de 60 secondes. Les tenir seule, à blanc, n'apprend rien de plus que de les avoir lus. **Proposition : en entraînement seulement, un bouton *Suite* permet à l'aide d'avancer à son rythme** ; en séance réelle, jamais — le temps y est tenu par l'appareil, c'est le sens du type. À confirmer.
 
-### 6.5 Renvoyé ailleurs
+### 6.5 ✅ Les pancartes de section — **tranché le 14/08/2026 : option B**
+
+> ✅ **Décision de Xavier : les deux couleurs restent.** §3.1 est amendé — *« la couleur distingue les sections, elle ne les classe jamais »* — et l'**interdiction d'aligner la palette sur une échelle d'urgence** y est écrite explicitement. Le raisonnement qui a mené là est conservé ci-dessous, parce qu'il juge d'avance toute couleur qu'on voudrait ajouter.
+
+**§3.1 disait : « Aucun code couleur, aucune pastille, aucun badge » sur les sous-titres de `quand`.** La maquette validée le 14/08/2026 leur donne pourtant deux couleurs — *Aujourd'hui* en pêche, *Sans date* en azur.
+
+**Ce n'est pas forcément une infraction, et c'est ça qu'il faut trancher.** La règle vise le **classement** : elle interdit qu'une couleur dise *urgent*, *en retard* ou *important*. Deux couleurs qui ne font que **séparer** deux sections ne classent rien. Mais *Aujourd'hui* et *Sans date* sont ordonnés dans le temps par nature — **une couleur posée dessus peut se relire comme une urgence**, même si personne ne l'a voulu.
+
+| Option | Ce que ça donne |
+|---|---|
+| **A — une seule couleur** *(le repli sûr)* | Toutes les pancartes en pêche. La règle de §3.1 tient à la lettre, on ne perd que de la variété |
+| ✅ **B — les couleurs restent** | §3.1 s'amende : *« la couleur distingue les sections, elle ne les classe jamais »*, plus l'interdiction explicite d'aligner la palette sur une échelle d'urgence |
+
+### 6.6 Renvoyé ailleurs
 
 - **Le comportement du personnage** — D3, son propre brainstorm.
 - **La séance à deux (K6)** ne ressemble à aucun autre écran : signal d'arrêt permanent, critères d'arrêt à un tap, deux lecteurs, un chronomètre. **Elle mérite son propre passage.**
 - **P2** — les gestes système en haut et en bas : à mesurer sur l'appareil, pas sur le papier.
+
+---
+
+## 7. 🏗️ Où en est l'implémentation — 15/08/2026
+
+**Écrit, compilé, 76 tests au vert. ⏳ Pas encore posé sur le téléphone** *(aucun appareil branché au moment de l'écriture)* : **rien de ce qui suit n'est vérifié à l'œil.**
+
+| | Où | État |
+|---|---|---|
+| **La matière** (§4.1) — la recette à six couches, déclinée en couleur | `ui/Matiere.kt` | ✅ Une seule fonction, `Modifier.matiere` |
+| **Les pièces** (§4.2) — panneau, carte, bouton, ruban, pancarte, bande de titre, cadre vide | `ui/Pieces.kt` | ✅ **Aucun composant Material** |
+| **Les ornements** — étincelle, cœur, rivet | `ui/Ornements.kt` | ✅ Décor pur, jamais sur une carte de liste |
+| **La police** (§4.3) | `res/font/varela_round.ttf` · `ui/Typographie.kt` | ✅ Embarquée |
+| **Le thème** jour / nuit | `ui/ThemeMonde.kt` | ✅ ⚠️ **Il s'ajoute à côté de l'ancien**, il ne le remplace pas — voir ci-dessous |
+| **Les cinq écrans** (§3) | `monde/Bords.kt` | ✅ Ruban fixe (D11), gauche et droite défilent, haut et bas non (**P1**), roue dentée (D4) |
+| **Une étape ouverte** (§3.1) | `monde/Etapes.kt` | ✅ Plein écran, fermeture au bouton, **jamais au geste** — et la traversée est coupée tant qu'elle est ouverte |
+| **L'icône du lanceur** (D10) | `AndroidManifest.xml` | ✅ Ouvre le monde |
+| **La phrase pour le soignant** | `crise/CriseActivity.kt` | ✅ Devient une porte à part entière, pour que les trois boutons de l'écran **Crise** mènent quelque part |
+
+**⚠️ Ce qui est provisoire, et qu'il ne faut pas prendre pour acquis :**
+
+- 🔴 **Le contenu des écrans est écrit en dur** — les 11 étapes de `inputs/programme.json` v1, recopiées dans `strings.xml` *(et pas dans du Kotlin : c'est `strings.xml` que lisent les tests d'invariants)*. **C'est K5 qui le remplacera par une lecture du dossier synchronisé**, avec le filtrage des sept interdits de [`PROGRAMME.md`](PROGRAMME.md) §7.
+- ⏳ **Le bouton *Fait* n'existe pas encore** sur une démarche ouverte : il écrirait dans `reponses/`, ce que Kokoro ne sait pas faire. ⭐ **Un bouton qui n'écrit rien mentirait** — mieux vaut qu'il manque et que ça se voie.
+- ⏳ **Les nouveautés** (D5, §6.1) ne sont pas là : elles supposent de comparer deux versions du programme, donc K5.
+- ⚠️ **Les surfaces déjà éprouvées gardent leur apparence** — accès crise, tension appliquée, check-in, écran de contrôle. 🔴 **La prévisibilité est une fonctionnalité** : leur passage à cette matière est un changement d'interface, et **il s'annonce avant de se faire**. C'est ce qui fait cohabiter deux thèmes pour l'instant.
+- ⏳ **§6.2 — la notification muette n'est pas faite.** Elle porte toujours ses deux boutons et son corps de texte.

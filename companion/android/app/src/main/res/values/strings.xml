@@ -166,7 +166,7 @@
     <string name="controle_action_ouvrir_crise">Ouvrir l\'écran de crise</string>
 
     <string name="controle_section_monde">Le monde de Kokoro</string>
-    <string name="controle_monde_explication">Cinq écrans, reliés par un décor continu. On passe de l\'un à l\'autre en glissant le doigt : depuis le centre vers la gauche, la droite, le haut ou le bas, et de partout on revient au centre. Les quatre écrans du bord sont vides pour l\'instant.</string>
+    <string name="controle_monde_explication">Cinq écrans, reliés par un décor continu. On passe de l\'un à l\'autre en glissant le doigt : depuis le centre vers la gauche, la droite, le haut ou le bas, et de partout on revient au centre. Au centre, Kokoro et la roue dentée qui ramène ici. À gauche la thérapie, à droite la documentation, en haut le bilan, en bas la crise.</string>
     <string name="controle_action_monde">Ouvrir le monde</string>
 
     <string name="controle_section_nuit">La nuit du décor</string>
@@ -179,6 +179,51 @@
     <string name="controle_action_nuit">Enregistrer la plage</string>
 
     <string name="monde_titre">Le monde de Kokoro</string>
+
+    <!--
+      Les cinq écrans du monde — companion/INTERFACE.md §3. Une rubrique par écran, et le titre est
+      écrit en toutes lettres sur son ruban : savoir où l'on est ne dépend jamais d'un pictogramme.
+    -->
+    <string name="monde_therapie_titre">Thérapie</string>
+    <string name="monde_documentation_titre">Documentation</string>
+    <string name="monde_bilan_titre">Bilan</string>
+    <string name="monde_crise_titre">Crise</string>
+
+    <string name="monde_quand_aujourdhui">Aujourd\'hui</string>
+    <string name="monde_quand_au_besoin">Quand j\'en ai besoin</string>
+    <string name="monde_quand_sans_date">Sans date</string>
+
+    <string name="monde_duree_minutes">%1$d minutes</string>
+    <string name="monde_fermer">Fermer</string>
+    <string name="monde_reglages">Écran de contrôle</string>
+
+    <string name="monde_bilan_vide">Rien à passer pour l\'instant.</string>
+    <string name="monde_documentation_vide">Rien à lire pour l\'instant.</string>
+
+    <string name="monde_crise_mot_code">Mot-code à Chourouk</string>
+    <string name="monde_crise_tension">Tension appliquée</string>
+    <string name="monde_crise_phrase">La phrase pour le soignant</string>
+
+    <!--
+      Les étapes de companion/inputs/programme.json v1, recopiées mot pour mot.
+      ⚠️ Provisoire : K5 les lira dans le dossier synchronisé et appliquera le filtrage des sept
+      interdits de companion/PROGRAMME.md §7. Elles sont ici, et pas dans du Kotlin, pour rester
+      sous le contrôle des tests d'invariants.
+    -->
+    <string name="etape_ppc_releve">Demander le relevé de télésuivi</string>
+    <string name="etape_ppc_releve_detail">Link Sommeil, sur les 3 derniers mois : heures par nuit, nombre de nuits utilisées, fuites, IAH résiduel. Des chiffres, pas une impression.</string>
+    <string name="etape_ppc_origine_fuite">Faire trancher : fuite au masque, ou à la bouche ?</string>
+    <string name="etape_ppc_origine_fuite_detail">Le télésuivi distingue les deux. Cette réponse commande le choix d\'interface, elle passe avant lui. Réponse écrite du prestataire.</string>
+    <string name="etape_ppc_interfaces">Demander un essai de plusieurs interfaces</string>
+    <string name="etape_ppc_interfaces_detail">Après la réponse sur l\'origine de la fuite. Si la fuite est au masque, le narinaire est autorisé par la prescription. Au moins deux interfaces à essayer à domicile.</string>
+    <string name="etape_ppc_prise_en_charge">Demander où en est la prise en charge</string>
+    <string name="etape_ppc_prise_en_charge_detail">Trois mois après son renouvellement. Le seuil qui conditionne le remboursement se demande au prestataire, il ne se suppose pas.</string>
+    <string name="etape_ppc_roisman">Demander une consultation de reprise au Dr Roisman</string>
+    <string name="etape_ppc_roisman_detail">En annonçant que la reprise se fera par paliers écrits. Solliciter le pneumologue après trois mois d\'usage irrégulier n\'est pas un aveu d\'échec : c\'est la démarche normale.</string>
+    <string name="etape_ppc_voyage">Demander comment emporter l\'appareil en Tunisie</string>
+    <string name="etape_ppc_voyage_detail">Départ le 07/09. Bagage cabine (l\'appareil est un matériel médical, généralement hors franchise sur présentation de l\'ordonnance), adaptateur et tension, eau de l\'humidificateur. Réponse écrite avant le départ.</string>
+    <string name="etape_email_isorni">Envoyer l\'email préparé au Dr Isorni</string>
+    <string name="etape_email_isorni_detail">Le brouillon est prêt dans le dossier. Il a vocation à partir avant la consultation du 03/09, pour qu\'il arrive préparé — pas à être lu sur place.</string>
 
     <string name="controle_section_corps">Le corps de Kokoro</string>
     <string name="controle_corps_explication">Le personnage est dessiné en vectoriel, pièce par pièce. Il se règle ici et n\'apparaît sur aucun écran de la thérapie.</string>

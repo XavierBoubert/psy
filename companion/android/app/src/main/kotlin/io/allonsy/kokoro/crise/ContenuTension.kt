@@ -47,9 +47,16 @@ private data class BlocEnCours(
     val etape: EtapeSoins?,
 )
 
+/**
+ * @param ouvrirSurLaPhrase entre directement sur **la phrase pour le soignant**, sans passer par
+ *   l'accueil de la tension appliquée. ⭐ **Le retour reste l'accueil** : venir la lire ne doit pas
+ *   enfermer, et repartir de là est le chemin normal.
+ */
 @Composable
-fun ContenuTension(onFermer: () -> Unit) {
-    var vue by remember { mutableStateOf(VueTension.ACCUEIL) }
+fun ContenuTension(onFermer: () -> Unit, ouvrirSurLaPhrase: Boolean = false) {
+    var vue by remember {
+        mutableStateOf(if (ouvrirSurLaPhrase) VueTension.PHRASE else VueTension.ACCUEIL)
+    }
     var retour by remember { mutableStateOf(VueTension.ACCUEIL) }
     var bloc by remember { mutableStateOf<BlocEnCours?>(null) }
     var dernierFait by remember { mutableStateOf<EtapeSoins?>(null) }

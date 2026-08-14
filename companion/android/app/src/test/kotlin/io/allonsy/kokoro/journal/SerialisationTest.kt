@@ -5,7 +5,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.File
 
-private val GABARIT = File("../../dossier/gabarits/journal.json")
+private val GABARIT = File("../../../psy/docs/gabarits/journal.json")
 
 /**
  * Le format du dossier est normatif (`psy/DOSSIER.md`) : aucune surface n'a le droit de

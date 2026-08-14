@@ -5,7 +5,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.File
 
-private val ETAT = File("../../dossier/etat.md")
+private val ETAT = File("../../../psy/outputs/dossier/etat.md")
 
 private val NOYAU_DU_SCHEMA = listOf(
     "shutdowns",

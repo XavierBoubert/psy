@@ -3,9 +3,9 @@ import { dirname, extname, isAbsolute, join, relative, resolve } from 'node:path
 import { fileURLToPath } from 'node:url';
 
 const PROJECT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
-const DESIGN = resolve(PROJECT_ROOT, 'companion/android/design');
-const PROMPTS = join(DESIGN, 'prompts');
-const SORTIES = join(DESIGN, 'sorties');
+const RESSOURCES = resolve(PROJECT_ROOT, 'companion/ressources');
+const PROMPTS = join(RESSOURCES, 'prompts');
+const SORTIES = join(RESSOURCES, 'sorties');
 
 const BASE_PAR_DEFAUT = '_base';
 const MODELE_PAR_DEFAUT = 'gemini-3.1-flash-image';

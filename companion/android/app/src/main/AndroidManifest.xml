@@ -13,17 +13,16 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.Kokoro">
 
+        <!--
+            L'écran de contrôle. Il n'est plus le point d'entrée : on l'atteint par la roue dentée
+            de l'écran central du monde (companion/INTERFACE.md, D4).
+        -->
         <activity
             android:name=".MainActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Kokoro">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/Theme.Kokoro" />
 
         <activity
             android:name=".crise.CriseActivity"
@@ -54,12 +53,21 @@
             android:theme="@style/Theme.Kokoro"
             android:turnScreenOn="true" />
 
+        <!--
+            🔴 D10 — l'icône du lanceur ouvre le monde. C'est lui l'interface principale de l'app
+            depuis companion/INTERFACE.md v2 ; l'écran de contrôle est au bout de la roue dentée.
+        -->
         <activity
             android:name=".monde.MondeActivity"
-            android:exported="false"
-            android:label="@string/monde_titre"
+            android:exported="true"
+            android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Kokoro" />
+            android:theme="@style/Theme.Kokoro">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".corps.AtelierActivity"

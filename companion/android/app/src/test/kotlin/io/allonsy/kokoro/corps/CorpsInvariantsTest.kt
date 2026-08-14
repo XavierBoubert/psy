@@ -6,7 +6,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.File
 
-private val FICHIER_SVG = File("../design/retenus/kokoro-corps-v2.svg")
+private val FICHIER_SVG = File("../../ressources/retenus/kokoro-corps-v2.svg")
 
 private const val PRECISION = 1e-6f
 

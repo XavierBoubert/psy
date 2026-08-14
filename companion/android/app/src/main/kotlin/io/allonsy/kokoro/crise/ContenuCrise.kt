@@ -63,6 +63,7 @@ fun ContenuCrise(
                     onFermer = onFermer,
                 )
                 EcranCrise.Tension -> ContenuTension(onFermer = onFermer)
+                EcranCrise.Phrase -> ContenuTension(onFermer = onFermer, ouvrirSurLaPhrase = true)
             }
         }
     }

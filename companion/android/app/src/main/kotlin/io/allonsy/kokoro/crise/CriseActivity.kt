@@ -21,10 +21,19 @@ const val EXTRA_ECRAN = "ecran"
 const val ECRAN_MOT_CODE = "mot_code"
 const val ECRAN_TENSION = "tension"
 
+/**
+ * ⭐ **La phrase pour le soignant devient une porte à part entière** *(15/08/2026)*. Elle n'était
+ * atteignable que depuis la tension appliquée ; l'écran **Crise** du monde la propose directement,
+ * comme `companion/inputs/programme.json` l'annonce déjà (`ecran: phrase-soignant`). Ce n'est pas un
+ * écran de plus — **c'est la même vue, atteinte plus tôt**.
+ */
+const val ECRAN_PHRASE = "phrase"
+
 sealed interface EcranCrise {
     data object Accueil : EcranCrise
     data object MotCode : EcranCrise
     data object Tension : EcranCrise
+    data object Phrase : EcranCrise
 }
 
 class CriseActivity : ComponentActivity() {
@@ -94,5 +103,6 @@ class CriseActivity : ComponentActivity() {
 private fun ecranDemande(intent: Intent): EcranCrise = when (intent.getStringExtra(EXTRA_ECRAN)) {
     ECRAN_MOT_CODE -> EcranCrise.MotCode
     ECRAN_TENSION -> EcranCrise.Tension
+    ECRAN_PHRASE -> EcranCrise.Phrase
     else -> EcranCrise.Accueil
 }
