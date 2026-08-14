@@ -1,6 +1,6 @@
 # Kokoro — le corps
 
-**Spécification graphique du personnage.** ⭐ **v2.1 — 14/08/2026 — retenue.** Le corps de Kokoro est un **petit robot kawaii en 2D**, dessiné pour être découpé et animé sur une page web.
+**Spécification graphique du personnage.** ⭐ **v2.1 — 14/08/2026 — retenue.** Le corps de Kokoro est un **petit robot kawaii en 2D**, dessiné **en pièces séparées pour être riggé et animé**.
 
 > ⭐ **v2.1 :** le visage passe au **morphing** — une forme se déforme vers la suivante au lieu de s'échanger en fondu croisé. **Ce que la v2.0 écrivait au §9 (« échange de forme, pas de déformation ») est corrigé, pas nuancé.** Motif et mécanisme : [§9](#-le-morphing-du-visage-14082026).
 
@@ -28,7 +28,7 @@
 
 | Demande | Ce qu'elle change |
 |---|---|
-| **Un robot kawaii, animable en 2D sur une page web** | Le personnage cesse d'être une forme unique et devient un **assemblage de pièces séparées** — c'est la condition d'un rig simple, et ça vaut pour le web **comme** pour Android |
+| **Un robot kawaii, animable en 2D** | Le personnage cesse d'être une forme unique et devient un **assemblage de pièces séparées** — c'est la condition d'un rig simple |
 | **Plusieurs expressions de visage** | Le visage cesse d'être fixe. ⭐ **Le jeu reste fermé — six, listées au §3** — et **aucune des six ne demande à être interprétée** |
 | 🔴 **La possibilité de montrer des parties de l'écran** | Un geste de désignation entre dans le personnage. **C'était interdit par la v0.1.** L'arbitrage, la réserve et les trois garde-fous sont au **§6** |
 
@@ -229,8 +229,8 @@ Le SVG place les pièces ; il ne dit pas autour de quoi elles tournent. **Les tr
 - **Aucune pièce n'a de coude ni de genou** — un membre est une forme, une rotation, aucune déformation. ⭐ **Le morphing est réservé au visage** : seuls les trois tracés du panneau se déforment, le corps ne se déforme jamais.
 - **Aucune pièce n'en recouvre une autre** : elles se touchent ou flottent. **L'ordre de peinture est celui du SVG** — corps, tête, pieds, bras.
 - **Format de production : le SVG lui-même**, une pièce par groupe nommé. Android le transcrit en Kotlin et le trace au vectoriel ; l'app ne dépend d'aucune ressource distante ni d'aucune police externe ([§5.7 point 6](../../../PLAN.md#57-ce-qui-nentrera-jamais-dans-kokoro)).
-- 🔴 **Aucun bitmap du personnage.** ⚠️ **Les images générées par le script ne sont pas des livrables** — ce sont des planches de recherche. **Un PNG de Kokoro sorti d'un modèle n'entre ni dans l'APK ni dans la page web.** ⏳ **Portée précisée le 14/08/2026, à confirmer par Xavier** : la règle protégeait l'**animabilité** du personnage — on ne fait pas pivoter un bras dans un PNG — et non une propriété du fichier. **Le décor, qui n'a aucune articulation, est peint** ; l'arbitrage et ce qu'il n'autorise pas sont au [`DECOR.md` §2](DECOR.md).
-- **Animation web : CSS/SVG uniquement**, aucune bibliothèque d'animation, aucun canvas, aucun runtime tiers.
+- 🔴 **Aucun bitmap du personnage.** ⚠️ **Les images générées par le script ne sont pas des livrables** — ce sont des planches de recherche. **Un PNG de Kokoro sorti d'un modèle n'entre pas dans l'APK.** ⏳ **Portée précisée le 14/08/2026, à confirmer par Xavier** : la règle protégeait l'**animabilité** du personnage — on ne fait pas pivoter un bras dans un PNG — et non une propriété du fichier. **Le décor, qui n'a aucune articulation, est peint** ; l'arbitrage et ce qu'il n'autorise pas sont au [`DECOR.md` §2](DECOR.md).
+- **Aucune bibliothèque d'animation, aucun canvas, aucun runtime tiers** — le tracé vectoriel et les animations de Compose, rien d'autre.
 
 ---
 
@@ -243,7 +243,8 @@ Le SVG place les pièces ; il ne dit pas autour de quoi elles tournent. **Les tr
 | Écran de crise | ❌ **absent** | 🔴 **L'écran de crise ne porte aucun personnage.** Deux boutons, rien d'autre — un compagnon décoratif au pire moment est du bruit |
 | Écran vasovagal | 160 dp | `allonge` uniquement, à côté de la consigne |
 | Séance à deux (K6) | ❌ **absent de l'écran de l'aide** | L'aide-au-patient lit un déroulé, pas un personnage. **C10** |
-| Surface web desktop ([§5.8](../../../PLAN.md#58-la-surface-web-desktop)) | Identique | ⭐ **Même fichier, même palette, même jeu fermé.** La page web prend [`retenus/kokoro-corps-v2.svg`](retenus/kokoro-corps-v2.svg) directement — une seule apparence sur les deux surfaces, et une seule source |
+
+> ❌ **La surface web desktop est supprimée le 14/08/2026** *([`PLAN.md` §5.8](../../../PLAN.md#58-il-ny-a-quune-surface-14082026))* — cette table n'a plus qu'une seule surface à décliner. ⭐ **Le rig en pièces séparées ne perd rien à la décision** : il n'a jamais été motivé par le web, mais par les **six expressions** et la **désignation d'un élément de l'écran**, qu'une forme unique et muette ne pouvait pas porter.
 
 ---
 

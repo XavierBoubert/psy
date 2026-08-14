@@ -17,7 +17,7 @@ const CORE_FIELDS = [
   'missions_actives',
 ] as const;
 
-const KNOWN_SOURCES = ['claude-code', 'android', 'web'] as const;
+const KNOWN_SOURCES = ['claude-code', 'android'] as const;
 const KNOWN_ISSUES = ['termine', 'arrete_avant_la_fin', 'fait', 'entrainement'] as const;
 
 type Flux = {

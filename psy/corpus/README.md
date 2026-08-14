@@ -23,7 +23,7 @@ Sources sur lesquelles le dispositif appuie ses affirmations. Règle : **toute a
 
 | Corpus | Statut |
 |---|---|
-| Protocole EMDR — stimulations bilatérales non visuelles | ⏸️ reporté avec l'axe EMDR (`PLAN.md` §3.6) |
+| Protocole EMDR — ⭐ **stimulation bilatérale conduite par un tiers** (cadence, longueur des séries, critères d'arrêt) | ⏸️ reporté avec l'axe EMDR (`PLAN.md` §3.6). ⚠️ **Besoin requalifié le 14/08/2026** : l'aidant joue le geste en `seance-duo` — ce n'est plus un instrument à spécifier, c'est un **geste à scripter** |
 | ACT / défusion cognitive | ❓ à évaluer pour le TAG — **vérifier la compatibilité avec l'aphantasie** avant de retenir |
 | CIM-11 | ❓ optionnel |
 

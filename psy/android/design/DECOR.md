@@ -29,7 +29,7 @@ Les **planches magenta d'origine** sont versionnées dans [`retenus/decor/`](ret
 
 ## 2. 🔴 L'arbitrage à confirmer : un bitmap entre dans l'APK
 
-⚠️ **`CORPS.md` §9 écrit : « Aucun bitmap. Un PNG sorti d'un modèle n'entre ni dans l'APK ni dans la page web. »** Le décor y déroge, et c'est un arbitrage neuf, pas une continuation.
+⚠️ **`CORPS.md` §9 écrit : « Aucun bitmap du personnage. Un PNG sorti d'un modèle n'entre pas dans l'APK. »** Le décor y déroge, et c'est un arbitrage neuf, pas une continuation.
 
 | | Le personnage | Le décor |
 |---|---|---|

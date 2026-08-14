@@ -39,11 +39,9 @@ Claude Psy ──programme + bibliothèque──► Kokoro ──journal + répo
 | `agent/` | `supervisions/` — sorties du Superviseur, **hors `dossier/`** | ✅ |
 | `corpus/` | Référentiels cliniques indexés | ✅ **échelles** + **tension appliquée** · ⏸️ 3 corpus prioritaires restants |
 | `protocoles/` | Fiches actionnables, **écrites pour le praticien** | ✅ 8 fiches |
-| `android/` | **Kokoro (心)** — Kotlin + Compose | ✅ **K0 → K4** · 🔴 **K5 en cours** · 🆕 K6 la séance à deux · ⏸️ K7 la présence |
-| `web/` | Outils de séance desktop — TypeScript strict | ⏸️ après K5. Premier livrable : **schémas Zod des §7 et §8** |
+| `android/` | **Kokoro (心)** — Kotlin + Compose. ⭐ **La seule surface tournée vers Xavier** | ✅ **K0 → K4** · 🔴 **K5 en cours** · 🆕 K6 la séance à deux · ⏸️ K7 la présence |
 
-**Critère de répartition entre surfaces, à ne jamais enfreindre :**
-> **Ce qui doit être là au moment où ça arrive → Kokoro. Ce qui demande de la surface et du calme → desktop.**
+> ❌ **`web/` est supprimé le 14/08/2026 — il n'y a plus qu'une surface.** Tout ce qui est accessible à Xavier passe par Kokoro. Ce que la suppression déplace et ce qu'elle coûte : **[`../PLAN.md` §5.8](../PLAN.md#58-il-ny-a-quune-surface-14082026)**.
 
 ⚠️ **`protocoles/` et `programme/bibliotheque/` ne sont pas la même chose et ne doivent jamais l'être.** Un protocole est écrit pour le praticien : il porte des diagnostics, des pronostics, des réserves adressées à un professionnel. **Une fiche de bibliothèque est écrite pour Xavier.** C'est le contrôle **C9** du Superviseur.
 

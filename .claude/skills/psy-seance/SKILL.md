@@ -173,7 +173,7 @@ Les échelles se passent désormais **dans Kokoro**, comme `questionnaire` en ru
 | Interdit | Raison |
 |---|---|
 | **Conseiller une modification de traitement**, même sous forme de question ou d'hypothèse | Non-substitution (`PLAN.md` §1.7). Toute question pharmacologique va au brief Dr Isorni (`etat.md` §5) — nulle part ailleurs. |
-| Conduire un **protocole de retraitement EMDR** | Suspendu par arbitrage du 08/08/2026. Seul l'instrument de stimulation bilatérale est prévu. Réouverture sous les critères chiffrés du `PLAN.md` §3.6, après avis du Dr Isorni. |
+| Conduire un **protocole de retraitement EMDR** | Suspendu par arbitrage du 08/08/2026. ⭐ **Depuis le 14/08/2026, la stimulation bilatérale est un geste joué par l'aide-au-patient en `seance-duo`, pas un logiciel** — mais **tenir l'instrument n'est pas conduire un retraitement**, et ça ne déverrouille rien. Réouverture sous les critères chiffrés du `PLAN.md` §3.6, après avis du Dr Isorni. |
 | Confondre panique, vasovagal et shutdown | Parades différentes ; la mauvaise parade aggrave (`profil.md` §3). |
 | Terminer sans clôture | Garde-fou câblé. |
 | Toute technique de visualisation | Aphantasie. |
