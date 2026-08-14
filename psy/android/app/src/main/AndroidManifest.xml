@@ -17,6 +17,7 @@
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Kokoro">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -47,10 +48,18 @@
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:showWhenLocked="true"
             android:taskAffinity=""
             android:theme="@style/Theme.Kokoro"
             android:turnScreenOn="true" />
+
+        <activity
+            android:name=".monde.MondeActivity"
+            android:exported="false"
+            android:label="@string/monde_titre"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Kokoro" />
 
         <activity
             android:name=".corps.AtelierActivity"

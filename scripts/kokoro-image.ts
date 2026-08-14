@@ -6,10 +6,11 @@ const PROJECT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const DESIGN = resolve(PROJECT_ROOT, 'psy/android/design');
 const PROMPTS = join(DESIGN, 'prompts');
 const SORTIES = join(DESIGN, 'sorties');
-const BASE = join(PROMPTS, '_base.md');
 
+const BASE_PAR_DEFAUT = '_base';
 const MODELE_PAR_DEFAUT = 'gemini-3.1-flash-image';
 const FORMAT_PAR_DEFAUT = '1:1';
+const TAILLE_PAR_DEFAUT = '1K';
 const LETTRES = 'abcdefgh';
 const MAX_CANDIDATS = LETTRES.length;
 
@@ -20,11 +21,12 @@ const MIMES: Readonly<Record<string, string>> = {
   '.webp': 'image/webp',
 };
 
-const USAGE = `Usage: kokoro-image <variante> [--n=<1-${MAX_CANDIDATS}>] [--ref=<image>[,<image>]] [--format=<1:1|4:3|3:4|16:9>] [--modele=<id>] [--sans-base] [--sans-planche]
+const USAGE = `Usage: kokoro-image <variante> [--n=<1-${MAX_CANDIDATS}>] [--ref=<image>[,<image>]] [--format=<1:1|4:3|3:4|16:9>] [--taille=<1K|2K|4K>] [--base=<charte>] [--modele=<id>] [--sans-base] [--sans-planche]
 
   <variante>      nom d'un fichier de psy/android/design/prompts/ (sans .md)
   --ref           images de départ — chemin projet, ou raccourci « <variante>/03-b.png » sous sorties/
-  --sans-base     n'ajoute pas la charte de style _base.md
+  --base          charte de style préfixée au prompt (défaut ${BASE_PAR_DEFAUT}, le personnage)
+  --sans-base     n'ajoute aucune charte de style
   --sans-planche  n'assemble pas la planche contact`;
 
 type Options = {
@@ -32,8 +34,9 @@ type Options = {
   readonly n: number;
   readonly refs: ReadonlyArray<string>;
   readonly format: string;
+  readonly taille: string;
   readonly modele: string;
-  readonly avecBase: boolean;
+  readonly base: string | null;
   readonly avecPlanche: boolean;
 };
 
@@ -69,22 +72,27 @@ const lireOptions = (args: ReadonlyArray<string>): Options => {
     n,
     refs,
     format: lireDrapeau(args, 'format') ?? FORMAT_PAR_DEFAUT,
+    taille: lireDrapeau(args, 'taille') ?? TAILLE_PAR_DEFAUT,
     modele: lireDrapeau(args, 'modele') ?? MODELE_PAR_DEFAUT,
-    avecBase: !args.includes('--sans-base'),
+    base: args.includes('--sans-base') ? null : lireDrapeau(args, 'base') ?? BASE_PAR_DEFAUT,
     avecPlanche: !args.includes('--sans-planche'),
   };
 };
 
-const composerPrompt = async (options: Options): Promise<string> => {
-  const variante = await readFile(join(PROMPTS, `${options.variante}.md`), 'utf8').catch(() => {
-    throw new Error(`prompt introuvable : psy/android/design/prompts/${options.variante}.md`);
+const lirePrompt = async (nom: string): Promise<string> => {
+  const contenu = await readFile(join(PROMPTS, `${nom}.md`), 'utf8').catch(() => {
+    throw new Error(`prompt introuvable : psy/android/design/prompts/${nom}.md`);
   });
 
-  if (!options.avecBase) return variante.trim();
+  return contenu.trim();
+};
 
-  const base = await readFile(BASE, 'utf8');
+const composerPrompt = async (options: Options): Promise<string> => {
+  const variante = await lirePrompt(options.variante);
 
-  return `${base.trim()}\n\n---\n\n${variante.trim()}`;
+  if (options.base === null) return variante;
+
+  return `${await lirePrompt(options.base)}\n\n---\n\n${variante}`;
 };
 
 const resoudreRef = async (chemin: string): Promise<Reference> => {
@@ -149,7 +157,7 @@ const appeler = async (
         contents: [{ role: 'user', parts }],
         generationConfig: {
           responseModalities: ['TEXT', 'IMAGE'],
-          imageConfig: { aspectRatio: options.format },
+          imageConfig: { aspectRatio: options.format, imageSize: options.taille },
         },
       }),
     },
@@ -269,8 +277,8 @@ const main = async (): Promise<void> => {
     `# ${options.variante} — série ${numero}`,
     '',
     `- date : ${new Date().toISOString()}`,
-    `- modèle : ${options.modele} · format ${options.format}`,
-    `- charte _base.md : ${options.avecBase ? 'oui' : 'non'}`,
+    `- modèle : ${options.modele} · format ${options.format} · taille ${options.taille}`,
+    `- charte : ${options.base === null ? 'aucune' : `${options.base}.md`}`,
     `- références : ${references.length === 0 ? 'aucune' : references.map((reference) => relative(PROJECT_ROOT, reference.chemin)).join(', ')}`,
     `- candidats : ${reussis.map(({ lettre }) => lettre).join(' ') || 'aucun'}`,
     '',

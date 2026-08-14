@@ -12,6 +12,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
 import io.allonsy.kokoro.reglages.MOT_CODE
+import io.allonsy.kokoro.reglages.PLAGE_NUIT_PAR_DEFAUT
 import io.allonsy.kokoro.reglages.Reglages
 import io.allonsy.kokoro.reglages.lireReglages
 import io.allonsy.kokoro.ui.ThemeKokoro
@@ -29,7 +30,7 @@ sealed interface EcranCrise {
 class CriseActivity : ComponentActivity() {
     private val ecran = mutableStateOf<EcranCrise>(EcranCrise.Accueil)
     private val envoi = mutableStateOf(ResultatEnvoi.INACTIF)
-    private val reglages = mutableStateOf(Reglages("", ""))
+    private val reglages = mutableStateOf(Reglages("", "", PLAGE_NUIT_PAR_DEFAUT))
 
     private val accuseEnvoi = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {

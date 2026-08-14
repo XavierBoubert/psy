@@ -229,7 +229,7 @@ Le SVG place les pièces ; il ne dit pas autour de quoi elles tournent. **Les tr
 - **Aucune pièce n'a de coude ni de genou** — un membre est une forme, une rotation, aucune déformation. ⭐ **Le morphing est réservé au visage** : seuls les trois tracés du panneau se déforment, le corps ne se déforme jamais.
 - **Aucune pièce n'en recouvre une autre** : elles se touchent ou flottent. **L'ordre de peinture est celui du SVG** — corps, tête, pieds, bras.
 - **Format de production : le SVG lui-même**, une pièce par groupe nommé. Android le transcrit en Kotlin et le trace au vectoriel ; l'app ne dépend d'aucune ressource distante ni d'aucune police externe ([§5.7 point 6](../../../PLAN.md#57-ce-qui-nentrera-jamais-dans-kokoro)).
-- 🔴 **Aucun bitmap.** ⚠️ **Les images générées par le script ne sont pas des livrables** — ce sont des planches de recherche. **Un PNG sorti d'un modèle n'entre ni dans l'APK ni dans la page web.**
+- 🔴 **Aucun bitmap du personnage.** ⚠️ **Les images générées par le script ne sont pas des livrables** — ce sont des planches de recherche. **Un PNG de Kokoro sorti d'un modèle n'entre ni dans l'APK ni dans la page web.** ⏳ **Portée précisée le 14/08/2026, à confirmer par Xavier** : la règle protégeait l'**animabilité** du personnage — on ne fait pas pivoter un bras dans un PNG — et non une propriété du fichier. **Le décor, qui n'a aucune articulation, est peint** ; l'arbitrage et ce qu'il n'autorise pas sont au [`DECOR.md` §2](DECOR.md).
 - **Animation web : CSS/SVG uniquement**, aucune bibliothèque d'animation, aucun canvas, aucun runtime tiers.
 
 ---

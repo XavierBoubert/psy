@@ -165,6 +165,21 @@
     <string name="controle_action_acces">Réafficher la notification d\'accès</string>
     <string name="controle_action_ouvrir_crise">Ouvrir l\'écran de crise</string>
 
+    <string name="controle_section_monde">Le monde de Kokoro</string>
+    <string name="controle_monde_explication">Cinq écrans, reliés par un décor continu. On passe de l\'un à l\'autre en glissant le doigt : depuis le centre vers la gauche, la droite, le haut ou le bas, et de partout on revient au centre. Les quatre écrans du bord sont vides pour l\'instant.</string>
+    <string name="controle_action_monde">Ouvrir le monde</string>
+
+    <string name="controle_section_nuit">La nuit du décor</string>
+    <string name="controle_nuit_explication">Sur cette plage horaire, le décor du monde est en nuit. Il est décidé à l\'ouverture du monde et tenu tant qu\'il reste ouvert : rien ne bascule sous les yeux. Kokoro, lui, garde ses couleurs.</string>
+    <string name="controle_nuit_active">Décor de nuit</string>
+    <string name="controle_nuit_reglee">Nuit de %1$s à %2$s.</string>
+    <string name="controle_nuit_coupee">Nuit coupée — le décor reste celui du jour.</string>
+    <string name="controle_champ_nuit_debut">Début (hh:mm)</string>
+    <string name="controle_champ_nuit_fin">Fin (hh:mm)</string>
+    <string name="controle_action_nuit">Enregistrer la plage</string>
+
+    <string name="monde_titre">Le monde de Kokoro</string>
+
     <string name="controle_section_corps">Le corps de Kokoro</string>
     <string name="controle_corps_explication">Le personnage est dessiné en vectoriel, pièce par pièce. Il se règle ici et n\'apparaît sur aucun écran de la thérapie.</string>
     <string name="controle_action_corps">Ouvrir l\'atelier du corps</string>

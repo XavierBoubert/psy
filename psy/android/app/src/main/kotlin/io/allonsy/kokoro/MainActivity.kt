@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.rememberScrollState
@@ -27,12 +28,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -51,9 +54,14 @@ import io.allonsy.kokoro.journal.cheminAffichable
 import io.allonsy.kokoro.journal.enregistrerDossier
 import io.allonsy.kokoro.journal.intentChoisirDossier
 import io.allonsy.kokoro.journal.lireDossier
+import io.allonsy.kokoro.monde.MondeActivity
 import io.allonsy.kokoro.reglages.MOT_CODE
+import io.allonsy.kokoro.reglages.PLAGE_NUIT_PAR_DEFAUT
+import io.allonsy.kokoro.reglages.PlageNuit
 import io.allonsy.kokoro.reglages.Reglages
+import io.allonsy.kokoro.reglages.ecrireHeure
 import io.allonsy.kokoro.reglages.ecrireReglages
+import io.allonsy.kokoro.reglages.lireHeure
 import io.allonsy.kokoro.reglages.lireReglages
 import io.allonsy.kokoro.ui.ThemeKokoro
 
@@ -67,7 +75,7 @@ data class EtatAutorisations(
 
 class MainActivity : ComponentActivity() {
     private val autorisations = mutableStateOf(EtatAutorisations(false, false, false))
-    private val reglages = mutableStateOf(Reglages("", ""))
+    private val reglages = mutableStateOf(Reglages("", "", PLAGE_NUIT_PAR_DEFAUT))
     private val dossier = mutableStateOf<String?>(null)
 
     private val choixDossier = registerForActivityResult(
@@ -260,6 +268,16 @@ private fun EcranControle(
                 context.startActivity(Intent(context, JournalActivity::class.java))
             }
 
+            Section(stringResource(R.string.controle_section_monde))
+            Explication(stringResource(R.string.controle_monde_explication))
+            Action(stringResource(R.string.controle_action_monde)) {
+                context.startActivity(Intent(context, MondeActivity::class.java))
+            }
+
+            Section(stringResource(R.string.controle_section_nuit))
+            Explication(stringResource(R.string.controle_nuit_explication))
+            ChampsNuit(nuit = reglages.nuit, onEnregistrer = { onEnregistrer(reglages.copy(nuit = it)) })
+
             Section(stringResource(R.string.controle_section_corps))
             Explication(stringResource(R.string.controle_corps_explication))
             Action(stringResource(R.string.controle_action_corps)) {
@@ -311,7 +329,72 @@ private fun ChampsContact(reglages: Reglages, onEnregistrer: (Reglages) -> Unit)
         modifier = Modifier.fillMaxWidth(),
     )
     Action(stringResource(R.string.controle_action_enregistrer)) {
-        onEnregistrer(Reglages(contactNom = nom, contactNumero = numero))
+        onEnregistrer(reglages.copy(contactNom = nom, contactNumero = numero))
+    }
+}
+
+/**
+ * Le réglage de la nuit — un interrupteur et deux heures.
+ *
+ * ⭐ **Le bouton d'enregistrement reste inerte tant qu'une des deux heures ne se lit pas.** Rien
+ * n'est corrigé en silence : un réglage qu'on croit posé et qui ne l'est pas serait pire qu'un
+ * réglage qui refuse de partir.
+ */
+@Composable
+private fun ChampsNuit(nuit: PlageNuit, onEnregistrer: (PlageNuit) -> Unit) {
+    var debut by remember(nuit) { mutableStateOf(ecrireHeure(nuit.debut)) }
+    var fin by remember(nuit) { mutableStateOf(ecrireHeure(nuit.fin)) }
+
+    Text(
+        text = when {
+            nuit.active -> stringResource(
+                R.string.controle_nuit_reglee,
+                ecrireHeure(nuit.debut),
+                ecrireHeure(nuit.fin),
+            )
+            else -> stringResource(R.string.controle_nuit_coupee)
+        },
+        style = MaterialTheme.typography.bodyLarge,
+        color = MaterialTheme.colorScheme.onBackground,
+    )
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = stringResource(R.string.controle_nuit_active),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onBackground,
+        )
+        Switch(
+            checked = nuit.active,
+            onCheckedChange = { onEnregistrer(nuit.copy(active = it)) },
+        )
+    }
+    OutlinedTextField(
+        value = debut,
+        onValueChange = { debut = it },
+        label = { Text(stringResource(R.string.controle_champ_nuit_debut)) },
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        modifier = Modifier.fillMaxWidth(),
+    )
+    OutlinedTextField(
+        value = fin,
+        onValueChange = { fin = it },
+        label = { Text(stringResource(R.string.controle_champ_nuit_fin)) },
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        modifier = Modifier.fillMaxWidth(),
+    )
+    Action(
+        libelle = stringResource(R.string.controle_action_nuit),
+        actif = lireHeure(debut) != null && lireHeure(fin) != null,
+    ) {
+        val ouverture = lireHeure(debut) ?: return@Action
+        val fermeture = lireHeure(fin) ?: return@Action
+        onEnregistrer(nuit.copy(debut = ouverture, fin = fermeture))
     }
 }
 

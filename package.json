@@ -11,7 +11,9 @@
     "sync": "node scripts/contenu-sync.ts \"H:/Mon Drive/kokoro\"",
     "programme-publish": "node scripts/programme-publish.ts",
     "publish": "node scripts/programme-publish.ts \"H:/Mon Drive/kokoro\"",
+    "kokoro": "bash psy/android/kokoro",
     "image": "node scripts/kokoro-image.ts",
+    "decoupe": "node scripts/kokoro-decoupe.ts",
     "typecheck": "tsc --noEmit"
   },
   "engines": {

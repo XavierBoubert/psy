@@ -6,6 +6,8 @@
 >
 > ✅ **K0 → K4 franchis.** Poste de travail · **full-screen intent levé** (le point le plus risqué du projet) · **noyau de crise** — ⭐ le mot-code a été envoyé pour de vrai, téléphone verrouillé, et Chourouk a confirmé, l'essai fait **à froid en la prévenant** · **tension appliquée guidée sur quatre repères externes** · **check-in quotidien sur le téléphone**.
 >
+> ⭐ **Le monde existe depuis le 14/08/2026** — cinq écrans en croix, un décor peint en quatre couches glissées en parallaxe, verrou portrait. Il est **vide sauf Kokoro au centre** : ce qu'on y posera se décide en séance. **Le geste ne s'interrompt pas** : la caméra colle au doigt, et un ressort la reprend à la vitesse qu'elle avait. ⭐ **Le décor passe en nuit sur une plage horaire** — 21 h → 6 h par défaut, réglable et désactivable dans l'écran de contrôle ; **lue à l'arrivée, jamais bascule sous les yeux**, et jamais suivie sur le thème du système. Spécification : [`design/DECOR.md`](design/DECOR.md).
+>
 > 🔴 **K5 en cours — Kokoro porte la thérapie.** Il lit `programme.json` et `bibliotheque/`, et écrit `reponses/`. 🆕 **K6 — la séance à deux** : type `seance-duo`, entraînement, signal d'arrêt, critères d'arrêt à un tap. ⏸️ **K7 — la présence** : overlay, visage, écran de diagnostic One UI.
 
 *Kokoro (心) : le mot japonais qui désigne indissociablement le cœur et l'esprit, racine de 心理学* (shinrigaku), *« psychologie ». Il nomme l'objet du soin, pas une promesse de résultat.*
@@ -90,6 +92,15 @@ Depuis `psy/android/`, téléphone branché et débogage USB autorisé :
 ```bash
 ./kokoro            # tests, compilation, installation, ouverture — trois lignes de sortie
 ```
+
+⭐ **Ou depuis la racine du dépôt, sans changer de répertoire** *(14/08/2026)* :
+
+```bash
+npm run kokoro              # la même chose, exactement
+npm run kokoro -- pose      # sans repasser les tests
+```
+
+C'est la **même commande**, pas une seconde façon de faire : `npm run kokoro` appelle `./kokoro`, qui se replace tout seul dans `psy/android/`. Elle existe pour que **Xavier compile et déploie sans passer par Claude** — depuis la racine, là où sont déjà `npm run sync` et `npm run publish`. ⚠️ Elle suppose le `bash` de Git dans le `PATH` (c'est le cas sur ce poste) ; si un jour ce n'est plus vrai, `./kokoro` reste la voie directe.
 
 | Commande | Ce qu'elle fait |
 |---|---|
