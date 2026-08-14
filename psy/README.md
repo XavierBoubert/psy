@@ -1,7 +1,11 @@
-# `psy/` — le dispositif
+# `psy/` — Claude Psy, le praticien
 
 Réalisation de [`../PLAN.md`](../PLAN.md) — **le document unique du projet**. Toute la doctrine y est ; ce README n'est qu'une carte.
 📖 **Le vocabulaire fait foi dans [`../THESAURUS.md`](../THESAURUS.md)** — *un mot, une chose*. `corpus` ≠ `protocole` ≠ `fiche de bibliothèque` ; `chantier` ≠ `cible` ≠ `palier`.
+
+**Ce qu'il est.** Le psychiatre et le psychologue. Une **séance de fond par semaine**. **Il construit tout le contenu** — protocoles, désensibilisations, bilans, questionnaires, briefs, programme — et le donne à Kokoro.
+
+**Ce qu'il ne fait jamais :** prescrire · conseiller une modification de traitement, même sous forme interrogative · **publier sans supervision** · publier hors séance · venir vers Xavier de lui-même.
 
 **Étape 0 close (09/08/2026).** Étapes **1** (versant somatique), **2** (instrumentation), **3** (outils de crise) et **5** (Kokoro) sont ouvertes.
 🔴 **Jalon en cours : K5 — Kokoro lit le programme et la bibliothèque.**
@@ -10,40 +14,55 @@ Réalisation de [`../PLAN.md`](../PLAN.md) — **le document unique du projet**.
 
 ---
 
-## ⭐ Cinq personas
+## Carte
 
-| Persona | Ce qu'il est | Où il vit |
+| Chemin | Rôle | État |
 |---|---|---|
-| **Claude Psy** | **Le psychiatre et le psychologue.** Une séance par semaine. Il construit **tout le contenu** et le donne à Kokoro | `.claude/skills/psy-*` (6 skills cliniques) |
-| **Claude Superviseur** | **Le superviseur du psy.** Il supervise **Claude, jamais Xavier**. 🔴 **Sa passe est bloquante avant toute publication** | `.claude/skills/psy-superviseur` → [`agent/supervisions/`](agent/supervisions/) |
-| **Kokoro (心)** | **Le compagnon du patient.** Il **protège · accompagne · éduque · réconforte**. Il porte toute la documentation accessible à Xavier | [`android/`](android/README.md) |
-| ⭐ **L'aide-au-patient** | **La personne qui tient le téléphone** pendant une **séance à deux** et exécute les consignes chronométrées de Kokoro. Aujourd'hui **Chourouk**. 🔴 **Elle n'est pas thérapeute** — elle suit un déroulé, elle ne juge pas | Kokoro, type `seance-duo` |
-| **Xavier** | **Le patient.** | — |
+| [`docs/protocoles/`](docs/protocoles/README.md) | **Fiches actionnables, écrites pour le praticien** — réserves, hypothèses, frontières de non-substitution | ✅ 7 fiches *(la 8ᵉ est passée chez l'aidant)* |
+| [`docs/corpus/`](docs/corpus/README.md) | **Référentiels cliniques indexés** — `echelles/`, `tension-appliquee/` | ✅ échelles + tension appliquée · ⏸️ 3 corpus prioritaires restants |
+| [`docs/references/`](docs/references/README.md) | **Littérature source convertie** — DSM-5, validation française de la BES. `originales/` garde les PDF | ✅ |
+| [`docs/gabarits/`](docs/gabarits/) | **Modèles vierges** — à copier, jamais à remplir sur place | ✅ 5 gabarits |
+| **[`outputs/dossier/`](outputs/dossier/)** ⭐ | 🔴 **Mémoire longitudinale — source de vérité.** `profil.md`, `etat.md`, `seances/`, `crises/`, `mesures/`, `briefs/`. Format : **[`../PLAN.md` §7](../PLAN.md#7-le-dossier--format)** *(normatif)* | ✅ |
+| [`scripts/`](scripts/) | `programme-publish.ts` · `contenu-sync.ts` · les trois convertisseurs de documents | ✅ |
 
-> ⭐ **Kokoro ne vient jamais vers Xavier.** Aucune notification, aucune relance, aucun reproche. **Xavier vient à lui, et y trouve tout.** *(Seule exception : l'accès crise sur l'écran verrouillé — une porte, pas un rappel.)*
-
-```
-Claude Psy ──programme + bibliothèque──► Kokoro ──journal + réponses──► dossier ──► Claude Psy
-     ▲              (après supervision)                                      │
-     └──────────────────── Superviseur ◄──────────────────────────────────────┘
-```
+> ⭐ **Le dossier clinique est réparti sur deux rôles, et la ligne de partage est celle de l'auteur.** Ce que Claude Psy écrit est ici ; **les check-ins et les réponses, écrits par Kokoro, vivent dans [`../companion/outputs/`](../companion/outputs/)**. C'est **une seule mémoire longitudinale**, qui se charge en entier — voir [`../PLAN.md` §7.2](../PLAN.md#72-arborescence).
+>
+> ⭐ **Le programme qu'il écrit ne vit pas ici non plus** : il est **donné** à Kokoro, donc il vit dans [`../companion/inputs/`](../companion/inputs/). Écrire dedans est un acte de séance, jamais un acte de passage.
 
 ---
 
-## Carte
+## Le circuit, et les deux commandes qui le tiennent
 
-| Répertoire | Rôle | État |
+```
+Claude Psy ──── programme + bibliothèque ────► Kokoro ──── journal + réponses ────► dossier
+     ▲            (companion/inputs/)                      (companion/outputs/)        │
+     │              après supervision                                                  │
+     └───────────────────── Superviseur ◄──────────────────────────────────────────────┘
+```
+
+| Quand | Commande | Ce qu'elle fait |
 |---|---|---|
-| **`dossier/`** ⭐ | **Mémoire longitudinale — source de vérité unique.** Format : **[`../PLAN.md` §7](../PLAN.md#7-le-dossier--format)** *(normatif)* | ✅ profil + état + journal + mesures + séances |
-| **`programme/`** ⭐ | **La thérapie telle que Kokoro l'affiche** : `programme.json` + **`bibliotheque/`**. Six types d'étape, dont ⭐ **`seance-duo`** — le déroulé chronométré tenu par l'aide-au-patient. Format : **[`../PLAN.md` §8](../PLAN.md#8-le-programme--format)** *(normatif)* | 🏗️ moitié PC écrite et vérifiée · Kokoro ne lit pas encore |
-| `agent/` | `supervisions/` — sorties du Superviseur, **hors `dossier/`** | ✅ |
-| `corpus/` | Référentiels cliniques indexés | ✅ **échelles** + **tension appliquée** · ⏸️ 3 corpus prioritaires restants |
-| `protocoles/` | Fiches actionnables, **écrites pour le praticien** | ✅ 8 fiches |
-| `android/` | **Kokoro (心)** — Kotlin + Compose. ⭐ **La seule surface tournée vers Xavier** | ✅ **K0 → K4** · 🔴 **K5 en cours** · 🆕 K6 la séance à deux · ⏸️ K7 la présence |
+| **À l'ouverture de séance** | `npm run sync` | Verse au dépôt ce que Kokoro a écrit. **N'écrase jamais un fichier existant** |
+| **À la clôture de séance** | `npm run publish` | Publie la thérapie et la bibliothèque. 🔴 **Refuse tout si un invariant est enfreint ou si la supervision manque** |
 
-> ❌ **`web/` est supprimé le 14/08/2026 — il n'y a plus qu'une surface.** Tout ce qui est accessible à Xavier passe par Kokoro. Ce que la suppression déplace et ce qu'elle coûte : **[`../PLAN.md` §5.8](../PLAN.md#58-il-ny-a-quune-surface-14082026)**.
+⭐ **`npm run publish` est la seule fenêtre d'écriture du programme.** Entre deux séances, **l'écran de Xavier ne change pas** — c'est la prévisibilité, pas une limitation technique.
 
-⚠️ **`protocoles/` et `programme/bibliotheque/` ne sont pas la même chose et ne doivent jamais l'être.** Un protocole est écrit pour le praticien : il porte des diagnostics, des pronostics, des réserves adressées à un professionnel. **Une fiche de bibliothèque est écrite pour Xavier.** C'est le contrôle **C9** du Superviseur.
+---
+
+## Les six skills
+
+Elles vivent dans **`.claude/skills/psy-*`** — Claude Code ne les découvre que là.
+
+| Skill | Rôle |
+|---|---|
+| `psy-seance` | Séance de fond hebdomadaire — ouverture / une seule cible / clôture obligatoire → `outputs/dossier/seances/`. ⭐ **Battement hebdomadaire du dispositif** |
+| `psy-journal` | Check-in quotidien — 7 questions fermées, < 2 min → `../companion/outputs/journal/` |
+| `psy-crise` | **Triage de crise** — sécurité avant mécanisme. ⭐ **Seule exception au chargement de contexte : la question de sécurité se pose avant la lecture du dossier** |
+| `psy-bilan` | Passation et cotation d'une échelle → `outputs/dossier/mesures/`. Items lus dans `docs/corpus/echelles/`, **jamais restitués de mémoire** |
+| `psy-brief-isorni` | Brief d'une page avant consultation → `outputs/dossier/briefs/`, `transmis: false`. **Aucune proposition pharmacologique** |
+| `psy-hygiene` | Versant somatique (PPC, alimentation, activité) — ⭐ **le passage de palier se compte dans le journal, il ne se demande pas** |
+
+**Invariants de tout skill** : charger `profil.md` + `etat.md` avant d'agir · **non-substitution** · protocole de crise câblé · aucune visualisation · utilisable sans parler ni écrire · zéro streak · annoncer avant de faire.
 
 ---
 
@@ -51,14 +70,14 @@ Claude Psy ──programme + bibliothèque──► Kokoro ──journal + répo
 
 | Je veux… | Fichier |
 |---|---|
-| 🔴 **Faire face à une crise, maintenant** | **[`protocoles/crise-escalade.md`](protocoles/crise-escalade.md)** — prime sur tout le reste |
-| Savoir qui est Xavier avant de lui parler | [`dossier/profil.md`](dossier/profil.md) |
-| Savoir où on en est aujourd'hui | [`dossier/etat.md`](dossier/etat.md) |
+| 🔴 **Faire face à une crise, maintenant** | **[`docs/protocoles/crise-escalade.md`](docs/protocoles/crise-escalade.md)** — prime sur tout le reste |
+| Savoir qui est Xavier avant de lui parler | [`outputs/dossier/profil.md`](outputs/dossier/profil.md) |
+| Savoir où on en est aujourd'hui | [`outputs/dossier/etat.md`](outputs/dossier/etat.md) |
 | Écrire ou lire une donnée du dossier | [`../PLAN.md` §7](../PLAN.md#7-le-dossier--format) *(normatif)* |
 | Écrire ou publier le programme | [`../PLAN.md` §8](../PLAN.md#8-le-programme--format) *(normatif)* |
 | Savoir ce qui transite par Drive | [`../PLAN.md` §6](../PLAN.md#6-le-contenu--google-drive) *(normatif)* |
-| Appliquer un protocole en cours | [`protocoles/ppc-desensibilisation.md`](protocoles/ppc-desensibilisation.md) *(chantier n° 1)* |
-| Trancher un point clinique | [`../ressources/xavier/Rapport psychiatrique et psychologique.md`](../ressources/xavier/Rapport%20psychiatrique%20et%20psychologique.md) *(**v2.4**, fait foi)* |
+| Appliquer un protocole en cours | [`docs/protocoles/ppc-desensibilisation.md`](docs/protocoles/ppc-desensibilisation.md) *(chantier n° 1)* |
+| Trancher un point clinique | [`../patient/ressources/Rapport psychiatrique et psychologique.md`](../patient/ressources/Rapport%20psychiatrique%20et%20psychologique.md) *(**v2.4**, fait foi)* |
 | Comprendre une décision de conception | [`../PLAN.md` §11](../PLAN.md#11-journal-des-décisions) |
 
 `profil.md` et `etat.md` se chargent **ensemble**, jamais l'un sans l'autre : le premier dit *qui est Xavier*, le second *où on en est*.
@@ -75,7 +94,9 @@ Claude Psy ──programme + bibliothèque──► Kokoro ──journal + répo
 6. 🔴 **Publier sans supervision.** Ni le programme, ni la bibliothèque, ni le brief. **Un refus se corrige, il ne se contourne pas.**
 7. 🔴 **Écrire une consigne qui demande un jugement à l'aide-au-patient**, ou qui lui apprend un diagnostic, un score ou une hypothèse. **Elle lit des consignes, pas un dossier.** Contrôle **C10**.
 
-En cas d'idéation suicidaire ou de détresse aiguë : **3114**, gratuit, 24h/24. **Protocole complet : [`protocoles/crise-escalade.md`](protocoles/crise-escalade.md)** *(`dossier/profil.md` §4 n'en est que le résumé)*.
+⚠️ **[`docs/protocoles/`](docs/protocoles/README.md) et [`../companion/inputs/bibliotheque/`](../companion/inputs/bibliotheque/README.md) ne sont pas la même chose et ne doivent jamais l'être.** Un protocole est écrit pour le praticien : il porte des diagnostics, des pronostics, des réserves adressées à un professionnel. **Une fiche de bibliothèque est écrite pour Xavier.** C'est le contrôle **C9** du Superviseur.
+
+En cas d'idéation suicidaire ou de détresse aiguë : **3114**, gratuit, 24h/24. **Protocole complet : [`docs/protocoles/crise-escalade.md`](docs/protocoles/crise-escalade.md)** *(`outputs/dossier/profil.md` §4 n'en est que le résumé)*.
 
 🔴 **Les numéros d'appel d'urgence — 15, 112, 114 — ont été retirés du dispositif le 10/08/2026**, à la demande de Xavier. **Le 3114 est le seul conservé, et il ne s'affiche que sur ce déclencheur-là** — jamais en ouverture, jamais « au cas où », **jamais dans Kokoro**.
 

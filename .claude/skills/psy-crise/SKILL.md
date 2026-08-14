@@ -1,11 +1,11 @@
 ---
 name: psy-crise
-description: Triage d'un épisode de crise chez Xavier — sécurité d'abord, puis panique / vasovagal / shutdown, et orientation vers la bonne parade. Applique psy/protocoles/crise-escalade.md. Utiliser dès que Xavier dit « crise », « panique », « malaise », « je me sens mal », « ça monte », « shutdown », écrit le mot-code, envoie un message très court ou fragmenté, ou signale des idées noires — y compris au milieu d'une séance, d'un check-in ou d'une passation.
+description: Triage d'un épisode de crise chez Xavier — sécurité d'abord, puis panique / vasovagal / shutdown, et orientation vers la bonne parade. Applique psy/docs/protocoles/crise-escalade.md. Utiliser dès que Xavier dit « crise », « panique », « malaise », « je me sens mal », « ça monte », « shutdown », écrit le mot-code, envoie un message très court ou fragmenté, ou signale des idées noires — y compris au milieu d'une séance, d'un check-in ou d'une passation.
 ---
 
 # psy-crise — triage et escalade
 
-**La fiche qui fait foi est [`psy/protocoles/crise-escalade.md`](../../../psy/protocoles/crise-escalade.md).** Ce skill ne la résume pas : il l'exécute, dans l'ordre, sans rien y ajouter.
+**La fiche qui fait foi est [`psy/docs/protocoles/crise-escalade.md`](../../../psy/docs/protocoles/crise-escalade.md).** Ce skill ne la résume pas : il l'exécute, dans l'ordre, sans rien y ajouter.
 
 ---
 
@@ -25,7 +25,7 @@ Un contexte chargé n'a jamais aidé personne pendant les trente premières seco
 
 ## 1. 🔴 Aucun numéro ne s'affiche à l'ouverture *(révisé le 10/08/2026)*
 
-**Les numéros d'appel d'urgence — 15, 112, 114 — ont été retirés du dispositif** le 10/08/2026, à la demande de Xavier. Motifs au [`crise-escalade.md`](../../../psy/protocoles/crise-escalade.md) §0 : aucun n'a jamais servi · ⭐ **une syncope vasovagale ne s'appelle pas, elle s'allonge** — proposer un appel au lieu de la tension appliquée était une **erreur d'orientation** · l'affichage permanent était anxiogène.
+**Les numéros d'appel d'urgence — 15, 112, 114 — ont été retirés du dispositif** le 10/08/2026, à la demande de Xavier. Motifs au [`crise-escalade.md`](../../../psy/docs/protocoles/crise-escalade.md) §0 : aucun n'a jamais servi · ⭐ **une syncope vasovagale ne s'appelle pas, elle s'allonge** — proposer un appel au lieu de la tension appliquée était une **erreur d'orientation** · l'affichage permanent était anxiogène.
 
 **Un seul numéro subsiste : le 3114** (prévention du suicide), **et uniquement au §5**, déclenché par une réponse « oui » ou « je ne sais pas » à la question de sécurité. **Ne jamais l'afficher en ouverture, ni en rappel, ni « au cas où ».**
 
@@ -52,9 +52,9 @@ Un contexte chargé n'a jamais aidé personne pendant les trente premières seco
 
 | Réponse | Parade | Fiche |
 |---|---|---|
-| **1 — panique** | Nommer les symptômes par leur numéro · expirer plus long qu'inspirer (4 / 6) · rester si possible · **ne rien chercher à faire disparaître** | [`panique-13-symptomes.md`](../../../psy/protocoles/panique-13-symptomes.md) |
-| **2 — vasovagal** | ⭐ **Tension appliquée** — bras, jambes, tronc, salves de 10-15 s. **S'allonger, jambes surélevées.** | [`tension-appliquee.md`](../../../psy/protocoles/tension-appliquee.md) |
-| **3 — shutdown** | **Mot-code « shutdown »** · retrait sensoriel · reprise différée · **aucune question posée** → §4 | [`jour-de-vol.md`](../../../psy/protocoles/jour-de-vol.md) §4 |
+| **1 — panique** | Nommer les symptômes par leur numéro · expirer plus long qu'inspirer (4 / 6) · rester si possible · **ne rien chercher à faire disparaître** | [`panique-13-symptomes.md`](../../../psy/docs/protocoles/panique-13-symptomes.md) |
+| **2 — vasovagal** | ⭐ **Tension appliquée** — bras, jambes, tronc, salves de 10-15 s. **S'allonger, jambes surélevées.** | [`tension-appliquee.md`](../../../psy/docs/protocoles/tension-appliquee.md) |
+| **3 — shutdown** | **Mot-code « shutdown »** · retrait sensoriel · reprise différée · **aucune question posée** → §4 | [`jour-de-vol.md`](../../../psy/docs/protocoles/jour-de-vol.md) §4 |
 | **4 — je ne sais pas** | Deux discriminants suffisent : *perte de connaissance ?* (oui → vasovagal quasi certain) · *aiguille ou geste médical ?* (oui → vasovagal). Sinon, traiter comme une panique. | — |
 
 > 🔴 **L'erreur la plus coûteuse : appliquer une respiration lente à un vasovagal.** Elle abaisse encore une tension déjà en train de chuter. Et **jamais de tension appliquée « au cas où »** — elle est inutile hors vasovagal.
@@ -102,7 +102,7 @@ Le retrait des numéros a une conséquence favorable : **le triage est désormai
 
 ## 7. Trace au dossier — après, jamais avant
 
-Copier `psy/dossier/gabarits/crise.json` → `psy/dossier/crises/AAAA-MM-JJ-HHMM-<type>.json` (`PLAN.md` §7.5).
+Copier `psy/docs/gabarits/crise.json` → `psy/outputs/dossier/crises/AAAA-MM-JJ-HHMM-<type>.json` (`PLAN.md` §7.5).
 
 | Champ | Vigilance |
 |---|---|

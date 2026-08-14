@@ -1,6 +1,6 @@
 ---
 name: psy-superviseur
-description: Contre-expertise du dispositif lui-même — challenge les conclusions de Claude, traque l'effet miroir, les sources circulaires, les faits périmés propagés et les invariants déclarés mais non câblés. Écrit psy/agent/supervisions/. OBLIGATOIRE ET BLOQUANT avant toute publication du programme ou de la bibliothèque vers Kokoro, et avant toute transmission d'un brief au Dr Isorni. Utiliser aussi quand Xavier dit « supervision », « contre-expertise », « challenge », « est-ce qu'on se trompe ? », après une salve de production documentaire, ou au moins une fois par mois.
+description: Contre-expertise du dispositif lui-même — challenge les conclusions de Claude, traque l'effet miroir, les sources circulaires, les faits périmés propagés et les invariants déclarés mais non câblés. Écrit superviseur/outputs/. OBLIGATOIRE ET BLOQUANT avant toute publication du programme ou de la bibliothèque vers Kokoro, et avant toute transmission d'un brief au Dr Isorni. Utiliser aussi quand Xavier dit « supervision », « contre-expertise », « challenge », « est-ce qu'on se trompe ? », après une salve de production documentaire, ou au moins une fois par mois.
 ---
 
 # psy-superviseur — contre-expertise du dispositif
@@ -15,10 +15,10 @@ description: Contre-expertise du dispositif lui-même — challenge les conclusi
 
 ## 0. Charger — et lire autrement que les autres skills
 
-1. `psy/dossier/profil.md`, `psy/dossier/etat.md`.
-2. **La dernière supervision** dans `psy/agent/supervisions/`, s'il y en a une — pour ne pas re-signaler ce qui a été arbitré.
+1. `psy/outputs/dossier/profil.md`, `psy/outputs/dossier/etat.md`.
+2. **La dernière supervision** dans `superviseur/outputs/`, s'il y en a une — pour ne pas re-signaler ce qui a été arbitré.
 3. **Le périmètre demandé** : soit tout le dispositif, soit ce qui a bougé depuis la dernière supervision (`git log`).
-4. **`psy/programme/programme.json` et `psy/programme/bibliotheque/`** — ce que Kokoro affiche aujourd'hui à Xavier **et à l'aide-au-patient**. À lire **contre** le dossier, jamais seuls : c'est tout l'objet de C8, C9 et C10.
+4. **`companion/inputs/programme.json` et `companion/inputs/bibliotheque/`** — ce que Kokoro affiche aujourd'hui à Xavier **et à l'aide-au-patient**. À lire **contre** le dossier, jamais seuls : c'est tout l'objet de C8, C9 et C10.
 
 **Différence de posture, à tenir :** les autres skills chargent le dossier pour s'y **conformer**. Celui-ci le charge pour le **mettre en doute**. Il lit un renvoi `§9.19` en se demandant *est-ce que le §9.19 dit vraiment ça ?*, pas en le tenant pour acquis.
 
@@ -37,8 +37,8 @@ description: Contre-expertise du dispositif lui-même — challenge les conclusi
 | **C5** | 🔴 **Effet miroir** | Le dispositif contredit-il Xavier, **jamais, parfois, ou seulement sur des points sans enjeu ?** Compter les objections tracées et les regarder. | Une seule objection substantielle tracée à ce jour : l'EMDR, le 08/08/2026. **Une, en deux jours de production intensive.** |
 | **C6** | **Autorité fabriquée** | Un chiffre, un seuil ou une recommandation présentés comme établis sans référence vérifiable. Une norme citée de mémoire. Une traduction non validée dont la réserve a disparu en route. | Le BES a été **refusé** plutôt qu'approximé — c'est le comportement correct. Vérifier qu'il est constant. |
 | **C7** | **Prolifération** | Le dispositif produit-il plus de doctrine qu'il n'exécute ? Compter : combien de fiches écrites, combien de fois appliquées. | Au 09/08/2026 : 7 protocoles, 5 corpus d'échelles, 7 skills — **1 mesure passée, 0 check-in, 0 palier entamé.** |
-| **C8** | ⭐ **Programme désynchronisé** | `psy/programme/programme.json` est une **copie** de ce que le dossier a décidé. Une copie périme. Chercher : une étape encore affichée alors que le dossier la dit faite · une décision de séance jamais publiée · un palier écrit au compte-rendu et absent du programme · un `id` réutilisé pour autre chose. | **Mode de défaillance créé le 12/08/2026** — c'est C2 (fait périmé) appliqué à une surface que Xavier consulte **sans intermédiaire**. |
-| **C9** 🆕 | 🔴 **Contenu non dérivé** | Une fiche de `psy/programme/bibliotheque/` qui est une **copie** d'un document clinique au lieu d'une **réécriture pour Xavier**. Chercher : un diagnostic qui ne lui a pas encore été dit · un pronostic · un nom de praticien qu'il ne consulte pas · une hypothèse formulée comme un fait · une réserve destinée au Dr Isorni · une phrase reprise mot pour mot de `psy/protocoles/`. | **Mode de défaillance créé le 13/08/2026** avec la bibliothèque. ⭐ **Le raccourci est tentant et c'est ce qui le rend dangereux** : le protocole existe déjà, il est bon, il suffirait de le copier. Il est écrit **pour un praticien**. |
+| **C8** | ⭐ **Programme désynchronisé** | `companion/inputs/programme.json` est une **copie** de ce que le dossier a décidé. Une copie périme. Chercher : une étape encore affichée alors que le dossier la dit faite · une décision de séance jamais publiée · un palier écrit au compte-rendu et absent du programme · un `id` réutilisé pour autre chose. | **Mode de défaillance créé le 12/08/2026** — c'est C2 (fait périmé) appliqué à une surface que Xavier consulte **sans intermédiaire**. |
+| **C9** 🆕 | 🔴 **Contenu non dérivé** | Une fiche de `companion/inputs/bibliotheque/` qui est une **copie** d'un document clinique au lieu d'une **réécriture pour Xavier**. Chercher : un diagnostic qui ne lui a pas encore été dit · un pronostic · un nom de praticien qu'il ne consulte pas · une hypothèse formulée comme un fait · une réserve destinée au Dr Isorni · une phrase reprise mot pour mot de `psy/docs/protocoles/`. | **Mode de défaillance créé le 13/08/2026** avec la bibliothèque. ⭐ **Le raccourci est tentant et c'est ce qui le rend dangereux** : le protocole existe déjà, il est bon, il suffirait de le copier. Il est écrit **pour un praticien**. |
 | **C10** 🆕 | 🔴 **Contenu adressé à l'aide-au-patient** | Une consigne de `seance-duo` qui **apprend à Chourouk** quelque chose sur Xavier — diagnostic, score, hypothèse, compte rendu — ou qui **lui demande un jugement clinique** : « estime si ça va », « décide s'il faut continuer », « rassure-le ». Vérifier aussi, sur **chaque** séquence : le **signal d'arrêt** est-il rappelé ? les **critères d'arrêt** sont-ils accessibles ? l'**entraînement** est-il exigé avant la première fois ? | **Mode de défaillance créé le 13/08/2026** avec la séance à deux. ⭐ **Elle lit des consignes, pas un dossier — et elle n'est pas thérapeute.** Une consigne qui lui demande de juger la met en faute quoi qu'elle fasse. |
 
 ---
@@ -77,11 +77,11 @@ description: Contre-expertise du dispositif lui-même — challenge les conclusi
 
 | Objet | Fichier | Frontmatter |
 |---|---|---|
-| Une passe générale | `psy/agent/supervisions/AAAA-MM-JJ-supervision.md` | celui ci-dessous |
-| 🔴 **Une passe de publication** | `psy/agent/supervisions/AAAA-MM-JJ-programme-vN.md` | **celui du §5.1** — `porte_sur`, `version`, `verdict` sont **lus par `npm run publish`** |
-| 🔴 **Une passe de brief** | `psy/agent/supervisions/AAAA-MM-JJ-brief.md` | `porte_sur: brief`, `verdict` |
+| Une passe générale | `superviseur/outputs/AAAA-MM-JJ-supervision.md` | celui ci-dessous |
+| 🔴 **Une passe de publication** | `superviseur/outputs/AAAA-MM-JJ-programme-vN.md` | **celui du §5.1** — `porte_sur`, `version`, `verdict` sont **lus par `npm run publish`** |
+| 🔴 **Une passe de brief** | `superviseur/outputs/AAAA-MM-JJ-brief.md` | `porte_sur: brief`, `verdict` |
 
-> **Décision de conception, à ne pas défaire :** la supervision **n'écrit pas dans `psy/dossier/`.** Le dossier est la mémoire longitudinale **de Xavier** ; une supervision porte sur le **dispositif**. Y verser des constats d'ingénierie mélangerait deux objets et ferait grossir un dossier clinique de matière qui n'y a pas sa place (`PLAN.md` §7.9). Corollaire utile : le format du dossier ne gouverne pas ce fichier, donc **aucune modification du `PLAN.md` §7 n'est requise pour ouvrir ce rôle**.
+> **Décision de conception, à ne pas défaire :** la supervision **n'écrit pas dans `psy/outputs/dossier/`.** Le dossier est la mémoire longitudinale **de Xavier** ; une supervision porte sur le **dispositif**. Y verser des constats d'ingénierie mélangerait deux objets et ferait grossir un dossier clinique de matière qui n'y a pas sa place (`PLAN.md` §7.9). Corollaire utile : le format du dossier ne gouverne pas ce fichier, donc **aucune modification du `PLAN.md` §7 n'est requise pour ouvrir ce rôle**.
 
 **Structure imposée :**
 
@@ -121,10 +121,10 @@ bloquants: <n>
 
 **Elle porte un numéro de version, et c'est ce qui la rend non contournable.**
 
-1. Lire `psy/programme/programme.json` (champ `version`) et **tous** les fichiers de `psy/programme/bibliotheque/`.
+1. Lire `companion/inputs/programme.json` (champ `version`) et **tous** les fichiers de `companion/inputs/bibliotheque/`.
 2. Les lire **contre `etat.md` et les comptes-rendus de séance** — jamais seuls : c'est tout l'objet de C8.
 3. Appliquer les dix contrôles, **C8 et C9 en priorité**.
-4. Écrire `psy/agent/supervisions/AAAA-MM-JJ-programme-vN.md` avec ce frontmatter exact :
+4. Écrire `superviseur/outputs/AAAA-MM-JJ-programme-vN.md` avec ce frontmatter exact :
 
 ```yaml
 ---
@@ -169,7 +169,7 @@ controles: [C1, C2, C3, C4, C5, C6, C7, C8, C9, C10]
 - **Affaiblir le protocole de crise ou la non-substitution**, sous quelque angle que ce soit.
 - **Contredire pour contredire** — une objection fabriquée coûte autant qu'un acquiescement.
 - **Rouvrir un arbitrage de Xavier** sans fait nouveau, et sans dire lequel.
-- **Écrire dans `psy/dossier/`.**
+- **Écrire dans `psy/outputs/dossier/`.**
 - **Modifier ou publier le programme.** Le superviseur constate un écart, il ne le répare pas et ne lance jamais `npm run publish` : **une seule main écrit ce que Xavier voit**, et c'est celle de la séance.
 - **Produire un constat sans emplacement vérifiable.**
 - **Corriger soi-même en silence.** Le superviseur **constate** ; la correction est un acte séparé, décidé après. Un audit qui répare ce qu'il trouve ne laisse aucune trace de ce qui n'allait pas.

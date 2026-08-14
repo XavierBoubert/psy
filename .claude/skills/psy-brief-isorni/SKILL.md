@@ -1,6 +1,6 @@
 ---
 name: psy-brief-isorni
-description: Rédige le brief d'une page pour le Dr Isorni avant une consultation — évolution chiffrée tirée du journal, traitement, événements, questions à trancher. Écrit psy/dossier/briefs/AAAA-MM-JJ-isorni.md avec transmis:false ; Xavier relit et décide de transmettre. Utiliser quand Xavier dit « brief », « prépare la consultation », « le point pour Isorni », ou à la séance qui précède une consultation (la prochaine : 03/09/2026, brief à écrire au week-end du 29-30/08).
+description: Rédige le brief d'une page pour le Dr Isorni avant une consultation — évolution chiffrée tirée du journal, traitement, événements, questions à trancher. Écrit psy/outputs/dossier/briefs/AAAA-MM-JJ-isorni.md avec transmis:false ; Xavier relit et décide de transmettre. Utiliser quand Xavier dit « brief », « prépare la consultation », « le point pour Isorni », ou à la séance qui précède une consultation (la prochaine : 03/09/2026, brief à écrire au week-end du 29-30/08).
 ---
 
 # psy-brief-isorni — brief de consultation
@@ -12,7 +12,7 @@ description: Rédige le brief d'une page pour le Dr Isorni avant une consultatio
 
 ## 0. Charger — avant d'écrire une ligne
 
-1. `psy/dossier/profil.md` et `psy/dossier/etat.md` — ensemble.
+1. `psy/outputs/dossier/profil.md` et `psy/outputs/dossier/etat.md` — ensemble.
 2. **`etat.md` §5** — les questions ouvertes au Dr Isorni. **C'est le cœur du brief**, pas une annexe.
 3. **Tous les `journal/*.json`** depuis le brief précédent (ou depuis le début s'il n'y en a pas) — c'est la source des chiffres.
 4. **Tous les `crises/*.json`** de la période.
@@ -20,7 +20,7 @@ description: Rédige le brief d'une page pour le Dr Isorni avant une consultatio
 6. Les `seances/*.md` de la période — pour les événements et les décisions.
 7. Le brief précédent dans `briefs/`, s'il existe — pour la colonne « période précédente ».
 
-En cas de doute clinique, la source qui fait foi est `ressources/xavier/Rapport psychiatrique et psychologique.md` (**v2.4**).
+En cas de doute clinique, la source qui fait foi est `patient/ressources/Rapport psychiatrique et psychologique.md` (**v2.4**).
 
 ---
 
@@ -45,7 +45,7 @@ En cas de doute clinique, la source qui fait foi est `ressources/xavier/Rapport 
 
 ## 2. Structure imposée
 
-Copier `psy/dossier/gabarits/brief-isorni.md` → `psy/dossier/briefs/AAAA-MM-JJ-isorni.md`. Les cinq sections sont obligatoires et gardent cet ordre (`PLAN.md` §7.8) :
+Copier `psy/docs/gabarits/brief-isorni.md` → `psy/outputs/dossier/briefs/AAAA-MM-JJ-isorni.md`. Les cinq sections sont obligatoires et gardent cet ordre (`PLAN.md` §7.8) :
 
 | Section | Contenu | Piège |
 |---|---|---|
@@ -94,7 +94,7 @@ Copier `psy/dossier/gabarits/brief-isorni.md` → `psy/dossier/briefs/AAAA-MM-JJ
 - **Tension appliquée et tension artérielle** (question 13) — avant de démarrer le palier 1.
 - **Demander l'échelle BES** (question 11) — une demande de document, pas une question clinique.
 
-> ⚠️ **L'email part avant la consultation** (`ressources/xavier/20260808 Email au Dr Isorni.md`, rédigé, non envoyé au 09/08/2026). **Un créneau de consultation ne suffit pas à découvrir un SAOS sévère, une NASH et six questions en même temps.** Le brief prépare la consultation ; l'email prépare le médecin.
+> ⚠️ **L'email part avant la consultation** (`patient/ressources/20260808 Email au Dr Isorni.md`, rédigé, non envoyé au 09/08/2026). **Un créneau de consultation ne suffit pas à découvrir un SAOS sévère, une NASH et six questions en même temps.** Le brief prépare la consultation ; l'email prépare le médecin.
 
 ---
 
@@ -102,7 +102,7 @@ Copier `psy/dossier/gabarits/brief-isorni.md` → `psy/dossier/briefs/AAAA-MM-JJ
 
 **Le brief s'écrit avec deux champs de frontmatter à `false` / vide, et ils tombent dans cet ordre — jamais l'inverse :**
 
-1. 🔴 **`supervise:` — la passe du Superviseur, bloquante** *(depuis le 13/08/2026, `PLAN.md` §4.3)*. Le brief part vers **un praticien qui peut agir dessus** : c'est l'une des trois sorties du dispositif. `psy-superviseur` écrit `psy/agent/supervisions/AAAA-MM-JJ-brief.md` avec un `verdict` ; **le champ `supervise:` ne se remplit que si ce verdict est `publiable`.** Ce qu'elle cherche en priorité : un chiffre estimé au lieu d'être compté · une réserve manquante · ⭐ **une proposition pharmacologique déguisée en question**.
+1. 🔴 **`supervise:` — la passe du Superviseur, bloquante** *(depuis le 13/08/2026, `PLAN.md` §4.3)*. Le brief part vers **un praticien qui peut agir dessus** : c'est l'une des trois sorties du dispositif. `psy-superviseur` écrit `superviseur/outputs/AAAA-MM-JJ-brief.md` avec un `verdict` ; **le champ `supervise:` ne se remplit que si ce verdict est `publiable`.** Ce qu'elle cherche en priorité : un chiffre estimé au lieu d'être compté · une réserve manquante · ⭐ **une proposition pharmacologique déguisée en question**.
 2. **Lire le brief à Xavier** — ou lui dire où il est. **La supervision ne remplace pas son arbitrage, elle le précède.**
 3. `transmis: false` **reste faux** tant qu'il n'a pas décidé.
 4. **Ne rien transmettre soi-même.** Le dispositif n'écrit à aucun praticien.

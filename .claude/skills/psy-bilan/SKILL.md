@@ -1,6 +1,6 @@
 ---
 name: psy-bilan
-description: Passation et cotation d'une échelle validée avec Xavier — VVIQ, TAS-20, CAT-Q, GAD-7, PHQ-9, BES (grille comportementale), MAIA, DIVA-5. Passation en conversation, OU cotation d'une passation revenue de Kokoro (les échelles y sont publiées depuis le 13/08/2026, sauf le PHQ-9). Lit les items dans psy/corpus/echelles/, écrit une passation par fichier dans psy/dossier/mesures/AAAA-MM-JJ-<echelle>.json, réponses item par item. Utiliser quand Xavier dit « on passe le VVIQ », « une échelle », « le bilan », « le questionnaire », ou quand une séance prévoit une passation au plan de `psy/corpus/echelles/README.md` §3.
+description: Passation et cotation d'une échelle validée avec Xavier — VVIQ, TAS-20, CAT-Q, GAD-7, PHQ-9, BES (grille comportementale), MAIA, DIVA-5. Passation en conversation, OU cotation d'une passation revenue de Kokoro (les échelles y sont publiées depuis le 13/08/2026, sauf le PHQ-9). Lit les items dans psy/docs/corpus/echelles/, écrit une passation par fichier dans psy/outputs/dossier/mesures/AAAA-MM-JJ-<echelle>.json, réponses item par item. Utiliser quand Xavier dit « on passe le VVIQ », « une échelle », « le bilan », « le questionnaire », ou quand une séance prévoit une passation au plan de `psy/docs/corpus/echelles/README.md` §3.
 ---
 
 # psy-bilan — passation et cotation d'une échelle
@@ -20,10 +20,10 @@ Un score seul n'est pas une mesure, c'est un résumé (`PLAN.md` §7.7).
 
 ## 0. Avant la première question
 
-1. **Charger** `psy/dossier/profil.md` et `psy/dossier/etat.md` — ensemble, jamais l'un sans l'autre.
+1. **Charger** `psy/outputs/dossier/profil.md` et `psy/outputs/dossier/etat.md` — ensemble, jamais l'un sans l'autre.
 2. **Lire `etat.md` §6** — quelle échelle est prévue, à quelle date, avec quelles réserves.
-3. **Lire la fiche de l'échelle** dans `psy/corpus/echelles/` — **intégralement**, items, cotation, seuils, rubrique « ce qu'elle ne dit pas ».
-4. **Vérifier** que `psy/dossier/mesures/<date>-<echelle>.json` n'existe pas déjà. Si oui : le dire, ne pas écraser (R2 — append-only).
+3. **Lire la fiche de l'échelle** dans `psy/docs/corpus/echelles/` — **intégralement**, items, cotation, seuils, rubrique « ce qu'elle ne dit pas ».
+4. **Vérifier** que `psy/outputs/dossier/mesures/<date>-<echelle>.json` n'existe pas déjà. Si oui : le dire, ne pas écraser (R2 — append-only).
 
 > ⛔ **Ne jamais faire passer une échelle de mémoire.** Si les items ne sont pas dans `corpus/echelles/`, la passation n'a pas lieu. C'est la règle qui a bloqué le BES le 09/08/2026, et elle est juste : un item mal restitué produit un score faux, donc **faussement rassurant** — le pire résultat possible dans ce dossier.
 
@@ -61,7 +61,7 @@ Un score seul n'est pas une mesure, c'est un résumé (`PLAN.md` §7.7).
 
 1. **Il se pose en dernier**, après les huit autres et après le GAD-7 si les deux sont au programme.
 2. **Toute réponse ≥ 1 interrompt la passation immédiatement.** On ne finit pas, on ne demande pas de préciser, on ne cote pas.
-3. **Déclencher [`psy/protocoles/crise-escalade.md`](../../../psy/protocoles/crise-escalade.md) §2** → skill `psy-crise` : **3114** (gratuit, 24 h/24), contact d'urgence, Dr Isorni.
+3. **Déclencher [`psy/docs/protocoles/crise-escalade.md`](../../../psy/docs/protocoles/crise-escalade.md) §2** → skill `psy-crise` : **3114** (gratuit, 24 h/24), contact d'urgence, Dr Isorni.
 4. **Le fichier `mesures/` s'écrit après**, jamais avant.
 
 > ⭐ **Si la parole est coupée à ce moment-là**, le 3114 est inutilisable — c'est un numéro de téléphone. Voies sans parole : mot-code « shutdown » à Chourouk, canal écrit (`crise-escalade.md` §4).
@@ -89,7 +89,7 @@ Un score seul n'est pas une mesure, c'est un résumé (`PLAN.md` §7.7).
 
 ## 5. Écriture du fichier
 
-Copier `psy/dossier/gabarits/mesure.json` → `psy/dossier/mesures/AAAA-MM-JJ-<echelle>.json`, `"passation": "claude-code"`.
+Copier `psy/docs/gabarits/mesure.json` → `psy/outputs/dossier/mesures/AAAA-MM-JJ-<echelle>.json`, `"passation": "claude-code"`.
 
 - **`reponses` contient autant d'entrées que l'instrument a d'items** — 16 pour le VVIQ, 20 pour la TAS-20, 25 pour le CAT-Q. Un item sans réponse est `null`, pas absent.
 - **`version` porte l'identification exacte, sens de cotation compris.**

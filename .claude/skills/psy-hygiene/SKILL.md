@@ -1,6 +1,6 @@
 ---
 name: psy-hygiene
-description: Conduite du versant somatique de Xavier — PPC (chantier n° 1), alimentation à structure externe, activité physique sans impact. Vérifie les critères de passage de palier en comptant le journal, jamais en demandant un ressenti ; applique les protocoles de psy/protocoles/. Utiliser quand Xavier dit « PPC », « masque », « le palier », « les repas », « l'activité », « on avance sur le chantier », ou quand une séance travaille une cible somatique.
+description: Conduite du versant somatique de Xavier — PPC (chantier n° 1), alimentation à structure externe, activité physique sans impact. Vérifie les critères de passage de palier en comptant le journal, jamais en demandant un ressenti ; applique les protocoles de psy/docs/protocoles/. Utiliser quand Xavier dit « PPC », « masque », « le palier », « les repas », « l'activité », « on avance sur le chantier », ou quand une séance travaille une cible somatique.
 ---
 
 # psy-hygiene — le versant somatique
@@ -11,15 +11,15 @@ description: Conduite du versant somatique de Xavier — PPC (chantier n° 1), a
 
 | Chantier | Fiche | Cible dossier | Champ journal |
 |---|---|---|---|
-| 🔴 **n° 1 — PPC** | [`ppc-desensibilisation.md`](../../../psy/protocoles/ppc-desensibilisation.md) | `ppc-desensibilisation` | `campagne.ppc_minutes` |
-| n° 2 — Alimentation | [`alimentation-structure-externe.md`](../../../psy/protocoles/alimentation-structure-externe.md) | `alimentation-structure` | `campagne.repas_servis_une_fois`, `campagne.poids_kg` |
-| n° 3 — Activité physique | [`activite-physique-sans-impact.md`](../../../psy/protocoles/activite-physique-sans-impact.md) | `alimentation-structure` *(même chantier somatique)* | `campagne.activite_minutes` |
+| 🔴 **n° 1 — PPC** | [`ppc-desensibilisation.md`](../../../psy/docs/protocoles/ppc-desensibilisation.md) | `ppc-desensibilisation` | `campagne.ppc_minutes` |
+| n° 2 — Alimentation | [`alimentation-structure-externe.md`](../../../psy/docs/protocoles/alimentation-structure-externe.md) | `alimentation-structure` | `campagne.repas_servis_une_fois`, `campagne.poids_kg` |
+| n° 3 — Activité physique | [`activite-physique-sans-impact.md`](../../../psy/docs/protocoles/activite-physique-sans-impact.md) | `alimentation-structure` *(même chantier somatique)* | `campagne.activite_minutes` |
 
 ---
 
 ## 0. Charger — avant d'ouvrir un chantier
 
-1. `psy/dossier/profil.md` et `psy/dossier/etat.md` — ensemble.
+1. `psy/outputs/dossier/profil.md` et `psy/outputs/dossier/etat.md` — ensemble.
 2. **`etat.md` §1** — quel chantier est ouvert, quel palier est en cours. **Il fait foi sur le palier**, pas la mémoire de la conversation.
 3. **La fiche du chantier**, intégralement.
 4. **Les `journal/*.json` depuis le dernier passage de palier** — c'est là que se lit le critère.

@@ -30,12 +30,12 @@
 
 | Terme | Où ça vit | Écrit **pour** | Contenu |
 |---|---|---|---|
-| **Corpus** | `psy/corpus/` | **Claude Psy** | La **littérature** : article, échelle publiée, recommandation. Une source citable, avec sa date et **ce qu'elle ne dit pas**. |
-| **Protocole** | `psy/protocoles/` | **Le praticien** | La **fiche qu'on applique**, adaptée au profil. Porte diagnostics, pronostics, réserves, hypothèses non tranchées, frontières de non-substitution. |
-| ⭐ **Fiche de bibliothèque** | `psy/programme/bibliotheque/` | **Xavier** *(ou l'aide-au-patient)* | Ce qu'il y a **à faire, et pourquoi**. **Réécrite**, jamais copiée d'un protocole. |
-| **Programme** | `psy/programme/programme.json` | **Kokoro** | La liste des **étapes** du moment. Un fichier, une version, une supervision. |
-| **Rapport** | `ressources/xavier/Rapport…md` | **Claude Psy** | Le document clinique de référence (**v2.4**). **En cas de doute clinique, c'est lui qui fait foi**, jamais une fiche. |
-| **Dossier** | `psy/dossier/` | **Le dispositif** | La mémoire longitudinale — **source de vérité unique**. |
+| **Corpus** | `psy/docs/corpus/` | **Claude Psy** | La **littérature** : article, échelle publiée, recommandation. Une source citable, avec sa date et **ce qu'elle ne dit pas**. |
+| **Protocole** | `psy/docs/protocoles/` | **Le praticien** | La **fiche qu'on applique**, adaptée au profil. Porte diagnostics, pronostics, réserves, hypothèses non tranchées, frontières de non-substitution. |
+| ⭐ **Fiche de bibliothèque** | `companion/inputs/bibliotheque/` | **Xavier** *(ou l'aide-au-patient)* | Ce qu'il y a **à faire, et pourquoi**. **Réécrite**, jamais copiée d'un protocole. |
+| **Programme** | `companion/inputs/programme.json` | **Kokoro** | La liste des **étapes** du moment. Un fichier, une version, une supervision. |
+| **Rapport** | `patient/ressources/Rapport…md` | **Claude Psy** | Le document clinique de référence (**v2.4**). **En cas de doute clinique, c'est lui qui fait foi**, jamais une fiche. |
+| **Dossier** | `psy/outputs/dossier/` | **Le dispositif** | La mémoire longitudinale — **source de vérité unique**. |
 
 > 🔴 **La confusion à ne jamais commettre : protocole ≠ fiche de bibliothèque.**
 > Un protocole est écrit **pour le praticien**. Une fiche de bibliothèque est écrite **pour Xavier**.
@@ -71,7 +71,7 @@
 | ⭐ **Entraînement** *(13/08/2026)* | Avant toute séance à deux | **Kokoro** | La **même séquence, à blanc**, sans le matériel réel. Sert à ce que l'aide connaisse le déroulé **avant** que ça compte. |
 | **Passation** | Ponctuelle | **Kokoro** *(sauf PHQ-9)* | Une **échelle** administrée item par item. → `dossier/mesures/` |
 | **Brief** | Avant consultation | Claude Code | Une page pour le Dr Isorni. **Xavier relit et décide de transmettre.** → `dossier/briefs/` |
-| **Supervision** | 🔴 **Avant toute publication** + mensuelle | Claude Code | La passe du Superviseur. **Bloquante.** → `psy/agent/supervisions/` |
+| **Supervision** | 🔴 **Avant toute publication** + mensuelle | Claude Code | La passe du Superviseur. **Bloquante.** → `superviseur/outputs/` |
 
 > 🔴 **Séance ≠ séance à deux.** La première est une conversation hebdomadaire avec Claude Psy. La seconde est un **exercice**, exécuté par l'aide-au-patient, décidé lors de la première. **Une séance à deux ne remplace jamais une séance de fond.**
 

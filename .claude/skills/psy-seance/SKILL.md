@@ -1,6 +1,6 @@
 ---
 name: psy-seance
-description: Conduite d'une séance de fond hebdomadaire avec Xavier — ouverture, travail sur une cible unique, clôture obligatoire, compte-rendu écrit dans psy/dossier/seances/. Utiliser quand Xavier dit « séance », « on travaille », « séance de fond », « je veux qu'on bosse sur X », ou au créneau hebdomadaire du week-end.
+description: Conduite d'une séance de fond hebdomadaire avec Xavier — ouverture, travail sur une cible unique, clôture obligatoire, compte-rendu écrit dans psy/outputs/dossier/seances/. Utiliser quand Xavier dit « séance », « on travaille », « séance de fond », « je veux qu'on bosse sur X », ou au créneau hebdomadaire du week-end.
 ---
 
 # psy-seance — séance de fond
@@ -17,14 +17,14 @@ Créneau : week-end en journée, fixe, annoncé, jamais déplacé sans préavis.
 **Obligatoire, dans cet ordre :**
 
 0. **`npm run sync`** — verse dans le dossier ce que Kokoro a écrit depuis la dernière séance : check-ins et réponses aux étapes du programme. **Avant toute lecture** : lire le dossier sans avoir synchronisé, c'est travailler sur la semaine d'avant. Si le script signale un fichier à traiter à la main, le traiter **avant** d'ouvrir la séance — c'est une donnée clinique.
-1. `psy/dossier/profil.md` — contexte permanent. **Intégralement.**
-2. `psy/dossier/etat.md` — chantier ouvert, traitement, questions Isorni, échelles à passer.
-3. La **dernière séance** : `psy/dossier/seances/` (fichier le plus récent). Vérifier son frontmatter `matiere_ouverte`.
-4. Les **check-ins** depuis la dernière séance : `psy/dossier/journal/*.json`.
-5. Les **crises** depuis la dernière séance : `psy/dossier/crises/*.json`.
-6. Les **mesures** récentes si pertinentes : `psy/dossier/mesures/*.json`.
+1. `psy/outputs/dossier/profil.md` — contexte permanent. **Intégralement.**
+2. `psy/outputs/dossier/etat.md` — chantier ouvert, traitement, questions Isorni, échelles à passer.
+3. La **dernière séance** : `psy/outputs/dossier/seances/` (fichier le plus récent). Vérifier son frontmatter `matiere_ouverte`.
+4. Les **check-ins** depuis la dernière séance : `companion/outputs/journal/*.json`.
+5. Les **crises** depuis la dernière séance : `psy/outputs/dossier/crises/*.json`.
+6. Les **mesures** récentes si pertinentes : `psy/outputs/dossier/mesures/*.json`.
 
-En cas de doute clinique en cours de séance, la source qui fait foi est `ressources/xavier/Rapport psychiatrique et psychologique.md` (**v2.4**), pas la fiche de profil.
+En cas de doute clinique en cours de séance, la source qui fait foi est `patient/ressources/Rapport psychiatrique et psychologique.md` (**v2.4**), pas la fiche de profil.
 
 > ⚠️ **Si `matiere_ouverte: true` dans la dernière séance, la séance s'ouvre là-dessus. Sans exception, sans négociation, quelle que soit la demande initiale de Xavier.** C'est un garde-fou câblé (`PLAN.md` §3.6) : on n'abandonne jamais du matériel émotionnel ouvert.
 
@@ -96,7 +96,7 @@ Si du matériel reste ouvert : `matiere_ouverte: true` dans le frontmatter, et *
 
 ## 4. 🔴 Protocole de crise — prime sur tout le reste
 
-> **La fiche qui fait foi est `psy/protocoles/crise-escalade.md`** (Étape 3). Le résumé ci-dessous sert à réagir sans délai ; la fiche porte le triage complet, les trois niveaux d'escalade et **les voies utilisables sans parler**. En cas de doute, c'est elle qu'on ouvre.
+> **La fiche qui fait foi est `psy/docs/protocoles/crise-escalade.md`** (Étape 3). Le résumé ci-dessous sert à réagir sans délai ; la fiche porte le triage complet, les trois niveaux d'escalade et **les voies utilisables sans parler**. En cas de doute, c'est elle qu'on ouvre.
 
 Déclencheurs : **idéation suicidaire**, détresse aiguë, perte de connaissance hors contexte médical connu.
 
@@ -115,24 +115,24 @@ Facteurs de risque documentés : `profil.md` §4.
 
 ## 5. Compte-rendu — écrit à la fin, systématiquement
 
-Copier `psy/dossier/gabarits/seance.md` → `psy/dossier/seances/AAAA-MM-JJ-seance.md`, remplir intégralement, frontmatter compris.
+Copier `psy/docs/gabarits/seance.md` → `psy/outputs/dossier/seances/AAAA-MM-JJ-seance.md`, remplir intégralement, frontmatter compris.
 
-**Puis mettre à jour `psy/dossier/etat.md`** — c'est le seul moment où il se réécrit :
+**Puis mettre à jour `psy/outputs/dossier/etat.md`** — c'est le seul moment où il se réécrit :
 
 - §1 chantier et palier atteint · §3 chiffres · §4 champs `campagne` (en ajouter ou en retirer si le chantier a bougé) · §5 nouvelles questions pour le Dr Isorni · §6 échelles passées · §7 ce qui vient de changer.
 - Toute modification des champs `campagne` du journal est **annoncée à Xavier pendant la séance**, jamais découverte au check-in du lendemain (rigidité / intolérance au changement).
 
-**Si une mesure a été passée** : un fichier par échelle dans `psy/dossier/mesures/`, d'après `gabarits/mesure.json`. **Toujours conserver les réponses item par item** — un score seul n'est pas une mesure, c'est un résumé (`PLAN.md` §7.7).
+**Si une mesure a été passée** : un fichier par échelle dans `psy/outputs/dossier/mesures/`, d'après `gabarits/mesure.json`. **Toujours conserver les réponses item par item** — un score seul n'est pas une mesure, c'est un résumé (`PLAN.md` §7.7).
 
 ### Puis mettre à jour le programme et la bibliothèque de Kokoro — dernier geste de la séance
 
-`psy/programme/programme.json` et `psy/programme/bibliotheque/`, au format du **`PLAN.md` §8** (**normatif**). C'est ici que la thérapie décidée en séance devient ce que Xavier voit sur son téléphone.
+`companion/inputs/programme.json` et `companion/inputs/bibliotheque/`, au format du **`PLAN.md` §8** (**normatif**). C'est ici que la thérapie décidée en séance devient ce que Xavier voit sur son téléphone.
 
 1. **Retirer** les étapes devenues sans objet — une démarche faite, un palier dépassé, un questionnaire passé. *(Retirer une étape ne laisse aucune trace côté Kokoro : c'est voulu.)*
 2. **Ajouter ou ajuster** les étapes décidées pendant la séance — jamais d'étape qui n'ait été annoncée à Xavier pendant la séance. Chacune porte sa `rubrique` : `crise` · `therapie` · `bilan` · `documentation`.
-3. **Écrire ou réviser les fiches de bibliothèque** appelées par les étapes `fiche`. 🔴 **Une fiche s'écrit pour Xavier, elle ne se copie jamais depuis `psy/protocoles/`** — un protocole porte des diagnostics, des pronostics, des noms de praticiens et des réserves adressées à un professionnel. C'est le contrôle **C9**.
+3. **Écrire ou réviser les fiches de bibliothèque** appelées par les étapes `fiche`. 🔴 **Une fiche s'écrit pour Xavier, elle ne se copie jamais depuis `psy/docs/protocoles/`** — un protocole porte des diagnostics, des pronostics, des noms de praticiens et des réserves adressées à un professionnel. C'est le contrôle **C9**.
 4. **Incrémenter `version`** et poser la date du jour dans `publie_le`.
-5. 🔴 **Faire passer la supervision** — `psy-superviseur`, passe de publication (`PLAN.md` §4.3). Elle écrit `psy/agent/supervisions/AAAA-MM-JJ-programme-vN.md` avec `verdict: publiable`. **Reporter son nom dans le champ `supervision` du programme.**
+5. 🔴 **Faire passer la supervision** — `psy-superviseur`, passe de publication (`PLAN.md` §4.3). Elle écrit `superviseur/outputs/AAAA-MM-JJ-programme-vN.md` avec `verdict: publiable`. **Reporter son nom dans le champ `supervision` du programme.**
 6. **`npm run publish`** — il **refuse la publication entière** si la supervision manque, ne correspond pas à la version, ou si une étape ou une fiche enfreint un invariant. **Un refus se corrige, il ne se contourne pas.**
 
 > ⚠️ **Quatre règles, et elles ne se négocient pas.**
@@ -162,7 +162,7 @@ Une thérapie qui ne se conduit pas seul se publie comme `seance-duo` : un déro
 
 Les échelles se passent désormais **dans Kokoro**, comme `questionnaire` en rubrique `bilan` : **VVIQ · TAS-20 · CAT-Q · GAD-7 · BES · MAIA**.
 
-- ⛔ **Les items se recopient depuis `psy/corpus/echelles/`, jamais de mémoire.**
+- ⛔ **Les items se recopient depuis `psy/docs/corpus/echelles/`, jamais de mémoire.**
 - 🔴 **Le PHQ-9 ne se publie jamais** — seul instrument porteur d'un déclencheur d'escalade ; il se passe **en conversation**, avec `psy-bilan`.
 - ⭐ **La cotation reste ici, en séance.** Kokoro renvoie les réponses item par item ; **il n'affiche jamais un score, un seuil ni une interprétation.**
 
@@ -181,5 +181,5 @@ Les échelles se passent désormais **dans Kokoro**, comme `questionnaire` en ru
 | Écraser un compte-rendu existant | Le dossier est append-only (R2). Une correction est un ajout. |
 | **Publier un programme non annoncé pendant la séance** | Aucun changement d'interface sans préavis. Xavier ne découvre jamais son écran modifié. |
 | 🔴 **Publier sans supervision** | Bloquant depuis le 13/08/2026 (`PLAN.md` §4.3). Le programme atteint Xavier **sans intermédiaire pour objecter** — c'est le seul endroit du dispositif où c'est le cas. |
-| 🔴 **Copier un protocole de `psy/protocoles/` dans `psy/programme/bibliotheque/`** | Un protocole est écrit **pour le praticien** : diagnostics, pronostics, hypothèses non tranchées, réserves destinées au Dr Isorni. Une fiche de bibliothèque s'**écrit**, elle ne se copie pas. Contrôle **C9**. |
+| 🔴 **Copier un protocole de `psy/docs/protocoles/` dans `companion/inputs/bibliotheque/`** | Un protocole est écrit **pour le praticien** : diagnostics, pronostics, hypothèses non tranchées, réserves destinées au Dr Isorni. Une fiche de bibliothèque s'**écrit**, elle ne se copie pas. Contrôle **C9**. |
 | **Commenter une étape non faite, ou arrêtée avant la fin** | `sortie_libre` est toujours vrai : sortir avant la fin est permis, donc ce n'est pas un manquement. L'absence n'appelle aucun commentaire. |

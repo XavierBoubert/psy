@@ -1,7 +1,7 @@
 # PLAN — le dispositif
 
-**Statut :** v2.1 — 14/08/2026. ⭐ **Document unique du projet.**
-**Base clinique de référence :** `ressources/xavier/Rapport psychiatrique et psychologique.md` (**v2.4**) — c'est lui, et lui seul, qui fait foi sur un point clinique.
+**Statut :** v2.2 — 14/08/2026. ⭐ **Document unique du projet.**
+**Base clinique de référence :** `patient/ressources/Rapport psychiatrique et psychologique.md` (**v2.4**) — c'est lui, et lui seul, qui fait foi sur un point clinique.
 
 > 📐 **Ce document a absorbé les cinq documents qui se partageaient la doctrine** — `psy/SYNCHRO.md`, `psy/agent/README.md`, `psy/android/PLAN-KOKORO.md`, `psy/programme/FORMAT.md` et `psy/dossier/SCHEMA.md`. Ils n'existent plus. **Il n'y a plus qu'un endroit où lire ce que le dispositif est, et un seul où le modifier.**
 >
@@ -33,7 +33,7 @@
 
 **Ce qu'il est.** Le praticien. Il suit son patient à raison d'**une séance de fond par semaine**, et il **construit tout le contenu** : les protocoles, les désensibilisations, les bilans, les questionnaires, les briefs, le programme. Il connaît le dossier mieux que Xavier ne s'en souvient.
 
-**Ce qu'il produit** *(détail au [§3](#3-claude-psy--ce-quil-produit))* : le dossier clinique (`psy/dossier/`), les protocoles (`psy/protocoles/`), le corpus (`psy/corpus/`), les briefs pour le Dr Isorni, et **le programme que Kokoro affiche** (`psy/programme/`).
+**Ce qu'il produit** *(détail au [§3](#3-claude-psy--ce-quil-produit))* : le dossier clinique (`psy/outputs/dossier/`), les protocoles (`psy/docs/protocoles/`), le corpus (`psy/docs/corpus/`), les briefs pour le Dr Isorni, et **le programme que Kokoro affiche** (`companion/inputs/`).
 
 **Ce qu'il ne fait jamais :** prescrire · conseiller une modification de traitement, même sous forme interrogative · publier sans supervision · publier hors séance · venir vers Xavier de lui-même.
 
@@ -47,9 +47,9 @@
 
 **🔴 Ce qui change le 13/08/2026 : il supervise chaque contenu que Claude Psy produit, et sa passe est bloquante avant publication.** Rien n'atteint Xavier ni un tiers sans elle. Détail et câblage : [§4](#4-claude-superviseur--le-contrôle).
 
-**Ce qu'il ne fait jamais :** écrire dans `psy/dossier/` · modifier le programme · publier quoi que ce soit · noter Xavier.
+**Ce qu'il ne fait jamais :** écrire dans `psy/outputs/dossier/` · modifier le programme · publier quoi que ce soit · noter Xavier.
 
-**Il est incarné par un skill** : `psy-superviseur`. Sortie : `psy/agent/supervisions/`.
+**Il est incarné par un skill** : `psy-superviseur`. Sortie : `superviseur/outputs/`.
 
 ### 1.3 Kokoro (心) — le compagnon
 
@@ -125,7 +125,7 @@
           │                          └────────────────────┘
           │ écrit                                    ┌──────────────┐
           ▼                                          │  Dr Isorni   │
-   psy/dossier/  ◄────────────────────────  brief ──►│ (Xavier relit│
+   psy/outputs/dossier/  ◄────────────────────────  brief ──►│ (Xavier relit│
    source de vérité                                  │  et décide)  │
                                                      └──────────────┘
 ```
@@ -177,7 +177,7 @@ Issues du rapport v2.4. **Aucune n'est négociable, et aucune n'est une préfér
 | **Vasovagal** | Chute de tension sur stimulus sang/injection/accident. **Peut faire perdre connaissance.** | ⭐ **Tension appliquée** — contraction musculaire | 🔴 **La relaxation.** « Détends-toi, respire lentement » abaisse encore la tension. Et **on n'appelle pas une syncope vasovagale : on s'allonge.** |
 | **Shutdown** | Perte de parole en surcharge. Le canal verbal est coupé, **pas la compréhension**. | Mot-code « shutdown » à Chourouk · retrait · reprise différée | Insister, demander de parler, interpréter le silence comme du retrait relationnel |
 
-> 🔴 **La fiche qui fait foi est `psy/protocoles/crise-escalade.md`.** `psy/dossier/profil.md` §4 n'en est qu'un résumé.
+> 🔴 **La fiche qui fait foi est `psy/docs/protocoles/crise-escalade.md`.** `psy/outputs/dossier/profil.md` §4 n'en est qu'un résumé.
 >
 > 🔴 **Les numéros d'appel d'urgence — 15, 112, 114 — ont été retirés de tout le dispositif le 10/08/2026**, à la demande de Xavier. Trois motifs, dont un clinique et décisif : ⭐ **une syncope vasovagale ne s'appelle pas, elle s'allonge** — proposer un appel au lieu de la tension appliquée était **une erreur d'orientation présentée comme une sécurité supplémentaire** ; aucun de ces numéros n'a jamais servi ; leur affichage permanent était anxiogène sur un profil TAG. **Ne jamais les réintroduire, sous aucune forme, dans aucune surface.**
 >
@@ -335,9 +335,9 @@ SAOS ──► privation de sommeil ──► dérèglement ghréline/leptine �
 
 | # | Chantier | Fiche | État |
 |---|---|---|---|
-| **1** 🔴 | **Reprise de la PPC par désensibilisation** | `psy/protocoles/ppc-desensibilisation.md` | **Chantier en cours** — palier 0 (logistique) non bouclé |
-| 2 | **Alimentation à structure externe** | `psy/protocoles/alimentation-structure-externe.md` | Écrit, démarre après |
-| 3 | **Activité physique sans impact** | `psy/protocoles/activite-physique-sans-impact.md` | Écrit, **feu vert médical préalable requis** |
+| **1** 🔴 | **Reprise de la PPC par désensibilisation** | `psy/docs/protocoles/ppc-desensibilisation.md` | **Chantier en cours** — palier 0 (logistique) non bouclé |
+| 2 | **Alimentation à structure externe** | `psy/docs/protocoles/alimentation-structure-externe.md` | Écrit, démarre après |
+| 3 | **Activité physique sans impact** | `psy/docs/protocoles/activite-physique-sans-impact.md` | Écrit, **feu vert médical préalable requis** |
 
 **Principes de conception du programme somatique :** zéro streak · zéro jugement calorique · zéro compteur de régularité · structure externe plutôt que volonté · prévisibilité (mêmes horaires, rotation stable, aucune injonction à « varier »).
 
@@ -347,7 +347,7 @@ SAOS ──► privation de sommeil ──► dérèglement ghréline/leptine �
 
 ### 3.8 Le corpus
 
-**Règle : toute affirmation clinique est adossée à une source citable.** `psy/corpus/`.
+**Règle : toute affirmation clinique est adossée à une source citable.** `psy/docs/corpus/`.
 
 | Priorité | Corpus | État |
 |---|---|---|
@@ -356,13 +356,13 @@ SAOS ──► privation de sommeil ──► dérèglement ghréline/leptine �
 | **3** | **TCC de l'agoraphobie** — exposition graduée. ⭐ **Sert deux fois** : la désensibilisation à la PPC *est* une exposition graduée | ⏸️ |
 | **4** | **Recommandations HAS** — TSA adulte, troubles anxieux | ⏸️ |
 | — | **Échelles et instruments** | ✅ `corpus/echelles/` |
-| — | DSM-5 intégral + extraits | ✅ `ressources/spécialisées/` |
+| — | DSM-5 intégral + extraits | ✅ `psy/docs/references/` |
 | ⏸️ | EMDR — ⭐ **protocole de stimulation bilatérale conduite par un tiers** *(cadence, longueur des séries, critères d'arrêt)* | Reporté avec [§3.6](#36-emdr--arbitrage-rendu--on-commence-par-la-tcc). ⚠️ **Le besoin de corpus change avec la décision du 14/08** : ce n'est plus un instrument à spécifier, c'est **un geste à scripter** |
 | ❓ | ACT / défusion cognitive — **vérifier la compatibilité aphantasie** | À évaluer |
 
 ### 3.9 Les échelles
 
-**Instruments versés** dans `psy/corpus/echelles/` : VVIQ, TAS-20, CAT-Q, GAD-7/PHQ-9 complets ; BES partiel + grille comportementale de substitution ; MAIA (items non obtenus, grille de substitution).
+**Instruments versés** dans `psy/docs/corpus/echelles/` : VVIQ, TAS-20, CAT-Q, GAD-7/PHQ-9 complets ; BES partiel + grille comportementale de substitution ; MAIA (items non obtenus, grille de substitution).
 
 **Deux règles non négociables, écrites dans chaque fiche :**
 
@@ -380,7 +380,7 @@ SAOS ──► privation de sommeil ──► dérèglement ghréline/leptine �
 **Trois règles de publication, non négociables :**
 
 1. 🔴 **Le PHQ-9 ne se publie jamais** — voir ci-dessous.
-2. ⛔ **Les items se recopient depuis `psy/corpus/echelles/`, jamais de mémoire.** La règle qui a bloqué le BES vaut à la publication comme à la passation.
+2. ⛔ **Les items se recopient depuis `psy/docs/corpus/echelles/`, jamais de mémoire.** La règle qui a bloqué le BES vaut à la publication comme à la passation.
 3. **La cotation n'est pas dans Kokoro.** L'app renvoie les réponses item par item ; **le score se calcule en séance**, et son interprétation aussi. ⭐ **Kokoro n'affiche jamais un score, un seuil ni une interprétation** — ce serait une progression à l'écran, et un score mal lu est pire qu'un score absent.
 
 > 🔴 **Deux câblages de sécurité.** (1) **L'item 9 du PHQ-9 interroge l'idéation suicidaire** : il se pose **en dernier**, toute réponse ≥ 1 **interrompt la passation** et déclenche le protocole de crise ; le fichier `mesures/` s'écrit après. (2) ⭐ **Le PHQ-9 ne se passe jamais dans Kokoro** — c'est le seul instrument porteur d'un déclencheur d'escalade, et Kokoro s'interdit tout numéro d'urgence par construction. Il se passe **en conversation**, avec `psy-bilan`.
@@ -402,7 +402,7 @@ Les skills vivent dans **`.claude/skills/psy-*/SKILL.md`** — Claude Code ne le
 
 **Invariants communs à tout skill du dispositif :**
 
-- charger **`psy/dossier/profil.md` et `psy/dossier/etat.md` ensemble, avant d'agir** — jamais l'un sans l'autre ;
+- charger **`psy/outputs/dossier/profil.md` et `psy/outputs/dossier/etat.md` ensemble, avant d'agir** — jamais l'un sans l'autre ;
 - **non-substitution** — aucun conseil de modification de traitement, jamais, même sous forme interrogative ;
 - **protocole de crise câblé** — 3114, non contournable ;
 - **aucune visualisation** ;
@@ -426,10 +426,10 @@ Les skills vivent dans **`.claude/skills/psy-*/SKILL.md`** — Claude Code ne le
 
 | Contenu produit par Claude Psy | Supervision | Bloquante ? |
 |---|---|---|
-| **Le programme** (`psy/programme/programme.json`) | À chaque publication | 🔴 **Oui — câblée dans `npm run publish`** |
-| **La bibliothèque** (`psy/programme/bibliotheque/`) | À chaque publication | 🔴 **Oui — même passe, même refus** |
+| **Le programme** (`companion/inputs/programme.json`) | À chaque publication | 🔴 **Oui — câblée dans `npm run publish`** |
+| **La bibliothèque** (`companion/inputs/bibliotheque/`) | À chaque publication | 🔴 **Oui — même passe, même refus** |
 | **Le brief** (`dossier/briefs/`) | Avant transmission | 🔴 **Oui — le brief ne part pas sans visa** |
-| **Les protocoles** (`psy/protocoles/`) | À l'écriture et à toute révision | Oui, avant qu'un protocole entre dans la bibliothèque |
+| **Les protocoles** (`psy/docs/protocoles/`) | À l'écriture et à toute révision | Oui, avant qu'un protocole entre dans la bibliothèque |
 | **Le corpus, les fiches d'échelle** | À l'écriture | Non — constat, correction séparée |
 | **Le dossier** (séances, journal, mesures, crises) | Passe périodique | Non — **le superviseur n'écrit jamais dans `dossier/`** |
 | **Ce document** | Passe périodique | Non |
@@ -455,7 +455,7 @@ Les skills vivent dans **`.claude/skills/psy-*/SKILL.md`** — Claude Code ne le
 
 **Le câblage, parce qu'un invariant non câblé est exactement ce que C3 traque :**
 
-1. Le superviseur écrit `psy/agent/supervisions/AAAA-MM-JJ-programme-vN.md`, avec en frontmatter :
+1. Le superviseur écrit `superviseur/outputs/AAAA-MM-JJ-programme-vN.md`, avec en frontmatter :
 
 ```yaml
 ---
@@ -467,7 +467,7 @@ controles: [C1, C2, C3, C4, C5, C6, C7, C8, C9, C10]
 ---
 ```
 
-2. `psy/programme/programme.json` porte le champ **`supervision`**, obligatoire, qui nomme ce fichier.
+2. `companion/inputs/programme.json` porte le champ **`supervision`**, obligatoire, qui nomme ce fichier.
 3. **`npm run publish` refuse la publication** si : le champ manque · le fichier n'existe pas · sa `version` ne correspond pas à celle du programme · son `verdict` n'est pas `publiable`.
 
 > ⭐ **Ce que ce câblage garantit vraiment : on ne peut pas publier une version supervisée hier.** Le numéro de version relie la passe à son objet. Republier après une correction impose une passe nouvelle — c'est le but.
@@ -478,7 +478,7 @@ controles: [C1, C2, C3, C4, C5, C6, C7, C8, C9, C10]
 
 ### 4.4 Ce que le superviseur ne fait jamais
 
-1. **Écrire dans `psy/dossier/`.** Une supervision porte sur le dispositif, pas sur le patient. Sortie : `psy/agent/supervisions/`.
+1. **Écrire dans `psy/outputs/dossier/`.** Une supervision porte sur le dispositif, pas sur le patient. Sortie : `superviseur/outputs/`.
 2. **Modifier ou publier le programme.** Il constate ; **la correction est un acte séparé**, fait par Claude Psy.
 3. **Noter Xavier.** Il ne supervise pas le patient.
 4. **Noter le processus sur le résultat.** Une hypothèse tenue pour acquise avant d'être mesurée reste une faute même si la mesure l'a ensuite confirmée. *(L'aphantasie a été tenue pour acquise deux jours avant que le VVIQ ne la confirme.)*
@@ -522,7 +522,7 @@ controles: [C1, C2, C3, C4, C5, C6, C7, C8, C9, C10]
 
 **Nommé, expressif, muet.** Il communique **par texte uniquement** : une voix qui surgit est une agression sensorielle, tandis que le texte se relit à froid, ne force pas le tempo, et **reste lisible en shutdown** — précisément quand le canal verbal est coupé.
 
-⭐ **Le corps — retenu le 13/08/2026 : un petit robot kawaii en 2D, à trait minimal et ligne claire.** Tête carrée arrondie portant un **panneau-visage**, corps en capsule, bras et pieds flottants sans main ni doigt, une seule couleur d'accent sur une plaque de poitrine. **Deux jeux fermés, et ils sont fermés au sens strict — rien hors liste ne s'affiche** : **six expressions** (neutre · attentif · chaleureux · clignement · veille · de-côté) et **cinq postures** (repos · présent · montre · côte-à-côte · retrait), plus `allonge` pour le seul écran vasovagal. 🔴 **Aucun sourcil, jamais, et aucune bouche concave vers le bas** — le reproche n'est pas interdit par discipline, il est rendu **indessinable par la géométrie**. ⭐ **Le panneau s'éteint** : présence sans visage, donc rien à décoder, au moment précis où la charge est la plus forte. 🔴 **Kokoro peut désigner un élément de l'écran** *(arbitrage de Xavier, réserve conservée)* — jamais le lecteur, jamais au-dessus de l'épaule, jamais sans un texte qui dit ce qu'il montre, jamais pour réclamer une action. Spécification complète : [`psy/android/design/CORPS.md`](psy/android/design/CORPS.md).
+⭐ **Le corps — retenu le 13/08/2026 : un petit robot kawaii en 2D, à trait minimal et ligne claire.** Tête carrée arrondie portant un **panneau-visage**, corps en capsule, bras et pieds flottants sans main ni doigt, une seule couleur d'accent sur une plaque de poitrine. **Deux jeux fermés, et ils sont fermés au sens strict — rien hors liste ne s'affiche** : **six expressions** (neutre · attentif · chaleureux · clignement · veille · de-côté) et **cinq postures** (repos · présent · montre · côte-à-côte · retrait), plus `allonge` pour le seul écran vasovagal. 🔴 **Aucun sourcil, jamais, et aucune bouche concave vers le bas** — le reproche n'est pas interdit par discipline, il est rendu **indessinable par la géométrie**. ⭐ **Le panneau s'éteint** : présence sans visage, donc rien à décoder, au moment précis où la charge est la plus forte. 🔴 **Kokoro peut désigner un élément de l'écran** *(arbitrage de Xavier, réserve conservée)* — jamais le lecteur, jamais au-dessus de l'épaule, jamais sans un texte qui dit ce qu'il montre, jamais pour réclamer une action. Spécification complète : [`companion/CORPS.md`](./companion/CORPS.md).
 
 **État de repos — 99 % du temps : il respire, c'est tout.** Micro-animation lente et constante, sans information, zéro charge cognitive, zéro interprétation à faire. La charge mesurée reste **consultable en un tap**, jamais affichée d'elle-même, **et jamais avec une valence morale**.
 
@@ -537,10 +537,10 @@ controles: [C1, C2, C3, C4, C5, C6, C7, C8, C9, C10]
 | **K4** | **Check-in quotidien + transport** | ✅ **11/08/2026** — un vrai check-in saisi sur le téléphone est arrivé au dossier (`journal/2026-08-11.json`, `"source": "android"`). 11 champs en compteurs et choix fermés, énoncés **mot pour mot** du skill, **aucune saisie de texte**, format identique au gabarit. Écriture par **SAF** — **aucune permission au manifeste** |
 | **K5** | ⭐ **Le programme et la bibliothèque** | 🔴 **en cours.** Kokoro lit `programme.json` + `bibliotheque/`, affiche par rubrique, écrit `reponses/`. ✅ Moitié PC écrite et vérifiée ; **Kokoro ne lit pas encore** |
 | **K6** 🆕 | ⭐ **La séance à deux** *(13/08/2026)* | 🔜 **Le jalon qui ouvre les thérapies impossibles en solo.** Type `seance-duo` : déroulé chronométré tenu par l'**aide-au-patient**, **mode entraînement** obligatoire avant la première fois, **signal d'arrêt** rappelé en permanence, **critères d'arrêt à un tap**. **Critère de fin :** un entraînement joué en entier par Chourouk, puis une séance réelle menée à son terme ou **arrêtée sur le signal** — l'un et l'autre valent |
-| **K7** | **La présence** *(Kokoro devient Kokoro)* | ⏸️ Foreground service + overlay · ⭐ **le corps — spécifié et retenu le 13/08/2026, reste à tracer en vectoriel** ([`design/CORPS.md`](psy/android/design/CORPS.md)) · **écran de diagnostic One UI**. **Critère de fin :** l'overlay survit 72 h sans être tué par One UI |
+| **K7** | **La présence** *(Kokoro devient Kokoro)* | ⏸️ Foreground service + overlay · ⭐ **le corps — spécifié et retenu le 13/08/2026, reste à tracer en vectoriel** ([`design/CORPS.md`](./companion/CORPS.md)) · **écran de diagnostic One UI**. **Critère de fin :** l'overlay survit 72 h sans être tué par One UI |
 | ~~—~~ | ~~**Interpellation**~~ | ❌ **supprimé le 12/08/2026** — incompatible avec « Kokoro ne vient jamais vers Xavier ». 📌 **Ce n'est pas une perte : Android rétrograde déjà un full-screen intent en bannière dès que le téléphone est en usage.** La décision ne fait qu'aligner l'intention sur ce que la plateforme garantissait |
 
-**Critère de fin de K5 :** une étape publiée depuis le PC apparaît sur le téléphone, est faite par Xavier, et sa réponse revient dans `psy/dossier/` — valide au format, sans intervention manuelle.
+**Critère de fin de K5 :** une étape publiée depuis le PC apparaît sur le téléphone, est faite par Xavier, et sa réponse revient dans `psy/outputs/dossier/` — valide au format, sans intervention manuelle.
 
 #### ⭐ La règle de priorité, révisée le 13/08/2026
 
@@ -650,12 +650,12 @@ Une contrainte de conception qui reste une phrase se perd à l'implémentation. 
 
 | Sens | Ce qui transite | Auteur unique | Versé dans |
 |---|---|---|---|
-| **PC → Kokoro** | `programme.json` — la thérapie du moment | Claude Psy | *(source : `psy/programme/`)* |
-| **PC → Kokoro** | `bibliotheque/*.md` — la documentation accessible à Xavier | Claude Psy | *(source : `psy/programme/bibliotheque/`)* |
-| **Kokoro → PC** | `journal/AAAA-MM-JJ.json` — les check-ins | Kokoro | `psy/dossier/journal/` |
-| **Kokoro → PC** | `reponses/AAAA-MM-JJ-HHMM-<id>.json` — ce qui a été fait | Kokoro | `psy/dossier/reponses/` |
+| **PC → Kokoro** | `programme.json` — la thérapie du moment | Claude Psy | *(source : `companion/inputs/`)* |
+| **PC → Kokoro** | `bibliotheque/*.md` — la documentation accessible à Xavier | Claude Psy | *(source : `companion/inputs/bibliotheque/`)* |
+| **Kokoro → PC** | `journal/AAAA-MM-JJ.json` — les check-ins | Kokoro | `companion/outputs/journal/` |
+| **Kokoro → PC** | `reponses/AAAA-MM-JJ-HHMM-<id>.json` — ce qui a été fait | Kokoro | `companion/outputs/reponses/` |
 
-**Ce qui ne transite jamais** — et la liste est fermée : `profil.md` · `etat.md` · `seances/` · `crises/` · `mesures/` · `briefs/` · `gabarits/` · `psy/agent/supervisions/` · `psy/corpus/` · `psy/protocoles/` *(à l'état brut)* · `ressources/` · le code · `.git`.
+**Ce qui ne transite jamais** — et la liste est fermée : `profil.md` · `etat.md` · `seances/` · `crises/` · `mesures/` · `briefs/` · `gabarits/` · `superviseur/outputs/` · `psy/docs/corpus/` · `psy/docs/protocoles/` *(à l'état brut)* · `psy/docs/references/` · `patient/ressources/` · `aidant/ressources/` · le code · `.git`.
 
 > ⭐ **La distinction qui tient tout : le contenu publié est *dérivé*, jamais *extrait*.** Le programme porte **ce qu'il y a à faire**, jamais ce qui a été constaté, mesuré ou diagnostiqué. La bibliothèque porte **une fiche réécrite pour Xavier**, jamais le protocole clinique brut. C'est le contrôle **C9** du superviseur ([§4.2](#42-les-dix-contrôles)).
 
@@ -667,7 +667,7 @@ Une contrainte de conception qui reste une phrase se perd à l'implémentation. 
 
 Le plan d'origine posait : « données locales, repo privé. **Rien ne part vers un tiers hors appels à Claude.** » **Versionner le dossier sur GitHub contredit partiellement cette phrase** : GitHub est un tiers, et il héberge des données de santé.
 
-Arbitrage de Xavier, en connaissance de cause : la traçabilité clinique et la sauvegarde hors-machine valent le risque résiduel. `ressources/xavier/` — l'intégralité des documents médicaux réels — y était de toute façon versionné depuis l'origine.
+Arbitrage de Xavier, en connaissance de cause : la traçabilité clinique et la sauvegarde hors-machine valent le risque résiduel. `patient/ressources/` — l'intégralité des documents médicaux réels — y était de toute façon versionné depuis l'origine.
 
 **Conditions :** dépôt **privé**, à revérifier périodiquement · **2FA** + clé SSH · **aucun fork, aucun collaborateur, aucune GitHub Action** ayant accès au contenu.
 
@@ -704,7 +704,7 @@ Arbitrage de Xavier, en connaissance de cause : la traçabilité clinique et la 
 
 L'assouplissement porte sur **GitHub et Google Drive, et rien d'autre**. Hors de ces deux-là et hors des appels à Claude, **aucune donnée ne part vers un tiers** : pas de cloud santé, pas de service d'analyse externe, pas de télémétrie, pas d'hébergeur de sauvegarde. **Toute proposition d'ajouter un service tiers est refusée par défaut** et doit faire l'objet d'un arbitrage explicite, tracé ici.
 
-**Porte de sortie**, si l'un des arbitrages est révisé : chiffrement au repos par `git-crypt` ou `age` sur `psy/dossier/` et `ressources/xavier/`. Contrepartie : Claude Code ne lit plus rien sans déverrouillage, et chaque surface doit gérer la clé.
+**Porte de sortie**, si l'un des arbitrages est révisé : chiffrement au repos par `git-crypt` ou `age` sur `psy/outputs/dossier/` et `patient/ressources/`. Contrepartie : Claude Code ne lit plus rien sans déverrouillage, et chaque surface doit gérer la clé.
 
 ### 6.4 L'arborescence du transit
 
@@ -723,7 +723,7 @@ H:\Mon Drive\kokoro\               ← hors dépôt, jamais partagé
 
 | Commande | Sens | Ce qu'elle fait |
 |---|---|---|
-| **`npm run sync`** | Drive → dépôt | Verse `journal/` et `reponses/` dans `psy/dossier/`. **N'écrase jamais un fichier existant** (R2), valide chaque fichier au [§7](#7-le-dossier--format), et signale tout nom hors convention |
+| **`npm run sync`** | Drive → dépôt | Verse `journal/` et `reponses/` dans `psy/outputs/dossier/`. **N'écrase jamais un fichier existant** (R2), valide chaque fichier au [§7](#7-le-dossier--format), et signale tout nom hors convention |
 | **`npm run publish`** | dépôt → Drive | Valide le programme et la bibliothèque au [§8](#8-le-programme--format), **vérifie la supervision** ([§4.3](#43--la-supervision-est-bloquante-avant-publication)), et **refuse la publication entière** au moindre manquement |
 
 Formes longues : `npm run contenu-sync -- <transit>` · `npm run programme-publish -- <transit>`.
@@ -747,7 +747,7 @@ Formes longues : `npm run contenu-sync -- <transit>` · `npm run programme-publi
 
 ## 7. Le dossier — format
 
-> 🔴 **NORMATIF.** Ce paragraphe définit le format de `psy/dossier/`. Claude Code et Kokoro le lisent et l'écrivent. **Aucune surface n'a le droit d'inventer un format.**
+> 🔴 **NORMATIF.** Ce paragraphe définit le format de `psy/outputs/dossier/`. Claude Code et Kokoro le lisent et l'écrivent. **Aucune surface n'a le droit d'inventer un format.**
 
 **Pourquoi il existe :** le dossier est la **source de vérité unique**. C'est lui — pas les conversations — qui rend le suivi longitudinal possible. Si son format dérive, la mémoire longitudinale se dégrade **en silence** : les tendances deviennent incalculables, les comparaisons faussées, et l'avantage n° 2 du dispositif disparaît.
 
@@ -766,18 +766,26 @@ Formes longues : `npm run contenu-sync -- <transit>` · `npm run programme-publi
 
 ### 7.2 Arborescence
 
+⭐ **Le dossier est réparti sur deux rôles depuis la réorganisation du 14/08/2026, et la ligne de partage est celle de l'auteur** *(R3, et « aucun fichier n'a deux auteurs », [§6.2](#62-le-périmètre))* : **ce que Claude Psy écrit vit chez le psy, ce que Kokoro écrit vit chez le compagnon.** C'est un déplacement de fichiers, **pas** un changement de format : les §7.3 à §7.8 sont inchangés, et le dossier reste **une seule mémoire longitudinale**, qui se charge en entier.
+
 ```
-psy/dossier/
+psy/outputs/dossier/                     ← écrit par Claude Psy
   profil.md        fiche condensée — contexte PERMANENT, rechargé à chaque séance
   etat.md          état COURANT — chantier en cours, traitement, questions ouvertes
-  journal/         check-ins quotidiens ....... JSON — AAAA-MM-JJ.json
-  reponses/        ce que Xavier a fait ....... JSON — AAAA-MM-JJ-HHMM-<id>.json
   seances/         comptes-rendus de séance ... MD   — AAAA-MM-JJ-seance.md
   crises/          épisodes de crise .......... JSON — AAAA-MM-JJ-HHMM-<type>.json
   mesures/         échelles cotées ............ JSON — AAAA-MM-JJ-<echelle>.json
   briefs/          briefs Dr Isorni ........... MD   — AAAA-MM-JJ-isorni.md
-  gabarits/        modèles vierges — à copier, jamais à remplir sur place
+
+companion/outputs/                       ← écrit par Kokoro, versé par `npm run sync`
+  journal/         check-ins quotidiens ....... JSON — AAAA-MM-JJ.json
+  reponses/        ce que Xavier a fait ....... JSON — AAAA-MM-JJ-HHMM-<id>.json
+
+psy/docs/gabarits/                       ← ni l'un ni l'autre : des modèles vierges
+                   à copier, jamais à remplir sur place
 ```
+
+> ⚠️ **`companion/outputs/` est du dossier clinique, malgré son emplacement.** Les six règles ci-dessus s'y appliquent entières — **R1 et R2 en particulier**. Un fichier n'y est jamais écrasé ni supprimé, et `npm run sync` refuse de le faire.
 
 **`profil.md` et `etat.md` sont les deux seules exceptions à R2** : ce sont des documents vivants, réécrits. Leur historique est tenu par git, et chacun porte un journal de révisions en pied de page.
 
@@ -978,7 +986,7 @@ Ajouter un champ est un acte de conception, pas une commodité. **Trois question
 ### 8.1 Le circuit
 
 ```
-Claude Psy ──écrit── psy/programme/programme.json + psy/programme/bibliotheque/
+Claude Psy ──écrit── companion/inputs/programme.json + companion/inputs/bibliotheque/
                             │
                     Claude Superviseur ── verdict: publiable   (§4.3, bloquant)
                             │
@@ -992,7 +1000,7 @@ Claude Psy ──écrit── psy/programme/programme.json + psy/programme/bibli
                             │
                        npm run sync
                             ▼
-              psy/dossier/  ──lit── Claude Psy · Superviseur
+              psy/outputs/dossier/  ──lit── Claude Psy · Superviseur
 ```
 
 **Le dépôt reste la source de vérité. Drive n'est qu'un tuyau.**
@@ -1012,7 +1020,7 @@ Claude Psy ──écrit── psy/programme/programme.json + psy/programme/bibli
 |---|---|
 | `version` | Entier, **s'incrémente à chaque publication**. Kokoro compare avec la version qu'il a : s'il y a du nouveau, il affiche **une ligne discrète en haut** — **jamais une notification** |
 | `publie_le` | `AAAA-MM-JJ` |
-| `supervision` 🆕 | 🔴 **Obligatoire.** Nom du fichier de `psy/agent/supervisions/` (sans extension) qui vise **cette version**. Sans lui, `npm run publish` refuse ([§4.3](#43--la-supervision-est-bloquante-avant-publication)) |
+| `supervision` 🆕 | 🔴 **Obligatoire.** Nom du fichier de `superviseur/outputs/` (sans extension) qui vise **cette version**. Sans lui, `npm run publish` refuse ([§4.3](#43--la-supervision-est-bloquante-avant-publication)) |
 
 ### 8.3 Une étape
 
@@ -1151,9 +1159,9 @@ Un fichier par étape faite, dans `reponses/` : `AAAA-MM-JJ-HHMM-<id>.json`
 
 ### 8.6 La bibliothèque
 
-**`psy/programme/bibliotheque/<id>.md`** — un fichier Markdown par document, publié tel quel vers Drive.
+**`companion/inputs/bibliotheque/<id>.md`** — un fichier Markdown par document, publié tel quel vers Drive.
 
-> 🔴 **La règle qui vaut plus que toutes les autres ici : un document de la bibliothèque est *écrit pour Xavier*, il n'est pas *copié depuis* `psy/protocoles/`.**
+> 🔴 **La règle qui vaut plus que toutes les autres ici : un document de la bibliothèque est *écrit pour Xavier*, il n'est pas *copié depuis* `psy/docs/protocoles/`.**
 >
 > Un protocole clinique porte des diagnostics, des pronostics, des noms de praticiens, des hypothèses non tranchées et des réserves adressées à un professionnel. **Une fiche de bibliothèque porte ce qu'il y a à faire, et pourquoi.** C'est le contrôle **C9** du superviseur.
 
@@ -1206,7 +1214,7 @@ Un fichier par étape faite, dans `reponses/` : `AAAA-MM-JJ-HHMM-<id>.json`
 - [ ] **Envoyer l'email au Dr Isorni** — rédigé, non envoyé
 
 ### Étape 2 — Instrumentation du suivi ⏱️ *ouverte le 09/08/2026*
-- [x] **Instruments versés** (`psy/corpus/echelles/`) + plan de passation daté
+- [x] **Instruments versés** (`psy/docs/corpus/echelles/`) + plan de passation daté
 - [x] Skills `psy-bilan` et `psy-brief-isorni`
 - [x] 🔴 **Check-in quotidien démarré** (09/08), **passé sur Kokoro** (11/08)
 - [x] **VVIQ passé — 18/80, aphantasie confirmée**
@@ -1278,11 +1286,11 @@ Un fichier par étape faite, dans `reponses/` : `AAAA-MM-JJ-HHMM-<id>.json`
 |---|---|---|
 | **E** | Compte Google du transit | ✅ **13/08/2026 — on reste sur `xavier@allons-y.io`.** Micro-entreprise : la note passe en frais de société. Objection du dispositif **conservée** au [§6.6](#66-état-des-conditions--vérifié-le-13082026), acceptée et non levée |
 | ~~**J**~~ | ~~Sauvegarde froide hors-ligne~~ | ❌ **Clos le 13/08/2026 à la demande de Xavier. Ne pas rouvrir.** |
-| **L** | La bibliothèque remplace-t-elle `psy/protocoles/` ? | ✅ **Non** *(13/08/2026)*. Deux lecteurs différents ; fusionner ferait entrer du contenu clinique brut dans le téléphone — ce que **C9** traque |
+| **L** | La bibliothèque remplace-t-elle `psy/docs/protocoles/` ? | ✅ **Non** *(13/08/2026)*. Deux lecteurs différents ; fusionner ferait entrer du contenu clinique brut dans le téléphone — ce que **C9** traque |
 | **P** | Un bilan dans Kokoro | ✅ **Un texte daté écrit en séance, jamais un graphique calculé par l'app** *(13/08/2026)*. C'est ce qui permet « ses bilans dans la main » sans casser « aucun historique à l'écran » |
 | **Q** | Les échelles passent-elles par Kokoro ? | ✅ **Oui** *(13/08/2026)* — VVIQ, TAS-20, CAT-Q, GAD-7, BES, MAIA. 🔴 **Le PHQ-9 reste dehors** : seul instrument porteur d'un déclencheur d'escalade ([§3.9](#39-les-échelles)) |
 | **R** | Priorité de construction de Kokoro | ✅ **On accélère** *(13/08/2026)*. Depuis K5, **Kokoro ne concurrence plus le palier 0 — il le porte.** Ce qui ne bouge pas : la date du brief, et `ppc_minutes` comme indicateur qui tranche ([§5.4](#54-les-jalons)) |
-| **S** 🆕 | 🔴 **Kokoro peut-il désigner un élément de l'écran ?** La v0.1 du corps l'interdisait avec les autres gestes — pointer appelle une réponse, et une réponse attendue est une charge de camouflage | ✅ **Oui** *(13/08/2026, arbitrage de Xavier)*. **Le geste vise l'écran, pas Xavier** — c'est la fonction *éduquer*, qui sans ça reste purement textuelle. 🔴 **Quatre garde-fous, aucun optionnel** : jamais au-dessus de l'épaule · jamais vers le lecteur · ni main ni doigt · **toujours doublé d'un texte qui dit ce qu'il montre**. ⚠️ **L'objection reste écrite, acceptée et non levée** ([`design/CORPS.md` §6](psy/android/design/CORPS.md)) |
+| **S** 🆕 | 🔴 **Kokoro peut-il désigner un élément de l'écran ?** La v0.1 du corps l'interdisait avec les autres gestes — pointer appelle une réponse, et une réponse attendue est une charge de camouflage | ✅ **Oui** *(13/08/2026, arbitrage de Xavier)*. **Le geste vise l'écran, pas Xavier** — c'est la fonction *éduquer*, qui sans ça reste purement textuelle. 🔴 **Quatre garde-fous, aucun optionnel** : jamais au-dessus de l'épaule · jamais vers le lecteur · ni main ni doigt · **toujours doublé d'un texte qui dit ce qu'il montre**. ⚠️ **L'objection reste écrite, acceptée et non levée** ([`design/CORPS.md` §6](./companion/CORPS.md)) |
 
 ---
 
@@ -1290,10 +1298,11 @@ Un fichier par étape faite, dans `reponses/` : `AAAA-MM-JJ-HHMM-<id>.json`
 
 | Date | Décisions |
 |---|---|
+| **14/08/2026** *(soir)* | 📐 **Le dépôt s'organise par rôle, et plus par nature de fichier — demande de Xavier : « qu'ils puissent devenir indépendants, responsables et compartimentés ».** Cinq répertoires, un par persona : `psy/` · `companion/` · `superviseur/` · `patient/` · `aidant/`, avec la même convention partout — la racine porte la documentation, `ressources/` ce dont le rôle a besoin, `outputs/` ce qu'il produit, `inputs/` ce qu'un autre lui donne, `scripts/` ce qui le sert. ❌ **`ressources/` et `scripts/` disparaissent de la racine** : un fichier qui n'appartient à aucun rôle n'a plus de domicile, et c'est voulu — **c'est le signe qu'il faut nommer son rôle, pas créer un fourre-tout**. ⭐ **La décision qui a demandé le plus d'arbitrage, et la seule qui touche à un format normatif : le dossier clinique se coupe en deux.** `journal/` et `reponses/` passent en `companion/outputs/`, le reste demeure en `psy/outputs/dossier/`. **La ligne de partage n'est pas thématique, c'est celle de l'auteur** — la règle « aucun fichier n'a deux auteurs » ([§6.2](#62-le-périmètre)) cessait d'être lisible dans l'arborescence alors qu'elle était déjà vraie dans les faits. ⚠️ **Ce que ça coûte, dit franchement : le §7 décrit maintenant un dossier réparti sur deux chemins**, et un lecteur pressé peut croire qu'il y a deux dossiers. **Il n'y en a qu'un, et il se charge en entier** — le [§7.2](#72-arborescence) le dit explicitement, et les six règles, R2 append-only comprise, s'appliquent des deux côtés. 🔴 **Aucun format ne change** : §7.3 à §7.8 et §8 sont intacts ; `programme-publish` et `contenu-sync` ne changent que de constante de chemin. 📌 **Deux déplacements méritent leur motif.** Les **gabarits** quittent `dossier/` pour `psy/docs/gabarits/` : un modèle vierge est de la documentation, pas une donnée produite — il n'avait rien à faire dans un répertoire de sorties. La **fiche Chourouk** quitte `protocoles/` pour `aidant/ressources/` : elle était le seul document de `protocoles/` à n'être **pas** écrit pour le praticien, et ce voisinage était précisément la confusion que **C9** et **C10** traquent. ⭐ **Le programme reste chez le compagnon (`companion/inputs/`) bien qu'il soit écrit par le psy** — c'est le sens de `inputs/` : le lieu dit **à qui la chose est destinée**, pas qui l'a tapée. 📝 **Trois répertoires `scripts/` naissent vides** (`superviseur/`, `patient/`, `aidant/`), chacun avec un README qui dit **pourquoi il est vide et ce qui aurait vocation à y entrer** — notamment que rien n'y viendra doubler `npm run publish`, sous peine de **C3 et C7 en même temps**. ✅ **Vérifié : 180 fichiers avant, 180 après ; aucun lien relatif cassé ; `npm run typecheck` passe.** |
 | **14/08/2026** | ❌ **La surface web desktop est supprimée — décision de Xavier : « tout est dans Kokoro dorénavant ».** `psy/web/` sort du dépôt, le §5.8 cesse de décrire une surface pour enregistrer sa suppression, et **le dispositif n'a plus qu'une seule surface tournée vers Xavier.** ⭐ **Ce que la décision enregistre existait déjà : trois des quatre livrables desktop avaient migré vers Kokoro avant d'avoir été écrits** — les échelles le 13/08, les fiches le 13/08, et le tableau de bord n'avait plus de destinataire du jour où « aucun historique, aucune progression à l'écran » est devenu un invariant. **Un plan qui décrit une surface que trois décisions successives ont vidée n'est plus un plan, c'est un vestige** ; le §5.8 était le dernier endroit du document où une doctrine survivait à son objet. 📌 **Deux orphelins, traités séparément plutôt qu'oubliés ensemble.** Les **schémas Zod** n'étaient pas un livrable d'interface — c'est le **contrat de données**, et ses consommateurs (`programme-publish`, `contenu-sync`) existent déjà et le valident à la main : le besoin passe en transverse, il ne disparaît pas avec la surface. ⚠️ **Le second orphelin semblait être une vraie perte, et il a tenu deux heures : la stimulation bilatérale *visuelle* exige une amplitude de mouvement oculaire qu'un téléphone ne donne pas** — c'était **le seul argument proprement clinique** en faveur du desktop, et le dispositif l'a d'abord porté au compte des pertes, en reportant l'arbitrage de modalité à l'Étape 6. 🔴 **Xavier a tranché autrement, et mieux : « l'EMDR va être joué via l'aidant dans les séances à deux ».** ⭐ **La réserve n'est pas reportée, elle est levée — et l'objection portait sur le mauvais axe.** Le dispositif cherchait **quel écran** ; la réponse était qu'**il n'en faut aucun** : une main à un mètre donne plus d'amplitude que n'importe quel écran, desktop compris, et c'est la modalité historique de l'EMDR, pas un pis-aller. 📌 **Trois conséquences d'un coup** : l'arbitrage de modalité **tombe** *(les trois redeviennent disponibles, y compris la visuelle)* · l'Étape 6 **perd son dernier livrable logiciel** — ce qui reste à écrire est du contenu clinique, porté par **K6** · et `seance-duo` gagne un usage qu'il n'avait pas été conçu pour porter. 🔴 **Ce que ça ne déverrouille pas, dit tout de suite parce que la lecture inverse est tentante : tenir l'instrument et conduire un retraitement sont deux actes différents.** Les critères de la phase 3 restent entiers, les deux objections inchangées du 08/08 restent inchangées. ⚠️ **Et la décision rend visible une frontière que personne n'avait encore rencontrée — elle porte sur la phase 3 seule : un retraitement demande de dire ce qui vient entre deux séries, donc la personne qui tient l'instrument entend le matériel.** ⭐ **Ce n'est plus une question de compétence, c'est C10** — l'aide lit des consignes, elle n'apprend pas sur Xavier ce qu'il n'a pas décidé de partager. **En phases 1 et 2 la question ne se pose pas** ; en phase 3 elle devient une condition de plus, **à trancher avec le Dr Isorni au déverrouillage, et jamais pendant une séance**. 📌 **Un point dur de format nommé maintenant pour ne pas être découvert à K6 :** `sequence` est **linéaire** et ne sait pas exprimer une **répétition en séries** (§8.3) — et déplier trente consignes identiques serait un contournement, pas une solution. ⚙️ **Conséquence normative, petite mais réelle : le champ `source` du journal (§7.3) perd la valeur `"web"`** — deux valeurs, `claude-code` et `android`, et `contenu-sync` refuse désormais la troisième. **Un format qui garde une valeur sans producteur finit par la voir arriver.** |
-| **13/08/2026** *(nuit)* | ⭐ **Kokoro a un corps, et il est acté : un petit robot kawaii en 2D.** Spécification complète dans [`psy/android/design/CORPS.md`](psy/android/design/CORPS.md) **v1.0**, planche de référence promue dans `design/retenus/`. **L'ovoïde de la v0.1 est abandonné** — il tenait douze heures et il est tombé sur trois demandes de Xavier, chacune ajoutant quelque chose qu'une forme unique et muette ne pouvait pas porter : **animable en 2D sur une page web** (donc un assemblage de pièces, pas une forme continue — et le rig sert Android autant que le web), **plusieurs expressions**, et 🔴 **la possibilité de montrer une partie de l'écran**. ⭐ **Le gain qui n'était pas prévu et qui décide de la valeur du robot : il porte son visage sur un panneau, et un panneau s'éteint.** L'ovoïde portait ses yeux à même le corps — pour ne rien donner à lire pendant un exercice, il fallait le **retourner de dos**. Un écran vide dit « il n'y a rien à décoder ici » sans coûter un seul dessin de plus, et c'est exactement ce qu'on veut au moment le plus chargé. 🔴 **Les deux jeux sont fermés au sens strict — six expressions, cinq postures, rien hors liste ne s'affiche.** ⭐ **Et l'invariant « aucune expression de reproche » cesse d'être une consigne pour devenir une propriété du dessin :** pas de sourcil dans le jeu de pièces, pas de bouche concave vers le bas — **le reproche n'est pas interdit, il est indessinable.** Même logique que le câblage de la supervision : un invariant qui reste une phrase se perd à l'implémentation. 🔴 **Arbitrage S — la désignation entre dans le personnage, et l'objection reste écrite.** Pointer était interdit, et pour un motif qui n'a pas disparu : un geste dirigé vers quelqu'un appelle une réponse. **Ce qui le rend acceptable est une distinction, pas une exception :** le bras vise **l'écran**, jamais Xavier. Quatre garde-fous — jamais au-dessus de l'épaule *(un bras levé se lit comme un salut, et la planche `01` a produit ce défaut du premier coup)*, jamais vers le lecteur, ni main ni doigt, **et toujours doublé d'un texte qui dit ce qu'il montre.** ❌ **Frontière posée avant d'être franchie : une désignation montre où une chose se trouve, elle ne réclame jamais une action** — ni « clique ici », ni « tu as oublié ça ». ⚠️ **Ce n'est pas encore un livrable :** les planches sont des recherches, **aucun PNG de modèle n'entre dans l'APK ni dans la page web** ; le tracé vectoriel des onze pièces reste à faire, comme la pose `allonge` de l'écran vasovagal — **la seule qui manque, et la seule qui soit une structure externe et non un décor** *(consigne à se représenter chez un aphantasique)*. 📌 **L'annonce préalable de changement d'apparence (§5.6) est due, et celle-ci est la plus facile qu'on aura jamais : Kokoro n'a encore aucun visage installé. La prochaine en sera une vraie.** |
+| **13/08/2026** *(nuit)* | ⭐ **Kokoro a un corps, et il est acté : un petit robot kawaii en 2D.** Spécification complète dans [`companion/CORPS.md`](./companion/CORPS.md) **v1.0**, planche de référence promue dans `design/retenus/`. **L'ovoïde de la v0.1 est abandonné** — il tenait douze heures et il est tombé sur trois demandes de Xavier, chacune ajoutant quelque chose qu'une forme unique et muette ne pouvait pas porter : **animable en 2D sur une page web** (donc un assemblage de pièces, pas une forme continue — et le rig sert Android autant que le web), **plusieurs expressions**, et 🔴 **la possibilité de montrer une partie de l'écran**. ⭐ **Le gain qui n'était pas prévu et qui décide de la valeur du robot : il porte son visage sur un panneau, et un panneau s'éteint.** L'ovoïde portait ses yeux à même le corps — pour ne rien donner à lire pendant un exercice, il fallait le **retourner de dos**. Un écran vide dit « il n'y a rien à décoder ici » sans coûter un seul dessin de plus, et c'est exactement ce qu'on veut au moment le plus chargé. 🔴 **Les deux jeux sont fermés au sens strict — six expressions, cinq postures, rien hors liste ne s'affiche.** ⭐ **Et l'invariant « aucune expression de reproche » cesse d'être une consigne pour devenir une propriété du dessin :** pas de sourcil dans le jeu de pièces, pas de bouche concave vers le bas — **le reproche n'est pas interdit, il est indessinable.** Même logique que le câblage de la supervision : un invariant qui reste une phrase se perd à l'implémentation. 🔴 **Arbitrage S — la désignation entre dans le personnage, et l'objection reste écrite.** Pointer était interdit, et pour un motif qui n'a pas disparu : un geste dirigé vers quelqu'un appelle une réponse. **Ce qui le rend acceptable est une distinction, pas une exception :** le bras vise **l'écran**, jamais Xavier. Quatre garde-fous — jamais au-dessus de l'épaule *(un bras levé se lit comme un salut, et la planche `01` a produit ce défaut du premier coup)*, jamais vers le lecteur, ni main ni doigt, **et toujours doublé d'un texte qui dit ce qu'il montre.** ❌ **Frontière posée avant d'être franchie : une désignation montre où une chose se trouve, elle ne réclame jamais une action** — ni « clique ici », ni « tu as oublié ça ». ⚠️ **Ce n'est pas encore un livrable :** les planches sont des recherches, **aucun PNG de modèle n'entre dans l'APK ni dans la page web** ; le tracé vectoriel des onze pièces reste à faire, comme la pose `allonge` de l'écran vasovagal — **la seule qui manque, et la seule qui soit une structure externe et non un décor** *(consigne à se représenter chez un aphantasique)*. 📌 **L'annonce préalable de changement d'apparence (§5.6) est due, et celle-ci est la plus facile qu'on aura jamais : Kokoro n'a encore aucun visage installé. La prochaine en sera une vraie.** |
 | **13/08/2026** *(soir)* | ⭐ **Un cinquième persona entre dans le dispositif : l'aide-au-patient.** Kokoro intègre les **séances à deux** — un déroulé **chronométré**, tenu par une personne qui **ne fait que ce que l'écran affiche**. Aujourd'hui : **Chourouk**. ⭐ **Le motif est encore la règle §9.19, et c'est ce qui rend l'idée juste plutôt que seulement pratique :** certaines thérapies ne se conduisent pas seul, et *« demande de l'aide au bon moment »* est **inapplicable chez quelqu'un dont la parole tombe sous surcharge** — même faute que « écoute ta satiété ». **La parade est une structure externe, et ici la structure est une personne qui a le déroulé sous les yeux et n'a rien à décider.** 🔴 **Trois garde-fous nés avec le type, et aucun n'est optionnel** : le **signal d'arrêt** — un geste convenu à froid par lequel Xavier arrête **sans parler**, rappelé à l'écran en permanence, **champ obligatoire du format** · les **critères d'arrêt** accessibles en un tap, dont le dernier est toujours *« tu ne sais pas quoi faire → on s'arrête »* · le **mode entraînement**, obligatoire avant la première fois — **même logique que l'essai à froid du mot-code : la première fois que ça compte ne doit pas être la première fois que ça se fait.** 🔴 **Un dixième contrôle apparaît — C10, contenu adressé à l'aide-au-patient.** Le dispositif gagne une **quatrième sortie** : ce que Chourouk lit sur l'écran. Deux fautes à traquer : lui **apprendre** quelque chose sur Xavier qu'il n'a pas décidé de partager (diagnostic, score, hypothèse), et lui **demander de juger** — *« estime si ça va »*, *« décide s'il faut continuer »*. ⭐ **Une consigne qui demande un jugement clinique la met en faute quoi qu'elle fasse.** ⚠️ **Ce que l'aide-au-patient change à l'arbitrage EMDR, dit précisément parce que la tentation de lire « quelqu'un est là, donc on peut y aller » est forte :** elle lève **une** des trois objections du 08/08 — l'abréaction sans filet, la vraie, celle où **en shutdown on ne peut plus demander d'aide**. **Les deux autres restent entières** : la fenêtre de surcharge et la titration du traitement ne se corrigent pas par une présence. **Les critères de déverrouillage de la phase 3 ne bougent pas.** Ce qu'elle rend possible **aujourd'hui**, c'est la **phase 1** — et c'est déjà la moitié de ce que l'arbitrage K attendait d'un psychologue en présentiel. 📖 **[`THESAURUS.md`](THESAURUS.md) créé, à la demande de Xavier** — un mot, une chose. Il fixe les cinq personas, les six objets de contenu (⭐ **corpus ≠ protocole ≠ fiche de bibliothèque**, distingués par une seule question : *écrit pour qui ?*), et **signale plutôt que masque la seule ambiguïté du projet** : « étape » a deux sens, celui de la feuille de route et celui du programme. ⭐ **Les échelles passent par Kokoro** — VVIQ, TAS-20, CAT-Q, GAD-7, BES, MAIA, en rubrique `bilan`. **Pas seulement commode : une passation en conversation demande de tenir un fil, de suivre le rythme d'un autre et de répondre à voix haute — trois charges que le format fermé supprime.** 🔴 **Le PHQ-9 reste dehors**, et **la cotation n'entre pas dans l'app** : l'écran ne montre jamais un score ni un seuil. 🔴 **Arbitrage E clos : on reste sur le compte Google professionnel** — micro-entreprise, la note passe en frais de société. **L'objection du dispositif reste écrite, acceptée et non levée** ; elle redeviendra un sujet si la structure gagne un associé, un comptable ou un administrateur. **Le dossier de transit est renommé `kokoro`** — il ne portait plus que du journal sous le nom `psy-journal`, et **un nom qui ment finit par tromper quelqu'un**. ✅ **Les trois conditions de sécurité sont vérifiées par Xavier** : dépôt privé, 2FA active des deux côtés, Drive non partagé. ❌ **La sauvegarde froide hors-ligne est close, à sa demande.** *(Le dispositif note une fois, sans y revenir, que la connectivité à l'étranger et la perte de compte sont deux risques distincts.)* ⭐ **La règle de priorité du 10/08 est révisée, pas supprimée** : *« on avance sur Kokoro »*. **Elle tient debout parce que depuis K5, Kokoro ne concurrence plus le palier 0 — il le porte** : les six démarches y sont déjà des étapes. **Ce qui ne bouge pas** : la date du brief (29-30/08), le fait que Kokoro affiche les appels sans les passer, et ⭐ **`ppc_minutes` comme indicateur qui tranche — tant qu'il est à 0, le contrôle C7 reste ouvert.** 📌 **Un défaut de la refonte du matin, trouvé et corrigé le soir : la règle « le développement passe après le palier 0 et le brief » n'avait pas survécu à l'absorption des cinq documents**, alors que `etat.md` la citait sept fois. **C'est exactement C3** — et elle a été restaurée avant d'être révisée, pas après. |
-| **13/08/2026** *(matin)* | ⭐ **La vision passe à quatre personas, et ce document devient le document unique du projet.** **Claude Psy** (le praticien, six skills) · **Claude Superviseur** (la contre-expertise) · **Kokoro** (le compagnon : protéger, accompagner, éduquer, réconforter) · **Xavier** (le patient). 📐 **Cinq documents sont absorbés et supprimés** — `psy/SYNCHRO.md`, `psy/agent/README.md`, `psy/android/PLAN-KOKORO.md`, `psy/programme/FORMAT.md`, `psy/dossier/SCHEMA.md`. **Il n'y a plus qu'un endroit où lire la doctrine, et un seul où la modifier** ; la doctrine se partageait jusqu'ici entre six fichiers qui se citaient mutuellement, et l'audit du 09/08 avait déjà montré ce que ça coûte (le protocole de crise avait deux domiciles, toutes les surfaces pointaient vers le mauvais). ⚠️ **Conséquence assumée : ce document cesse d'être un journal de conception.** Les trois sections que la v1.2 conservait sciemment périmées — stéatose simple au lieu de NASH, cible ≥ 5 % au lieu de 7-10 %, SAOS présenté comme une hypothèse à dépister — **sont corrigées** : un document unique n'a pas le droit de porter un fait qu'il sait faux. Ce qu'elles disaient est ci-dessous, pour mémoire. 🔴 **La supervision devient bloquante avant publication** *(arbitrage de Xavier)* : rien n'atteint Xavier ni le Dr Isorni sans une passe du superviseur qui porte **explicitement sur la version qui sort**. ⭐ **Et elle est câblée, pas déclarée** — `programme.json` porte un champ `supervision` obligatoire, `npm run publish` refuse si le fichier manque, si sa version ne correspond pas, ou si son verdict n'est pas `publiable`. **C'est le contrôle C3 appliqué à lui-même** : le dispositif venait d'ajouter un invariant, il l'a câblé dans la foulée plutôt que de l'écrire trois fois. Un neuvième contrôle apparaît — **C9, contenu non dérivé**. 🔴 **Le périmètre Drive s'élargit à tout le contenu échangé, dans les deux sens** — arbitrage neuf, tracé au §6.3 comme le §2.2 de l'ancien SYNCHRO l'exigeait. Descendent : `programme.json` **et la bibliothèque** ; remontent : `journal/` et `reponses/`. **Ce que ça élargit, dit franchement : ce ne sont plus des compteurs ni même des libellés, ce sont des fiches thérapeutiques entières.** Ni compte rendu, ni mesure, ni diagnostic, ni idéation ne transitent — la liste de ce qui reste au PC est fermée. **Xavier a arbitré en connaissance de cause : « c'est assumé »** ; le contre-argument reste écrit, il est accepté, pas levé. ⭐ **Le fait clinique qui commande tout ça, et c'est Xavier qui l'apporte :** *« j'aurais beaucoup plus de facilité de suivre mes protocoles, désensibilisations, etc. si c'est sur mon mobile avec Kokoro »*. **Ce n'est pas une préférence d'interface, c'est la sixième instance de la règle §9.19** : un protocole rangé dans un dépôt demande de se souvenir qu'il existe — donc d'avoir le signal qui dit « c'est le moment ». **Un protocole dans la main est une structure externe.** D'où la **bibliothèque** : Kokoro cesse de porter des fonctions et porte **toute la documentation accessible au patient**, groupée en quatre rubriques (`crise` · `therapie` · `bilan` · `documentation`). 🔴 **Le point dur de la bibliothèque est nommé avant d'être rencontré : une fiche est *écrite pour Xavier*, jamais *copiée depuis* `psy/protocoles/`** — un protocole porte des diagnostics, des pronostics et des réserves adressées à un professionnel. C'est C9, et c'est la raison pour laquelle `psy/protocoles/` **ne disparaît pas** au profit de la bibliothèque (arbitrage L). ⭐ **Un bilan dans Kokoro est un texte daté écrit en séance, jamais un graphique calculé par l'app** — c'est ce qui permet de satisfaire « Xavier a ses bilans dans la main » sans toucher à l'invariant « aucun historique, aucune progression à l'écran ». |
+| **13/08/2026** *(matin)* | ⭐ **La vision passe à quatre personas, et ce document devient le document unique du projet.** **Claude Psy** (le praticien, six skills) · **Claude Superviseur** (la contre-expertise) · **Kokoro** (le compagnon : protéger, accompagner, éduquer, réconforter) · **Xavier** (le patient). 📐 **Cinq documents sont absorbés et supprimés** — `psy/SYNCHRO.md`, `psy/agent/README.md`, `psy/android/PLAN-KOKORO.md`, `psy/programme/FORMAT.md`, `psy/dossier/SCHEMA.md`. **Il n'y a plus qu'un endroit où lire la doctrine, et un seul où la modifier** ; la doctrine se partageait jusqu'ici entre six fichiers qui se citaient mutuellement, et l'audit du 09/08 avait déjà montré ce que ça coûte (le protocole de crise avait deux domiciles, toutes les surfaces pointaient vers le mauvais). ⚠️ **Conséquence assumée : ce document cesse d'être un journal de conception.** Les trois sections que la v1.2 conservait sciemment périmées — stéatose simple au lieu de NASH, cible ≥ 5 % au lieu de 7-10 %, SAOS présenté comme une hypothèse à dépister — **sont corrigées** : un document unique n'a pas le droit de porter un fait qu'il sait faux. Ce qu'elles disaient est ci-dessous, pour mémoire. 🔴 **La supervision devient bloquante avant publication** *(arbitrage de Xavier)* : rien n'atteint Xavier ni le Dr Isorni sans une passe du superviseur qui porte **explicitement sur la version qui sort**. ⭐ **Et elle est câblée, pas déclarée** — `programme.json` porte un champ `supervision` obligatoire, `npm run publish` refuse si le fichier manque, si sa version ne correspond pas, ou si son verdict n'est pas `publiable`. **C'est le contrôle C3 appliqué à lui-même** : le dispositif venait d'ajouter un invariant, il l'a câblé dans la foulée plutôt que de l'écrire trois fois. Un neuvième contrôle apparaît — **C9, contenu non dérivé**. 🔴 **Le périmètre Drive s'élargit à tout le contenu échangé, dans les deux sens** — arbitrage neuf, tracé au §6.3 comme le §2.2 de l'ancien SYNCHRO l'exigeait. Descendent : `programme.json` **et la bibliothèque** ; remontent : `journal/` et `reponses/`. **Ce que ça élargit, dit franchement : ce ne sont plus des compteurs ni même des libellés, ce sont des fiches thérapeutiques entières.** Ni compte rendu, ni mesure, ni diagnostic, ni idéation ne transitent — la liste de ce qui reste au PC est fermée. **Xavier a arbitré en connaissance de cause : « c'est assumé »** ; le contre-argument reste écrit, il est accepté, pas levé. ⭐ **Le fait clinique qui commande tout ça, et c'est Xavier qui l'apporte :** *« j'aurais beaucoup plus de facilité de suivre mes protocoles, désensibilisations, etc. si c'est sur mon mobile avec Kokoro »*. **Ce n'est pas une préférence d'interface, c'est la sixième instance de la règle §9.19** : un protocole rangé dans un dépôt demande de se souvenir qu'il existe — donc d'avoir le signal qui dit « c'est le moment ». **Un protocole dans la main est une structure externe.** D'où la **bibliothèque** : Kokoro cesse de porter des fonctions et porte **toute la documentation accessible au patient**, groupée en quatre rubriques (`crise` · `therapie` · `bilan` · `documentation`). 🔴 **Le point dur de la bibliothèque est nommé avant d'être rencontré : une fiche est *écrite pour Xavier*, jamais *copiée depuis* `psy/docs/protocoles/`** — un protocole porte des diagnostics, des pronostics et des réserves adressées à un professionnel. C'est C9, et c'est la raison pour laquelle `psy/docs/protocoles/` **ne disparaît pas** au profit de la bibliothèque (arbitrage L). ⭐ **Un bilan dans Kokoro est un texte daté écrit en séance, jamais un graphique calculé par l'app** — c'est ce qui permet de satisfaire « Xavier a ses bilans dans la main » sans toucher à l'invariant « aucun historique, aucune progression à l'écran ». |
 | **12/08/2026** | ⭐ **Kokoro cesse d'être une app à fonctions et devient le porteur de la thérapie.** Claude Psy écrit `programme.json`, Kokoro l'affiche — **ajouter une étape cesse d'être un acte de développement pour devenir un acte clinique**, fait en séance. ✅ Moitié PC écrite et vérifiée : `npm run publish` refuse la publication entière si une étape enfreint un invariant, **testé sur 9 pièges, les 9 attrapés**. 🔴 **Le point dur nommé : les garde-fous câblés en tests devenaient contournables par du contenu, en silence** — d'où la double garde. ❌ **L'interpellation est supprimée** — *« tant que Xavier ne vient pas vers Kokoro, Kokoro ne lui notifie de rien »*. 📌 **Ce n'est pas une perte** : Android rétrograde déjà un full-screen intent en bannière dès que le téléphone est en usage — la décision aligne l'intention sur ce que la plateforme garantissait. ⭐ **La présence devient le dernier jalon** : le workflow d'abord, le visage ensuite. 🔗 **Le Drive porte le contenu vivant dans les deux sens** — `programme.json` descend, `reponses/` remontent. |
 | **11/08/2026** | ✅ **Le check-in quotidien passe sur le téléphone, et un vrai check-in est arrivé au dossier** — 11 champs en compteurs et choix fermés, énoncés mot pour mot du skill, **aucune saisie de texte**, format identique au gabarit. 🔴 **Syncthing est écarté, le transport passe par Google Drive** — arbitrage de Xavier rendu **après objection argumentée et maintien de la décision**, objection conservée entière. ⭐ **Réduction de surface appliquée d'office : seul `journal/` transite.** ✅ **SAF retenu** — un dossier désigné, **aucune permission au manifeste**. ⚠️ **Une objection du dispositif s'est révélée fausse** (Drive *est* sélectionnable) et 🔴 **une autre pire que prévu** : **Drive accepte deux fichiers du même nom** sans rien dire — garde doublée le jour même. ⏳ **Le critère de fin exigeait un check-in réel** : un check-in fabriqué depuis le PC aurait été une **donnée clinique fausse**. |
 | **10/08/2026** | 🔴 **Les numéros d'appel d'urgence sortent du dispositif — décision de Xavier, et elle corrige une faute de conception.** 15, 112 et 114 retirés des 22 fichiers qui les portaient ; **le 3114 conservé**, sur le seul déclencheur de l'idéation suicidaire. ⭐ **Le motif principal est clinique, et il est de la même famille que la règle §9.19 : une syncope vasovagale ne s'appelle pas, elle s'allonge.** Le dispositif proposait un appel là où la parade est la tension appliquée — **une erreur d'orientation présentée comme une sécurité supplémentaire**. S'y ajoutent deux faits que rien ne contredisait : aucun de ces numéros n'a jamais servi, et leur affichage permanent était **anxiogène** sur un profil TAG. 📌 **La demande a été instruite avant d'être exécutée**, sa formulation couvrant aussi le câblage de l'idéation suicidaire. ⚡ **K0, K1 et K2 franchis le même jour** : poste de travail, **full-screen intent levé** (le point le plus risqué du projet), **noyau de crise** — et ⭐ **le mot-code envoyé pour de vrai, téléphone verrouillé, Chourouk confirmant la réception, l'essai fait à froid en la prévenant.** ✅ **K3 construit** : la tension appliquée cesse d'être un minuteur et devient un guidage sur **quatre repères externes** — ⭐ **on ne déclenche plus sur une sensation, on déclenche sur un fait extérieur.** |

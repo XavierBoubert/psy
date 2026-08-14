@@ -1,6 +1,6 @@
 ---
 name: psy-journal
-description: Check-in quotidien de Xavier — 7 questions fermées, moins de 2 minutes, aucune saisie de texte obligatoire. Écrit psy/dossier/journal/AAAA-MM-JJ.json. Utiliser quand Xavier dit « check-in », « journal du jour », « le point du jour », ou quand il ouvre une session sans objet précis en début ou fin de journée.
+description: Check-in quotidien de Xavier — 7 questions fermées, moins de 2 minutes, aucune saisie de texte obligatoire. Écrit companion/outputs/journal/AAAA-MM-JJ.json. Utiliser quand Xavier dit « check-in », « journal du jour », « le point du jour », ou quand il ouvre une session sans objet précis en début ou fin de journée.
 ---
 
 # psy-journal — check-in quotidien
@@ -11,9 +11,9 @@ description: Check-in quotidien de Xavier — 7 questions fermées, moins de 2 m
 
 ## 0. Avant de poser la première question
 
-1. **Lire** `psy/dossier/profil.md` §3 (les trois mécanismes de crise), §4 (protocole de crise), §7 (ce qu'on ne dit jamais). La procédure complète, si elle sert, est `psy/protocoles/crise-escalade.md`.
-2. **Lire** `psy/dossier/etat.md` §4 — il déclare quels champs `campagne` sont actifs aujourd'hui. **Ne jamais poser de question sur un champ non déclaré.**
-3. **Vérifier** si `psy/dossier/journal/<aujourd'hui>.json` existe déjà. Si oui : le dire, proposer de le compléter ou de s'arrêter. Ne pas écraser.
+1. **Lire** `psy/outputs/dossier/profil.md` §3 (les trois mécanismes de crise), §4 (protocole de crise), §7 (ce qu'on ne dit jamais). La procédure complète, si elle sert, est `psy/docs/protocoles/crise-escalade.md`.
+2. **Lire** `psy/outputs/dossier/etat.md` §4 — il déclare quels champs `campagne` sont actifs aujourd'hui. **Ne jamais poser de question sur un champ non déclaré.**
+3. **Vérifier** si `companion/outputs/journal/<aujourd'hui>.json` existe déjà. Si oui : le dire, proposer de le compléter ou de s'arrêter. Ne pas écraser.
 
 **Ne pas lire** l'historique du journal pour ce rituel. Le check-in enregistre, il n'analyse pas. L'analyse est le travail de `psy-seance`.
 
@@ -71,7 +71,7 @@ Poser **une question à la fois**. Chaque question est fermée : un nombre ou un
 Si une réponse ou une remarque signale une **idéation suicidaire** ou une **détresse aiguë** :
 
 1. **Abandonner le check-in immédiatement.** Ne pas finir les questions. Ne pas écrire le fichier.
-2. Appliquer **`psy/protocoles/crise-escalade.md` §2** *(résumé : afficher le **3114**, gratuit 24h/24 ; orienter vers le contact d'urgence et le Dr Isorni)*.
+2. Appliquer **`psy/docs/protocoles/crise-escalade.md` §2** *(résumé : afficher le **3114**, gratuit 24h/24 ; orienter vers le contact d'urgence et le Dr Isorni)*.
 3. Ne jamais tenter de gérer seul ni de rationaliser.
 4. La trace au dossier vient **après**, jamais avant.
 
@@ -80,7 +80,7 @@ Si une réponse ou une remarque signale une **idéation suicidaire** ou une **d�
 
 ### 4.2 Épisode de crise rapporté en passant
 
-Si Xavier mentionne un épisode (panique, vasovagal, shutdown) : **ne pas le noyer dans `notes`.** Créer un fichier `psy/dossier/crises/AAAA-MM-JJ-HHMM-<type>.json` d'après `psy/dossier/gabarits/crise.json`.
+Si Xavier mentionne un épisode (panique, vasovagal, shutdown) : **ne pas le noyer dans `notes`.** Créer un fichier `psy/outputs/dossier/crises/AAAA-MM-JJ-HHMM-<type>.json` d'après `psy/docs/gabarits/crise.json`.
 
 **Demander le type explicitement, ne jamais le présumer :**
 
@@ -92,7 +92,7 @@ Si Xavier mentionne un épisode (panique, vasovagal, shutdown) : **ne pas le noy
 
 ## 5. Écriture du fichier
 
-Copier `psy/dossier/gabarits/journal.json` → `psy/dossier/journal/AAAA-MM-JJ.json`, remplir, `"source": "claude-code"`.
+Copier `psy/docs/gabarits/journal.json` → `companion/outputs/journal/AAAA-MM-JJ.json`, remplir, `"source": "claude-code"`.
 
 **Un fichier par jour, jamais de fichier partagé** (R1 du schéma — contrainte de transport).
 
@@ -102,7 +102,7 @@ Kokoro (K4) sait écrire le check-in depuis le téléphone, avec `"source": "and
 
 **Conduite, sans exception :**
 
-1. **Vérifier d'abord** si `psy/dossier/journal/<aujourd'hui>.json` existe — c'est déjà la règle du §0.3.
+1. **Vérifier d'abord** si `companion/outputs/journal/<aujourd'hui>.json` existe — c'est déjà la règle du §0.3.
 2. **Vérifier aussi le transit** si le doute existe : **`npm run sync`** verse ce qui vient du téléphone **sans jamais écraser**, et signale tout doublon.
 3. Si Xavier a fait son check-in sur le téléphone, **ne pas le refaire ici**. Le dire en une phrase, et s'arrêter.
 4. La bascule **se déclare, elle ne se devine pas** : si Xavier annonce qu'il passe au téléphone, le PC cesse d'écrire le journal.

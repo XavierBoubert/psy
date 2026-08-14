@@ -61,7 +61,7 @@
       "Read(//c/Users/xavie/AppData/Local/**)",
       "Bash(./gradlew --console=plain testDebugUnitTest assembleDebug)",
       "Bash(awk -F'\"' '{t+=$2; f+=$6; e+=$8} END {print t\" tests, \"f\" échecs, \"e\" erreurs\"}')",
-      "Bash(cp psy/programme/programme.json /tmp/prog.bak)"
+      "Bash(cp companion/inputs/programme.json /tmp/prog.bak)"
     ],
     "additionalDirectories": [
       "C:\\Users\\xavie",
