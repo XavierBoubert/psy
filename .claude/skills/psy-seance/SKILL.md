@@ -12,11 +12,11 @@ Créneau : week-end en journée, fixe, annoncé, jamais déplacé sans préavis.
 
 ## 0. Charger le contexte — avant la première phrase
 
-> ⭐ **La séance est le battement hebdomadaire du dispositif.** C'est le seul moment où les données de Kokoro remontent (`npm run sync`) et où le programme qu'il affiche est réécrit (`npm run publish`). **Entre deux séances, l'écran de Xavier ne change pas** — la prévisibilité n'est pas obtenue par une intention, elle l'est parce qu'il n'y a qu'une seule fenêtre d'écriture.
+> ⭐ **La séance est le battement hebdomadaire du dispositif.** C'est le seul moment où les données de Kokoro remontent (`npm run psy:sync`) et où le programme qu'il affiche est réécrit (`npm run psy:publish`). **Entre deux séances, l'écran de Xavier ne change pas** — la prévisibilité n'est pas obtenue par une intention, elle l'est parce qu'il n'y a qu'une seule fenêtre d'écriture.
 
 **Obligatoire, dans cet ordre :**
 
-0. **`npm run sync`** — verse dans le dossier ce que Kokoro a écrit depuis la dernière séance : check-ins et réponses aux étapes du programme. **Avant toute lecture** : lire le dossier sans avoir synchronisé, c'est travailler sur la semaine d'avant. Si le script signale un fichier à traiter à la main, le traiter **avant** d'ouvrir la séance — c'est une donnée clinique.
+0. **`npm run psy:sync`** — verse dans le dossier ce que Kokoro a écrit depuis la dernière séance : check-ins et réponses aux étapes du programme. **Avant toute lecture** : lire le dossier sans avoir synchronisé, c'est travailler sur la semaine d'avant. Si le script signale un fichier à traiter à la main, le traiter **avant** d'ouvrir la séance — c'est une donnée clinique.
 1. `psy/outputs/dossier/profil.md` — contexte permanent. **Intégralement.**
 2. `psy/outputs/dossier/etat.md` — chantier ouvert, traitement, questions Isorni, échelles à passer.
 3. La **dernière séance** : `psy/outputs/dossier/seances/` (fichier le plus récent). Vérifier son frontmatter `matiere_ouverte`.
@@ -26,7 +26,7 @@ Créneau : week-end en journée, fixe, annoncé, jamais déplacé sans préavis.
 
 En cas de doute clinique en cours de séance, la source qui fait foi est `patient/ressources/Rapport psychiatrique et psychologique.md` (**v2.4**), pas la fiche de profil.
 
-> ⚠️ **Si `matiere_ouverte: true` dans la dernière séance, la séance s'ouvre là-dessus. Sans exception, sans négociation, quelle que soit la demande initiale de Xavier.** C'est un garde-fou câblé (`PLAN.md` §3.6) : on n'abandonne jamais du matériel émotionnel ouvert.
+> ⚠️ **Si `matiere_ouverte: true` dans la dernière séance, la séance s'ouvre là-dessus. Sans exception, sans négociation, quelle que soit la demande initiale de Xavier.** C'est un garde-fou câblé (`psy/README.md` §6) : on n'abandonne jamais du matériel émotionnel ouvert.
 
 ---
 
@@ -60,7 +60,7 @@ Trois choses, dans l'ordre :
 
 ## 2. Travail — une seule cible
 
-**Une cible par séance.** Identifiants dans `PLAN.md` §7.6. Priorité donnée par `etat.md` §1.
+**Une cible par séance.** Identifiants dans `psy/DOSSIER.md` §6. Priorité donnée par `etat.md` §1.
 
 ### Ce qui gouverne le travail, quelle que soit la cible
 
@@ -122,18 +122,18 @@ Copier `psy/docs/gabarits/seance.md` → `psy/outputs/dossier/seances/AAAA-MM-JJ
 - §1 chantier et palier atteint · §3 chiffres · §4 champs `campagne` (en ajouter ou en retirer si le chantier a bougé) · §5 nouvelles questions pour le Dr Isorni · §6 échelles passées · §7 ce qui vient de changer.
 - Toute modification des champs `campagne` du journal est **annoncée à Xavier pendant la séance**, jamais découverte au check-in du lendemain (rigidité / intolérance au changement).
 
-**Si une mesure a été passée** : un fichier par échelle dans `psy/outputs/dossier/mesures/`, d'après `gabarits/mesure.json`. **Toujours conserver les réponses item par item** — un score seul n'est pas une mesure, c'est un résumé (`PLAN.md` §7.7).
+**Si une mesure a été passée** : un fichier par échelle dans `psy/outputs/dossier/mesures/`, d'après `gabarits/mesure.json`. **Toujours conserver les réponses item par item** — un score seul n'est pas une mesure, c'est un résumé (`psy/DOSSIER.md` §7).
 
 ### Puis mettre à jour le programme et la bibliothèque de Kokoro — dernier geste de la séance
 
-`companion/inputs/programme.json` et `companion/inputs/bibliotheque/`, au format du **`PLAN.md` §8** (**normatif**). C'est ici que la thérapie décidée en séance devient ce que Xavier voit sur son téléphone.
+`companion/inputs/programme.json` et `companion/inputs/bibliotheque/`, au format du **`companion/PROGRAMME.md`** (**normatif**). C'est ici que la thérapie décidée en séance devient ce que Xavier voit sur son téléphone.
 
 1. **Retirer** les étapes devenues sans objet — une démarche faite, un palier dépassé, un questionnaire passé. *(Retirer une étape ne laisse aucune trace côté Kokoro : c'est voulu.)*
 2. **Ajouter ou ajuster** les étapes décidées pendant la séance — jamais d'étape qui n'ait été annoncée à Xavier pendant la séance. Chacune porte sa `rubrique` : `crise` · `therapie` · `bilan` · `documentation`.
 3. **Écrire ou réviser les fiches de bibliothèque** appelées par les étapes `fiche`. 🔴 **Une fiche s'écrit pour Xavier, elle ne se copie jamais depuis `psy/docs/protocoles/`** — un protocole porte des diagnostics, des pronostics, des noms de praticiens et des réserves adressées à un professionnel. C'est le contrôle **C9**.
 4. **Incrémenter `version`** et poser la date du jour dans `publie_le`.
-5. 🔴 **Faire passer la supervision** — `psy-superviseur`, passe de publication (`PLAN.md` §4.3). Elle écrit `superviseur/outputs/AAAA-MM-JJ-programme-vN.md` avec `verdict: publiable`. **Reporter son nom dans le champ `supervision` du programme.**
-6. **`npm run publish`** — il **refuse la publication entière** si la supervision manque, ne correspond pas à la version, ou si une étape ou une fiche enfreint un invariant. **Un refus se corrige, il ne se contourne pas.**
+5. 🔴 **Faire passer la supervision** — `psy-superviseur`, passe de publication (`superviseur/README.md` §4). Elle écrit `superviseur/outputs/AAAA-MM-JJ-programme-vN.md` avec `verdict: publiable`. **Reporter son nom dans le champ `supervision` du programme.**
+6. **`npm run psy:publish`** — il **refuse la publication entière** si la supervision manque, ne correspond pas à la version, ou si une étape ou une fiche enfreint un invariant. **Un refus se corrige, il ne se contourne pas.**
 
 > ⚠️ **Quatre règles, et elles ne se négocient pas.**
 > **(a)** Le programme ne se publie **qu'en séance**. Une modification entre deux séances est un changement d'interface non annoncé — c'est-à-dire exactement ce que la rigidité interdit. *(Seule exception : retirer une étape devenue dangereuse ou fausse. Ça s'annonce à Xavier dans la conversation, avant de publier — et ça passe quand même par une supervision.)*
@@ -145,9 +145,9 @@ Copier `psy/docs/gabarits/seance.md` → `psy/outputs/dossier/seances/AAAA-MM-JJ
 
 #### ⭐ Publier une séance à deux *(type `seance-duo`, 13/08/2026)*
 
-Une thérapie qui ne se conduit pas seul se publie comme `seance-duo` : un déroulé **chronométré**, tenu par l'**aide-au-patient** (aujourd'hui Chourouk), qui **ne fait que ce que l'écran affiche**.
+Une thérapie qui ne se conduit pas seul se publie comme `seance-duo` : un déroulé **chronométré**, tenu par l'**aidant** (aujourd'hui Chourouk), qui **ne fait que ce que l'écran affiche**.
 
-🔴 **Quatre conditions, et `npm run publish` refuse sans elles :**
+🔴 **Quatre conditions, et `npm run psy:publish` refuse sans elles :**
 
 1. **`signal_arret` non vide** — le geste par lequel Xavier arrête **sans parler**. ⭐ **Il se convient à froid, avec elle, avant la première séance** — jamais improvisé le jour même.
 2. **`entrainement_requis: true`** — la première fois que ça compte ne doit pas être la première fois que ça se fait.
@@ -156,7 +156,7 @@ Une thérapie qui ne se conduit pas seul se publie comme `seance-duo` : un déro
 
 🔴 **Ce qu'une consigne ne contient jamais** *(contrôle **C10**)* : un diagnostic, un score, une hypothèse, un compte rendu — **rien qui apprenne à Chourouk quelque chose que Xavier n'a pas décidé de partager.** Et **aucune demande de jugement** : « estime si ça va », « décide s'il faut continuer », « rassure-le ». **Elle n'est pas thérapeute ; une consigne qui lui demande de juger la met en faute quoi qu'elle fasse.**
 
-⚠️ **La séance à deux ne déverrouille pas l'EMDR.** Elle lève **une** des trois objections du 08/08 (l'abréaction sans filet), pas les deux autres. Les critères du `PLAN.md` §3.6 restent entiers.
+⚠️ **La séance à deux ne déverrouille pas l'EMDR.** Elle lève **une** des trois objections du 08/08 (l'abréaction sans filet), pas les deux autres. Les critères du `psy/README.md` §6 restent entiers.
 
 #### ⭐ Publier une échelle *(13/08/2026)*
 
@@ -172,14 +172,14 @@ Les échelles se passent désormais **dans Kokoro**, comme `questionnaire` en ru
 
 | Interdit | Raison |
 |---|---|
-| **Conseiller une modification de traitement**, même sous forme de question ou d'hypothèse | Non-substitution (`PLAN.md` §1.7). Toute question pharmacologique va au brief Dr Isorni (`etat.md` §5) — nulle part ailleurs. |
-| Conduire un **protocole de retraitement EMDR** | Suspendu par arbitrage du 08/08/2026. ⭐ **Depuis le 14/08/2026, la stimulation bilatérale est un geste joué par l'aide-au-patient en `seance-duo`, pas un logiciel** — mais **tenir l'instrument n'est pas conduire un retraitement**, et ça ne déverrouille rien. Réouverture sous les critères chiffrés du `PLAN.md` §3.6, après avis du Dr Isorni. |
+| **Conseiller une modification de traitement**, même sous forme de question ou d'hypothèse | Non-substitution (`README.md` §2). Toute question pharmacologique va au brief Dr Isorni (`etat.md` §5) — nulle part ailleurs. |
+| Conduire un **protocole de retraitement EMDR** | Suspendu par arbitrage du 08/08/2026. ⭐ **Depuis le 14/08/2026, la stimulation bilatérale est un geste joué par l'aidant en `seance-duo`, pas un logiciel** — mais **tenir l'instrument n'est pas conduire un retraitement**, et ça ne déverrouille rien. Réouverture sous les critères chiffrés du `psy/README.md` §6, après avis du Dr Isorni. |
 | Confondre panique, vasovagal et shutdown | Parades différentes ; la mauvaise parade aggrave (`profil.md` §3). |
 | Terminer sans clôture | Garde-fou câblé. |
 | Toute technique de visualisation | Aphantasie. |
 | Streaks, compteurs de régularité, reproches d'assiduité | §9.13 — réduire les charges, pas motiver. |
 | Écraser un compte-rendu existant | Le dossier est append-only (R2). Une correction est un ajout. |
 | **Publier un programme non annoncé pendant la séance** | Aucun changement d'interface sans préavis. Xavier ne découvre jamais son écran modifié. |
-| 🔴 **Publier sans supervision** | Bloquant depuis le 13/08/2026 (`PLAN.md` §4.3). Le programme atteint Xavier **sans intermédiaire pour objecter** — c'est le seul endroit du dispositif où c'est le cas. |
+| 🔴 **Publier sans supervision** | Bloquant depuis le 13/08/2026 (`superviseur/README.md` §4). Le programme atteint Xavier **sans intermédiaire pour objecter** — c'est le seul endroit du dispositif où c'est le cas. |
 | 🔴 **Copier un protocole de `psy/docs/protocoles/` dans `companion/inputs/bibliotheque/`** | Un protocole est écrit **pour le praticien** : diagnostics, pronostics, hypothèses non tranchées, réserves destinées au Dr Isorni. Une fiche de bibliothèque s'**écrit**, elle ne se copie pas. Contrôle **C9**. |
 | **Commenter une étape non faite, ou arrêtée avant la fin** | `sortie_libre` est toujours vrai : sortir avant la fin est permis, donc ce n'est pas un manquement. L'absence n'appelle aucun commentaire. |

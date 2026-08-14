@@ -4,7 +4,7 @@
 
 > ⭐ **v2.1 :** le visage passe au **morphing** — une forme se déforme vers la suivante au lieu de s'échanger en fondu croisé. **Ce que la v2.0 écrivait au §9 (« échange de forme, pas de déformation ») est corrigé, pas nuancé.** Motif et mécanisme : [§9](#-le-morphing-du-visage-14082026).
 
-> 📐 **Ce document n'est pas de la doctrine.** La doctrine du personnage tient dans [`../../../PLAN.md` §5.3](../PLAN.md#53-le-personnage) et les invariants dans [§5.6](../PLAN.md#56-les-invariants-traduits-en-règles-vérifiables) et [§5.7](../PLAN.md#57-ce-qui-nentrera-jamais-dans-kokoro). **Ici on ne décide rien de clinique : on dessine ce qui a déjà été décidé.**
+> 📐 **Ce document n'est pas de la doctrine.** La doctrine du personnage tient dans [`companion/README.md` §4](README.md) et les invariants dans [`companion/README.md` §5](README.md) et [`companion/README.md` §6](README.md). **Ici on ne décide rien de clinique : on dessine ce qui a déjà été décidé.**
 >
 > ⏱️ **Ce document s'applique au jalon K7 (« la présence »), pas avant.** K5 et K6 passent d'abord.
 >
@@ -142,7 +142,7 @@ Tout se joue sur le panneau : **deux yeux, une bouche.** Rien d'autre n'y entre 
 
 **Xavier a demandé que Kokoro puisse montrer des parties de l'écran. C'est accordé, et la réserve reste écrite.**
 
-**L'objection, qui était réelle et qui n'est pas levée :** *pointer est un geste social.* La v0.1 l'interdisait avec le reste des gestes (faire signe, lever le pouce, applaudir) parce qu'un geste dirigé vers quelqu'un appelle une réponse, et qu'une réponse attendue est une charge de camouflage. **Ce que l'arbitrage retient contre l'objection :** montrer un élément d'interface n'est pas un geste **vers Xavier**, c'est un geste **vers l'écran** — et c'est la fonction **éduquer** de [§1.3](../PLAN.md#13-kokoro-心--le-compagnon), qui sans ça reste purement textuelle.
+**L'objection, qui était réelle et qui n'est pas levée :** *pointer est un geste social.* La v0.1 l'interdisait avec le reste des gestes (faire signe, lever le pouce, applaudir) parce qu'un geste dirigé vers quelqu'un appelle une réponse, et qu'une réponse attendue est une charge de camouflage. **Ce que l'arbitrage retient contre l'objection :** montrer un élément d'interface n'est pas un geste **vers Xavier**, c'est un geste **vers l'écran** — et c'est la fonction **éduquer** de [`companion/README.md` §1](../README.md), qui sans ça reste purement textuelle.
 
 > 🔴 **Quatre garde-fous, aucun optionnel :**
 > 1. **Le bras ne dépasse jamais la ligne des épaules.** Un bras levé se lit comme un salut ou une main levée — et le salut est interdit. *(Sur la planche `01`, la pose vers le haut a exactement ce défaut : elle ne fait pas partie du jeu retenu.)* ⭐ **Depuis la v2, la borne se calcule au lieu de se choisir** : le bras pend déjà à 19,5° de la verticale dans le dessin, donc l'horizontale est à **+70,5°**, et pas un degré de plus. `CorpsInvariantsTest` vérifie que la somme fait 90
@@ -172,7 +172,7 @@ Tout se joue sur le panneau : **deux yeux, une bouche.** Rien d'autre n'y entre 
 
 ## 8. Ce que le corps ne fait jamais
 
-Miroir corporel de [`PLAN.md` §5.7](../PLAN.md#57-ce-qui-nentrera-jamais-dans-kokoro) :
+Miroir corporel de [`companion/README.md` §6](README.md) :
 
 1. **Se lever, s'approcher, grandir, marcher vers le lecteur, entrer dans le champ.** Kokoro ne vient jamais vers Xavier — **y compris avec son corps.**
 2. **Faire signe, lever un bras au-dessus de l'épaule, applaudir, lever le pouce.** Le pouce levé est une **évaluation** ; l'évaluation est interdite. *(La désignation du §6 est la seule exception, et elle est bornée.)*
@@ -242,9 +242,9 @@ Le SVG place les pièces ; il ne dit pas autour de quoi elles tournent. **Les tr
 | En-tête d'écran | 96 dp | `repos`, `present` ou `montre` |
 | Écran de crise | ❌ **absent** | 🔴 **L'écran de crise ne porte aucun personnage.** Deux boutons, rien d'autre — un compagnon décoratif au pire moment est du bruit |
 | Écran vasovagal | 160 dp | `allonge` uniquement, à côté de la consigne |
-| Séance à deux (K6) | ❌ **absent de l'écran de l'aide** | L'aide-au-patient lit un déroulé, pas un personnage. **C10** |
+| Séance à deux (K6) | ❌ **absent de l'écran de l'aide** | L'aidant lit un déroulé, pas un personnage. **C10** |
 
-> ❌ **La surface web desktop est supprimée le 14/08/2026** *([`PLAN.md` §5.8](../PLAN.md#58-il-ny-a-quune-surface-14082026))* — cette table n'a plus qu'une seule surface à décliner. ⭐ **Le rig en pièces séparées ne perd rien à la décision** : il n'a jamais été motivé par le web, mais par les **six expressions** et la **désignation d'un élément de l'écran**, qu'une forme unique et muette ne pouvait pas porter.
+> ❌ **La surface web desktop est supprimée le 14/08/2026** *([`companion/README.md` §1](README.md))* — cette table n'a plus qu'une seule surface à décliner. ⭐ **Le rig en pièces séparées ne perd rien à la décision** : il n'a jamais été motivé par le web, mais par les **six expressions** et la **désignation d'un élément de l'écran**, qu'une forme unique et muette ne pouvait pas porter.
 
 ---
 
@@ -264,8 +264,8 @@ Le SVG place les pièces ; il ne dit pas autour de quoi elles tournent. **Les tr
 > ⚠️ **Il n'a pas produit le corps retenu.** La v2 est dessinée à la main par Xavier. Ce qui suit sert encore aux **recherches** — une pose à explorer, une variante à voir — mais **plus rien de ce qu'il sort n'entre dans le personnage sans passer par un tracé vectoriel**.
 
 ```bash
-npm run image -- robot --n=4 --format=4:3          # 4 candidats + une planche contact
-npm run image -- robot --ref=robot/01-b.png        # itère à partir du candidat retenu
+npm run companion:image -- robot --n=4 --format=4:3          # 4 candidats + une planche contact
+npm run companion:image -- robot --ref=robot/01-b.png        # itère à partir du candidat retenu
 ```
 
 - **La charte vit dans [`prompts/_base.md`](./ressources/prompts/_base.md)**, écrite une fois et préfixée à chaque appel : morphologie, palette, six expressions, règles de visage, désignation, interdits. **Itérer = modifier trois lignes du prompt de variante, pas réécrire la charte.**

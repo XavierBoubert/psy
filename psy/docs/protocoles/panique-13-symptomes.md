@@ -78,7 +78,7 @@ Une attaque de panique = **au moins 4** de ces symptômes, montée brutale, pic 
 
 ## 4. Ce qui se trace au dossier
 
-Un épisode → `crises/AAAA-MM-JJ-HHMM-panique.json` (cf. `PLAN.md` §7.5). Champs qui comptent ici : `contexte` (`transport`, `foule`, `lieu_clos`), `parade_utilisee`, `perte_de_connaissance`.
+Un épisode → `crises/AAAA-MM-JJ-HHMM-panique.json` (cf. `psy/DOSSIER.md` §5). Champs qui comptent ici : `contexte` (`transport`, `foule`, `lieu_clos`), `parade_utilisee`, `perte_de_connaissance`.
 
 ⚠️ **Un `perte_de_connaissance: true` sur un épisode typé `panique` impose de revoir le typage en séance.** C'est le discriminant, il ne se néglige pas.
 

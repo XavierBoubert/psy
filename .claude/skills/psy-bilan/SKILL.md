@@ -6,7 +6,7 @@ description: Passation et cotation d'une échelle validée avec Xavier — VVIQ,
 # psy-bilan — passation et cotation d'une échelle
 
 **Une passation = un fichier. Les réponses item par item sont conservées, toujours.**
-Un score seul n'est pas une mesure, c'est un résumé (`PLAN.md` §7.7).
+Un score seul n'est pas une mesure, c'est un résumé (`psy/DOSSIER.md` §7).
 
 > ⭐ **Depuis le 13/08/2026, les échelles se passent dans Kokoro** *(arbitrage de Xavier)* — publiées en séance comme `questionnaire`, rubrique `bilan` : **VVIQ · TAS-20 · CAT-Q · GAD-7 · BES · MAIA**.
 >

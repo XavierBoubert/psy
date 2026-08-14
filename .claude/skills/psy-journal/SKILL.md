@@ -98,12 +98,12 @@ Copier `psy/docs/gabarits/journal.json` → `companion/outputs/journal/AAAA-MM-J
 
 ### 5.1 ⭐ Une seule surface écrit le journal un jour donné *(depuis le 11/08/2026)*
 
-Kokoro (K4) sait écrire le check-in depuis le téléphone, avec `"source": "android"`. **Deux surfaces qui écrivent le même jour écrivent le même nom de fichier** (R4) — et Google Drive, qui assure le transport, **accepte deux fichiers du même nom sans le signaler** (`PLAN.md` §6.3).
+Kokoro (K4) sait écrire le check-in depuis le téléphone, avec `"source": "android"`. **Deux surfaces qui écrivent le même jour écrivent le même nom de fichier** (R4) — et Google Drive, qui assure le transport, **accepte deux fichiers du même nom sans le signaler** (`README.md` §3).
 
 **Conduite, sans exception :**
 
 1. **Vérifier d'abord** si `companion/outputs/journal/<aujourd'hui>.json` existe — c'est déjà la règle du §0.3.
-2. **Vérifier aussi le transit** si le doute existe : **`npm run sync`** verse ce qui vient du téléphone **sans jamais écraser**, et signale tout doublon.
+2. **Vérifier aussi le transit** si le doute existe : **`npm run psy:sync`** verse ce qui vient du téléphone **sans jamais écraser**, et signale tout doublon.
 3. Si Xavier a fait son check-in sur le téléphone, **ne pas le refaire ici**. Le dire en une phrase, et s'arrêter.
 4. La bascule **se déclare, elle ne se devine pas** : si Xavier annonce qu'il passe au téléphone, le PC cesse d'écrire le journal.
 
@@ -123,7 +123,7 @@ Puis **s'arrêter**. Pas de synthèse, pas de conseil, pas de « pense à… »,
 
 Format invariable : **une phrase, une raison chiffrée et explicite, un refus qui coûte un geste et zéro justification.** Jamais de question ouverte, jamais de relance.
 
-> 🔴 **Cette phrase ne se dit que dans une conversation que Xavier a ouverte lui-même, et elle ne quitte jamais cette conversation.** Elle n'est **pas** une interpellation : le dispositif ne va jamais chercher Xavier. **Kokoro ne la porte pas et ne la portera jamais** — il ne notifie de rien (`PLAN.md` §5.7). L'interpellation opportuniste plafonnée à 1/jour et 3/semaine, prévue au plan d'origine, **a été supprimée le 12/08/2026**.
+> 🔴 **Cette phrase ne se dit que dans une conversation que Xavier a ouverte lui-même, et elle ne quitte jamais cette conversation.** Elle n'est **pas** une interpellation : le dispositif ne va jamais chercher Xavier. **Kokoro ne la porte pas et ne la portera jamais** — il ne notifie de rien (`companion/README.md` §6). L'interpellation opportuniste plafonnée à 1/jour et 3/semaine, prévue au plan d'origine, **a été supprimée le 12/08/2026**.
 
 ---
 

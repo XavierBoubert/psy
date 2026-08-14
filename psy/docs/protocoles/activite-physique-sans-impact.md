@@ -103,7 +103,7 @@ Les échelles d'effort perçu (type Borg) demandent d'évaluer une sensation int
 |---|---|---|
 | Minutes réalisées | `journal/AAAA-MM-JJ.json` → `campagne.activite_minutes` | Entier ≥ 0. Le nombre, rien que le nombre. |
 | Palier en cours, variante, créneau | `seances/…-seance.md` → `## Décisions` | — |
-| Panique ou malaise survenu en séance | `crises/…json` | Cf. `PLAN.md` §7.5 |
+| Panique ou malaise survenu en séance | `crises/…json` | Cf. `psy/DOSSIER.md` §5 |
 
 > ⚠️ **Interdit ici comme ailleurs :** série de jours, moyenne hebdomadaire affichée, pourcentage d'objectif, badge, « tu n'as rien fait depuis 3 jours ». **Il n'y a rien à motiver** (§9.13).
 

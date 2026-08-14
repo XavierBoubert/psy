@@ -73,7 +73,7 @@ val DECOR_JOUR = PaletteDecor(
  * 🔴 Le décor **ne suit toujours pas le thème sombre du système** : il changerait alors d'apparence
  * selon un réglage qui n'a rien à voir avec la thérapie, et sans que Xavier l'ait décidé. Une plage
  * horaire est l'inverse — elle est **fixée d'avance, visible dans les réglages, et désactivable**.
- * L'invariant interdit le changement *non annoncé*, pas le changement *prévu* (`PLAN.md` §5.6).
+ * L'invariant interdit le changement *non annoncé*, pas le changement *prévu* (`companion/README.md` §5).
  *
  * ⭐ **Et il ne bascule jamais sous les yeux** : la palette est décidée à l'arrivée dans le monde,
  * puis tenue tant qu'il est ouvert. Voir un décor virer tout seul à 21 h serait exactement le

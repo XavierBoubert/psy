@@ -7,7 +7,7 @@ const SOURCE = resolve(PROJECT_ROOT, 'companion/inputs/programme.json');
 const BIBLIOTHEQUE = resolve(PROJECT_ROOT, 'companion/inputs/bibliotheque');
 const SUPERVISIONS = resolve(PROJECT_ROOT, 'superviseur/outputs');
 
-const USAGE = 'Usage: programme-publish <dossier-de-transit-drive>';
+const USAGE = 'Usage: psy-publish <dossier-de-transit-drive>';
 
 const TYPES = ['ecran', 'exercice', 'questionnaire', 'demarche', 'fiche', 'seance-duo'] as const;
 const POUR = ['aide', 'patient'] as const;
@@ -85,20 +85,20 @@ const problemesInterdits = (etape: Record<string, unknown>): ReadonlyArray<strin
 
 const estTexteNonVide = (value: unknown): boolean => typeof value === 'string' && value.trim().length > 0;
 
-// C10 — l'aide-au-patient lit des consignes, pas un dossier, et elle n'est pas therapeute.
+// C10 — l'aidant lit des consignes, pas un dossier, et elle n'est pas therapeute.
 // Une consigne qui lui demande de juger la met en faute quoi qu'elle fasse.
 const JUGEMENTS: ReadonlyArray<Interdit> = [
   {
     motif: /\b(estime|evalue|juge|apprecie|decide)\b[^.]{0,40}\b(si|s'il|comment|quand)\b|\ba toi de voir\b|\bsi tu penses que\b/,
-    raison: 'consigne qui demande un jugement a l\'aide-au-patient — elle execute un deroule, elle ne decide pas (C10)',
+    raison: 'consigne qui demande un jugement a l\'aidant — elle execute un deroule, elle ne decide pas (C10)',
   },
   {
     motif: /\brassure(-le| le)?\b|\bcalme-le\b|\bdis-lui que ca va\b|\bimprovise\b|\badapte selon\b/,
-    raison: 'consigne hors script confiee a l\'aide-au-patient — elle ne fait que ce que l\'ecran affiche (C10)',
+    raison: 'consigne hors script confiee a l\'aidant — elle ne fait que ce que l\'ecran affiche (C10)',
   },
   {
     motif: /\bdiagnostic\b|\bdiagnostique\b|\bson score\b|\btrouble du spectre\b|\bagoraphobie\b|\balexithymie\b|\bapnee\b|\bnash\b/,
-    raison: 'contenu clinique adresse a l\'aide-au-patient — elle lit des consignes, pas un dossier (C10)',
+    raison: 'contenu clinique adresse a l\'aidant — elle lit des consignes, pas un dossier (C10)',
   },
 ];
 
@@ -230,7 +230,7 @@ const relireProgramme = (parsed: unknown): ReadonlyArray<string> => {
     typeof parsed['publie_le'] === 'string' ? null : 'publie_le absent',
     typeof parsed['supervision'] === 'string' && parsed['supervision'].length > 0
       ? null
-      : 'supervision absente — rien ne se publie sans une passe du superviseur (PLAN.md §4.3)',
+      : 'supervision absente — rien ne se publie sans une passe du superviseur (superviseur/README.md §4)',
     Array.isArray(etapes) ? null : 'etapes absentes',
   ].filter((probleme): probleme is string => probleme !== null);
 
@@ -246,7 +246,7 @@ const relireProgramme = (parsed: unknown): ReadonlyArray<string> => {
   ];
 };
 
-// --- La supervision, bloquante (PLAN.md §4.3) ---------------------------------
+// --- La supervision, bloquante (superviseur/README.md §4) ---------------------------------
 
 const champFrontmatter = (contenu: string, champ: string): string | null => {
   const trouve = new RegExp(`^${champ}\\s*:\\s*(.+?)\\s*$`, 'm').exec(contenu);

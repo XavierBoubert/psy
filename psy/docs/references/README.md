@@ -23,8 +23,8 @@
 **Un document source ne devient exploitable qu'une fois converti et versé ici**, PDF d'origine gardé dans `originales/`. La conversion se fait avec :
 
 ```bash
-npm run pdf-to-markdown -- <source.pdf> <destination.md>
-npm run docx-to-markdown -- <source.docx> <destination.md>
+npm run psy:pdf2md -- <source.pdf> <destination.md>
+npm run psy:docx2md -- <source.docx> <destination.md>
 ```
 
 ⚠️ **`pdf-to-markdown` ne détecte pas les cases cochées en couleur.** Un questionnaire rempli se transcrit **à la main**, par lecture visuelle des pages — c'est ce qui a été fait pour les questionnaires de `patient/ressources/`.

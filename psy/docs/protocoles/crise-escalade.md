@@ -2,7 +2,7 @@
 
 **Statut :** fiche actionnable — **v1.1 (10/08/2026)** · **Étape 3**
 **Cible dossier :** aucune — cette fiche prime sur toute cible en cours.
-**Source clinique :** `profil.md` §3 et §4 · `PLAN.md` §2.1 et §6 · rapport v2.4 §6.4, §9.14, §9.16, §9.20.
+**Source clinique :** `profil.md` §3 et §4 · `../../../patient/README.md` §1 et §6 · rapport v2.4 §6.4, §9.14, §9.16, §9.20.
 
 > **Ce que cette fiche est.** La procédure que toute surface du dispositif applique quand quelque chose dépasse le cadre d'une séance. Elle est **non contournable** : aucun skill, aucun outil, aucun protocole n'a le droit de la court-circuiter, de la différer ou de la nuancer.
 > **Ce qu'elle n'est pas.** Une évaluation du risque suicidaire. Le dispositif ne cote pas ce risque et ne décide pas s'il est « sérieux ». Il oriente, immédiatement, à chaque fois.
@@ -98,7 +98,7 @@
 | Voie | Ce que c'est | Réserve honnête |
 |---|---|---|
 | **Le mot-code « shutdown » à Chourouk** | Convenu à froid le 09/08/2026, **canal SMS validé par elle le 10/08/2026**. Se dit **ou s'écrit**. | Elle n'a aucun accès au dossier et n'est pas un relais d'urgence — c'est un **relais de charge**, et c'est ce qui est utile ici. |
-| **Écrire ici** | Le canal écrit reste ouvert en shutdown : c'est l'argument central du choix « compagnon muet, texte uniquement » (`PLAN.md` §5.3). | Le dispositif **oriente**, il ne prend pas en charge. |
+| **Écrire ici** | Le canal écrit reste ouvert en shutdown : c'est l'argument central du choix « compagnon muet, texte uniquement » (`../../../companion/README.md` §4). | Le dispositif **oriente**, il ne prend pas en charge. |
 
 > **Conséquence pour Kokoro (Étape 5)** *(révisée le 10/08/2026)* **:** l'écran de crise ne porte **aucun numéro d'urgence**. Il porte le **mot-code à Chourouk** et l'accès à la **tension appliquée** — les deux seules choses qui aient jamais servi. Le 3114 n'apparaît que dans la conduite du §2, jamais sur un écran d'accueil.
 
@@ -120,7 +120,7 @@ Le retrait des numéros d'urgence a une conséquence favorable et inattendue : *
 
 ## 6. Ce qui se trace au dossier
 
-Un épisode → `crises/AAAA-MM-JJ-HHMM-<type>.json`, d'après `gabarits/crise.json` (`PLAN.md` §7.5).
+Un épisode → `crises/AAAA-MM-JJ-HHMM-<type>.json`, d'après `gabarits/crise.json` (`psy/DOSSIER.md` §5).
 
 | Champ | Vigilance |
 |---|---|

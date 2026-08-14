@@ -1,6 +1,6 @@
 # `corpus/` — référentiels cliniques indexés
 
-Sources sur lesquelles le dispositif appuie ses affirmations. Règle : **toute affirmation clinique est adossée à une source citable** (`PLAN.md` §3.1, levier n° 6).
+Sources sur lesquelles le dispositif appuie ses affirmations. Règle : **toute affirmation clinique est adossée à une source citable** (`psy/README.md` §1, levier n° 6).
 
 ## Les quatre corpus prioritaires — validés, à récupérer
 
@@ -23,10 +23,10 @@ Sources sur lesquelles le dispositif appuie ses affirmations. Règle : **toute a
 
 | Corpus | Statut |
 |---|---|
-| Protocole EMDR — ⭐ **stimulation bilatérale conduite par un tiers** (cadence, longueur des séries, critères d'arrêt) | ⏸️ reporté avec l'axe EMDR (`PLAN.md` §3.6). ⚠️ **Besoin requalifié le 14/08/2026** : l'aidant joue le geste en `seance-duo` — ce n'est plus un instrument à spécifier, c'est un **geste à scripter** |
+| Protocole EMDR — ⭐ **stimulation bilatérale conduite par un tiers** (cadence, longueur des séries, critères d'arrêt) | ⏸️ reporté avec l'axe EMDR (`psy/README.md` §6). ⚠️ **Besoin requalifié le 14/08/2026** : l'aidant joue le geste en `seance-duo` — ce n'est plus un instrument à spécifier, c'est un **geste à scripter** |
 | ACT / défusion cognitive | ❓ à évaluer pour le TAG — **vérifier la compatibilité avec l'aphantasie** avant de retenir |
 | CIM-11 | ❓ optionnel |
 
 ## Convention
 
-Un corpus = un sous-répertoire, en Markdown, avec un `README.md` portant : la source exacte, sa date, son statut de validation, et **ce qu'il ne dit pas**. Les PDF bruts vont dans [`../references/originales/`](../references/originales/) et se convertissent avec `npm run pdf-to-markdown`, la version Markdown atterrissant dans [`../references/`](../references/). *(Les documents propres à Xavier, eux, vivent dans `patient/ressources/` — ce ne sont pas des référentiels cliniques.)*
+Un corpus = un sous-répertoire, en Markdown, avec un `README.md` portant : la source exacte, sa date, son statut de validation, et **ce qu'il ne dit pas**. Les PDF bruts vont dans [`../references/originales/`](../references/originales/) et se convertissent avec `npm run psy:pdf2md`, la version Markdown atterrissant dans [`../references/`](../references/). *(Les documents propres à Xavier, eux, vivent dans `patient/ressources/` — ce ne sont pas des référentiels cliniques.)*

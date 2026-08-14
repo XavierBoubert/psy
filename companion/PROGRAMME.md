@@ -1,0 +1,239 @@
+# `PROGRAMME.md` — le format du programme et de la bibliothèque
+
+> 🔴 **NORMATIF.** Contrat partagé entre **Claude Psy**, qui l'écrit, et **Kokoro**, qui l'affiche.
+>
+> **Règle unique : Kokoro n'invente rien et ne décide rien.** Il affiche ce qu'on lui donne, et renvoie ce que Xavier a fait.
+
+---
+
+## 1. Le circuit
+
+```
+Claude Psy ──écrit── companion/inputs/programme.json + companion/inputs/bibliotheque/
+                            │
+                    Claude Superviseur ── verdict: publiable   (bloquant)
+                            │
+                     npm run psy:publish
+                            ▼
+             Drive/programme.json + Drive/bibliotheque/
+                            ▼
+                         Kokoro
+                            │
+                    Drive/journal/ + Drive/reponses/
+                            │
+                       npm run psy:sync
+                            ▼
+     psy/outputs/dossier/ + companion/outputs/  ──lit── Claude Psy · Claude Superviseur
+```
+
+**Le dépôt reste la source de vérité. Drive n'est qu'un tuyau.**
+
+⭐ **Le programme ne se publie qu'à la clôture d'une séance.** Publier hors séance serait un changement d'interface non annoncé.
+
+---
+
+## 2. Le fichier
+
+```json
+{
+  "version": 4,
+  "publie_le": "2026-08-13",
+  "supervision": "2026-08-13-programme-v4",
+  "etapes": [ … ]
+}
+```
+
+| Champ | Règle |
+|---|---|
+| `version` | Entier, **s'incrémente à chaque publication**. Kokoro compare avec la version qu'il a : s'il y a du nouveau, il affiche **une ligne discrète en haut** — **jamais une notification** |
+| `publie_le` | `AAAA-MM-JJ` |
+| `supervision` | 🔴 **Obligatoire.** Nom du fichier de `superviseur/outputs/` (sans extension) qui vise **cette version**. Sans lui, `npm run psy:publish` refuse *(voir [`../superviseur/README.md`](../superviseur/README.md))* |
+
+---
+
+## 3. Une étape
+
+Champs communs, tous obligatoires sauf `duree_minutes` :
+
+| Champ | Valeurs |
+|---|---|
+| `id` | identifiant stable, `kebab-case`. ⚠️ **Ne change jamais** — c'est lui qui relie une réponse à son étape |
+| `titre` | ce qui s'affiche dans la liste |
+| `type` | `ecran` · `exercice` · `questionnaire` · `demarche` · `fiche` · `seance-duo` |
+| `rubrique` | `crise` · `therapie` · `bilan` · `documentation` — **c'est le groupement principal de l'écran d'accueil** |
+| `quand` | `aujourdhui` · `au_besoin` · `sans_date` |
+| `duree_minutes` | entier, ou absent si la durée n'est pas connue d'avance |
+
+### `ecran` — ouvre une fonction déjà construite dans Kokoro
+
+```json
+{ "id": "check-in", "titre": "Check-in du jour", "type": "ecran", "rubrique": "therapie",
+  "quand": "aujourdhui", "duree_minutes": 2, "ecran": "check-in" }
+```
+
+Valeurs de `ecran` : `check-in` · `mot-code` · `tension-appliquee` · `phrase-soignant`.
+**Kokoro refuse un nom d'écran qu'il ne connaît pas** plutôt que d'afficher une ligne morte.
+
+### `exercice` — un déroulé guidé au minuteur
+
+```json
+{ "id": "ppc-p1", "titre": "Masque tenu à la main", "type": "exercice", "rubrique": "therapie",
+  "quand": "aujourdhui", "duree_minutes": 5,
+  "consigne": "Masque contre le visage, sans sangles, machine éteinte, pendant une activité neutre.",
+  "minuteur_secondes": 300,
+  "sortie_libre": true }
+```
+
+`sortie_libre: true` affiche « je peux arrêter avant la fin, sans avoir à le justifier ».
+⭐ **C'est toujours `true`.** Le champ existe pour que ce soit écrit, pas pour être mis à `false`.
+
+### `questionnaire` — des questions fermées, une par écran
+
+```json
+{ "id": "gad7", "titre": "Questionnaire GAD-7", "type": "questionnaire", "rubrique": "bilan",
+  "quand": "sans_date", "duree_minutes": 5,
+  "questions": [
+    { "id": "q1", "enonce": "…", "choix": [
+        { "valeur": 0, "libelle": "Jamais" },
+        { "valeur": 3, "libelle": "Presque tous les jours" } ] }
+  ] }
+```
+
+Toute question est un **choix fermé** ou un **compteur**. Aucune saisie de texte obligatoire, jamais.
+« Passer » écrit `null` — **qui n'est pas `0`**.
+
+**Trois règles de publication des échelles, non négociables :**
+
+1. 🔴 **Le PHQ-9 ne se publie jamais.** C'est le seul instrument porteur d'un déclencheur d'escalade *(son item 9 interroge l'idéation suicidaire)*, et Kokoro s'interdit tout numéro d'urgence par construction. Il se passe **en conversation**, avec `psy-bilan`.
+2. ⛔ **Les items se recopient depuis `psy/docs/corpus/echelles/`, jamais de mémoire.** Un item mal restitué produit un score faux — donc **faussement rassurant**, le pire résultat possible ici.
+3. **La cotation n'est pas dans Kokoro.** L'app renvoie les réponses item par item ; **le score se calcule en séance**, et son interprétation aussi. ⭐ **Kokoro n'affiche jamais un score, un seuil ni une interprétation** — ce serait une progression à l'écran, et un score mal lu est pire qu'un score absent.
+
+### `demarche` — une chose à faire dans le monde réel
+
+```json
+{ "id": "ppc-releve", "titre": "Demander le relevé de télésuivi", "type": "demarche",
+  "rubrique": "therapie", "quand": "sans_date",
+  "detail": "Link Sommeil — heures par nuit, nombre de nuits, fuites, IAH résiduel." }
+```
+
+Renvoie `fait` ou rien. ⭐ **Pas encore fait n'est pas une donnée** : rien ne s'affiche, rien ne se compte.
+
+### `fiche` — un texte à lire ou à montrer
+
+```json
+{ "id": "panique-13", "titre": "Les 13 symptômes", "type": "fiche", "rubrique": "documentation",
+  "quand": "au_besoin", "document": "panique-13-symptomes", "montrable": false }
+```
+
+Deux formes, exclusives l'une de l'autre :
+
+- **`texte`** — le contenu est dans le programme. Pour ce qui tient en quelques lignes.
+- **`document`** — l'identifiant d'un fichier de la **bibliothèque** *(§6)*, soit `bibliotheque/<document>.md`. Pour les fiches longues.
+
+`montrable: true` affiche le texte en plein écran, lisible par quelqu'un d'autre — la phrase pour le soignant, la fiche pour Chourouk.
+
+### `seance-duo` — un déroulé chronométré tenu par l'aidant
+
+```json
+{ "id": "stab-ancrage-1", "titre": "Ancrage corporel — à deux", "type": "seance-duo",
+  "rubrique": "therapie", "quand": "sans_date", "duree_minutes": 22,
+  "entrainement_requis": true,
+  "signal_arret": "Xavier lève la main ouverte. On s'arrête, sans rien demander.",
+  "avant": [
+    "Pièce calme, lumière baissée, porte fermée.",
+    "Le téléphone reste dans tes mains du début à la fin.",
+    "Relis les critères d'arrêt — bouton en bas, à tout moment."
+  ],
+  "sequence": [
+    { "pour": "aide",    "consigne": "Assieds-toi en face de lui, à un mètre.", "secondes": 30 },
+    { "pour": "patient", "consigne": "Pose les deux pieds à plat. Appuie tes talons dans le sol.", "secondes": 60 },
+    { "pour": "aide",    "consigne": "Ne parle pas pendant ce temps. Le minuteur t'avertit.", "secondes": 60 }
+  ],
+  "arret": [
+    "Il fait le signal d'arrêt → on s'arrête, on ne demande rien.",
+    "Il ne répond plus aux consignes → on s'arrête, c'est un shutdown, pas un refus.",
+    "Tu ne sais pas quoi faire → on s'arrête. Ne jamais improviser."
+  ],
+  "sortie_libre": true }
+```
+
+| Champ | Règle |
+|---|---|
+| `entrainement_requis` | 🔴 **Toujours `true`.** La première exécution réelle ne peut pas être la première fois que l'aidant découvre le déroulé. Kokoro propose l'**entraînement** tant qu'il n'a pas été fait au moins une fois |
+| `signal_arret` | 🔴 **Obligatoire, non vide, et rappelé à l'écran en permanence.** ⭐ **C'est le champ le plus important du type** : Xavier doit pouvoir arrêter **sans parler**, parce que c'est exactement ce qui tombe en premier. Le geste se convient **à froid**, jamais pendant |
+| `avant` | Ce qui doit être vrai avant de commencer. L'aidant coche, ou n'entre pas dans la séquence |
+| `sequence` | Consignes ordonnées. `pour` vaut `aide` (elle fait) ou `patient` (elle lit à voix haute, **mot pour mot**). `secondes` est le temps tenu par l'appareil |
+| `arret` | 🔴 **Obligatoire, au moins deux entrées, accessibles en un tap à tout moment.** ⭐ **La dernière est toujours « tu ne sais pas quoi faire → on s'arrête »** — l'aidant n'improvise jamais |
+| `sortie_libre` | `true`, comme partout |
+
+> 🔴 **Ce que le type ne porte jamais** *(contrôle **C10**)* : un diagnostic, un score, une hypothèse, un compte rendu — **rien qui apprenne à l'aidant quelque chose sur Xavier qu'il n'a pas décidé de partager**. Et aucune consigne qui **lui demande de juger** : « estime si ça va », « décide s'il faut continuer », « rassure-le ». **Une consigne qui demande un jugement clinique la met en faute quoi qu'elle fasse.**
+
+> ⭐ **Le mode entraînement compte autant que la séance.** C'est **la même séquence, jouée à blanc**, sans le matériel réel. Il renvoie `issue: "entrainement"` — **ce n'est pas une donnée clinique et rien ne s'en déduit**. **La première fois que ça compte ne doit pas être la première fois que ça se fait.**
+
+> ⚠️ **Limite connue du format : `sequence` est linéaire, elle ne sait pas exprimer une répétition en séries.** Un déroulé de stimulation bilatérale est fait de séries — *n* allers-retours, une pause, on recommence. 🔴 **Déplier trente consignes identiques serait un contournement, pas une solution** : le format porterait une cadence sans jamais la nommer, et le Superviseur n'aurait rien à contrôler. **L'extension se décide en séance, sous supervision — pas à l'implémentation.**
+
+---
+
+## 4. L'écran d'accueil
+
+Groupé par **rubrique**, puis par **`quand`** : *aujourd'hui* · *quand j'en ai besoin* · *sans date*.
+**Aucun score, aucune progression, aucun historique, aucun palier atteint.**
+
+---
+
+## 5. Ce que Kokoro renvoie
+
+Un fichier par étape faite, dans `reponses/` : `AAAA-MM-JJ-HHMM-<id>.json`
+
+```json
+{ "etape": "ppc-p1", "horodatage": "2026-08-13T18:04:00+02:00",
+  "issue": "termine", "reponses": null, "source": "android" }
+```
+
+`issue` : `termine` · `arrete_avant_la_fin` · `fait` · `entrainement`.
+⭐ **`arrete_avant_la_fin` n'est pas un échec et ne se commente nulle part.**
+⭐ **`entrainement` n'est pas une donnée clinique** — il dit seulement que le déroulé a été répété à blanc.
+
+---
+
+## 6. La bibliothèque
+
+**`companion/inputs/bibliotheque/<id>.md`** — un fichier Markdown par document, publié tel quel vers Drive.
+
+> 🔴 **La règle qui vaut plus que toutes les autres ici : un document de la bibliothèque est *écrit pour Xavier*, il n'est pas *copié depuis* `psy/docs/protocoles/`.**
+>
+> Un protocole clinique porte des diagnostics, des pronostics, des noms de praticiens, des hypothèses non tranchées et des réserves adressées à un professionnel. **Une fiche de bibliothèque porte ce qu'il y a à faire, et pourquoi.** C'est le contrôle **C9**.
+
+**Ce qu'une fiche de bibliothèque ne contient jamais :** un diagnostic non encore dit à Xavier · un pronostic · un nom de praticien autre que ceux qu'il consulte · une hypothèse formulée comme un fait · une réserve destinée au Dr Isorni · **et tous les interdits du §7**.
+
+**Les fiches sont soumises aux mêmes vérifications que les étapes** : `npm run psy:publish` lit chaque fichier de la bibliothèque et applique les sept familles d'interdits.
+
+---
+
+## 7. 🔴 Les interdits — vérifiés à la publication ET à la lecture
+
+**Les tests de Kokoro lisent les textes de l'app ; ces textes-ci n'y sont pas.** Sans double vérification, tous les garde-fous du dispositif deviennent contournables par du contenu, **en silence**.
+
+**Deux vérifications, deux réactions volontairement différentes :**
+
+- **`npm run psy:publish` refuse la publication entière.** Sur le PC, on peut corriger — donc on corrige, on ne publie pas à moitié.
+- **Kokoro écarte la seule étape fautive** et affiche le reste. Sur le téléphone, on ne peut pas corriger, et perdre tout le programme pour une ligne serait pire.
+
+| # | Interdit | Pourquoi |
+|---|---|---|
+| 1 | « imagine », « visualise », « représente-toi », « lieu sûr » | Aphantasie mesurée — 18/80 |
+| 2 | « note … sur 10 », « ton niveau de », « à combien tu te sens » | R6 — on cote des comportements, pas des ressentis |
+| 3 | « jour 3 sur », « d'affilée », « série », « régularité », « % de l'objectif » | Zéro streak |
+| 4 | Tout numéro d'appel d'urgence, **3114 compris** | Un écran n'est pas un déclencheur d'escalade |
+| 5 | « as-tu besoin », « quand tu sens », « aux premiers signes » | Déclenchement sur repère externe, jamais sur un prodrome |
+| 6 | Tout ce qui touche à une dose, une molécule, un traitement | Non-substitution — ça part au brief |
+| 7 | « détends-toi », « respire lentement » sur une étape vasovagale | Délétère sur un vasovagal |
+
+---
+
+## 8. Ce que le programme ne fait jamais
+
+1. **Notifier.** *(Seule exception : l'accès crise sur l'écran verrouillé — une porte, pas un rappel.)*
+2. **Compter d'un jour à l'autre.** Aucun palier atteint, aucun historique, aucune progression à l'écran. **Les paliers se cotent en séance, à partir du journal.**
+3. **Reprocher.** Une étape non faite disparaît de l'écran le lendemain **sans laisser de trace**.
+4. **Se publier hors séance.** Ce serait un changement d'interface non annoncé.

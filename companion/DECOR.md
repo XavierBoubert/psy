@@ -2,7 +2,7 @@
 
 **Spécification graphique du monde.** ⭐ **v1 — 14/08/2026.** Le décor est un **paysage peint en quatre couches**, glissé en parallaxe sous cinq écrans disposés en croix.
 
-> 📐 **Ce document ne décide rien de clinique.** Il décrit le monde dans lequel le personnage est posé. Le personnage, lui, est spécifié dans [`CORPS.md`](./CORPS.md) et la doctrine dans [`../../../PLAN.md` §5](../PLAN.md#5-kokoro--le-compagnon).
+> 📐 **Ce document ne décide rien de clinique.** Il décrit le monde dans lequel le personnage est posé. Le personnage, lui, est spécifié dans [`CORPS.md`](./CORPS.md) et la doctrine dans [`README.md`](README.md).
 >
 > ⏱️ **Il s'applique au jalon K7 (« la présence »), comme `CORPS.md`.** K5 et K6 passent d'abord. Ce qui existe aujourd'hui est le monde vide : le décor, la navigation, et Kokoro au centre.
 
@@ -50,10 +50,10 @@ Les **planches magenta d'origine** sont versionnées dans [`retenus/decor/`](./r
 
 ```bash
 # 1. générer des candidats (charte du décor, pas celle du personnage)
-npm run image -- decor-feuillage --base=_decor --format=16:9 --taille=2K --n=2
+npm run companion:image -- decor-feuillage --base=_decor --format=16:9 --taille=2K --n=2
 
 # 2. détourer le candidat retenu vers l'APK
-npm run decoupe -- decor-feuillage/01-b.png \
+npm run companion:decoupe -- decor-feuillage/01-b.png \
   companion/android/app/src/main/res/drawable-nodpi/decor_feuillage.webp \
   --seuil=0.72 --plein=0.30
 ```
@@ -135,7 +135,7 @@ La caméra est une **valeur ordinaire**, écrite directement par le doigt ; l'an
 
 | Interdit | Origine |
 |---|---|
-| 🔴 **Bouger tout seul.** Aucune dérive, aucun nuage qui file, aucune animation d'ambiance | Hors la respiration de Kokoro, **rien ne se déplace sans que le doigt le déplace** — jamais de mouvement à interpréter (`PLAN.md` §5.6) |
+| 🔴 **Bouger tout seul.** Aucune dérive, aucun nuage qui file, aucune animation d'ambiance | Hors la respiration de Kokoro, **rien ne se déplace sans que le doigt le déplace** — jamais de mouvement à interpréter (`README.md` §5) |
 | 🔴 **Changer avec le thème sombre du système** | Il changerait d'apparence selon un réglage étranger à la thérapie, sans que Xavier l'ait décidé. **La plage horaire du §5 est l'inverse** : fixée d'avance, visible dans les réglages, et coupée d'un geste |
 | 🔴 **Basculer sous les yeux** | L'heure est lue **à l'arrivée dans le monde**, puis tenue tant qu'il est ouvert. Voir le décor virer tout seul à 21 h serait exactement le mouvement à interpréter que le dispositif ne provoque jamais |
 | **Porter du texte, un chiffre, une pastille, un indicateur de page** | Kokoro ne vient jamais vers Xavier, et un décor qui informe est une interpellation |
@@ -148,7 +148,7 @@ La caméra est une **valeur ordinaire**, écrite directement par le doigt ; l'an
 ## 8. Ce qui reste ouvert
 
 - ⏳ **L'arbitrage du §2** attend la confirmation de Xavier.
-- ⏳ **Le contenu des quatre écrans du bord** — programme, bibliothèque, bilans, crise. Il se décide en séance (`PLAN.md` §8), pas ici.
+- ⏳ **Le contenu des quatre écrans du bord** — programme, bibliothèque, bilans, crise. Il se décide en séance (`companion/PROGRAMME.md`), pas ici.
 - ⏳ **L'axe de symétrie des tuiles en miroir**, sur le feuillage. ⚠️ **Le rétrécir à 1,50 l'a rapproché** : il se croise désormais une fois par écran traversé au lieu d'une fois toutes les 1,4. La prairie, elle, l'a beaucoup éloigné. Le supprimer demanderait un dessin bouclé, que le modèle ne sait pas produire de façon fiable. **À regarder à l'écran** — si c'est gênant, la sortie est d'élargir le feuillage et de compenser l'échelle en régénérant une planche aux feuilles plus petites.
 - ⏳ **Le débattement vertical est modeste** (0,10). Monter à 0,16 rend le haut et le bas plus distincts ; c'est maintenant abordable, les deux décalages du bas ayant de la marge — mais il faudrait les remonter d'autant. À regarder à l'écran, pas à trancher sur le papier.
 - ⏳ **La palette de nuit est un premier jet** : ciel `#08202E → #1A4A63`, teinte `#4C7691` multipliée. Elle tient sur les planches actuelles ; elle n'a pas été regardée longtemps.

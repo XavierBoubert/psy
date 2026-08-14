@@ -39,13 +39,13 @@ En cas de doute clinique, la source qui fait foi est `patient/ressources/Rapport
 
 > ⚠️ **Un jour sans check-in est un jour sans fichier — ce n'est pas un zéro.** Ne jamais compter une absence comme une valeur nulle. Écrire le **nombre de jours couverts** à côté de chaque médiane : « 6,2 h/nuit (médiane sur 19 jours renseignés / 25 »).
 >
-> 🔴 **L'observance PPC se présente comme une donnée clinique, jamais comme une note.** Le télésuivi sert à **ajuster les réglages**, pas à noter le patient (`PLAN.md` §7.9). Écrire « 214 min/nuit en médiane sur 12 nuits renseignées », jamais « 48 % d'observance » ni « objectif non atteint ».
+> 🔴 **L'observance PPC se présente comme une donnée clinique, jamais comme une note.** Le télésuivi sert à **ajuster les réglages**, pas à noter le patient (`psy/DOSSIER.md` §9). Écrire « 214 min/nuit en médiane sur 12 nuits renseignées », jamais « 48 % d'observance » ni « objectif non atteint ».
 
 ---
 
 ## 2. Structure imposée
 
-Copier `psy/docs/gabarits/brief-isorni.md` → `psy/outputs/dossier/briefs/AAAA-MM-JJ-isorni.md`. Les cinq sections sont obligatoires et gardent cet ordre (`PLAN.md` §7.8) :
+Copier `psy/docs/gabarits/brief-isorni.md` → `psy/outputs/dossier/briefs/AAAA-MM-JJ-isorni.md`. Les cinq sections sont obligatoires et gardent cet ordre (`psy/DOSSIER.md` §8) :
 
 | Section | Contenu | Piège |
 |---|---|---|
@@ -102,7 +102,7 @@ Copier `psy/docs/gabarits/brief-isorni.md` → `psy/outputs/dossier/briefs/AAAA-
 
 **Le brief s'écrit avec deux champs de frontmatter à `false` / vide, et ils tombent dans cet ordre — jamais l'inverse :**
 
-1. 🔴 **`supervise:` — la passe du Superviseur, bloquante** *(depuis le 13/08/2026, `PLAN.md` §4.3)*. Le brief part vers **un praticien qui peut agir dessus** : c'est l'une des trois sorties du dispositif. `psy-superviseur` écrit `superviseur/outputs/AAAA-MM-JJ-brief.md` avec un `verdict` ; **le champ `supervise:` ne se remplit que si ce verdict est `publiable`.** Ce qu'elle cherche en priorité : un chiffre estimé au lieu d'être compté · une réserve manquante · ⭐ **une proposition pharmacologique déguisée en question**.
+1. 🔴 **`supervise:` — la passe du Superviseur, bloquante** *(depuis le 13/08/2026, `superviseur/README.md` §4)*. Le brief part vers **un praticien qui peut agir dessus** : c'est l'une des trois sorties du dispositif. `psy-superviseur` écrit `superviseur/outputs/AAAA-MM-JJ-brief.md` avec un `verdict` ; **le champ `supervise:` ne se remplit que si ce verdict est `publiable`.** Ce qu'elle cherche en priorité : un chiffre estimé au lieu d'être compté · une réserve manquante · ⭐ **une proposition pharmacologique déguisée en question**.
 2. **Lire le brief à Xavier** — ou lui dire où il est. **La supervision ne remplace pas son arbitrage, elle le précède.**
 3. `transmis: false` **reste faux** tant qu'il n'a pas décidé.
 4. **Ne rien transmettre soi-même.** Le dispositif n'écrit à aucun praticien.
@@ -119,5 +119,5 @@ Copier `psy/docs/gabarits/brief-isorni.md` → `psy/outputs/dossier/briefs/AAAA-
 - **Écrire un chiffre absent du dossier** — l'estimer, l'arrondir de mémoire, le reconstituer.
 - **Mettre `transmis: true`** sans décision explicite de Xavier.
 - 🔴 **Proposer la transmission avant la supervision.** Le champ `supervise:` se remplit en premier, et seulement sur un verdict `publiable`.
-- **Faire figurer des données sur Chourouk ou les filles** au-delà de ce qui concerne directement Xavier (`PLAN.md` §7.9).
+- **Faire figurer des données sur Chourouk ou les filles** au-delà de ce qui concerne directement Xavier (`psy/DOSSIER.md` §9).
 - **Écraser un brief existant** — append-only (R2).

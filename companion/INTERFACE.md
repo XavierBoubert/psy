@@ -2,7 +2,7 @@
 
 **v1 — 14/08/2026.** Le monde devient **l'interface principale** de l'app, et jusqu'à l'écran de veille.
 
-> 📐 **Onze décisions tranchées par Xavier le 14/08/2026** — §5. Le décor est spécifié dans [`DECOR.md`](./DECOR.md), le personnage dans [`CORPS.md`](./CORPS.md), le contrat de contenu dans [`../../../PLAN.md` §8](../PLAN.md#8-le-programme--format) — **ce document ne fait que ranger** ce que ces trois-là ont décidé.
+> 📐 **Onze décisions tranchées par Xavier le 14/08/2026** — §5. Le décor est spécifié dans [`DECOR.md`](./DECOR.md), le personnage dans [`CORPS.md`](./CORPS.md), le contrat de contenu dans [`companion/PROGRAMME.md`](PROGRAMME.md) — **ce document ne fait que ranger** ce que ces trois-là ont décidé.
 >
 > 📌 **Il ne décide jamais quel contenu clinique existe.** Ça se décide en séance.
 >
@@ -207,16 +207,16 @@ L'écran central est le seul qui soit vide par doctrine. Y poser les nouveautés
 
 ### 6.4 La bibliothèque et les séances à deux — ⚠️ ce n'est pas une décision d'interface
 
-**Oui, « thérapie » est bien la liste des prochaines actions de la thérapie en cours**, et **oui, une séance à deux s'y trouve pour être jouée** — le contrat lui donne déjà `rubrique: therapie` ([§8.3](../PLAN.md#83-une-étape)).
+**Oui, « thérapie » est bien la liste des prochaines actions de la thérapie en cours**, et **oui, une séance à deux s'y trouve pour être jouée** — le contrat lui donne déjà `rubrique: therapie` ([`companion/PROGRAMME.md` §3](PROGRAMME.md)).
 
-🔴 **Mais « une catégorie *Séances à deux* dans la documentation » n'existe pas dans le contrat.** La bibliothèque n'a aucun champ de catégorie : les fiches se groupent par `quand`, comme tout le reste. **L'ajouter, c'est modifier `PLAN.md` §8, qui est normatif — donc un acte de séance, supervisé, pas un choix d'écran.**
+🔴 **Mais « une catégorie *Séances à deux* dans la documentation » n'existe pas dans le contrat.** La bibliothèque n'a aucun champ de catégorie : les fiches se groupent par `quand`, comme tout le reste. **L'ajouter, c'est modifier `companion/PROGRAMME.md`, qui est normatif — donc un acte de séance, supervisé, pas un choix d'écran.**
 
 **Et sur l'entraînement, il y a un point de fond :** l'entraînement **n'est pas un contenu séparé**, c'est **la même étape jouée à blanc**, qui renvoie `issue: "entrainement"`. Le mettre dans la documentation ferait apparaître une même étape à deux endroits — ce qui casse la propriété qui a fait choisir ce rangement.
 
 | Ce qui va où | |
 |---|---|
 | **Thérapie** | **La séance à deux elle-même, une seule entrée.** ⭐ **Ce n'est pas un bouton de plus dans la liste : c'est le premier écran de l'étape** — voir ci-dessous |
-| **Documentation** | Ce qui se **lit** : *Ce qu'est une séance à deux* · *La fiche pour Chourouk* (`montrable`) · *Le signal d'arrêt, convenu à froid*. Des textes, y compris lisibles par l'aide-au-patient. ✅ **Validé le 14/08/2026** |
+| **Documentation** | Ce qui se **lit** : *Ce qu'est une séance à deux* · *La fiche pour Chourouk* (`montrable`) · *Le signal d'arrêt, convenu à froid*. Des textes, y compris lisibles par l'aidant. ✅ **Validé le 14/08/2026** |
 
 #### ⭐ L'écran de choix — acté le 14/08/2026
 
@@ -226,7 +226,7 @@ L'écran central est le seul qui soit vide par doctrine. Y poser les nouveautés
 
 | | |
 |---|---|
-| **Avant le premier entraînement** | 🔴 **Seul l'entraînement est proposé.** `entrainement_requis` vaut toujours `true` ([§8.3](../PLAN.md#83-une-étape)) : la première fois que ça compte ne doit pas être la première fois que ça se fait |
+| **Avant le premier entraînement** | 🔴 **Seul l'entraînement est proposé.** `entrainement_requis` vaut toujours `true` ([`companion/PROGRAMME.md` §3](PROGRAMME.md)) : la première fois que ça compte ne doit pas être la première fois que ça se fait |
 | **Ensuite** | Les deux boutons. ⭐ **On se réentraîne aussi la veille d'une vraie séance** — ce chemin ne se referme jamais |
 | ⭐ **L'entraînement est jouable en solo par l'aide** *(précision de Xavier, 14/08/2026)* | Chourouk peut le répéter **seule**, sans Xavier. Rien ne s'y oppose : le contenu d'une séance à deux **ne porte rien sur Xavier** (contrôle **C10**), donc il se répète sans lui |
 | **Ce que ça renvoie** | `issue: "entrainement"` — **ce n'est pas une donnée clinique, et rien ne s'en déduit** |

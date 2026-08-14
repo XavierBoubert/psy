@@ -82,7 +82,7 @@ private val PLACE_DE_KOKORO = BiasAlignment(horizontalBias = 0f, verticalBias = 
  *
  * 🔴 **Le décor ne bouge pas tout seul.** Aucune dérive, aucun nuage qui file, aucune animation
  * d'ambiance : hors la respiration de Kokoro, rien ne se déplace sans que le doigt le déplace
- * (`PLAN.md` §5.6 — jamais de mouvement à interpréter).
+ * (`companion/README.md` §5 — jamais de mouvement à interpréter).
  */
 @Composable
 fun MondeKokoro(palette: PaletteDecor, modifier: Modifier = Modifier) {
@@ -146,7 +146,7 @@ fun MondeKokoro(palette: PaletteDecor, modifier: Modifier = Modifier) {
  *
  * ⭐ **Quatre des cinq sont vides, et c'est l'état voulu pour l'instant** : le monde existe avant ce
  * qu'on y mettra. Ce qui les remplira — programme, bibliothèque, bilans — se décide en séance
- * (`PLAN.md` §8), pas ici.
+ * (`companion/PROGRAMME.md`), pas ici.
  *
  * 🔴 **Kokoro garde les couleurs du SVG, jour et nuit** ([PALETTE_CLAIRE]) : il n'est pas posé sur
  * le fond de l'application, il est posé dans le décor. Le repeindre avec le ciel reviendrait à lui

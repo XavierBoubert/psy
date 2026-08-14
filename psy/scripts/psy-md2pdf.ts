@@ -11,7 +11,7 @@ type ConvertArgs = {
   readonly destinationPath: string;
 };
 
-const USAGE = 'Usage: markdown-to-pdf <source.md> <destination.pdf>';
+const USAGE = 'Usage: psy-md2pdf <source.md> <destination.pdf>';
 
 const parseArgs = (argv: readonly string[]): ConvertArgs => {
   const [source, destination] = argv;

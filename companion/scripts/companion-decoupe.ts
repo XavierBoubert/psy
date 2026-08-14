@@ -15,7 +15,7 @@ const MIMES: Readonly<Record<string, string>> = {
   '.webp': 'image/webp',
 };
 
-const USAGE = `Usage: kokoro-decoupe <source> <destination.webp|.png> [--largeur=<px>] [--seuil=<0-1>] [--plein=<0-1>]
+const USAGE = `Usage: companion-decoupe <source> <destination.webp|.png> [--largeur=<px>] [--seuil=<0-1>] [--plein=<0-1>]
 
   <source>        image générée — chemin projet, ou raccourci « decor-feuillage/01-b.png » sous sorties/
   <destination>   chemin projet du fichier écrit ; l'extension décide du format

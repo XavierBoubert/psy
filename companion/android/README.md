@@ -2,7 +2,7 @@
 
 **Kotlin natif + Jetpack Compose.** Cible : **Samsung Galaxy / One UI**. App personnelle et sideloadée — aucune contrainte Google Play.
 
-> 📐 **Ce README dit ce que Kokoro est. [`../../PLAN.md` §5](../../PLAN.md#5-kokoro--le-compagnon) dit dans quel ordre on le construit** — jalons **K0 → K7**, critères de fin, points durs Android, invariants traduits en règles vérifiables.
+> 📐 **Ce README dit ce que Kokoro est. [`../README.md`](../README.md) dit dans quel ordre on le construit** — jalons **K0 → K7**, critères de fin, points durs Android, invariants traduits en règles vérifiables.
 >
 > ✅ **K0 → K4 franchis.** Poste de travail · **full-screen intent levé** (le point le plus risqué du projet) · **noyau de crise** — ⭐ le mot-code a été envoyé pour de vrai, téléphone verrouillé, et Chourouk a confirmé, l'essai fait **à froid en la prévenant** · **tension appliquée guidée sur quatre repères externes** · **check-in quotidien sur le téléphone**.
 >
@@ -20,7 +20,7 @@
 | **Accompagner** | Le programme du jour — ce que Claude Psy a décidé en séance |
 | **Éduquer** | La bibliothèque — les protocoles et les fiches, **écrits pour être lus par Xavier** |
 | **Réconforter** | La présence — un visage qui respire, qui n'attend rien, qui ne reproche rien |
-| ⭐ **Faire à deux** *(13/08/2026)* | Les thérapies impossibles en solo : Kokoro passe dans les mains de l'**aide-au-patient**, qui suit un déroulé **chronométré**. **Mode entraînement obligatoire** avant la première fois |
+| ⭐ **Faire à deux** *(13/08/2026)* | Les thérapies impossibles en solo : Kokoro passe dans les mains de l'**aidant**, qui suit un déroulé **chronométré**. **Mode entraînement obligatoire** avant la première fois |
 
 > ⭐ **Kokoro ne vient jamais vers Xavier.** Aucune notification, aucune relance, aucun rappel, aucun reproche. **Xavier vient à lui, et y trouve tout.** *(Seule exception : la notification d'accès crise sur l'écran verrouillé — **une porte, pas un rappel** ; elle ne dit rien, ne demande rien, et n'apparaît pas parce qu'il s'est passé quelque chose.)*
 
@@ -76,14 +76,14 @@ Puis : check-in quotidien, outils de crise, suivi des repas.
 
 | Sens | Fichiers | Format | Acheminé par |
 |---|---|---|---|
-| Kokoro **écrit** | `journal/AAAA-MM-JJ.json` · `reponses/AAAA-MM-JJ-HHMM-<id>.json` | [`../../PLAN.md` §7](../../PLAN.md#7-le-dossier--format) *(normatif)* | `npm run sync` |
-| Kokoro **lit** | `programme.json` · `bibliotheque/*.md` | [`../../PLAN.md` §8](../../PLAN.md#8-le-programme--format) *(normatif)* | `npm run publish` |
+| Kokoro **écrit** | `journal/AAAA-MM-JJ.json` · `reponses/AAAA-MM-JJ-HHMM-<id>.json` | [`psy/DOSSIER.md`](../../psy/DOSSIER.md) *(normatif)* | `npm run psy:sync` |
+| Kokoro **lit** | `programme.json` · `bibliotheque/*.md` | [`companion/PROGRAMME.md`](../PROGRAMME.md) *(normatif)* | `npm run psy:publish` |
 
-Transport : ~~Syncthing~~ → **Google Drive** depuis le 11/08/2026, étendu aux deux sens le 12/08, **étendu à la bibliothèque le 13/08** — périmètre, objections conservées et conditions : [`../../PLAN.md` §6](../../PLAN.md#6-le-contenu--google-drive).
+Transport : ~~Syncthing~~ → **Google Drive** depuis le 11/08/2026, étendu aux deux sens le 12/08, **étendu à la bibliothèque le 13/08** — périmètre, objections conservées et conditions : [`../../README.md`](../../README.md).
 
 ⭐ **Ni profil, ni état, ni séances, ni crises, ni mesures, ni briefs, ni supervisions ne quittent le PC.** **Le contenu publié est *dérivé*, jamais *extrait*** : il porte ce qu'il y a à faire, jamais ce qui a été constaté, mesuré ou diagnostiqué.
 
-🔴 **Kokoro écarte la seule étape fautive plutôt que de refuser tout le programme** — sur le téléphone on ne peut pas corriger, et perdre tout le programme pour une ligne serait pire. Côté PC, `npm run publish` refuse **la publication entière**. Les deux réactions diffèrent volontairement.
+🔴 **Kokoro écarte la seule étape fautive plutôt que de refuser tout le programme** — sur le téléphone on ne peut pas corriger, et perdre tout le programme pour une ligne serait pire. Côté PC, `npm run psy:publish` refuse **la publication entière**. Les deux réactions diffèrent volontairement.
 
 ## Construire et installer *(K0 franchi le 10/08/2026)*
 
@@ -96,11 +96,11 @@ Depuis `companion/android/`, téléphone branché et débogage USB autorisé :
 ⭐ **Ou depuis la racine du dépôt, sans changer de répertoire** *(14/08/2026)* :
 
 ```bash
-npm run kokoro              # la même chose, exactement
-npm run kokoro -- pose      # sans repasser les tests
+npm run companion:kokoro              # la même chose, exactement
+npm run companion:kokoro -- pose      # sans repasser les tests
 ```
 
-C'est la **même commande**, pas une seconde façon de faire : `npm run kokoro` appelle `./kokoro`, qui se replace tout seul dans `companion/android/`. Elle existe pour que **Xavier compile et déploie sans passer par Claude** — depuis la racine, là où sont déjà `npm run sync` et `npm run publish`. ⚠️ Elle suppose le `bash` de Git dans le `PATH` (c'est le cas sur ce poste) ; si un jour ce n'est plus vrai, `./kokoro` reste la voie directe.
+C'est la **même commande**, pas une seconde façon de faire : `npm run companion:kokoro` appelle `./kokoro`, qui se replace tout seul dans `companion/android/`. Elle existe pour que **Xavier compile et déploie sans passer par Claude** — depuis la racine, là où sont déjà `npm run psy:sync` et `npm run psy:publish`. ⚠️ Elle suppose le `bash` de Git dans le `PATH` (c'est le cas sur ce poste) ; si un jour ce n'est plus vrai, `./kokoro` reste la voie directe.
 
 | Commande | Ce qu'elle fait |
 |---|---|
@@ -128,4 +128,4 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 
 ## Ce qui n'entrera jamais dans Kokoro
 
-Liste complète et motifs : [`../../PLAN.md` §5.7](../../PLAN.md#57-ce-qui-nentrera-jamais-dans-kokoro). En résumé : conseil touchant au traitement · streak ou historique · son ou vibration non demandés · consigne de visualisation · expression de reproche · service tiers · **notification** · **numéro d'urgence, 3114 compris** · **le PHQ-9**.
+Liste complète et motifs : [`companion/README.md` §6](../README.md). En résumé : conseil touchant au traitement · streak ou historique · son ou vibration non demandés · consigne de visualisation · expression de reproche · service tiers · **notification** · **numéro d'urgence, 3114 compris** · **le PHQ-9**.

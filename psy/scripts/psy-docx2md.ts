@@ -11,7 +11,7 @@ type ConvertArgs = {
   readonly destinationPath: string;
 };
 
-const USAGE = 'Usage: docx-to-markdown <source.docx> <destination.md>';
+const USAGE = 'Usage: psy-docx2md <source.docx> <destination.md>';
 
 const parseArgs = (argv: readonly string[]): ConvertArgs => {
   const [source, destination] = argv;

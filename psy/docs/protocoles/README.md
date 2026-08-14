@@ -7,7 +7,7 @@ Différence avec `corpus/` : le corpus est la **littérature**, le protocole est
 > **Un protocole est écrit pour le praticien** : il porte des diagnostics, des pronostics, des noms de praticiens, des hypothèses non tranchées et des réserves adressées à un professionnel.
 > **Une fiche de bibliothèque est écrite pour Xavier** : elle porte ce qu'il y a à faire, et pourquoi.
 >
-> ⚠️ **Ne jamais copier un protocole dans la bibliothèque.** On le **réécrit**. C'est le contrôle **C9** du Superviseur ([`../../PLAN.md` §4.2](../../../PLAN.md#42-les-dix-contrôles)), et c'est la raison pour laquelle ce répertoire ne disparaît pas au profit de la bibliothèque.
+> ⚠️ **Ne jamais copier un protocole dans la bibliothèque.** On le **réécrit**. C'est le contrôle **C9** du Superviseur ([`superviseur/README.md` §3](../../../superviseur/README.md)), et c'est la raison pour laquelle ce répertoire ne disparaît pas au profit de la bibliothèque.
 
 ## Format imposé
 

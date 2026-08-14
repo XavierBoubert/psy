@@ -108,7 +108,7 @@ Le camouflage pousse à ne rien dire et à « faire normal », ce qui est exacte
 |---|---|
 | Un épisode vasovagal | `crises/AAAA-MM-JJ-HHMM-vasovagal.json` — `parade_utilisee: "tension_appliquee"`, `parade_efficace`, `perte_de_connaissance` |
 | Le palier atteint | Frontmatter de la séance : `cible: tension-appliquee`, `palier_atteint: 1..4` |
-| L'acquisition quotidienne | **Rien dans le journal.** Pas de champ `campagne`, pas de comptage quotidien : le chantier ouvert reste la PPC, et le journal a un budget de 2 minutes déjà dépensé (`PLAN.md` §7.10). Les paliers se cotent **en séance**. |
+| L'acquisition quotidienne | **Rien dans le journal.** Pas de champ `campagne`, pas de comptage quotidien : le chantier ouvert reste la PPC, et le journal a un budget de 2 minutes déjà dépensé (`psy/DOSSIER.md` §10). Les paliers se cotent **en séance**. |
 
 ---
 

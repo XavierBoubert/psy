@@ -21,7 +21,7 @@ const MIMES: Readonly<Record<string, string>> = {
   '.webp': 'image/webp',
 };
 
-const USAGE = `Usage: kokoro-image <variante> [--n=<1-${MAX_CANDIDATS}>] [--ref=<image>[,<image>]] [--format=<1:1|4:3|3:4|16:9>] [--taille=<1K|2K|4K>] [--base=<charte>] [--modele=<id>] [--sans-base] [--sans-planche]
+const USAGE = `Usage: companion-image <variante> [--n=<1-${MAX_CANDIDATS}>] [--ref=<image>[,<image>]] [--format=<1:1|4:3|3:4|16:9>] [--taille=<1K|2K|4K>] [--base=<charte>] [--modele=<id>] [--sans-base] [--sans-planche]
 
   <variante>      nom d'un fichier de companion/ressources/prompts/ (sans .md)
   --ref           images de départ — chemin projet, ou raccourci « <variante>/03-b.png » sous sorties/

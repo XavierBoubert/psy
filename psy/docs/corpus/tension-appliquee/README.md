@@ -1,6 +1,6 @@
 # Corpus — Tension appliquée (Öst)
 
-**Priorité n° 1 du corpus** (`PLAN.md` §3.8). Versé le 09/08/2026 — Étape 3.
+**Priorité n° 1 du corpus** (`psy/README.md` §7). Versé le 09/08/2026 — Étape 3.
 
 ---
 

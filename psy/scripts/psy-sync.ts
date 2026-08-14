@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 const PROJECT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const SORTIES = resolve(PROJECT_ROOT, 'companion/outputs');
 
-const USAGE = 'Usage: contenu-sync <dossier-de-transit-drive>';
+const USAGE = 'Usage: psy-sync <dossier-de-transit-drive>';
 
 const CORE_FIELDS = [
   'shutdowns',

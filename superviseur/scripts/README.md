@@ -1,8 +1,8 @@
 # `superviseur/scripts/` — vide aujourd'hui
 
-**Le superviseur n'a pas de script à lui, et il ne doit pas en avoir un qui double `npm run publish`.**
+**Le superviseur n'a pas de script à lui, et il ne doit pas en avoir un qui double `npm run psy:publish`.**
 
-⭐ **Ce qui est vérifiable mécaniquement est déjà câblé** dans [`psy/scripts/programme-publish.ts`](../../psy/scripts/programme-publish.ts) : visualisation, cotation de ressenti, streak, numéro d'urgence, prodrome, traitement, relaxation sur vasovagal, présence et validité de la supervision. **Le script ne fatigue pas et ne s'habitue pas** — c'est son avantage sur une relecture.
+⭐ **Ce qui est vérifiable mécaniquement est déjà câblé** dans [`psy/scripts/psy-publish.ts`](../../psy/scripts/psy-publish.ts) : visualisation, cotation de ressenti, streak, numéro d'urgence, prodrome, traitement, relaxation sur vasovagal, présence et validité de la supervision. **Le script ne fatigue pas et ne s'habitue pas** — c'est son avantage sur une relecture.
 
 **Ce que le superviseur regarde est ce qu'aucun script ne peut voir :** une étape conforme mot à mot et **fausse cliniquement** · un programme qui a cessé de correspondre au dossier *(C8)* · une fiche recopiée d'un protocole *(C9)* · un dispositif qui publie sans que rien n'avance *(C7)* · un programme qui ne contient jamais rien que Xavier n'ait déjà demandé *(C5)*.
 

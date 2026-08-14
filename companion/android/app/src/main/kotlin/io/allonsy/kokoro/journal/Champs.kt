@@ -3,7 +3,7 @@ package io.allonsy.kokoro.journal
 enum class Section { NOYAU, CAMPAGNE }
 
 /**
- * Les champs du check-in, dans l'ordre imposé par `PLAN.md` §7.3.
+ * Les champs du check-in, dans l'ordre imposé par `psy/DOSSIER.md` §3.
  * Le noyau est stable dans le temps ; la campagne suit `etat.md` §4 et sortira du
  * journal à la clôture du chantier. Aucune surface n'a le droit d'inventer un format :
  * cet ordre et ces clés sont ceux du schéma, et `ChampsTest` échoue s'ils divergent.
