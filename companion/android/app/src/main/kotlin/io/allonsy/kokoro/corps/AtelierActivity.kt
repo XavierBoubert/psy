@@ -64,8 +64,8 @@ private fun EcranAtelier() {
     val rig = rigAnime(
         expression = expressionForcee ?: reglage.expression,
         panneauAllume = expressionForcee != null || reglage.panneauAllume,
-        ouvertureBrasGauche = brasForces ?: ouvertureEnVol(reglage.ouvertureBrasGauche, vol),
-        ouvertureBrasDroit = brasForces ?: ouvertureEnVol(reglage.ouvertureBrasDroit, vol),
+        ouvertureBrasGauche = brasForces ?: reglage.ouvertureBrasGauche,
+        ouvertureBrasDroit = brasForces ?: reglage.ouvertureBrasDroit,
         orbitePiedGauche = piedsForces,
         orbitePiedDroit = piedsForces,
         regard = regardForce ?: reglage.regard,
@@ -196,7 +196,7 @@ private fun EcranAtelier() {
             LigneChoix(
                 options = listOf(
                     stringResource(R.string.corps_vol_aucun) to Vol.AUCUN,
-                    stringResource(R.string.corps_vol_flottement) to Vol.FLOTTEMENT,
+                    stringResource(R.string.corps_vol_levitation) to Vol.LEVITATION,
                     stringResource(R.string.corps_vol_traversee) to Vol.TRAVERSEE,
                 ),
                 selection = vol,
@@ -214,11 +214,6 @@ private fun EcranAtelier() {
             )
         }
     }
-}
-
-private fun ouvertureEnVol(ouverture: Float, vol: Vol): Float = when (vol) {
-    Vol.AUCUN -> ouverture
-    else -> maxOf(ouverture, OUVERTURE_VOL)
 }
 
 @Composable

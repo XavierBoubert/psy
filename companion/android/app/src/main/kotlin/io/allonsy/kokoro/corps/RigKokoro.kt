@@ -34,6 +34,11 @@ data class RigKokoro(
     /** Rotation de la racine, en degrés, autour de [PIVOT_RACINE] — l'inclinaison en vol. */
     val inclinaison: Float = 0f,
     val echelle: Float = 1f,
+    /**
+     * L'ombre portée, ou `null` quand il n'y en a pas. **Elle ne suit le personnage qu'en `x`** :
+     * c'est l'écart entre ses pieds et elle qui dit la hauteur de vol ([Vol.kt][Ombre]).
+     */
+    val ombre: Ombre? = null,
 ) {
     /**
      * Rotation appliquée au bras de gauche, en degrés Compose (sens horaire).

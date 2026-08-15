@@ -171,7 +171,7 @@ Tous s'exécutent depuis la racine, et **les arguments de chemin sont résolus p
 | `npm run psy:pdf2md` | `psy/scripts/psy-pdf2md.ts` | Convertit un PDF en Markdown. `-- <source.pdf> <destination.md>` |
 | `npm run psy:docx2md` | `psy/scripts/psy-docx2md.ts` | Convertit un DOCX en Markdown. `-- <source.docx> <destination.md>` |
 | `npm run psy:md2pdf` | `psy/scripts/psy-md2pdf.ts` | Convertit un Markdown en PDF *(Puppeteer/Chromium headless)*. `-- <source.md> <destination.pdf>` |
-| `npm run companion:kokoro` | `companion/android/kokoro` | ⭐ **Compile, teste, installe et ouvre Kokoro sur le téléphone.** C'est le même script que `./kokoro` — il existe pour que **Xavier déploie sans passer par Claude** |
+| `npm run companion:kokoro` | `companion/android/kokoro` | ⭐ **Compile, teste, installe et ouvre Kokoro sur le téléphone**, ⭐ **par le Wi-Fi, sans câble** *(15/08/2026 — le lien se renoue tout seul)*. C'est le même script que `./kokoro` — il existe pour que **Xavier déploie sans passer par Claude** |
 | `npm run companion:image` | `companion/scripts/companion-image.ts` | Génère des planches de recherche graphique via Gemini |
 | `npm run companion:decoupe` | `companion/scripts/companion-decoupe.ts` | Détoure une planche : le fond magenta `#FF00FF` devient le canal alpha |
 | `npm run typecheck` | — | `tsc --noEmit` sur `psy/scripts/` et `companion/scripts/` |

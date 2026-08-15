@@ -265,7 +265,7 @@
     <string name="corps_pieds_ecartes">écartés</string>
     <string name="corps_section_regard">Regard — un axe, indépendant de l\'expression</string>
     <string name="corps_section_balayage">Balayage du regard</string>
-    <string name="corps_section_vol">Déplacement de la racine</string>
+    <string name="corps_section_vol">Vol et ombre — déplacement de la racine</string>
     <string name="corps_section_palette">Palette</string>
     <string name="corps_posture_repos">repos</string>
     <string name="corps_posture_present">présent</string>
@@ -294,7 +294,7 @@
     <string name="corps_balayage_large">lecture, large</string>
     <string name="corps_balayage_lente">lecture, lente</string>
     <string name="corps_vol_aucun">posé</string>
-    <string name="corps_vol_flottement">flottement</string>
+    <string name="corps_vol_levitation">lévitation</string>
     <string name="corps_vol_traversee">traversée</string>
     <string name="corps_palette_sombre">sombre</string>
     <string name="corps_palette_claire">claire</string>

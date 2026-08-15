@@ -1,15 +1,22 @@
 package io.allonsy.kokoro.corps
 
+import androidx.compose.ui.geometry.Offset
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.File
+import kotlin.math.PI
 import kotlin.random.Random
 
 private val FICHIER_SVG = File("../../ressources/retenus/kokoro-corps-v2.svg")
 
 private const val PRECISION = 1e-6f
+
+/** Un tour d'horloge découpé en degrés — de quoi parcourir un cycle entier sans en rater le haut. */
+private const val TOUR = 360
+
+private fun phase(degres: Int): Float = degres * 2f * PI.toFloat() / TOUR
 
 /** Le jeu complet des postures — un test qui en oublierait une ne dirait rien de l'invariant. */
 private val POSTURES = listOf(
@@ -239,10 +246,6 @@ class CorpsInvariantsTest {
     @Test
     fun `la designation ne leve jamais le bras au dessus de l'epaule`() {
         assertEquals(90f, INCLINAISON_REPOS + OUVERTURE_HORIZONTALE, 1e-3f)
-        assertTrue(
-            "Le vol n'a pas le droit de lever le bras plus haut que la désignation",
-            OUVERTURE_VOL <= OUVERTURE_HORIZONTALE,
-        )
     }
 
     /**
@@ -462,6 +465,79 @@ class CorpsInvariantsTest {
         assertEquals(1f, expiration.etirementCorps, 0f)
         assertEquals(1f + AMPLITUDE_HAUTEUR, inspiration.etirementCorps, 1e-6f)
         assertEquals(1f - AMPLITUDE_LARGEUR, inspiration.retractionCorps, 1e-6f)
+    }
+
+    /**
+     * 🔴 `PRESENCE.md` §3 : **la lévitation bat sur l'horloge de la respiration**, à un quart de
+     * période. Deux périodes distinctes feraient battre le vol contre le souffle — un rythme lent,
+     * donc quelque chose à décoder. Le test tient la phase pour unique, comme le code, et vérifie
+     * ce qu'on en tire : le cycle se referme, il ne descend jamais sous la pose dessinée, il monte
+     * de 3 % de la hauteur, et les deux mouvements ne culminent jamais ensemble.
+     */
+    @Test
+    fun `la levitation bat sur l'horloge de la respiration`() {
+        assertEquals(0.03f * HAUTEUR_PERSONNAGE, LEVITATION_AMPLITUDE, PRECISION)
+        assertEquals(PI.toFloat() / 2f, LEVITATION_DEPHASAGE, PRECISION)
+
+        val hauteurs = (0..TOUR).map { levitation(phase(it)) }
+        assertEquals("Le cycle se referme", levitation(0f), levitation(phase(TOUR)), 1e-5f)
+        assertEquals("Le bas du cycle est la pose dessinée", 0f, hauteurs.max(), 1e-4f)
+        assertEquals("Le haut du cycle monte de 3 %", -LEVITATION_AMPLITUDE, hauteurs.min(), 1e-4f)
+
+        val sommetDuSouffle = PI.toFloat() / 2f
+        assertEquals("Le souffle culmine ici", 1f, souffle(sommetDuSouffle), 1e-5f)
+        assertEquals(
+            "Le vol y est à mi-course, pas au sommet — c'est le quart de période",
+            -LEVITATION_AMPLITUDE / 2f,
+            levitation(sommetDuSouffle),
+            1e-4f,
+        )
+    }
+
+    /**
+     * 🔴 §4.2 — il ne se déplace jamais vers le lecteur — et §3 — rien ne bat sur une seconde
+     * horloge. La lévitation est donc **purement verticale** : ni dérive latérale, ni bascule. Le
+     * flottement de la v1 en avait trois, sur trois périodes, et les trois battaient entre elles.
+     */
+    @Test
+    fun `la levitation ne fait que monter et descendre`() {
+        (0..TOUR).forEach {
+            val deplacement = Vol.LEVITATION.deplacement(phase(it), avance = 0f)
+            assertEquals("Aucune dérive latérale", 0f, deplacement.decalage.x, 0f)
+            assertEquals("Aucune bascule", 0f, deplacement.inclinaison, 0f)
+            assertEquals("La hauteur est celle de l'horloge", levitation(phase(it)), deplacement.decalage.y, 0f)
+        }
+        assertEquals("Ce qui ne vole pas ne bouge pas", Offset.Zero, Vol.AUCUN.deplacement(1f, 1f).decalage)
+        assertEquals(0f, Vol.AUCUN.deplacement(1f, 1f).inclinaison, 0f)
+    }
+
+    /**
+     * 🔴 §1.3 : l'ombre dit la hauteur de vol, **et rien d'autre**. Elle est posée au sol du dessin
+     * — le bas des pieds —, très aplatie, large comme le corps, et elle tient dans la vue.
+     *
+     * 🔴 **Son opacité est une valeur, pas une animation** : rien dans [Ombre] ne dépend du temps,
+     * donc rien ne peut pulser. C'est le type qui porte l'invariant, pas la vigilance.
+     */
+    @Test
+    fun `l'ombre est posee au sol et ne dit rien d'autre`() {
+        val ombre = Ombre()
+        assertEquals("L'ombre est posée au sol du dessin", BAS_PIEDS, ombre.sol, 0f)
+        assertEquals(
+            "L'empreinte au sol est celle des épaules",
+            (EPAULE_DROITE.x - EPAULE_GAUCHE.x) / 2f,
+            ombre.demiLargeur,
+            PRECISION,
+        )
+        assertTrue("L'ombre est très aplatie", ombre.aplatissement < 0.25f)
+        assertTrue(
+            "L'ombre déborde de la vue",
+            ombre.sol + ombre.demiLargeur * ombre.aplatissement <= HAUTEUR_VUE,
+        )
+        assertTrue("L'opacité reste discrète", ombre.opacite > 0f && ombre.opacite < 0.3f)
+
+        assertNull("Ce qui ne vole pas n'a pas d'ombre", Vol.AUCUN.ombre())
+        assertEquals("Le vol porte son ombre", Ombre(), Vol.LEVITATION.ombre())
+        assertEquals("La traversée aussi", Ombre(), Vol.TRAVERSEE.ombre())
     }
 
     // ————————————————————————————————————————————————————————————————————————————————————————

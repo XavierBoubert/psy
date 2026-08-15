@@ -83,6 +83,7 @@ ciel · nuages loin · nuages près · prairie · feuillage │ OMBRE · KOKORO 
 | Geste d'écriture | **4 000 ms** de geste, **10 000–20 000 ms** d'arrêt | 🔴 Intermittent, jamais continu |
 | Sommeil | Lévitation à **½ vitesse**, amplitude **½** | |
 | Semi-sourire | **La moitié de la flèche du sourire** | §6 E1 |
+| Ombre | Demi-largeur **39,3** *(le demi-écart d'épaules du dessin)*, aplatissement **0,16**, opacité **0,18**, noyau plein **45 %** du rayon | 🔴 **Aucune de ces quatre valeurs ne varie dans le temps** — c'est ce qui interdit à l'ombre de pulser. Seule la demi-largeur est dérivée du dessin ; les trois autres sont à régler à l'œil |
 
 ---
 
@@ -116,9 +117,11 @@ ciel · nuages loin · nuages près · prairie · feuillage │ OMBRE · KOKORO 
 
 **Chaque étape est livrable seule et vérifiable dans l'atelier du corps.**
 
-> ✅ **E1 → E7 faits** — le semi-sourire, `serein` par défaut, le regard devenu un axe, le clignement des yeux seuls à 2,8–6,5 s, le balayage de lecture, les neuf postures, le geste d'écriture. **Le corps est prêt ; aucune surface de la thérapie ne l'a encore vu.**
+> ✅ **E1 → E8 faits** — le semi-sourire, `serein` par défaut, le regard devenu un axe, le clignement des yeux seuls à 2,8–6,5 s, le balayage de lecture, les neuf postures, le geste d'écriture, le vol et l'ombre. **Le corps est prêt ; aucune surface de la thérapie ne l'a encore vu.**
 >
 > ⭐ **Le regard a gagné un second axe** — l'abaissement — parce que `notes` demande des « yeux baissés vers ce bras » et `lecture` des yeux sur la liste. Il se règle par la posture, comme le premier.
+>
+> ⭐ **Le flottement de la v1 est mort à E8.** Il battait sur trois périodes distinctes — 3,2 s de hauteur, 5,1 s de dérive latérale, 4,3 s de bascule — donc exactement l'information involontaire que §3 interdit. La lévitation ne garde qu'un axe, sur l'horloge de la respiration. **Et le bras entrouvert « en vol » de l'atelier a disparu avec lui** : la posture est seule maîtresse des bras.
 >
 > ⚠️ **Ce que le §2 décrit et que les postures ne portent pas encore** : le glissement du regard d'une carte à l'autre (`pensif`) et le balayage de lecture (`lecture`). E5 pose que le balayage se règle **indépendamment de la posture** ; c'est **E9 / E10**, en plaçant l'habitant par écran, qui l'attacheront.
 >

@@ -13,6 +13,8 @@
 #   ./kokoro test       tests unitaires seuls
 #   ./kokoro apk        compilation seule
 #   ./kokoro pose       compilation, installation, ouverture, contrôle de plantage
+#   ./kokoro lien       noue (ou renoue) le lien sans fil avec le téléphone
+#   ./kokoro appairer   appairage sans fil, une seule fois : <IP:port> <code>
 #   ./kokoro journal    les dernières lignes du dernier build
 #   ./kokoro plantage   le tampon de plantage du téléphone
 #
@@ -22,11 +24,16 @@ set -uo pipefail
 
 RACINE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 JOURNAL="$RACINE/build/kokoro.log"
+SANSFIL="$RACINE/.kokoro-sansfil"
 APK="$RACINE/app/build/outputs/apk/debug/app-debug.apk"
 RESULTATS="$RACINE/app/build/test-results/testDebugUnitTest"
 
 PAQUET="io.allonsy.kokoro"
-ECRAN="$PAQUET/.MainActivity"
+
+# 🔴 L'écran qu'on ouvre est celui du lanceur, et lui seul : One UI refuse `am start` sur une
+# activité non exportée. Depuis INTERFACE.md v2, c'est le monde — l'écran de contrôle est au bout
+# de la roue dentée, et l'atelier du corps se prend depuis là.
+ECRAN="$PAQUET/.monde.MondeActivity"
 
 # Une explication d'échec qui dépasse ça n'est plus une explication, c'est le journal.
 LIGNES_EXTRAIT=25
@@ -131,21 +138,26 @@ etape_apk() {
 
 telephone() { adb devices | awk 'NR > 1 && $2 == "device" { print $1; exit }'; }
 
+modele_de() { adb -s "$1" shell getprop ro.product.model | tr -d '\r'; }
+
 resume() {
     [ -f "$JOURNAL" ] || return 0
     tail -n 40 "$JOURNAL"
 }
 
-# One UI refuse `am start` sur une activité non exportée : on ouvre l'écran de contrôle, et
-# l'atelier du corps se prend depuis là.
 etape_pose() {
     local appareil modele
     appareil="$(telephone)"
     if [ -z "$appareil" ]; then
-        etat pose "AUCUN TÉLÉPHONE (adb devices)"
+        nouer_lien
+        appareil="$(telephone)"
+    fi
+    if [ -z "$appareil" ]; then
+        etat pose "AUCUN TÉLÉPHONE"
+        expliquer_lien
         exit 1
     fi
-    modele="$(adb -s "$appareil" shell getprop ro.product.model | tr -d '\r')"
+    modele="$(modele_de "$appareil")"
 
     if ! adb -s "$appareil" install -r -d "$APK" > "$JOURNAL.adb" 2>&1; then
         etat pose "ÉCHEC"
@@ -165,7 +177,7 @@ etape_pose() {
         printf '%s\n' "$chute" | head -n 10
         exit 1
     fi
-    etat ouvert "MainActivity"
+    etat ouvert "${ECRAN##*.}"
 }
 
 attendre_ecran() {
@@ -181,17 +193,125 @@ attendre_ecran() {
 }
 
 # ————————————————————————————————————————————————————————————————————————————————————————————
+# Le lien sans fil — déployer par le Wi-Fi, sans câble
+# ————————————————————————————————————————————————————————————————————————————————————————————
+#
+# 🔴 Un lien sans fil se noue une fois et se renoue tout seul : les autres commandes l'appellent
+# quand aucun téléphone ne répond, et Xavier n'a rien à taper. Trois voies, dans cet ordre :
+#
+#   1. le câble, s'il est branché — il ne sert qu'à basculer adbd sur le port 5555, une fois ;
+#   2. l'adresse retenue du dernier lien réussi ;
+#   3. l'annonce mDNS du téléphone, quand le débogage sans fil vient d'être rallumé.
+#
+# Le port 5555 ne survit pas à un redémarrage du téléphone : il faut alors rebrancher une fois,
+# ou repasser par `./kokoro appairer`. C'est Android qui l'impose, pas ce script.
+
+# Un téléphone sans fil se reconnaît à son adresse : `10.0.0.5:5555`, jamais un numéro de série.
+# Quand le câble est branché en même temps, les deux répondent — c'est le lien qu'on regarde ici.
+telephone_sansfil() {
+    adb devices | awk 'NR > 1 && $2 == "device" && $1 ~ /:/ { print $1; exit }'
+}
+
+adresse_retenue() { [ -f "$SANSFIL" ] && tr -d ' \r\n' < "$SANSFIL"; }
+
+adresse_annoncee() {
+    adb mdns services 2>/dev/null | awk '$2 == "_adb-tls-connect._tcp" { print $3; exit }'
+}
+
+# Le téléphone branché sait dire son adresse Wi-Fi ; c'est le seul service que le câble rend.
+adresse_usb() {
+    adb -s "$1" shell ip -f inet addr show wlan0 2>/dev/null |
+        sed -nE 's/.*inet ([0-9.]+).*/\1:5555/p' | head -n 1
+}
+
+# Une adresse ne se retient que si elle a répondu — un lien mort réessayé à chaque build coûte
+# plus cher qu'une découverte mDNS.
+#
+# ⚠️ La réponse d'adb se lit dans une variable, jamais dans un tube vers `grep -q` : grep sort au
+# premier accord, adb prend un SIGPIPE, et `pipefail` retourne alors un échec sur un lien noué.
+relier() {
+    [ -n "$1" ] || return 1
+    case "$(adb connect "$1" 2>&1)" in
+        "connected to"* | "already connected"*) printf '%s\n' "$1" > "$SANSFIL" ;;
+        *) return 1 ;;
+    esac
+}
+
+nouer_lien() {
+    local appareil adresse
+
+    adresse="$(telephone_sansfil)"
+    if [ -n "$adresse" ]; then
+        printf '%s\n' "$adresse" > "$SANSFIL"
+        return 0
+    fi
+
+    appareil="$(telephone)"
+    if [ -n "$appareil" ]; then
+        adresse="$(adresse_usb "$appareil")"
+        adb -s "$appareil" tcpip 5555 > /dev/null 2>&1
+        sleep 2
+        relier "$adresse" && return 0
+    fi
+
+    relier "$(adresse_retenue)" && return 0
+    relier "$(adresse_annoncee)" && return 0
+    return 1
+}
+
+# Le débogage sans fil est une case à cocher sur le téléphone : aucun script ne peut la cocher
+# à la place de Xavier, donc on dit exactement quoi faire plutôt que « aucun téléphone ».
+expliquer_lien() {
+    cat <<'FIN'
+— sur le téléphone : Paramètres › Options de développement › Débogage sans fil › activer
+— puis, une seule fois : ./kokoro appairer <IP:port> <code>
+  (adresse et code sous « Appairer l'appareil avec un code d'appairage »)
+— ou branche le câble une fois, puis : ./kokoro lien
+FIN
+}
+
+etape_lien() {
+    local appareil
+    if ! nouer_lien; then
+        etat lien "PAS DE LIEN"
+        expliquer_lien
+        exit 1
+    fi
+    appareil="$(telephone_sansfil)"
+    etat lien "ok        $appareil  $(modele_de "$appareil")"
+}
+
+# L'adresse et le code d'appairage changent à chaque ouverture de l'écran : ils se lisent sur le
+# téléphone au moment de taper la commande, ils ne se retiennent pas.
+etape_appairer() {
+    if [ -z "${1:-}" ] || [ -z "${2:-}" ]; then
+        echo "kokoro appairer <IP:port> <code>"
+        exit 1
+    fi
+    case "$(adb pair "$1" "$2" 2>&1)" in
+        "Successfully paired"*) etat appairage "ok" ;;
+        *)
+            etat appairage "ÉCHEC"
+            echo "— adresse et code changent à chaque ouverture de l'écran d'appairage"
+            exit 1
+            ;;
+    esac
+    etape_lien
+}
+
+# ————————————————————————————————————————————————————————————————————————————————————————————
 
 VERBEUX=0
-COMMANDE=""
+ARGUMENTS=()
 for argument in "$@"; do
     case "$argument" in
         -v) VERBEUX=1 ;;
-        *) COMMANDE="$argument" ;;
+        *) ARGUMENTS+=("$argument") ;;
     esac
 done
+COMMANDE="${ARGUMENTS[0]:-tout}"
 
-case "${COMMANDE:-tout}" in
+case "$COMMANDE" in
     tout)
         etape_tests
         etape_apk
@@ -203,10 +323,12 @@ case "${COMMANDE:-tout}" in
         etape_apk
         etape_pose
         ;;
+    lien) etape_lien ;;
+    appairer) etape_appairer "${ARGUMENTS[@]:1}" ;;
     journal) resume ;;
     plantage) adb logcat -b crash -d | tail -n 40 ;;
     *)
-        echo "kokoro [tout|test|apk|pose|journal|plantage] [-v]"
+        echo "kokoro [tout|test|apk|pose|lien|appairer|journal|plantage] [-v]"
         exit 1
         ;;
 esac

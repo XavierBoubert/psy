@@ -10,9 +10,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlin.math.PI
 
 @Preview(name = "Kokoro — repos", widthDp = 220, heightDp = 220)
 @Composable
@@ -97,6 +99,31 @@ private fun Planche(postures: List<Posture>) {
         postures.forEach { posture ->
             CorpsKokoro(
                 rig = RigKokoro.pose(posture),
+                modifier = Modifier.size(140.dp),
+                palette = PALETTE_CLAIRE,
+            )
+        }
+    }
+}
+
+/**
+ * Le vol ne se voit pas sur une image fixe — **l'ombre, si.** Les trois vignettes sont trois
+ * instants du même cycle, du bas vers le haut : ⭐ l'ombre ne bouge pas d'un pixel, c'est le
+ * personnage qui s'en éloigne. C'est tout ce qu'elle dit, et c'est tout ce qu'il y a à voir.
+ */
+@Preview(name = "Kokoro — le vol et son ombre", widthDp = 440, heightDp = 160)
+@Composable
+private fun ApercuVol() {
+    Row(
+        modifier = Modifier
+            .background(PALETTE_CLAIRE.fond)
+            .padding(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        listOf(PI.toFloat(), PI.toFloat() / 2f, 0f).forEach { phase ->
+            CorpsKokoro(
+                rig = RigKokoro.pose(Posture.Repos)
+                    .copy(decalage = Offset(0f, levitation(phase)), ombre = Ombre()),
                 modifier = Modifier.size(140.dp),
                 palette = PALETTE_CLAIRE,
             )

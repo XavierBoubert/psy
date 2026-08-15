@@ -65,9 +65,6 @@ const val INCLINAISON_REPOS = 19.463f
  */
 const val OUVERTURE_HORIZONTALE = 90f - INCLINAISON_REPOS
 
-/** Bras entrouverts, utilisé par l'atelier quand le rig est en vol. */
-const val OUVERTURE_VOL = 40f
-
 /**
  * 🔴 **La butée basse : le bras ne croise jamais le corps.** À -19,5° il est exactement vertical, et
  * plus bas il passerait devant le ventre. Le garde-fou du haut vaut aussi en bas — les deux sont

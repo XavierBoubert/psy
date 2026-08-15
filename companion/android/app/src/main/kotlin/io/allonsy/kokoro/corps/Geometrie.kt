@@ -20,7 +20,9 @@ const val LARGEUR_VUE = 240f
 const val HAUTEUR_VUE = 200f
 
 private const val SOMMET_TETE = 11.062f
-private const val BAS_PIEDS = 188.938f
+
+/** Le bas des pieds dans la vue — **le sol**, celui où l'ombre est posée (`PRESENCE.md` §1.3). */
+const val BAS_PIEDS = 188.938f
 
 const val HAUTEUR_PERSONNAGE = BAS_PIEDS - SOMMET_TETE
 

@@ -128,6 +128,8 @@ npm run companion:kokoro   # depuis la racine
 
 **Jamais `gradlew` ni `adb` à la main.** Un verdict par étape, et en cas d'échec seulement l'extrait qui l'explique ; le détail reste dans `build/kokoro.log` (`./kokoro journal`). Sous-commandes et motif : [`android/README.md`](android/README.md).
 
+⭐ **Le câble n'est pas nécessaire** *(15/08/2026)* : PC et téléphone sur le même Wi-Fi suffisent, et le lien se renoue tout seul à chaque build. Il se noue une première fois par `./kokoro lien` *(câble branché une fois)* ou `./kokoro appairer <IP:port> <code>` *(sans câble)*.
+
 ---
 
 ## 9. Carte

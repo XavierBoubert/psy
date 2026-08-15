@@ -2,7 +2,6 @@ package io.allonsy.kokoro.corps
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.InfiniteTransition
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -12,18 +11,22 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.geometry.Offset
 import kotlinx.coroutines.delay
 import kotlin.math.PI
 import kotlin.math.sin
 import kotlin.random.Random
 
-/** Cycle complet inspiration + expiration (CORPS.md §5). Il ne change jamais. */
+/**
+ * Cycle complet inspiration + expiration (CORPS.md §5). Il ne change jamais.
+ *
+ * 🔴 **C'est aussi la période de la lévitation** (`PRESENCE.md` §3) : le corps n'a qu'une horloge,
+ * et [Vol.kt][levitation] s'y branche par un déphasage. Une seconde période battrait contre
+ * celle-ci, et le battement se lirait comme une information.
+ */
 const val RESPIRATION_MILLIS = 4_500
 
 /** Toute transition d'expression ou de posture (invariant §5.6). */
@@ -67,17 +70,6 @@ const val ECRITURE_ARRET_MAX_MILLIS = 20_000L
 /** L'amplitude d'un aller-retour, en degrés d'ouverture — de petits mouvements, rien de plus. */
 const val ECRITURE_AMPLITUDE = 6f
 
-private const val AMPLITUDE_VERTICALE = 9f
-private const val AMPLITUDE_LATERALE = 5f
-private const val AMPLITUDE_INCLINAISON = 3f
-private const val TRAVERSEE_PORTEE = 46f
-private const val TRAVERSEE_MILLIS = 7_000
-
-/** Le déplacement de la racine — c'est le vol. */
-enum class Vol { AUCUN, FLOTTEMENT, TRAVERSEE }
-
-data class Deplacement(val decalage: Offset, val inclinaison: Float)
-
 @Composable
 fun rigAnime(posture: Posture, vol: Vol = Vol.AUCUN): RigKokoro = with(posture.reglage()) {
     rigAnime(
@@ -110,8 +102,8 @@ fun rigAnime(
 ): RigKokoro {
     val yeuxFermes = clignementAnime(expression, actif = panneauAllume)
     val visage = visageAnime(expression, yeuxFermes)
-    val souffle = respirationAnimee()
-    val mouvement = deplacementAnime(vol)
+    val battement = battementAnime()
+    val mouvement = deplacementAnime(vol, battement)
     val geste = ecritureAnimee(actif = ecriture != null)
     val brasGauche by animateFloatAsState(ouvertureBrasGauche, transition(), label = "bras-gauche")
     val brasDroit by animateFloatAsState(ouvertureBrasDroit, transition(), label = "bras-droit")
@@ -125,7 +117,7 @@ fun rigAnime(
     return RigKokoro(
         visage = visage,
         panneauAllume = panneauAllume,
-        respiration = souffle,
+        respiration = souffle(battement),
         ouvertureBrasGauche = brasGauche + geste.sur(ecriture, Cote.GAUCHE),
         ouvertureBrasDroit = brasDroit + geste.sur(ecriture, Cote.DROITE),
         orbitePiedGauche = piedGauche,
@@ -135,20 +127,17 @@ fun rigAnime(
         decalage = mouvement.decalage,
         inclinaison = mouvement.inclinaison,
         echelle = taille,
+        ombre = vol.ombre(),
     )
 }
 
 private fun transition() = tween<Float>(TRANSITION_MILLIS, easing = FastOutSlowInEasing)
 
 /**
- * Sinusoïde continue, sans temps d'arrêt : la phase avance linéairement et se referme sur elle-même,
- * donc le retour à zéro ne fait pas de saut.
+ * Le souffle à un instant de l'horloge : 0 = expiration, 1 = inspiration. Sinusoïde continue, sans
+ * temps d'arrêt — 🔴 **et sans changement de rythme, jamais** (`PRESENCE.md` §4.6).
  */
-@Composable
-private fun respirationAnimee(): Float {
-    val phase by rememberInfiniteTransition(label = "respiration").phase(RESPIRATION_MILLIS, "souffle")
-    return (sin(phase) + 1f) / 2f
-}
+fun souffle(phase: Float): Float = (sin(phase) + 1f) / 2f
 
 /**
  * Un intervalle tiré entre deux bornes, 🔴 **jamais celui qui vient de s'écouler.** Deux attentes
@@ -300,58 +289,23 @@ private fun balayageAnime(balayage: Balayage?): Float {
     return decalage.value
 }
 
+/**
+ * L'horloge du corps — 🔴 **une seule pour tout ce qui bat.**
+ *
+ * La respiration et la lévitation en sortent l'une et l'autre (`PRESENCE.md` §3) : deux horloges
+ * produiraient un battement lent entre elles, donc une information involontaire. La phase avance
+ * linéairement et se referme sur elle-même, donc le retour à zéro ne fait pas de saut.
+ */
 @Composable
-private fun deplacementAnime(vol: Vol): Deplacement = when (vol) {
-    Vol.AUCUN -> Deplacement(Offset.Zero, 0f)
-    Vol.FLOTTEMENT -> flottementAnime()
-    Vol.TRAVERSEE -> traverseeAnimee()
-}
-
-@Composable
-private fun flottementAnime(): Deplacement {
-    val transition = rememberInfiniteTransition(label = "flottement")
-    val hauteur by transition.phase(3_200, "flottement-hauteur")
-    val lateral by transition.phase(5_100, "flottement-lateral")
-    val bascule by transition.phase(4_300, "flottement-bascule")
-    return Deplacement(
-        decalage = Offset(
-            x = AMPLITUDE_LATERALE * sin(lateral),
-            y = -AMPLITUDE_VERTICALE * (sin(hauteur) + 1f) / 2f,
-        ),
-        inclinaison = AMPLITUDE_INCLINAISON * sin(bascule),
-    )
-}
-
-@Composable
-private fun traverseeAnimee(): Deplacement {
-    val transition = rememberInfiniteTransition(label = "traversee")
-    val avance by transition.animateFloat(
-        initialValue = -1f,
-        targetValue = 1f,
+private fun battementAnime(): Float {
+    val phase by rememberInfiniteTransition(label = "battement").animateFloat(
+        initialValue = 0f,
+        targetValue = 2f * PI.toFloat(),
         animationSpec = infiniteRepeatable(
-            animation = tween(TRAVERSEE_MILLIS, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse,
+            animation = tween(RESPIRATION_MILLIS, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart,
         ),
-        label = "traversee-avance",
+        label = "battement-phase",
     )
-    val hauteur by transition.phase(2_600, "traversee-hauteur")
-    return Deplacement(
-        decalage = Offset(
-            x = TRAVERSEE_PORTEE * avance,
-            y = -AMPLITUDE_VERTICALE * (sin(hauteur) + 1f) / 2f,
-        ),
-        inclinaison = -AMPLITUDE_INCLINAISON * avance,
-    )
+    return phase
 }
-
-/** Une phase en radians qui tourne indéfiniment, sans discontinuité au bouclage. */
-@Composable
-private fun InfiniteTransition.phase(dureeMillis: Int, label: String): State<Float> = animateFloat(
-    initialValue = 0f,
-    targetValue = 2f * PI.toFloat(),
-    animationSpec = infiniteRepeatable(
-        animation = tween(dureeMillis, easing = LinearEasing),
-        repeatMode = RepeatMode.Restart,
-    ),
-    label = label,
-)

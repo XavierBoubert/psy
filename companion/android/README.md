@@ -87,7 +87,7 @@ Transport : ~~Syncthing~~ → **Google Drive** depuis le 11/08/2026, étendu aux
 
 ## Construire et installer *(K0 franchi le 10/08/2026)*
 
-Depuis `companion/android/`, téléphone branché et débogage USB autorisé :
+Depuis `companion/android/`, téléphone branché **ou simplement sur le même Wi-Fi** :
 
 ```bash
 ./kokoro            # tests, compilation, installation, ouverture — trois lignes de sortie
@@ -108,13 +108,33 @@ C'est la **même commande**, pas une seconde façon de faire : `npm run companio
 | `./kokoro test` | Tests unitaires seuls |
 | `./kokoro apk` | Compilation seule |
 | `./kokoro pose` | Compilation, installation, ouverture — sans repasser les tests |
+| `./kokoro lien` | Noue (ou renoue) le lien sans fil avec le téléphone |
+| `./kokoro appairer <IP:port> <code>` | Appairage sans fil, quand le câble n'est pas là |
 | `./kokoro journal` | Les dernières lignes du dernier build |
 | `./kokoro plantage` | Le tampon de plantage du téléphone |
 | `-v` | Laisse Gradle parler comme d'habitude, pour creuser un cas tordu |
 
+### Déployer sans câble *(15/08/2026)*
+
+⭐ **Le câble n'est plus nécessaire au quotidien.** PC et téléphone sur le même Wi-Fi suffisent : quand aucun téléphone ne répond, `./kokoro` **renoue le lien tout seul** avant d'installer. Il n'y a **rien à taper de plus** — `npm run companion:kokoro` reste la seule commande à connaître.
+
+Le lien se noue **une fois**, par l'une des deux voies :
+
+```bash
+# Câble branché une seule fois — la voie simple, à privilégier
+./kokoro lien                          # bascule adbd sur le port 5555, puis débranche pour de bon
+
+# Sans câble — Options de développement › Débogage sans fil › « Appairer avec un code »
+./kokoro appairer 10.0.0.5:41234 481253    # adresse et code changent à chaque ouverture de l'écran
+```
+
+Ensuite, l'adresse est retenue dans `.kokoro-sansfil` *(non versionné)* et rejouée à chaque build ; si elle ne répond plus, le script interroge l'annonce mDNS du téléphone. **En cas d'échec, il dit quoi faire** plutôt que « aucun téléphone ».
+
+🔴 **Le port 5555 ne survit pas à un redémarrage du téléphone** — il faut alors rebrancher le câble une fois, ou repasser par `appairer`. C'est Android qui l'impose, pas le script. ⚠️ **Câble et Wi-Fi branchés en même temps : c'est le câble qui sert**, plus rapide et plus sûr.
+
 ⭐ **Le script ne sort qu'un verdict par étape, et en cas d'échec, seulement l'extrait qui l'explique** — la ligne du compilateur, ou le test tombé avec son message d'assertion, tiré du XML de résultats *(le journal Gradle, lui, ne dit pas **pourquoi** un test tombe)*. **Rien n'est perdu pour autant :** tout part dans `build/kokoro.log`, que `./kokoro journal` relit. C'est ce qui rend une passe de vérification lisible d'un coup d'œil — pour Xavier comme pour Claude, dont chaque ligne de sortie coûte.
 
-⚠️ **`./kokoro pose` ouvre `MainActivity`, jamais un écran interne** : One UI refuse `am start` sur une activité non exportée. L'atelier du corps se prend depuis l'écran de contrôle, section **« Le corps de Kokoro »**.
+⚠️ **`./kokoro pose` ouvre l'activité du lanceur, jamais un écran interne** : One UI refuse `am start` sur une activité non exportée. Depuis INTERFACE.md v2 c'est **`MondeActivity`** *(corrigé le 15/08/2026 — le script visait encore `MainActivity`, devenue non exportée, et échouait à l'étape `ouvert`)* ; l'écran de contrôle est au bout de la roue dentée, et l'atelier du corps se prend depuis là, section **« Le corps de Kokoro »**.
 
 Les deux commandes brutes, si le script est indisponible :
 

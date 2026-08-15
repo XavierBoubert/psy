@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Matrix
 import androidx.compose.ui.graphics.Path
@@ -83,6 +84,7 @@ private val TRACES_TRACEES: Map<String, Path> by lazy {
 private val Ancre.offset: Offset get() = Offset(x, y)
 
 private fun DrawScope.dessinerKokoro(rig: RigKokoro, palette: PaletteCorps) {
+    rig.ombre?.let { dessinerOmbre(it, rig, palette.trait) }
     withTransform({
         translate(rig.decalage.x, rig.decalage.y)
         rotate(rig.inclinaison, PIVOT_RACINE.offset)
@@ -94,6 +96,37 @@ private fun DrawScope.dessinerKokoro(rig: RigKokoro, palette: PaletteCorps) {
         dessinerAutour(PIED_DROIT, CENTRE_VENTRE, rig.rotationPiedDroit, palette)
         dessinerAutour(BRAS_GAUCHE, EPAULE_GAUCHE, rig.rotationBrasGauche, palette)
         dessinerAutour(BRAS_DROIT, EPAULE_DROITE, rig.rotationBrasDroit, palette)
+    }
+}
+
+/**
+ * L'ombre est peinte **dans la couche du personnage, juste sous lui** (`PRESENCE.md` §1.3) : un
+ * panneau posé par-dessus la recouvre mécaniquement. 🔴 **« Pas d'ombre sur l'interface » est une
+ * conséquence de l'ordre de peinture — aucune découpe, aucun test.**
+ *
+ * Elle suit le personnage en `x` **et pas en `y`** : c'est l'écart entre ses pieds et elle qui dit
+ * la hauteur de vol. Le flou est un dégradé radial plutôt qu'un `BlurMaskFilter` — même rendu, et
+ * rien à déléguer au pilote graphique.
+ */
+private fun DrawScope.dessinerOmbre(ombre: Ombre, rig: RigKokoro, encre: Color) {
+    val centre = Offset(AXE, ombre.sol)
+    val teinte = encre.copy(alpha = ombre.opacite)
+    withTransform({
+        translate(rig.decalage.x, 0f)
+        scale(rig.echelle, rig.echelle, PIVOT_RACINE.offset)
+        scale(1f, ombre.aplatissement, centre)
+    }) {
+        drawCircle(
+            brush = Brush.radialGradient(
+                0f to teinte,
+                ombre.noyau to teinte,
+                1f to encre.copy(alpha = 0f),
+                center = centre,
+                radius = ombre.demiLargeur,
+            ),
+            radius = ombre.demiLargeur,
+            center = centre,
+        )
     }
 }
 
