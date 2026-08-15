@@ -103,12 +103,16 @@ Aucun score · aucune progression · aucun historique · aucun palier atteint ·
 
 | Écran | Contenu | Pourquoi là |
 |---|---|---|
-| **Thérapie** *(entrée)* | Les prochaines actions de la thérapie en cours, groupées par *aujourd'hui* / *quand j'en ai besoin* / *sans date* · **Kokoro** en tête de liste · la **roue dentée** sur la bande de titre (D4) · **les nouveautés**, quand il y en a (D5) | C'est là qu'on arrive, donc c'est là que vit ce qui n'appartient à aucune rubrique |
+| **Thérapie** *(entrée)* | Les prochaines actions de la thérapie en cours, groupées par *aujourd'hui* / *quand j'en ai besoin* / *sans date* · 🔄 **Kokoro dans sa couche**, à la bande que chaque section lui réserve · la **roue dentée** sur la bande de titre (D4) · **les nouveautés**, quand il y en a (D5) | C'est là qu'on arrive, donc c'est là que vit ce qui n'appartient à aucune rubrique |
 | **Documentation** | La bibliothèque, une fiche par ligne | Deuxième liste appelée à grandir |
 | **Bilan** | Les questionnaires à passer, les comptes rendus écrits en séance. Aucun chiffre, aucune courbe | ⭐ **Il défile maintenant comme la documentation** — il ne le pouvait pas quand il était en haut |
 | **Crise** | Mot-code · tension appliquée · phrase pour le soignant | Trois grands boutons, **jamais de défilement** — 🔴 **c'est une exigence en soi, et elle survit à la levée de P1** |
 
-> ⏳ **La place de Kokoro est provisoire.** Il occupe le haut de la liste de la thérapie et s'en va avec elle quand on défile. **Comment il habite vraiment l'écran se décide à part** — ça touche au corps, pas au rangement.
+> ✅ **La place de Kokoro n'est plus provisoire** *(15/08/2026 — [`PRESENCE.md`](PRESENCE.md), E9 à E12)*. **Elle est ancrée au contenu, pas à la dalle** : chaque écran déclare une **bande** — à côté de la pancarte d'une section, ou réservée au-dessus d'une liste —, et Kokoro se pose dedans. 🔴 **Il en sort avec elle quand la liste défile, et il ne se replace pas** : un personnage qui se recolle en haut de l'écran est un mouvement qu'on n'a pas demandé.
+>
+> 🔴 **La bande est vide de tout** — ni texte, ni cadre, ni ornement. Elle n'annonce pas Kokoro, elle lui laisse la hauteur. Et **il n'est jamais devant un texte** : sa couche est peinte **entre le décor et le contenu**, donc tout panneau le recouvre **mécaniquement**. Ce n'est pas une découpe, c'est l'ordre de peinture.
+>
+> ⛔ **L'écran de crise fait exception et n'en porte aucun** — E13 demandait une dérogation, **la supervision du 15/08/2026 l'a refusée en l'état** et l'arbitrage appartient à Xavier.
 
 ### 3.1 À quoi ressemble un écran de bord
 
@@ -195,7 +199,7 @@ Aucun score · aucune progression · aucun historique · aucun palier atteint ·
 |---|---|---|
 | **D1** | Le rangement | ✅ **Une rubrique par écran** (§3). 🔄 **La forme a changé le 15/08/2026** — la croix est devenue un **anneau horizontal** *(§7.7)* — **la règle, non** : c'est toujours une rubrique par écran, et un contenu ne change jamais de place |
 | **D2** | La place de la crise | 🔄 **Dernière de l'anneau** *(15/08/2026, §7.7)* — c'était **BAS**. ⭐ **La propriété qu'on cherchait est conservée et même renforcée** : elle reste **à un seul geste de l'entrée**, et maintenant dans les deux sens |
-| **D3** | Kokoro suit-il ? | ⏭️ **Il suivra l'interface — hors sujet ici, renvoyé à son propre brainstorm.** ⏳ **En attendant il est en tête de la liste de la thérapie** *(§7.7)* — l'écran central où il se tenait n'existe plus |
+| **D3** | Kokoro suit-il ? | ✅ **Tranché le 15/08/2026 — il habite le monde**, et le brainstorm a eu lieu : [`PRESENCE.md`](PRESENCE.md). 🔄 **Il n'est plus une carte en tête de liste** : il est peint dans **une couche à lui, entre le décor et le contenu**, à une place que chaque écran lui **réserve**. 🔴 **Deux régimes, jamais les deux à la fois** — l'**habitant** dans le décor, le **locuteur** en bas à gauche d'un panneau plein écran. ⛔ **Sauf sur l'écran de crise, qui ne porte toujours aucun personnage** *(supervision du 15/08/2026)* |
 | **D4** | L'écran de contrôle | ✅ **Une roue dentée**, 🔄 **désormais sur la bande de titre de l'écran d'entrée** *(15/08/2026, §7.7)* — c'était le coin haut droit de l'écran central. ⚠️ **Exception assumée à « aucune icône seule »** : c'est le seul pictogramme universel du lot, et la bande n'a pas la place d'un mot de plus. 🔴 **Jamais de pastille dessus** — ⭐ **réaffirmé le 15/08/2026 par Xavier**, à qui la question s'est posée en vrai *(§7.4)* : **un défaut se dit en toutes lettres sur l'écran d'entrée**, il ne se signale pas par un point |
 | **D5** | Les nouveautés | ✅ **Sur l'écran d'entrée — la thérapie** *(15/08/2026)*. Bornes au §6.1 |
 | **D6** | Le thème | ✅ **Panneaux extrudés, registre du GUI de jeu kawaii** (§4). ⚠️ **Corrige la décision du matin** : le verre dépoli avait été retenu, puis abandonné après maquette le même jour. **Le verre est archivé, il ne revient pas par morceaux** |

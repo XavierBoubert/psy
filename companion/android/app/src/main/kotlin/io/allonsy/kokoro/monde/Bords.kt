@@ -5,10 +5,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -21,12 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.allonsy.kokoro.R
-import io.allonsy.kokoro.corps.CorpsKokoro
-import io.allonsy.kokoro.corps.HAUTEUR_VUE
-import io.allonsy.kokoro.corps.LARGEUR_VUE
-import io.allonsy.kokoro.corps.PALETTE_CLAIRE
-import io.allonsy.kokoro.corps.Posture
-import io.allonsy.kokoro.corps.rigAnime
 import io.allonsy.kokoro.crise.PortesDeCrise
 import io.allonsy.kokoro.ui.BandeTitre
 import io.allonsy.kokoro.ui.BoutonEpais
@@ -62,12 +56,6 @@ import io.allonsy.kokoro.ui.TypoKokoro
 
 /** L'écart qui laisse passer le monde entre les cartes. Ce n'est pas de la respiration graphique. */
 private val ECART_CARTES = 20.dp
-
-/**
- * Kokoro est haut d'environ un quart de dalle. **Une hauteur en dp, et non une fraction d'écran** :
- * il est posé dans une liste qui défile, où la hauteur disponible est infinie par construction.
- */
-private val HAUTEUR_KOKORO = 184.dp
 
 @Composable
 fun EcranDeBord(
@@ -111,15 +99,17 @@ fun EcranDeBord(
  * n'appartiennent à aucune rubrique : Kokoro, la roue dentée de l'écran de contrôle (**D4**), et
  * l'avis de porte fermée quand il y a lieu.
  *
- * ⏳ **La place de Kokoro est provisoire** : il occupe le haut de la liste et s'en va avec elle quand
- * on défile. **Comment il habite vraiment l'écran se décide à part** — ça touche au corps, pas au
- * rangement.
+ * ⭐ **Kokoro n'est plus une carte en tête de liste** *(`PRESENCE.md` **E9**)*. Il est peint dans sa
+ * couche, entre le décor et le contenu ; **la liste ne fait plus que lui garder sa bande**, à côté
+ * de la pancarte de chaque section. 🔴 **La bande est vide de tout ornement et de tout texte** :
+ * elle ne dit pas qu'il est là, elle laisse la place.
  *
  * ⭐ **L'écran est long avant d'être riche** : sept démarches administratives sans date. C'est
  * l'état réel du chantier n° 1, et l'interface ne le maquille pas.
  */
 @Composable
 fun ContenuTherapie(
+    perchoirs: Perchoirs,
     accesPerdu: Boolean,
     onReglages: () -> Unit,
     onOuvrir: (Etape) -> Unit,
@@ -133,13 +123,14 @@ fun ContenuTherapie(
         if (accesPerdu) {
             AvisAcces(onReglages = onReglages, modifier = Modifier.padding(top = 18.dp))
         }
-        KokoroPose()
         sectionsTherapie().forEach { section ->
-            Pancarte(
-                texte = section.quand,
-                couleur = section.couleur,
-                modifier = Modifier.padding(top = 20.dp, bottom = 16.dp, start = 2.dp),
-            )
+            BandeDeSection(perchoirs = perchoirs, perchoir = section.perchoir) {
+                Pancarte(
+                    texte = section.quand,
+                    couleur = section.couleur,
+                    modifier = Modifier.padding(start = 2.dp),
+                )
+            }
             section.etapes.forEach { etape ->
                 Carte(
                     titre = etape.titre,
@@ -153,22 +144,43 @@ fun ContenuTherapie(
 }
 
 /**
- * 🔴 **Kokoro garde les couleurs du SVG, jour et nuit** ([PALETTE_CLAIRE]) : il n'est pas posé sur le
- * fond de l'application, il est posé dans le décor. Le repeindre avec le ciel reviendrait à lui
- * donner une deuxième apparence à décoder — le décor change d'heure, lui non.
+ * La bande d'une section : **la pancarte à gauche, la place de l'habitant à droite.**
+ *
+ * ⭐ **Elle est au moins aussi haute que sa vue** ([CADRE_HABITANT]) — sinon la carte suivante le
+ * recouvrirait par le simple ordre de peinture, et il disparaîtrait sans que rien ne le signale.
  */
 @Composable
-private fun KokoroPose(modifier: Modifier = Modifier) {
+private fun BandeDeSection(
+    perchoirs: Perchoirs,
+    perchoir: Perchoir,
+    contenu: @Composable () -> Unit,
+) {
     Box(
-        modifier = modifier.fillMaxWidth().padding(top = 14.dp),
-        contentAlignment = Alignment.Center,
-    ) {
-        CorpsKokoro(
-            rig = rigAnime(Posture.Repos),
-            modifier = Modifier.height(HAUTEUR_KOKORO).aspectRatio(LARGEUR_VUE / HAUTEUR_VUE),
-            palette = PALETTE_CLAIRE,
-        )
-    }
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 20.dp, bottom = 16.dp)
+            .heightIn(min = CADRE_HABITANT.height)
+            .perchoir(perchoirs, perchoir),
+        contentAlignment = Alignment.CenterStart,
+        content = { contenu() },
+    )
+}
+
+/**
+ * La bande qu'une liste réserve à l'habitant **au-dessus d'elle** (`PRESENCE.md` §2).
+ *
+ * ⭐ **Vide de tout** : ni texte, ni cadre, ni ornement. Elle n'annonce pas Kokoro — elle lui laisse
+ * la hauteur, et c'est tout ce qu'elle fait.
+ */
+@Composable
+private fun BandeDeTete(perchoirs: Perchoirs, perchoir: Perchoir) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp)
+            .height(CADRE_HABITANT.height)
+            .perchoir(perchoirs, perchoir),
+    )
 }
 
 /**
@@ -179,12 +191,13 @@ private fun KokoroPose(modifier: Modifier = Modifier) {
  * Xavier (contrôle **C9**), et ça se décide en séance.
  */
 @Composable
-fun ContenuDocumentation() {
+fun ContenuDocumentation(perchoirs: Perchoirs) {
     EcranDeBord(
         titre = stringResource(R.string.monde_documentation_titre),
         couleur = LocalPaletteKokoro.current.lavande,
         defilant = true,
     ) {
+        BandeDeTete(perchoirs = perchoirs, perchoir = Perchoir.DOCUMENTATION)
         CadreVide(texte = stringResource(R.string.monde_documentation_vide))
     }
 }
@@ -199,14 +212,19 @@ fun ContenuDocumentation() {
  * haut du monde. **Les deux écrans qui n'ont rien se ressemblent maintenant à la lettre** : un état
  * vide posé en haut se lit comme une liste sans rien dedans, ce qu'il est, et non comme un message
  * adressé.
+ *
+ * ⭐ **Ils se ressemblent jusque dans l'habitant** : les deux listes étant vides, Kokoro y dort
+ * (`PRESENCE.md` §2), **et leur texte reste affiché sous lui**. 🔴 **Les Zzz ne remplacent pas le
+ * cadre vide** — ils n'informent de rien qu'il ne dise déjà en toutes lettres.
  */
 @Composable
-fun ContenuBilan() {
+fun ContenuBilan(perchoirs: Perchoirs) {
     EcranDeBord(
         titre = stringResource(R.string.monde_bilan_titre),
         couleur = LocalPaletteKokoro.current.beurre,
         defilant = true,
     ) {
+        BandeDeTete(perchoirs = perchoirs, perchoir = Perchoir.BILAN)
         CadreVide(texte = stringResource(R.string.monde_bilan_vide))
     }
 }
@@ -226,9 +244,15 @@ fun ContenuBilan() {
  *
  * ⭐ **Il est le voisin de gauche de l'entrée** : un seul geste depuis l'ouverture de l'app, dans le
  * sens qu'on veut.
+ *
+ * ⭐ **Kokoro veille ici, accoudé au bouton *Mot code*** *(arbitrage de Xavier, 16/08/2026 —
+ * `PRESENCE.md` E13)*. 🔴 **Le bouton ne change en rien** : ni place, ni taille, ni libellé, ni
+ * couleur. Il lui sert seulement d'arête — le perchoir est déclaré **sur** lui, et l'ordre de
+ * peinture met le corps derrière et les bras devant. **Aucun texte n'est ajouté à cet écran.**
  */
 @Composable
 fun ContenuCriseDuMonde(
+    perchoirs: Perchoirs,
     contactNom: String,
     envoiEnCours: Boolean,
     onFonction: (Fonction) -> Unit,
@@ -242,6 +266,7 @@ fun ContenuCriseDuMonde(
             contactNom = contactNom,
             envoiEnCours = envoiEnCours,
             onFonction = onFonction,
+            motCode = Modifier.perchoir(perchoirs, Perchoir.CRISE),
         )
     }
 }

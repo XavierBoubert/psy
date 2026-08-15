@@ -85,7 +85,7 @@ private fun ApercuPostures() {
 @Preview(name = "Kokoro — les postures immobiles", widthDp = 720, heightDp = 200)
 @Composable
 private fun ApercuPosturesImmobiles() {
-    Planche(listOf(Posture.Pensif, Posture.Lecture, Posture.Notes, Posture.Attente, Posture.Sommeil))
+    Planche(listOf(Posture.Pensif, Posture.Lecture, Posture.Notes, Posture.Accoude, Posture.Sommeil))
 }
 
 @Composable

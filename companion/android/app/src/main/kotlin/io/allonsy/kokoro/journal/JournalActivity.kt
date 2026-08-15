@@ -10,10 +10,6 @@ import io.allonsy.kokoro.reglages.estNuit
 import io.allonsy.kokoro.reglages.lireReglages
 import io.allonsy.kokoro.reglages.minuteCourante
 import io.allonsy.kokoro.ui.ThemeMonde
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-
-private val FORMAT_JOUR: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
 /**
  * Le check-in quotidien — sept questions du noyau puis les champs de campagne déclarés
@@ -60,7 +56,7 @@ class JournalActivity : ComponentActivity() {
     }
 
     private fun demarrer() {
-        val jour = LocalDate.now().format(FORMAT_JOUR)
+        val jour = jourCourant()
         checkin.value = Checkin.vide(jour)
         etape.value = when {
             lireDossier(this) == null -> EtapeJournal.DossierAbsent

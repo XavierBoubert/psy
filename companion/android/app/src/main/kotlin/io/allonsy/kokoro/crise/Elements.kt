@@ -66,6 +66,10 @@ internal fun PageCrise(
  *
  * @param envoiEnCours grise le mot-code le temps que le SMS parte. **Un bouton qu'on peut retoucher
  *   pendant l'envoi envoie deux fois**, et rien à l'écran ne dit qu'il travaille.
+ * @param motCode ce que l'écran accroche au **premier bouton**. ⭐ **L'écran de crise du monde y
+ *   déclare le perchoir de Kokoro** — c'est l'arête sur laquelle il s'accoude *(`PRESENCE.md` E13)*.
+ *   🔴 **Vide partout ailleurs, et notamment dans `CriseActivity`** : la présence se pose là où on
+ *   arrive en traversant, jamais sur l'écran qui s'impose par-dessus le verrouillage.
  */
 @Composable
 fun PortesDeCrise(
@@ -73,12 +77,14 @@ fun PortesDeCrise(
     envoiEnCours: Boolean,
     onFonction: (Fonction) -> Unit,
     modifier: Modifier = Modifier,
+    motCode: Modifier = Modifier,
 ) {
     val palette = LocalPaletteKokoro.current
     PileDeBoutons(modifier = modifier, ecart = ECART_PORTES) {
         BoutonEpais(
             libelle = stringResource(R.string.crise_bouton_mot_code, contactNom),
             onClic = { onFonction(Fonction.MOT_CODE) },
+            modifier = motCode,
             couleur = palette.azur,
             actif = !envoiEnCours,
             hauteurMinimale = HAUTEUR_CRISE,

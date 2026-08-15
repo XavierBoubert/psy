@@ -23,7 +23,7 @@ import kotlin.math.sin
  * périodes distinctes produiraient un battement lent entre elles, donc un rythme involontaire —
  * quelque chose à décoder, exactement ce que §4 interdit.
  */
-enum class Vol { AUCUN, LEVITATION, TRAVERSEE }
+enum class Vol { AUCUN, LEVITATION, SOMMEIL, TRAVERSEE }
 
 /** Le déplacement de la racine à un instant donné. */
 data class Deplacement(val decalage: Offset, val inclinaison: Float)
@@ -48,6 +48,16 @@ const val LEVITATION_DEPHASAGE = PI.toFloat() / 2f
 fun levitation(phase: Float): Float =
     -LEVITATION_AMPLITUDE * (sin(phase + LEVITATION_DEPHASAGE) + 1f) / 2f
 
+/**
+ * Le vol du sommeil — **moitié moins vite, moitié moins haut** (`PRESENCE.md` §3).
+ *
+ * 🔴 **Ce n'est pas une seconde horloge, c'est la même divisée par deux.** L'horloge du corps fait
+ * deux respirations par tour ([HORLOGE_MILLIS]) : une phase divisée par deux s'y referme donc
+ * exactement, sans saut au bouclage, et **rien ne peut battre contre le souffle** puisqu'il n'y a
+ * toujours qu'une horloge.
+ */
+fun levitationLente(phase: Float): Float = levitation(phase / 2f) / 2f
+
 /** Portée d'une traversée d'atelier, de part et d'autre du centre. */
 private const val TRAVERSEE_PORTEE = 46f
 
@@ -67,6 +77,8 @@ fun Vol.deplacement(phase: Float, avance: Float): Deplacement = when (this) {
     Vol.AUCUN -> Deplacement(Offset.Zero, 0f)
 
     Vol.LEVITATION -> Deplacement(Offset(0f, levitation(phase)), 0f)
+
+    Vol.SOMMEIL -> Deplacement(Offset(0f, levitationLente(phase)), 0f)
 
     Vol.TRAVERSEE -> Deplacement(
         decalage = Offset(TRAVERSEE_PORTEE * avance, levitation(phase)),

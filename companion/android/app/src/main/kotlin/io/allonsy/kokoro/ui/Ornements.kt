@@ -7,7 +7,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -43,6 +47,56 @@ fun Coeur(modifier: Modifier = Modifier, taille: Dp = 20.dp) {
         drawPath(forme, palette.contour, style = Stroke(width = TRAIT_ORNEMENT.toPx() * 2f))
         drawPath(forme, palette.peche.haut)
     }
+}
+
+/**
+ * Les Zzz du sommeil — `PRESENCE.md` §4.5.
+ *
+ * 🔴 **Ils n'informent de rien que le cadre vide ne dise déjà en toutes lettres.** Le texte de
+ * l'état vide reste affiché sous eux : ne pas les voir, ou ne pas les comprendre, ne fait donc rien
+ * perdre.
+ *
+ * 🔴 **Ils ne clignotent pas et ne montent pas.** Un Zzz qui pulse serait un mouvement continu dans
+ * le champ (§4.3), donc un rythme à décoder. Ils **paraissent en fondu et se tiennent** — c'est
+ * l'appelant qui porte le fondu, parce que c'est lui qui sait quand le sommeil commence.
+ *
+ * 🔴 **Aucune lettre n'est écrite ici** : ce sont trois tracés, comme le cœur et l'étincelle. Le
+ * décor ne porte jamais de texte (**P3**).
+ */
+@Composable
+fun Zzz(modifier: Modifier = Modifier, taille: Dp = 26.dp) {
+    val palette = LocalPaletteKokoro.current
+    Canvas(modifier.size(taille)) { zzz(palette.contour, TRAIT_ORNEMENT.toPx()) }
+}
+
+/** Trois Z qui s'éloignent de la tête en grandissant — l'ordre du plus petit au plus grand. */
+private fun DrawScope.zzz(couleur: Color, trait: Float) {
+    val poses = listOf(
+        Offset(0.00f, 0.72f) to 0.28f,
+        Offset(0.28f, 0.36f) to 0.34f,
+        Offset(0.56f, 0.00f) to 0.42f,
+    )
+    poses.forEach { (coin, part) ->
+        val cote = part * size.minDimension
+        val origine = Offset(coin.x * size.width, coin.y * size.height)
+        drawPath(
+            path = lettreZ(origine, cote),
+            color = couleur,
+            style = Stroke(
+                width = trait,
+                cap = StrokeCap.Round,
+                join = StrokeJoin.Round,
+            ),
+        )
+    }
+}
+
+/** Une barre, une diagonale, une barre — le Z se trace, il ne s'écrit pas. */
+private fun lettreZ(origine: Offset, cote: Float): Path = Path().apply {
+    moveTo(origine.x, origine.y)
+    lineTo(origine.x + cote, origine.y)
+    lineTo(origine.x, origine.y + cote)
+    lineTo(origine.x + cote, origine.y + cote)
 }
 
 /** Le boulon décoratif des bandes de titre — deux par bande, aux deux bouts. */

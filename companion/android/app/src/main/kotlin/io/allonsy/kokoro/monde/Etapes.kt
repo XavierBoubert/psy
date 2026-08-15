@@ -2,10 +2,14 @@ package io.allonsy.kokoro.monde
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
@@ -17,6 +21,8 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.allonsy.kokoro.R
+import io.allonsy.kokoro.corps.Expression
+import io.allonsy.kokoro.corps.Locuteur
 import io.allonsy.kokoro.ui.Croix
 import io.allonsy.kokoro.ui.LocalPaletteKokoro
 import io.allonsy.kokoro.ui.Teinte
@@ -53,8 +59,26 @@ data class Etape(
     val duree: String? = null,
 )
 
-/** Un `quand` et ce qu'il contient. La pancarte porte le `quand`, jamais autre chose. */
-data class Section(val quand: String, val couleur: Teinte, val etapes: List<Etape>)
+/**
+ * Un `quand` et ce qu'il contient. La pancarte porte le `quand`, jamais autre chose.
+ *
+ * [perchoir] est la bande où l'habitant peut se tenir (`PRESENCE.md` §2) — 🔴 **c'est une place,
+ * pas une marque** : rien ne distingue une section qui porte Kokoro d'une section qui ne le porte
+ * pas, et il n'y en a jamais qu'une à la fois de toute façon.
+ */
+data class Section(
+    val quand: String,
+    val couleur: Teinte,
+    val perchoir: Perchoir,
+    val etapes: List<Etape>,
+)
+
+/**
+ * ⏳ **Les deux écrans qui n'ont rien** — la bibliothèque et le bilan restent vides tant que **K5**
+ * n'a pas branché la lecture du dossier. C'est ce que l'habitant lit pour s'endormir (§2), et c'est
+ * la même vérité que celle qu'affiche leur `CadreVide` : **une seule source, pas deux.**
+ */
+val ECRANS_VIDES = setOf(Ecran.DOCUMENTATION, Ecran.BILAN)
 
 @Composable
 fun sectionsTherapie(): List<Section> {
@@ -63,6 +87,7 @@ fun sectionsTherapie(): List<Section> {
         Section(
             quand = stringResource(R.string.monde_quand_aujourdhui),
             couleur = palette.peche,
+            perchoir = Perchoir.AUJOURDHUI,
             etapes = listOf(
                 Etape(
                     titre = stringResource(R.string.journal_titre),
@@ -74,6 +99,7 @@ fun sectionsTherapie(): List<Section> {
         Section(
             quand = stringResource(R.string.monde_quand_sans_date),
             couleur = palette.azur,
+            perchoir = Perchoir.SANS_DATE,
             etapes = listOf(
                 demarche(R.string.etape_ppc_releve, R.string.etape_ppc_releve_detail),
                 demarche(R.string.etape_ppc_origine_fuite, R.string.etape_ppc_origine_fuite_detail),
@@ -105,9 +131,16 @@ private fun demarche(titre: Int, detail: Int): Etape =
  * ⏳ **Le bouton *Fait* n'est pas là**, et c'est délibéré : il écrirait dans `reponses/`, ce que
  * Kokoro ne sait pas encore faire (K5). **Un bouton qui n'écrit rien mentirait** — mieux vaut qu'il
  * manque et que ça se voie.
+ *
+ * ⭐ **C'est une bulle de discussion** (`PRESENCE.md` §1.1), donc elle porte le locuteur en bas à
+ * gauche, avec l'expression `attentif` — *une étape est ouverte, un contenu est affiché*.
+ *
+ * 🔴 **Le bas de la page n'est plus dans les marges système**, et c'est ce qui coupe le personnage
+ * **au bord de la dalle** plutôt qu'en plein panneau : ce qui manque de lui est hors de l'écran,
+ * pas effacé. Le haut et les côtés gardent leurs marges.
  */
 @Composable
-fun PanneauEtape(titre: String, detail: String, onFermer: () -> Unit) {
+fun PanneauEtape(titre: String, detail: String, locuteur: Boolean, onFermer: () -> Unit) {
     val palette = LocalPaletteKokoro.current
     Column(
         modifier = Modifier
@@ -117,7 +150,9 @@ fun PanneauEtape(titre: String, detail: String, onFermer: () -> Unit) {
                     Brush.verticalGradient(listOf(palette.panneauHaut, palette.panneauBas)),
                 )
             }
-            .safeDrawingPadding(),
+            .windowInsetsPadding(
+                WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
+            ),
     ) {
         Box(
             modifier = Modifier
@@ -143,5 +178,6 @@ fun PanneauEtape(titre: String, detail: String, onFermer: () -> Unit) {
             )
             Text(text = detail, style = TypoKokoro.lecture, color = palette.encre)
         }
+        Locuteur(expression = Expression.ATTENTIF, present = locuteur)
     }
 }

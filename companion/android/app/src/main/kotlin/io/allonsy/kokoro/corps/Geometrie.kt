@@ -1,5 +1,7 @@
 package io.allonsy.kokoro.corps
 
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpSize
 import kotlin.math.abs
 import kotlin.math.sqrt
 
@@ -19,12 +21,29 @@ import kotlin.math.sqrt
 const val LARGEUR_VUE = 240f
 const val HAUTEUR_VUE = 200f
 
-private const val SOMMET_TETE = 11.062f
+/** Le sommet du crâne dans la vue — le haut du personnage, et le haut du cadrage du locuteur. */
+const val SOMMET_TETE = 11.062f
 
 /** Le bas des pieds dans la vue — **le sol**, celui où l'ombre est posée (`PRESENCE.md` §1.3). */
 const val BAS_PIEDS = 188.938f
 
 const val HAUTEUR_PERSONNAGE = BAS_PIEDS - SOMMET_TETE
+
+/**
+ * L'échelle à laquelle on pose le dessin à l'écran : **ce que vaut une unité de la vue en dp**,
+ * pour un personnage d'une hauteur donnée.
+ *
+ * 🔴 **La hauteur qu'on donne est celle du personnage, jamais celle de sa vue** (`PRESENCE.md`
+ * §1.4). Les deux diffèrent de 11 % — la vue a des marges — et c'est le personnage que le tableau
+ * mesure : c'est de lui que sortent le 1,1 % de contour, les 2 px de l'habitant et les 3,5 px du
+ * locuteur. **Mesurer la vue à sa place délave le trait sans que rien ne le dise.**
+ */
+fun unitePour(hauteurPersonnage: Dp): Dp = hauteurPersonnage / HAUTEUR_PERSONNAGE
+
+/** La vue entière à cette échelle — la taille à donner à [CorpsKokoro], marges comprises. */
+fun cadrePour(hauteurPersonnage: Dp): DpSize = with(unitePour(hauteurPersonnage)) {
+    DpSize(width = this * LARGEUR_VUE, height = this * HAUTEUR_VUE)
+}
 
 /** Épaisseur des contours, telle que déclarée dans le SVG. Soit 1,1 % de la hauteur (§4). */
 const val EPAISSEUR_CONTOUR = 2f
@@ -393,8 +412,18 @@ val EPAULE_DROITE = Ancre(159.283740f, 111.095252f)
  */
 val CENTRE_VENTRE = Ancre(119.783517f, 137.708595f)
 
-/** Le torse respire autour de sa base : la tête ne bouge pas (§5, §9). */
+/** Le torse respire autour de sa base : la tête ne suit pas le souffle (§5, §9). */
 val PIVOT_RESPIRATION = Ancre(AXE, 169.425f)
+
+/**
+ * ⭐ **Le pivot de la tête — le milieu de la ligne des épaules**, et il n'est pas choisi : les deux
+ * ancres d'épaules sont symétriques autour de [AXE] et à la même hauteur au millième près, donc
+ * leur milieu est le seul point que le dessin désigne entre les deux.
+ *
+ * 🔴 **Une seule posture s'en sert** — `accoude`, sur l'écran de crise. Partout ailleurs la tête ne
+ * bouge pas (`CORPS.md` §9), et l'inclinaison vaut zéro.
+ */
+val PIVOT_TETE = Ancre(AXE, EPAULE_GAUCHE.y)
 
 /** Pivot de la racine : les transformations de vol tournent et redimensionnent autour de ce point. */
 val PIVOT_RACINE = Ancre(AXE, HAUTEUR_VUE / 2f)

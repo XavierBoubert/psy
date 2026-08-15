@@ -1,7 +1,11 @@
 # Kokoro — le corps
 
-**Spécification graphique du personnage.** ⭐ **v2.1 — 14/08/2026 — retenue.** Le corps de Kokoro est un **petit robot kawaii en 2D**, dessiné **en pièces séparées pour être riggé et animé**.
+**Spécification graphique du personnage.** ⭐ **v2.3 — 16/08/2026 — retenue.** Le corps de Kokoro est un **petit robot kawaii en 2D**, dessiné **en pièces séparées pour être riggé et animé**.
 
+> ⭐ **v2.3 — *« Kokoro veille sur toi »*** *(arbitrage de Xavier, 16/08/2026)*. **L'écran de crise du monde porte un personnage** : `attente` devient **`accoude`**, panneau **allumé**, accoudé au bouton *Mot code*, la tête penchée de 6°. **Détail, motifs et six bornes au [§10.2](#102--kokoro-veille-sur-toi--la-dérogation-de-lécran-de-crise-arbitrée-le-16082026).** 🔴 **La borne qui compte : `CriseActivity`, la tension appliquée et la phrase pour le soignant n'en portent aucun**, et un test de sources l'interdit.
+>
+> ⭐ **v2.2 — la présence est redescendue ici** *(étape E14 de [`PRESENCE.md`](PRESENCE.md))*. Six sections changent : le visage garde **six** expressions mais **`serein` entre et `de-cote` sort** (§3) · le clignement n'agit plus que sur les yeux (§5) · les postures passent de cinq à **dix** (§7) · les interdits de mouvement sont **réécrits, pas contournés** (§8 points 1, 7 et 8) · les tailles deviennent celles des **deux régimes** (§10) · le point ouvert §11.6 est tranché.
+>
 > ⭐ **v2.1 :** le visage passe au **morphing** — une forme se déforme vers la suivante au lieu de s'échanger en fondu croisé. **Ce que la v2.0 écrivait au §9 (« échange de forme, pas de déformation ») est corrigé, pas nuancé.** Motif et mécanisme : [§9](#-le-morphing-du-visage-14082026).
 
 > 📐 **Ce document n'est pas de la doctrine.** La doctrine du personnage tient dans [`companion/README.md` §4](README.md) et les invariants dans [`companion/README.md` §5](README.md) et [`companion/README.md` §6](README.md). **Ici on ne décide rien de clinique : on dessine ce qui a déjà été décidé.**
@@ -56,6 +60,8 @@ Le personnage tient dans une vue de **240 × 200**, et occupe **125 × 178** —
 
 **Vue de face, aucune perspective.** Pas d'axe incliné, pas de trois-quarts.
 
+> ⭐ **Une seule dérogation, arbitrée par Xavier le 16/08/2026, et elle ne porte que sur la tête** *(§7 n° 9, `accoude`)* **:** sur l'écran de crise, **la tête penche de 6°** autour du milieu de la ligne des épaules. 🔴 **Le corps, lui, reste de face** — aucun trois-quarts, aucune perspective, aucun raccourci. **C'est ce qui distingue *veiller sur quelqu'un* de *le fixer***, et l'angle est borné à 10° dans le code pour qu'une nuance ne devienne pas une pose.
+
 > 📌 **La symétrie est celle d'un dessin à la main, pas celle d'un gabarit.** Les axes des bras, des pieds, des yeux et de la bouche tombent entre 119,96 et 120,33, et le pied de gauche porte une rotation de 3,6° que celui de droite n'a pas. **Ces écarts sont dans le dessin, donc ils sont dans l'application** — les corriger reviendrait à redresser ce que Xavier a tracé.
 
 ---
@@ -68,14 +74,18 @@ Tout se joue sur le panneau : **deux yeux, une bouche.** Rien d'autre n'y entre 
 
 | # | Nom | Yeux | Bouche | Quand |
 |---|---|---|---|---|
-| 1 | ⭐ **`neutre`** *(dessinée)* | Deux ovales pleins | Trait horizontal court | **Par défaut.** Écran d'accueil, veille, overlay |
-| 2 | **`attentif`** | Deux ovales pleins | Barre courte arrondie | Une étape est ouverte, un contenu est affiché |
-| 3 | **`chaleureux`** | Deux arcs vers le haut *(yeux fermés souriants)* | Petit arc vers le haut | Une étape est faite. ⚠️ **Jamais en réaction à une étape non faite** — voir §8 |
-| 4 | **`clignement`** | Deux traits horizontaux courts | Trait court | Transition uniquement, jamais un état stable |
-| 5 | **`veille`** | Deux arcs vers le bas *(yeux fermés au repos)* | Trait court | Mode shutdown, écran en veille |
-| 6 | **`de-cote`** | Deux ovales pleins **décalés du même côté** | Trait court | Accompagne une désignation (§6) : **il regarde ce qu'il montre** |
+| 1 | ⭐ **`neutre`** *(dessinée)* | Deux ovales pleins | Trait horizontal court | Le dessin de Xavier, tel quel. **Reste dans le jeu ; plus aucune posture ne l'appelle** |
+| 2 | ⭐ **`serein`** | Deux ovales pleins | **Semi-sourire** — exactement **la moitié de la flèche** du sourire, 1,75 contre 3,5 | **Par défaut.** Écran d'accueil, veille, overlay. **Il ne demande rien et ne dit rien** |
+| 3 | **`attentif`** | Deux ovales pleins | Barre courte arrondie | Une étape est ouverte, un contenu est affiché |
+| 4 | **`chaleureux`** | Deux arcs vers le haut *(yeux fermés souriants)* | Petit arc vers le haut | Une étape est faite. ⚠️ **Jamais en réaction à une étape non faite** — voir §8 |
+| 5 | **`clignement`** | Deux traits horizontaux courts | Trait court | Transition uniquement, jamais un état stable |
+| 6 | **`veille`** | Deux arcs vers le bas *(yeux fermés au repos)* | Trait court | Mode shutdown, écran en veille, **et le sommeil d'une liste vide** *(`PRESENCE.md` §2 — `sommeil` réutilise `veille`, il n'ouvre pas de septième forme)* |
 
 🔴 **Aucune septième expression ne s'ajoute sans passer par ce document et par une annonce préalable.**
+
+> ⭐ **Le jeu reste à six, et le compte a été refait** *(E14, 15/08/2026)*. `PRESENCE.md` §5 annonçait **sept** : c'était une erreur d'arithmétique, pas une décision — **`serein` est entré et `de-cote` est sorti**, donc le jeu n'a pas grandi. Il n'y a **jamais** eu de septième expression, et l'annonce due à Xavier porte un échange, pas un ajout.
+>
+> 🔄 **`de-cote` a quitté le jeu, et ce n'est pas une suppression : c'est un changement de nature.** Elle n'était que `serein` plus un décalage des deux yeux — **une expression qui portait une direction de regard.** Le regard est devenu un **axe indépendant**, réglé par la posture (§7) et non par le visage : c'est ce qui permet de regarder une liste, un bras ou un élément désigné **sans inventer une forme de visage par direction**. Le décalage lui-même n'a pas bougé d'une unité.
 
 ### Ce qui garantit qu'aucune expression ne devient un reproche
 
@@ -85,7 +95,7 @@ Tout se joue sur le panneau : **deux yeux, une bouche.** Rien d'autre n'y entre 
 | 🔴 **Les commissures de la bouche ne tombent jamais** | Droite, en barre, ou en sourire — **milieu plus bas que les extrémités**, `⌣`. **Les autres formes n'existent pas dans le jeu de pièces**, et `CorpsInvariantsTest` mesure le milieu de l'arc pour le vérifier. *(La v1 disait « jamais concave vers le bas » : la formulation est ambiguë et elle a déjà produit une moue une fois. On décrit désormais la forme, pas son interdit.)* |
 | ⚠️ **Aucun tracé de visage n'est posé dans le repère de la bouche** | Ce repère porte un **demi-tour** : un arc convexe vers le haut y sortirait **concave vers le bas** — précisément la forme interdite. Les expressions sont donc placées par une simple translation, jamais par la matrice du dessin |
 | **Les yeux ne s'écarquillent pas** | Taille constante. Aucun reflet, aucun éclat, aucun brillant |
-| ⭐ **Il ne fixe jamais Xavier** | Aucune des six n'est un regard soutenu vers le lecteur. La 6 regarde **ailleurs, à dessein** |
+| ⭐ **Il ne suit jamais Xavier du regard** | 🔄 **Réécrit en E14** : le regard n'est plus porté par une expression, c'est un **axe réglé par la posture** (§7) — il va vers ce que les bras font, vers une liste, ou nulle part. **Rien dans le code ne connaît la position de Xavier**, donc aucun regard ne peut le chercher, le suivre ni le tenir. Le personnage ne réagit ni au toucher, ni au doigt, ni au capteur |
 | **Aucun symbole** | Pas de goutte de sueur, pas de larme, pas de rougissement, pas de cœur, pas d'étoile, pas d'icône flottante, pas de bulle |
 
 ⭐ **Et le panneau s'éteint.** Panneau vide = présence sans visage. C'est l'état des postures `cote-a-cote` et `retrait` (§7) : **zéro trait à lire au moment le plus chargé**, sans avoir à retourner le personnage.
@@ -127,14 +137,15 @@ Tout se joue sur le panneau : **deux yeux, une bouche.** Rien d'autre n'y entre 
 
 ## 5. La respiration
 
-**99 % du temps, c'est tout ce qui bouge.**
+**Elle et le clignement sont tout ce que le corps fait de lui-même** — le reste du mouvement appartient à la présence (`PRESENCE.md`), pas au corps.
 
 - **Cycle :** 4,5 s inspiration + expiration, sinusoïde continue, aucun temps d'arrêt.
 - **Amplitude :** le corps s'étire de **2 %** en hauteur, se rétracte de 1 % en largeur, **autour de sa base**. ⭐ **La ligne du ventre et le 心 sont dessus, donc ils suivent** — c'est le 心 qui monte et descend, et c'est l'ancre visuelle du souffle depuis que la plaque a disparu. **La tête ne bouge pas.**
 - 🔴 **Le rythme ne change jamais.** Ni plus vite, ni plus lent, ni en fonction de quoi que ce soit. **Une respiration qui varie devient une information à décoder** — et une information non demandée qui prétend parler de l'état de Xavier est exactement ce que §5.7 interdit.
 - 🔴 **Ce n'est pas un guide respiratoire.** Aucun texte n'invite jamais à se caler dessus.
-- **Clignement (`4`) :** au maximum une fois toutes les 20 s, durée ≤ 200 ms, **rythme irrégulier mais borné** — un clignement régulier devient un métronome.
+- 🔄 **Clignement — réécrit en E14** *(15/08/2026)* **: il n'agit que sur les yeux**, à cadence aléatoire **2 800 à 6 500 ms**, morphing de **80 ms**. La v2.1 en faisait une **expression entière** (`clignement`, n° 5), donc la bouche se raccourcissait et revenait toutes les 20 à 45 s. ⭐ **Ce tressaillement était le point ouvert §11.6 : il est tranché, et c'est le tressaillement qui tombe.** La bouche garde la forme de l'expression courante ; les deux axes du visage se déforment sur leurs propres horloges. **La borne basse évite le papillonnement, la borne haute évite qu'un clignement devienne un événement**, et deux intervalles consécutifs ne sont jamais égaux — un clignement régulier serait un métronome.
 - Transitions entre expressions et entre postures : **≥ 800 ms**, easing continu (invariant §5.6). Aucune apparition instantanée, aucun *cut*.
+- ⭐ **Le corps n'a qu'une horloge, et un tour vaut deux respirations.** La lévitation de `PRESENCE.md` s'y branche par un déphasage d'un quart, et le vol du sommeil en divise la phase par deux. 🔴 **Aucun second rythme n'existe** : deux périodes distinctes produiraient un battement lent entre elles, donc une information involontaire.
 
 ---
 
@@ -154,15 +165,24 @@ Tout se joue sur le panneau : **deux yeux, une bouche.** Rien d'autre n'y entre 
 
 ---
 
-## 7. Les cinq postures — le jeu est fermé
+## 7. Les dix postures — le jeu est fermé
+
+> 🔄 **Cinq postures sont entrées en E6, E7 et E11** *(15/08/2026)* — `pensif`, `lecture`, `notes`, `accoude`, `sommeil`. **Le compte est dix**, et il a été refait ici : `PRESENCE.md` §5 annonçait **neuf**, c'était une erreur d'arithmétique. `montre` reste **une** posture, quel que soit le côté.
+>
+> 🔴 **Une posture ne porte aucune information** (`PRESENCE.md` §2). Ne pas la reconnaître ne fait rien perdre : aucune action n'est attendue, aucun état du dossier n'y est encodé. **C'est aussi ce qui interdit d'ajouter un accessoire pour les rendre plus lisibles** — livre, lunettes et calepin n'existent pas.
 
 | # | Nom | Ce qu'on voit | Expression | Quand | Ce que le texte dit à côté |
 |---|---|---|---|---|---|
-| 1 | **`repos`** | Corps entier, de face, ⭐ **exactement le dessin** — bras écartés de 19,5°, pieds tels que tracés | `neutre` | **Par défaut. 99 % du temps.** Accueil, veille, overlay | Rien. **Seul cas sans texte — parce qu'il ne dit rien** |
+| 1 | **`repos`** | Corps entier, de face, ⭐ **exactement le dessin** — bras écartés de 19,5°, pieds tels que tracés | ⭐ `serein` *(et non plus `neutre`)* | **Par défaut.** Accueil, veille, overlay | Rien. **Seul cas sans texte — parce qu'il ne dit rien** |
 | 2 | **`present`** | Idem, immobile | `attentif` | Une étape ou une fiche est ouverte | Le libellé de l'étape |
-| 3 | **`montre`** | Un bras tendu latéralement ou vers le bas | `de-cote` | Une fiche explique où se trouve quelque chose | ⭐ **Ce qu'il montre, écrit.** Jamais une injonction (§6) |
+| 3 | **`montre`** | Un bras tendu latéralement ou vers le bas | `serein` **+ regard latéral** *(l'axe, plus l'expression)* | Une fiche explique où se trouve quelque chose | ⭐ **Ce qu'il montre, écrit.** Jamais une injonction (§6) |
 | 4 | ⭐ **`cote-a-cote`** | Corps entier, **panneau éteint** | *(aucune)* | Pendant un exercice, une désensibilisation, un bloc de tension appliquée | « Je reste là pendant que tu fais ça. » **Zéro visage à lire au moment le plus chargé** |
 | 5 | **`retrait`** | Réduit à ≈ 40 %, en bord d'écran, **panneau éteint** | *(aucune)* | Mode shutdown : sollicitations coupées | « Je me mets de côté. Rien n'attend. » ❌ **Pas de visage = pas de tristesse lisible.** Ce n'est pas une bouderie, et c'est écrit |
+| 6 | 🆕 **`pensif`** | Le dessin, **aucun geste** — seuls les yeux parcourent la liste, lentement | `serein` **+ regard baissé** | Écran de thérapie, avant 18 h | Rien |
+| 7 | 🆕 **`lecture`** | Bras avancés vers le bas, balayage des yeux gauche → droite, retour bref | `serein` **+ regard baissé** | Au-dessus d'une liste de fiches | Rien |
+| 8 | 🆕 **`notes`** | Un bras en bas, **petits allers-retours intermittents**, yeux baissés vers ce bras | `serein` **+ regard baissé** | Au-dessus du bilan | Rien |
+| 9 | 🆕 ⭐ **`accoude`** | **Accoudé sur le bouton comme sur un muret** : les deux bras à l'horizontale reposent sur son arête, le corps passe derrière, la tête dépasse au-dessus et **penche de 6°** | `serein`, **panneau allumé**, regard au centre | **Écran de crise du monde**, et lui seul (§10) | Rien. ⭐ **C'est la seule posture qui n'a rien à côté d'elle et qui dit pourtant quelque chose** : *je suis là* |
+| 10 | 🆕 **`sommeil`** | Yeux fermés au repos, lévitation à demi-vitesse, Zzz en fondu | `veille` *(réutilisée, pas une septième)* | Une liste est vide | Le cadre vide, **qui reste affiché** |
 
 ⏳ **Une sixième pose reste à dessiner et n'est pas dans la planche `01` : `allonge`** — le robot allongé sur le dos, pieds surélevés, **uniquement** pour l'écran vasovagal. Elle n'est pas décorative : *« allonge-toi, jambes surélevées »* est une consigne à se représenter, et **Xavier est aphantasique** ; une silhouette allongée est une **structure externe** ([règle §9.19](../PLAN.md#22--la-règle-centrale--signal-interne-absent--structure-externe)), pas une consigne à imaginer. **C'est la seule pose du jeu qui n'est pas de face.**
 
@@ -174,14 +194,14 @@ Tout se joue sur le panneau : **deux yeux, une bouche.** Rien d'autre n'y entre 
 
 Miroir corporel de [`companion/README.md` §6](README.md) :
 
-1. **Se lever, s'approcher, grandir, marcher vers le lecteur, entrer dans le champ.** Kokoro ne vient jamais vers Xavier — **y compris avec son corps.**
+1. 🔄 **Se lever, s'approcher, grandir, marcher vers le lecteur.** Kokoro ne vient jamais vers Xavier — **y compris avec son corps.** ⭐ **Réécrit en E14** : l'interdit est conservé **entier sur l'axe de profondeur** — rien ne grandit vers l'avant, rien ne se rapproche —, et **les entrées et sorties latérales sont admises** depuis E9. Elles ne se dirigent vers personne : il traverse le champ d'un bord à l'autre, à hauteur constante.
 2. **Faire signe, lever un bras au-dessus de l'épaule, applaudir, lever le pouce.** Le pouce levé est une **évaluation** ; l'évaluation est interdite. *(La désignation du §6 est la seule exception, et elle est bornée.)*
 3. **S'affaisser, baisser la tête, se recroqueviller, laisser tomber les bras.** Aucune posture de découragement, jamais — **y compris après une étape non faite.**
 4. 🔴 **Réagir à une étape non faite.** L'expression `chaleureux` ne se déclenche que sur un fait accompli ; **son absence n'est pas un message.** Il n'existe aucune expression « déçu », et il n'en existera jamais.
 5. **Fixer le lecteur.**
-6. **Changer d'apparence sans annonce** : pas de tenue, pas de saison, pas de variante surprise, pas de thème d'événement.
-7. **Bouger tout seul** hors de la respiration et du clignement : il ne se déplace pas à l'écran, ne sursaute pas, ne suit pas le doigt, ne réagit pas au toucher.
-8. **Se dupliquer, se refléter, se dédoubler** — une seule instance à l'écran, toujours au même endroit.
+6. **Changer d'apparence sans annonce** : pas de tenue, pas de saison, pas de variante surprise, pas de thème d'événement. 🔴 **La règle s'applique à la présence elle-même** : le passage de « il ne bouge pas » à « il habite le monde » est un changement d'apparence, **et son annonce est due** *(`PRESENCE.md` §7.2)*.
+7. 🔄 **Bouger tout seul — réécrit en E14, et la règle est refaite, pas contournée.** La v2.1 posait qu'il ne se déplace pas à l'écran. Depuis E8 à E11 il **lévite sur place** et **transite** d'un écran à l'autre, sur l'horloge de la respiration et **sur commande du doigt** — jamais de lui-même. Ce qui reste interdit sans changement : **sursauter, suivre le doigt, réagir au toucher, dériver sans qu'une main l'ait déplacé**, et **bouger pendant qu'un texte se lit**. 🔴 **Aucun mouvement continu dans le champ** : tout geste répété est intermittent ou borné.
+8. **Se dupliquer, se refléter, se dédoubler** — ⭐ **une seule instance à l'écran, et c'est ce qui impose l'alternance** : quand un panneau plein écran s'ouvre, l'habitant sort du champ **avant** que le locuteur n'entre (`PRESENCE.md` §1.1). Deux moitiés d'une même bascule, vérifiées par un test.
 
 ---
 
@@ -191,7 +211,7 @@ Miroir corporel de [`companion/README.md` §6](README.md) :
 
 | Pièce *(nom du SVG)* | Pivot | Ce qui l'anime |
 |---|---|---|
-| `head-out`, `head-in` | — | Rien. **La tête ne bouge pas.** `head-in` s'allume et s'éteint |
+| `head-out`, `head-in` | ⭐ **Milieu des épaules** — `(120,0 ; 111,1)` | 🔄 **Rien, sauf `accoude`** *(16/08/2026)* : la tête y penche de 6°, **coque, panneau et visage ensemble**. Partout ailleurs elle ne bouge pas — ni au souffle, ni au vol. Le pivot n'est pas choisi : les deux ancres d'épaules sont **le seul point que le dessin désigne entre elles**. `head-in` s'allume et s'éteint |
 | `eye-right`, `eye-left`, `mouth` | — | ⭐ **Morphing** : la forme se déforme vers la suivante *(voir ci-dessous)*. **Jamais deux visages superposés** |
 | `body-form`, `body-line`, `kanji-1…4` | **Base du corps** — `(120,0 ; 169,4)` | Respiration seule (2 % / 1 %). Les six pièces bougent ensemble |
 | `arm-right`, `arm-left` | ⭐ **Épaule** — `(80,6 ; 111,1)` et `(159,3 ; 111,1)` | Désignation (§6), **bornée à +70,5°** |
@@ -236,15 +256,42 @@ Le SVG place les pièces ; il ne dit pas autour de quoi elles tournent. **Les tr
 
 ## 10. Déclinaisons
 
+> 🔄 **Les deux premières lignes sont réécrites en E14** *(15/08/2026)*. Il n'y a plus d'overlay ni d'en-tête : il y a **deux régimes**, l'habitant et le locuteur, et jamais les deux à la fois (`PRESENCE.md` §1.1). ⚠️ **Les hauteurs se mesurent sur le personnage, pas sur sa vue** — les deux diffèrent de 11 %, et mesurer la vue rendait le contour à 1,8 px, soit **sous le seuil qui sert précisément à écarter les 48 dp**.
+
 | Usage | Taille | Note |
 |---|---|---|
-| Overlay K7 | 48 dp de haut, coin bas-droit, position fixe | `repos` seul, respiration active |
-| En-tête d'écran | 96 dp | `repos`, `present` ou `montre` |
-| Écran de crise | ❌ **absent** | 🔴 **L'écran de crise ne porte aucun personnage.** Deux boutons, rien d'autre — un compagnon décoratif au pire moment est du bruit |
+| 🆕 **L'habitant** — dans le décor | **60 dp** de personnage, contour rendu ≈ 2,0 px | Une posture, une place par écran. ⚠️ **48 dp est exclu** : le contour vaut 1,1 % de la hauteur, il y tomberait à 1,6 px et le trait se délaverait |
+| 🆕 **Le locuteur** — en bas à gauche d'un panneau plein écran | **≈ 110 dp** de personnage, **cadré au thorax**, tête ≈ 60 dp, contour ≈ 3,7 px | Une expression, **immobile hors expression**. Ce qui doit se lire est **un visage** |
+| 🔄 **Écran de crise — celui du monde** | ⭐ **`accoude`**, à l'échelle du locuteur | Voir **§10.2** — dérogation arbitrée par Xavier le 16/08/2026 |
+| 🔴 **Écran de crise — hors du monde** *(`CriseActivity`)*, tension appliquée, phrase pour le soignant | ❌ **absent** | 🔴 **Aucun personnage, et un test de sources l'interdit.** Ces écrans-là s'imposent par-dessus le verrouillage **quand ça va déjà mal** — un compagnon y serait exactement le bruit que §10 refuse |
 | Écran vasovagal | 160 dp | `allonge` uniquement, à côté de la consigne |
 | Séance à deux (K6) | ❌ **absent de l'écran de l'aide** | L'aidant lit un déroulé, pas un personnage. **C10** |
 
 > ❌ **La surface web desktop est supprimée le 14/08/2026** *([`companion/README.md` §1](README.md))* — cette table n'a plus qu'une seule surface à décliner. ⭐ **Le rig en pièces séparées ne perd rien à la décision** : il n'a jamais été motivé par le web, mais par les **six expressions** et la **désignation d'un élément de l'écran**, qu'une forme unique et muette ne pouvait pas porter.
+
+### 10.2 ⭐ *« Kokoro veille sur toi »* — la dérogation de l'écran de crise, arbitrée le 16/08/2026
+
+**Xavier a tranché : le personnage entre sur l'écran de crise du monde, et il y montre un visage.** La supervision du 15/08/2026 avait **refusé** la version précédente ; ce qui la faisait tomber est ce qu'elle proposait, pas ce qu'elle demandait.
+
+| | **Ce que E13 proposait** *(refusé)* | ⭐ **Ce que Xavier a arbitré** |
+|---|---|---|
+| **Le motif** | Aucun. Un plan d'animation, et `PRESENCE.md` §2 déclarant lui-même la pose **sans information** — donc une décoration | *« Kokoro veille sur toi »*. **C'est le motif qui manquait, et seul Xavier pouvait le donner** |
+| **Le visage** | **Panneau éteint** — une présence muette | 🔴 **Panneau allumé, `serein`, regard au centre.** *« Un visage bienveillant qui te regarde comme un ami »* |
+| **La pose** | *« Affaissé »* — **le mot même que §8 point 3 interdit** | **Accoudé sur le bouton comme sur un muret**, tête un peu penchée |
+| **Où** | Ambigu — le §2 disait l'écran du monde, la liste de fichiers disait `CriseActivity` | 🔴 **L'écran du monde, et lui seul** |
+
+> ⭐ **L'arbitrage est plus fin que la recommandation qu'il écarte, et il faut le dire :** la supervision demandait *« les deux portes, sinon `INTERFACE.md` §6.2 tombe »*. Xavier a choisi **une seule**, et le partage retenu est clinique : **la présence se pose sur l'écran qu'on atteint en traversant — calmement —, jamais sur celui qui s'impose par-dessus le verrouillage quand ça va déjà mal.**
+>
+> ⚠️ **Le contre-argument reste écrit, parce qu'un arbitrage dont on efface le contre-argument n'est plus un arbitrage** : les deux portes ne se ressemblent plus tout à fait. **Ce que §6.2 protégeait est préservé** — les trois boutons sont identiques de place, de taille, de libellé et de couleur, donc **rien de ce qu'on fait ne dépend de la porte où l'on est**. Ce qui diffère est un fond. ⏳ **À vérifier à l'usage, et à défaire si jamais il faut regarder lequel des deux écrans on a sous les yeux.**
+
+🔴 **Les six bornes de la dérogation, et un test tient chacune :**
+
+1. **Cet écran-ci, et lui seul.** `CriseActivity`, la tension appliquée et la phrase pour le soignant n'en portent aucun — **un test de sources refuse tout personnage dans `crise/`**, parce que le risque n'est pas d'en ajouter un exprès : c'est qu'il y arrive par la valeur par défaut d'un paramètre.
+2. **Aucun texte ajouté.** Les trois boutons ne bougent ni de place, ni de taille, ni de libellé, ni de couleur. Le bouton *Mot code* lui sert d'**arête**, rien de plus.
+3. **Il ne vole pas** — seule place du dispositif dans ce cas. **Il est accoudé, pas posé au sol** : le faire léviter ferait glisser ses bras le long du bord, et **son ombre tomberait sur l'interface**.
+4. **Il ne s'endort jamais ici.** Pas de liste, et veiller est ce qu'il y fait.
+5. **Rien n'y dépend du dossier** — ni de l'heure, ni du check-in. **Une seule pose, toujours la même.**
+6. **La tête penche de 6°, bornée à 10°**, et c'est la seule inclinaison du dispositif (§2).
 
 ### 10.1 🔴 L'illustration de la notification — une dérogation, demandée et assumée le 16/08/2026
 
@@ -261,7 +308,7 @@ Le SVG place les pièces ; il ne dit pas autour de quoi elles tournent. **Les tr
 
 1. **Elle n'entre pas dans le rig.** `kokoro-corps-v2.svg`, `Geometrie.kt` et `CorpsInvariantsTest` sont inchangés — **le corps animé de l'application ne connaît ni la main, ni le clin d'œil, ni l'inclinaison.** Les quatre règles ci-dessus restent tenues par la géométrie partout ailleurs.
 2. **Elle ne crée pas une septième expression.** §3 le dit : *« aucune septième expression ne s'ajoute sans passer par ce document et par une annonce préalable »*. Le clin d'œil est **peint dans une image**, il n'est pas une pièce du visage, et **rien ne peut le déclencher**.
-3. **Elle ne s'étend à aucun écran.** L'illustration vit dans le volet de notifications et **nulle part ailleurs** : ❌ **l'écran de crise ne porte toujours aucun personnage** (§10, et le motif n'a pas changé — *un compagnon décoratif au pire moment est du bruit*). **Ce qui est admis sur une porte ne l'est pas derrière.**
+3. **Elle ne s'étend à aucun écran.** L'illustration vit dans le volet de notifications et **nulle part ailleurs**. 🔄 **Ce point disait « l'écran de crise ne porte toujours aucun personnage » ; Xavier l'a rouvert le 16/08/2026** *(§10.2)*, et **la règle qu'il portait tient toujours là où elle comptait** : ce qui entre sur l'écran du monde **n'entre pas** dans `CriseActivity`, ni dans la tension appliquée, ni dans la phrase pour le soignant. **Ce qui est admis sur une porte ne l'est pas derrière** — et ce n'est plus une phrase, c'est un test de sources.
 4. **Elle ne ramène pas de texte.** La notification d'accès a été vidée le 15/08/2026 sur un motif de Xavier — *« je lis toute la journée mot code et tension appliquée »* — et **l'illustration s'y ajoute sans reprendre une seule ligne de corps** : `Kokoro` reste seul. ⭐ **C'est ce qui distingue une image d'une ligne** : elle ne se relit pas. 🔴 **Le jour où une ligne y revient, c'est [`INTERFACE.md` §6.2](INTERFACE.md) qu'on défait.**
 
 > ⚠️ **Ce qui reste ouvert, et qu'il faut regarder à l'usage plutôt que trancher ici** : le V et le clin d'œil sont des **signes sociaux à décoder**, et la règle centrale du dispositif est l'explicite et le littéral. **Une image qu'on ne peut pas rater ne demande rien en retour** — c'est ce qui la distingue d'un geste du personnage animé, et c'est le pari de cette dérogation. **Si l'image finit par se lire comme une attente, elle se retire ; elle ne se discute pas.**
@@ -275,7 +322,8 @@ Le SVG place les pièces ; il ne dit pas autour de quoi elles tournent. **Les tr
 3. ⭐ **Le personnage est devenu monochrome** — la plaque céladon a disparu avec la v1, le 心 est à l'encre. **Est-ce l'intention, ou une conséquence non voulue ?** Si Xavier veut une couleur, elle n'a plus d'endroit évident où se poser : le 心 lui-même est le seul candidat, et le colorer en ferait un signal à décoder. *(Alternatives si besoin : céladon `#8FA99B`, terre cuite sourde `#B08968`, ardoise `#7C8B99`. Un accent unique, quel qu'il soit — le nombre n'est pas négociable, la teinte oui.)*
 4. ⭐ **Les pieds ont un pivot et aucun usage.** Xavier a placé leur centre de rotation dans le ventre ; rien ne s'en sert encore, et **§8 point 7 interdit qu'ils bougent tout seuls**. À décider : quelle posture le mérite — probablement `allonge`.
 5. **La posture `retrait`** reste la plus risquée du jeu : à valider en la voyant animée, pas sur le papier.
-6. ⭐ **Le clignement déforme aussi la bouche** (§9) — `clignement` est une expression entière, bouche comprise, donc la bouche se raccourcit et revient toutes les 20 à 45 s. **Soit c'est un tressaillement à supprimer** *(le clignement ne toucherait plus que les yeux)*, **soit c'est un micro-mouvement de vie à garder.** À regarder à l'écran, pas à trancher sur le papier.
+6. ✅ ~~**Le clignement déforme aussi la bouche**~~ — **tranché le 15/08/2026 (E4)** : le clignement n'agit plus que sur **les yeux**, la bouche garde la forme de l'expression courante, et la cadence passe à 2 800–6 500 ms. **Le tressaillement était bien un tressaillement.** Détail au §5.
+7. ✅ ~~**L'écran de crise**~~ — **arbitré par Xavier le 16/08/2026** *(§10.2)* : `accoude` remplace `attente`, **panneau allumé**, sur l'écran de crise **du monde** uniquement. ⏳ **Ce qui reste à juger à l'écran, et qui ne se tranche pas sur le papier** : les bras exactement à l'horizontale sur l'arête du bouton *(le §6 garde-fou 1 est **atteint**, pas dépassé — et symétriquement, un seul bras à cette hauteur serait un salut)*, l'inclinaison de 6°, et **si le regard au centre se lit comme bienveillant ou comme fixe.**
 
 ---
 

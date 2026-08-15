@@ -29,6 +29,11 @@ data class RigKokoro(
     val regard: Float = 0f,
     /** Le second axe du regard : positif = les yeux descendent vers ce qui est sous le personnage. */
     val abaissement: Float = 0f,
+    /**
+     * Inclinaison de la tête seule, en degrés, autour de [PIVOT_TETE]. Négatif = elle penche vers
+     * la gauche de l'écran. 🔴 **Zéro partout sauf `accoude`** — ailleurs, la tête ne bouge pas.
+     */
+    val inclinaisonTete: Float = 0f,
     /** Translation de la racine, en unités de la vue — le vol. */
     val decalage: Offset = Offset.Zero,
     /** Rotation de la racine, en degrés, autour de [PIVOT_RACINE] — l'inclinaison en vol. */
@@ -73,6 +78,7 @@ data class RigKokoro(
                 ouvertureBrasDroit = ouvertureBrasDroit,
                 regard = regard,
                 abaissement = abaissement,
+                inclinaisonTete = inclinaisonTete,
                 echelle = echelle,
             )
         }

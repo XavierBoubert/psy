@@ -29,6 +29,20 @@ import kotlin.random.Random
  */
 const val RESPIRATION_MILLIS = 4_500
 
+/**
+ * Le tour complet de l'horloge du corps — **deux respirations, et toujours une seule horloge.**
+ *
+ * ⭐ **C'est le sommeil qui l'impose** (§3 : lévitation à ½ vitesse). Un vol deux fois plus lent tiré
+ * d'une horloge qui ne fait qu'un tour de respiration sauterait à chaque bouclage — il serait à
+ * mi-course quand l'horloge repasse à zéro. En faisant durer le tour **deux** respirations, la
+ * lévitation lente s'y referme exactement, et 🔴 **la respiration, elle, ne change pas de rythme**
+ * (§4.6) : elle en fait simplement deux par tour.
+ */
+const val HORLOGE_MILLIS = 2 * RESPIRATION_MILLIS
+
+/** Un tour d'horloge en radians — deux tours de souffle. */
+const val TOUR_HORLOGE = 4f * PI.toFloat()
+
 /** Toute transition d'expression ou de posture (invariant §5.6). */
 const val TRANSITION_MILLIS = 800
 
@@ -70,16 +84,28 @@ const val ECRITURE_ARRET_MAX_MILLIS = 20_000L
 /** L'amplitude d'un aller-retour, en degrés d'ouverture — de petits mouvements, rien de plus. */
 const val ECRITURE_AMPLITUDE = 6f
 
+/**
+ * La posture animée — 🔴 **les trois axes de `PRESENCE.md` §1.2 restent indépendants.** La posture
+ * porte le corps ; l'expression et le balayage du regard se règlent par-dessus, et `null` veut dire
+ * *celui de la posture*, jamais *aucun*.
+ */
 @Composable
-fun rigAnime(posture: Posture, vol: Vol = Vol.AUCUN): RigKokoro = with(posture.reglage()) {
+fun rigAnime(
+    posture: Posture,
+    vol: Vol = Vol.AUCUN,
+    expression: Expression? = null,
+    balayage: Balayage? = null,
+): RigKokoro = with(posture.reglage()) {
     rigAnime(
-        expression = expression,
+        expression = expression ?: this.expression,
         panneauAllume = panneauAllume,
         ouvertureBrasGauche = ouvertureBrasGauche,
         ouvertureBrasDroit = ouvertureBrasDroit,
         regard = regard,
         abaissement = abaissement,
+        balayage = balayage,
         ecriture = ecriture,
+        inclinaisonTete = inclinaisonTete,
         echelle = echelle,
         vol = vol,
     )
@@ -97,6 +123,7 @@ fun rigAnime(
     abaissement: Float = 0f,
     balayage: Balayage? = null,
     ecriture: Cote? = null,
+    inclinaisonTete: Float = 0f,
     echelle: Float = 1f,
     vol: Vol = Vol.AUCUN,
 ): RigKokoro {
@@ -111,6 +138,7 @@ fun rigAnime(
     val piedDroit by animateFloatAsState(orbitePiedDroit, transition(), label = "pied-droit")
     val oeillade by animateFloatAsState(regard, transition(), label = "regard")
     val yeuxBaisses by animateFloatAsState(abaissement, transition(), label = "abaissement")
+    val teteInclinee by animateFloatAsState(inclinaisonTete, transition(), label = "inclinaison-tete")
     val parcours = balayageAnime(balayage)
     val taille by animateFloatAsState(echelle, transition(), label = "echelle")
 
@@ -124,6 +152,7 @@ fun rigAnime(
         orbitePiedDroit = piedDroit,
         regard = oeillade + parcours,
         abaissement = yeuxBaisses,
+        inclinaisonTete = teteInclinee,
         decalage = mouvement.decalage,
         inclinaison = mouvement.inclinaison,
         echelle = taille,
@@ -295,14 +324,17 @@ private fun balayageAnime(balayage: Balayage?): Float {
  * La respiration et la lévitation en sortent l'une et l'autre (`PRESENCE.md` §3) : deux horloges
  * produiraient un battement lent entre elles, donc une information involontaire. La phase avance
  * linéairement et se referme sur elle-même, donc le retour à zéro ne fait pas de saut.
+ *
+ * ⭐ **Un tour vaut deux respirations** ([HORLOGE_MILLIS]) : c'est ce qui laisse le sommeil ralentir
+ * son vol de moitié **sans horloge à lui**, en se contentant de diviser la phase par deux.
  */
 @Composable
 private fun battementAnime(): Float {
     val phase by rememberInfiniteTransition(label = "battement").animateFloat(
         initialValue = 0f,
-        targetValue = 2f * PI.toFloat(),
+        targetValue = TOUR_HORLOGE,
         animationSpec = infiniteRepeatable(
-            animation = tween(RESPIRATION_MILLIS, easing = LinearEasing),
+            animation = tween(HORLOGE_MILLIS, easing = LinearEasing),
             repeatMode = RepeatMode.Restart,
         ),
         label = "battement-phase",

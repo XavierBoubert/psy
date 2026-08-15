@@ -29,7 +29,7 @@ private val POSTURES = listOf(
     Posture.Pensif,
     Posture.Lecture,
     Posture.Notes,
-    Posture.Attente,
+    Posture.Accoude,
     Posture.Sommeil,
 )
 
@@ -286,7 +286,9 @@ class CorpsInvariantsTest {
         assertTrue("La lecture avance les bras", Posture.Lecture.reglage().ouvertureBrasGauche < 0f)
         assertTrue("La lecture baisse les yeux", Posture.Lecture.reglage().abaissement > 0f)
 
-        assertTrue("L'attente éteint le panneau", !Posture.Attente.reglage().panneauAllume)
+        val accoude = Posture.Accoude.reglage()
+        assertTrue("Accoudé, il montre un visage : le panneau reste allumé", accoude.panneauAllume)
+        assertEquals("Un visage bienveillant, pas une bouche neutre", Expression.SEREIN, accoude.expression)
 
         val sommeil = Posture.Sommeil.reglage()
         assertEquals("Le sommeil réutilise veille", Expression.VEILLE, sommeil.expression)
@@ -328,6 +330,65 @@ class CorpsInvariantsTest {
             assertTrue("Deux arrêts égaux de suite font un rythme", arret != precedent)
             precedent = arret
         }
+    }
+
+    /**
+     * ⭐ **La tête ne penche que sur l'écran de crise, et de six degrés** — `CORPS.md` §2 et §9, et
+     * la dérogation arbitrée par Xavier le 16/08/2026.
+     *
+     * 🔴 **Trois choses se vérifient ensemble, parce qu'elles se tiennent** : **une seule** posture
+     * incline la tête *(une inclinaison qui se répand redevient une pose à interpréter)* · l'angle
+     * reste **sous la borne** *(au-delà, pencher la tête cesse d'être une nuance)* · et **le pivot
+     * est un point du dessin**, le milieu de la ligne des épaules, pas une valeur choisie. **La
+     * tête tourne autour de ce point ou elle se décolle du corps.**
+     */
+    @Test
+    fun `seule la posture accoude penche la tete, et elle reste bornee`() {
+        assertEquals(
+            "Une seule posture incline la tête",
+            listOf<Posture>(Posture.Accoude),
+            POSTURES.filter { it.reglage().inclinaisonTete != 0f },
+        )
+        POSTURES.forEach { posture ->
+            val angle = posture.reglage().inclinaisonTete
+            assertTrue(
+                "$posture — la tête penche trop : $angle",
+                kotlin.math.abs(angle) <= INCLINAISON_TETE_MAX,
+            )
+        }
+        assertTrue("Elle penche vers la gauche de l'écran", INCLINAISON_TETE < 0f)
+
+        assertEquals("Le pivot de la tête est sur l'axe", AXE, PIVOT_TETE.x, PRECISION)
+        assertEquals(
+            "Le pivot de la tête est la ligne des épaules",
+            EPAULE_GAUCHE.y,
+            PIVOT_TETE.y,
+            PRECISION,
+        )
+        assertEquals("Et les deux épaules y sont", EPAULE_DROITE.y, PIVOT_TETE.y, 1e-3f)
+        assertEquals(
+            "Le rig au repos ne penche pas la tête",
+            0f,
+            RigKokoro.pose(Posture.Repos).inclinaisonTete,
+            0f,
+        )
+    }
+
+    /**
+     * ⭐ **Accoudé, les deux bras sont exactement à l'horizontale — et ce n'est pas une valeur
+     * choisie** : c'est la ligne des épaules, celle où le bord du bouton vient passer. 🔴 **Le
+     * garde-fou 1 du §6 tient à la lettre** : la borne n'est pas dépassée, elle est **atteinte**, et
+     * elle l'est symétriquement — un seul bras à cette hauteur serait un salut.
+     */
+    @Test
+    fun `accoude pose les deux bras sur la ligne des epaules`() {
+        val accoude = Posture.Accoude.reglage()
+        assertEquals(OUVERTURE_HORIZONTALE, accoude.ouvertureBrasGauche, 0f)
+        assertEquals("Les deux bras, symétriquement", accoude.ouvertureBrasGauche, accoude.ouvertureBrasDroit, 0f)
+        assertNull("Rien ne bouge : il veille, il n'écrit pas", accoude.ecriture)
+        assertEquals("Il regarde devant lui, il ne suit personne", 0f, accoude.regard, 0f)
+        assertEquals("Il ne baisse pas les yeux non plus", 0f, accoude.abaissement, 0f)
+        assertEquals("Il n'est pas réduit", 1f, accoude.echelle, 0f)
     }
 
     @Test
@@ -492,6 +553,49 @@ class CorpsInvariantsTest {
             levitation(sommetDuSouffle),
             1e-4f,
         )
+    }
+
+    /**
+     * 🔴 §3 — **le sommeil ralentit le vol de moitié sans ouvrir une seconde horloge.** La phase est
+     * divisée par deux, donc la période double exactement ; et parce qu'un tour d'horloge vaut deux
+     * respirations, le demi-régime **se referme sur lui-même** au bouclage. Le vérifier importe : un
+     * vol qui sauterait à chaque tour serait une saccade toutes les neuf secondes, et une saccade
+     * est exactement ce que les hypersensibilités interdisent.
+     */
+    @Test
+    fun `le sommeil ralentit le vol de moitie sans seconde horloge`() {
+        assertEquals("Un tour d'horloge vaut deux respirations", 2 * RESPIRATION_MILLIS, HORLOGE_MILLIS)
+        assertEquals(4f * PI.toFloat(), TOUR_HORLOGE, PRECISION)
+
+        val lentes = (0..2 * TOUR).map { levitationLente(phase(it)) }
+        assertEquals(
+            "Le vol du sommeil se referme sur le tour d'horloge",
+            levitationLente(0f),
+            levitationLente(TOUR_HORLOGE),
+            1e-5f,
+        )
+        assertEquals("Il monte deux fois moins haut", -LEVITATION_AMPLITUDE / 2f, lentes.min(), 1e-4f)
+        assertEquals("Le bas du cycle reste la pose dessinée", 0f, lentes.max(), 1e-4f)
+
+        val demiTour = TOUR_HORLOGE / 2f
+        assertEquals(
+            "Le vol éveillé est revenu chez lui après une respiration",
+            levitation(0f),
+            levitation(demiTour),
+            1e-5f,
+        )
+        assertTrue(
+            "Le sommeil, lui, n'en est qu'à la moitié de son cycle — c'est ça, la demi-vitesse",
+            levitationLente(demiTour) - levitationLente(0f) > LEVITATION_AMPLITUDE / 4f,
+        )
+
+        assertEquals(
+            "Le sommeil vole",
+            Offset(0f, levitationLente(1f)),
+            Vol.SOMMEIL.deplacement(1f, avance = 1f).decalage,
+        )
+        assertEquals("Le sommeil ne bascule pas", 0f, Vol.SOMMEIL.deplacement(1f, 1f).inclinaison, 0f)
+        assertEquals("Le sommeil porte son ombre", Ombre(), Vol.SOMMEIL.ombre())
     }
 
     /**

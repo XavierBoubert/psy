@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import io.allonsy.kokoro.R
+import io.allonsy.kokoro.corps.Expression
 import io.allonsy.kokoro.ui.BoutonEpais
 import io.allonsy.kokoro.ui.ChampTexte
 import io.allonsy.kokoro.ui.LocalPaletteKokoro
@@ -43,6 +44,24 @@ sealed interface EtapeJournal {
     data class Echoue(val cause: String) : EtapeJournal
 }
 
+/**
+ * L'expression du locuteur, **choisie par le contenu** (`PRESENCE.md` §1.1, **E12**).
+ *
+ * 🔴 **`chaleureux` réagit à un fait accompli et n'a pas de contraire** (§4.4) : il ne paraît que
+ * lorsque le check-in du jour **est écrit**, et il n'existe aucune expression pour dire qu'il ne
+ * l'est pas. Une question à laquelle on n'a pas répondu, un dossier qu'on n'a pas choisi, une
+ * écriture qui a échoué : **l'expression est celle de tous les jours**, exactement comme si de rien
+ * n'était.
+ *
+ * ⭐ **Un échec d'écriture n'est pas un échec de Xavier** — c'est un dossier introuvable, et le
+ * texte de la page le dit déjà. Le visage n'a rien à ajouter.
+ */
+fun expressionDuJournal(etape: EtapeJournal): Expression = when (etape) {
+    EtapeJournal.DejaEcrit, is EtapeJournal.Enregistre -> Expression.CHALEUREUX
+    EtapeJournal.DossierAbsent, EtapeJournal.Note -> Expression.SEREIN
+    is EtapeJournal.Repondre, is EtapeJournal.Echoue -> Expression.SEREIN
+}
+
 @Composable
 fun ContenuJournal(
     etape: EtapeJournal,
@@ -58,6 +77,7 @@ fun ContenuJournal(
         titre = stringResource(R.string.journal_titre),
         couleur = LocalPaletteKokoro.current.peche,
         ecart = 16.dp,
+        locuteur = expressionDuJournal(etape),
         onFermer = onFermer,
     ) {
         when (etape) {

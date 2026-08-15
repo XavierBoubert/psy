@@ -1,6 +1,20 @@
 package io.allonsy.kokoro.journal
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
 enum class Section { NOYAU, CAMPAGNE }
+
+private val FORMAT_JOUR: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+/**
+ * Le jour courant, au format qui nomme les fichiers du journal.
+ *
+ * 🔴 **Une seule écriture de la date pour tout le dispositif.** Le check-in la pose sur le fichier
+ * qu'il écrit, l'habitant s'en sert pour savoir si ce fichier existe : deux formats divergents
+ * feraient croire qu'aucun check-in n'a jamais été fait.
+ */
+fun jourCourant(): String = LocalDate.now().format(FORMAT_JOUR)
 
 /**
  * Les champs du check-in, dans l'ordre imposé par `psy/DOSSIER.md` §3.

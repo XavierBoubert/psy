@@ -34,8 +34,16 @@ sealed interface Posture {
     /** Au-dessus du bilan : un bras en bas qui va et vient, les yeux baissés vers ce bras. */
     data object Notes : Posture
 
-    /** Écran de crise : bras posés, panneau éteint. 🔴 **L'immobilité est du ressort de l'écran.** */
-    data object Attente : Posture
+    /**
+     * ⭐ **Écran de crise : accoudé sur le bouton comme sur un muret** — *« Kokoro veille sur toi »*
+     * *(arbitrage de Xavier, 16/08/2026)*.
+     *
+     * Les deux bras à l'horizontale reposent sur l'arête du bouton, le corps passe derrière, la
+     * tête dépasse au-dessus et **penche légèrement**. 🔴 **Le panneau reste allumé, et c'est tout
+     * l'objet** : ce qu'on veut là, c'est un visage bienveillant qui regarde — pas une présence
+     * muette. **C'est la seule posture du jeu qui incline la tête, et la seule qui ne vole pas.**
+     */
+    data object Accoude : Posture
 
     /** Liste vide : yeux fermés au repos. `sommeil` réutilise `veille` (`PRESENCE.md` §1.2). */
     data object Sommeil : Posture
@@ -75,6 +83,19 @@ const val OUVERTURE_MINIMALE = -INCLINAISON_REPOS
 /** Bras ramenés vers l'avant et le bas, à mi-chemin de la verticale — la posture de qui lit. */
 const val OUVERTURE_AVANCEE = OUVERTURE_MINIMALE / 2f
 
+/**
+ * ⭐ **L'inclinaison de la tête d'`accoude`** — négatif : elle penche vers la gauche de l'écran.
+ *
+ * 🔴 **Bornée, et petite.** Une tête qui penche est ce qui distingue *veiller sur quelqu'un* de
+ * *fixer quelqu'un* ; au-delà d'une dizaine de degrés elle devient une pose à interpréter, et
+ * `CORPS.md` §2 pose que le personnage est vu de face, sans axe incliné. **C'est la seule
+ * dérogation, et elle ne porte que sur la tête.** ⏳ **À juger à l'écran.**
+ */
+const val INCLINAISON_TETE = -6f
+
+/** La borne de l'inclinaison de tête — au-delà, ce n'est plus une nuance, c'est une pose. */
+const val INCLINAISON_TETE_MAX = 10f
+
 /** Bras légèrement écartés : ce qu'ils font quand ils reposent sur quelque chose. */
 const val OUVERTURE_POSEE = 12f
 
@@ -105,6 +126,7 @@ data class ReglagePosture(
     val abaissement: Float,
     /** Le côté du bras qui écrit, ou `null` — **la seule posture qui bouge d'elle-même.** */
     val ecriture: Cote?,
+    val inclinaisonTete: Float,
     val echelle: Float,
 )
 
@@ -144,10 +166,16 @@ fun Posture.reglage(): ReglagePosture = when (this) {
         ecriture = Cote.GAUCHE,
     )
 
-    Posture.Attente -> reglageDeBase(Expression.SEREIN).copy(
-        panneauAllume = false,
-        ouvertureBrasGauche = OUVERTURE_POSEE,
-        ouvertureBrasDroit = OUVERTURE_POSEE,
+    /**
+     * ⭐ **Les deux bras exactement à l'horizontale, et ce n'est pas une valeur choisie** : c'est la
+     * ligne des épaules, celle où le bord haut du bouton vient passer. **Les bras reposent dessus,
+     * le corps est derrière.** Le regard reste au centre — 🔴 **il regarde devant lui, il ne suit
+     * personne** : rien dans le code ne connaît la position de Xavier.
+     */
+    Posture.Accoude -> reglageDeBase(Expression.SEREIN).copy(
+        ouvertureBrasGauche = OUVERTURE_HORIZONTALE,
+        ouvertureBrasDroit = OUVERTURE_HORIZONTALE,
+        inclinaisonTete = INCLINAISON_TETE,
     )
 
     Posture.Sommeil -> reglageDeBase(Expression.VEILLE)
@@ -162,5 +190,6 @@ private fun reglageDeBase(expression: Expression) = ReglagePosture(
     regard = 0f,
     abaissement = 0f,
     ecriture = null,
+    inclinaisonTete = 0f,
     echelle = 1f,
 )

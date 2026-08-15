@@ -61,6 +61,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import io.allonsy.kokoro.R
+import io.allonsy.kokoro.corps.Expression
+import io.allonsy.kokoro.corps.Locuteur
 import kotlinx.coroutines.delay
 import kotlin.math.cos
 import kotlin.math.sin
@@ -573,6 +575,10 @@ fun FondKokoro(modifier: Modifier = Modifier, contenu: @Composable ColumnScope.(
  * @param defilant à `false`, la page tient dans l'écran et **le contenu se place au lieu de
  *   défiler** — c'est ce qui permet à une page ouverte de reprendre exactement la mise en place de
  *   l'écran de crise, **qui ne défile jamais, et par exigence propre**.
+ * @param locuteur l'expression du personnage posé en bas à gauche (`PRESENCE.md` §1.1), ou `null`
+ *   pour une page qui n'en porte pas. 🔴 **`null` par défaut, et les écrans de crise le gardent** :
+ *   l'entrée d'un personnage dans une surface de crise est la dérogation bornée de **E13**, elle ne
+ *   se déduit pas de « la page est un panneau plein écran ».
  * @param onFermer la croix de la bande de titre. `null` pour une page dont on ne sort pas par là.
  */
 @Composable
@@ -583,16 +589,22 @@ fun PageKokoro(
     ecart: Dp = 18.dp,
     defilant: Boolean = true,
     alignement: Alignment.Vertical = Alignment.Top,
+    locuteur: Expression? = null,
     onFermer: (() -> Unit)? = null,
     contenu: @Composable ColumnScope.() -> Unit,
 ) {
     FondKokoro(modifier = modifier) {
         BandeTitre(titre = titre, couleur = couleur, onFermer = onFermer)
 
+        /**
+         * ⭐ **La bande du locuteur prend le bas de la page**, marges système comprises : c'est le
+         * bord de la dalle qui coupe le personnage au thorax, et non un cadre posé au-dessus. Sans
+         * lui, la page garde sa marge basse comme avant.
+         */
         val bas = Modifier
             .weight(1f)
             .fillMaxWidth()
-            .windowInsetsPadding(WindowInsets.navigationBars)
+            .then(if (locuteur == null) Modifier.windowInsetsPadding(WindowInsets.navigationBars) else Modifier)
             .imePadding()
 
         Column(
@@ -602,6 +614,8 @@ fun PageKokoro(
             verticalArrangement = Arrangement.spacedBy(ecart, alignement),
             content = contenu,
         )
+
+        if (locuteur != null) Locuteur(expression = locuteur)
     }
 }
 

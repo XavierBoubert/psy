@@ -120,7 +120,7 @@ private fun EcranAtelier() {
                     stringResource(R.string.corps_posture_pensif) to Posture.Pensif,
                     stringResource(R.string.corps_posture_lecture) to Posture.Lecture,
                     stringResource(R.string.corps_posture_notes) to Posture.Notes,
-                    stringResource(R.string.corps_posture_attente) to Posture.Attente,
+                    stringResource(R.string.corps_posture_accoude) to Posture.Accoude,
                     stringResource(R.string.corps_posture_sommeil) to Posture.Sommeil,
                 ),
                 selection = posture,
@@ -197,6 +197,7 @@ private fun EcranAtelier() {
                 options = listOf(
                     stringResource(R.string.corps_vol_aucun) to Vol.AUCUN,
                     stringResource(R.string.corps_vol_levitation) to Vol.LEVITATION,
+                    stringResource(R.string.corps_vol_sommeil) to Vol.SOMMEIL,
                     stringResource(R.string.corps_vol_traversee) to Vol.TRAVERSEE,
                 ),
                 selection = vol,

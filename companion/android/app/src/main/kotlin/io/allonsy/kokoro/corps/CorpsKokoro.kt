@@ -27,11 +27,24 @@ import kotlin.math.min
  * fixe — c'est la sémantique SVG, et c'est ce qui garde le contour de la tête régulier alors que
  * `head-out` est étiré de façon non uniforme.
  */
+/**
+ * Ce qu'une passe de peinture dessine — **une seule instance du personnage, peinte en deux fois.**
+ *
+ * 🔴 **Ce n'est pas un dédoublement** (`CORPS.md` §8 point 8) : les deux passes reçoivent **le même
+ * rig, calculé une seule fois**, et se peignent au même endroit. Deux rigs animés séparément
+ * dériveraient l'un de l'autre au premier clignement.
+ *
+ * ⭐ **Elles n'existent que pour l'écran de crise** : le corps passe **sous** le bouton *Mot code*,
+ * les bras **dessus**. C'est ce qui fait qu'il est accoudé au bouton au lieu d'être posé devant.
+ */
+enum class Passe { ENTIER, CORPS, BRAS }
+
 @Composable
 fun CorpsKokoro(
     rig: RigKokoro,
     modifier: Modifier = Modifier,
     palette: PaletteCorps = PALETTE_SOMBRE,
+    passe: Passe = Passe.ENTIER,
 ) {
     Canvas(modifier) {
         val facteur = min(size.width / LARGEUR_VUE, size.height / HAUTEUR_VUE)
@@ -42,7 +55,7 @@ fun CorpsKokoro(
             )
             scale(facteur, facteur, Offset.Zero)
         }) {
-            dessinerKokoro(rig, palette)
+            dessinerKokoro(rig, palette, passe)
         }
     }
 }
@@ -83,19 +96,23 @@ private val TRACES_TRACEES: Map<String, Path> by lazy {
 
 private val Ancre.offset: Offset get() = Offset(x, y)
 
-private fun DrawScope.dessinerKokoro(rig: RigKokoro, palette: PaletteCorps) {
-    rig.ombre?.let { dessinerOmbre(it, rig, palette.trait) }
+private fun DrawScope.dessinerKokoro(rig: RigKokoro, palette: PaletteCorps, passe: Passe) {
+    if (passe != Passe.BRAS) rig.ombre?.let { dessinerOmbre(it, rig, palette.trait) }
     withTransform({
         translate(rig.decalage.x, rig.decalage.y)
         rotate(rig.inclinaison, PIVOT_RACINE.offset)
         scale(rig.echelle, rig.echelle, PIVOT_RACINE.offset)
     }) {
-        dessinerTorse(rig, palette)
-        dessinerTete(rig, palette)
-        dessinerAutour(PIED_GAUCHE, CENTRE_VENTRE, rig.rotationPiedGauche, palette)
-        dessinerAutour(PIED_DROIT, CENTRE_VENTRE, rig.rotationPiedDroit, palette)
-        dessinerAutour(BRAS_GAUCHE, EPAULE_GAUCHE, rig.rotationBrasGauche, palette)
-        dessinerAutour(BRAS_DROIT, EPAULE_DROITE, rig.rotationBrasDroit, palette)
+        if (passe != Passe.BRAS) {
+            dessinerTorse(rig, palette)
+            dessinerTete(rig, palette)
+            dessinerAutour(PIED_GAUCHE, CENTRE_VENTRE, rig.rotationPiedGauche, palette)
+            dessinerAutour(PIED_DROIT, CENTRE_VENTRE, rig.rotationPiedDroit, palette)
+        }
+        if (passe != Passe.CORPS) {
+            dessinerAutour(BRAS_GAUCHE, EPAULE_GAUCHE, rig.rotationBrasGauche, palette)
+            dessinerAutour(BRAS_DROIT, EPAULE_DROITE, rig.rotationBrasDroit, palette)
+        }
     }
 }
 
@@ -141,11 +158,21 @@ private fun DrawScope.dessinerTorse(rig: RigKokoro, palette: PaletteCorps) {
     }
 }
 
+/**
+ * ⭐ **La tête peut pencher, et elle seule** — autour de [PIVOT_TETE], le milieu de la ligne des
+ * épaules. La coque, le panneau et le visage tournent **ensemble** : le visage est peint dans le
+ * panneau, il ne glisse pas dessus.
+ *
+ * 🔴 **Une seule posture s'en sert** (`accoude`), et l'angle y est borné. Partout ailleurs
+ * l'inclinaison vaut zéro et cette rotation ne fait rien.
+ */
 private fun DrawScope.dessinerTete(rig: RigKokoro, palette: PaletteCorps) {
-    dessinerPiece(TETE, palette)
-    dessinerPiece(PANNEAU, palette)
-    if (rig.panneauAllume) {
-        dessinerVisage(rig, palette.trait)
+    withTransform({ rotate(rig.inclinaisonTete, PIVOT_TETE.offset) }) {
+        dessinerPiece(TETE, palette)
+        dessinerPiece(PANNEAU, palette)
+        if (rig.panneauAllume) {
+            dessinerVisage(rig, palette.trait)
+        }
     }
 }
 

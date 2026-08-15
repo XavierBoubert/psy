@@ -276,7 +276,7 @@
     <string name="corps_posture_pensif">pensif</string>
     <string name="corps_posture_lecture">lecture</string>
     <string name="corps_posture_notes">notes</string>
-    <string name="corps_posture_attente">attente</string>
+    <string name="corps_posture_accoude">accoudé</string>
     <string name="corps_posture_sommeil">sommeil</string>
     <string name="corps_expression_posture">celle de la posture</string>
     <string name="corps_expression_neutre">neutre</string>
@@ -295,6 +295,7 @@
     <string name="corps_balayage_lente">lecture, lente</string>
     <string name="corps_vol_aucun">posé</string>
     <string name="corps_vol_levitation">lévitation</string>
+    <string name="corps_vol_sommeil">sommeil</string>
     <string name="corps_vol_traversee">traversée</string>
     <string name="corps_palette_sombre">sombre</string>
     <string name="corps_palette_claire">claire</string>

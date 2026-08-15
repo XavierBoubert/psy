@@ -32,6 +32,7 @@ import androidx.compose.ui.input.pointer.util.addPointerInputChange
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
+import io.allonsy.kokoro.corps.locuteurEnScene
 import io.allonsy.kokoro.decor.Decor
 import io.allonsy.kokoro.decor.PaletteDecor
 import io.allonsy.kokoro.decor.rememberInclinaison
@@ -57,8 +58,13 @@ private const val RAIDEUR = 120f
 /** Plafond de l'élan repris, en écrans par seconde — au-delà, le ressort dépasserait sa cible. */
 private const val ELAN_MAX = 6f
 
-/** La montée d'une étape ouverte. Assez lente pour se voir, assez courte pour ne pas se subir. */
-private const val MONTEE_ETAPE_MS = 320
+/**
+ * La montée d'une étape ouverte. Assez lente pour se voir, assez courte pour ne pas se subir.
+ *
+ * ⭐ **C'est aussi le délai que l'habitant attend avant de revenir** (`Habitant.kt`, [sortieAnimee])
+ * : il ne rentre dans le champ qu'une fois le panneau redescendu.
+ */
+const val MONTEE_ETAPE_MS = 320
 
 /**
  * Le monde de Kokoro — quatre écrans en anneau, un décor continu, aucun bouton de navigation.
@@ -97,6 +103,7 @@ private const val MONTEE_ETAPE_MS = 320
 fun MondeKokoro(
     palette: PaletteDecor,
     contactNom: String,
+    sejour: Sejour,
     onFonction: (Fonction) -> Unit,
     onReglages: () -> Unit,
     modifier: Modifier = Modifier,
@@ -107,6 +114,7 @@ fun MondeKokoro(
     onAccuseFini: () -> Unit = {},
 ) {
     var position by remember { mutableIntStateOf(0) }
+    val perchoirs = rememberPerchoirs()
     var taille by remember { mutableStateOf(IntSize.Zero) }
     var ouverte by remember { mutableStateOf<Etape?>(null) }
     var affichee by remember { mutableStateOf<Etape?>(null) }
@@ -121,6 +129,24 @@ fun MondeKokoro(
      * par seconde — le décalage, lui, se calcule à la mise en page et ne recompose rien.
      */
     val ancre by remember { derivedStateOf { ancreDe(vue.floatValue) } }
+
+    /**
+     * 🔴 **L'alternance des deux régimes** (`PRESENCE.md` §1.1) : un panneau ouvert fait sortir
+     * l'habitant du champ, et **le locuteur n'entre qu'une fois qu'il en est sorti.**
+     *
+     * ⭐ **La bascule est lue par [derivedStateOf], pas la sortie elle-même** : celle-ci change à
+     * chaque image pendant 420 ms, et la lire ici recomposerait les quatre écrans autant de fois.
+     * Le booléen, lui, ne change que deux fois par ouverture.
+     */
+    val sortie = sortieAnimee(dehors = ouverte != null)
+    val locuteur by remember { derivedStateOf { locuteurEnScene(sortie.value) } }
+
+    /**
+     * ⭐ **La seconde passe de peinture** (`PRESENCE.md` §1.3, **E13**) : sur l'écran de crise, le
+     * corps de Kokoro passe **sous** le bouton *Mot code* et ses bras **dessus**. L'état est publié
+     * par la couche du bas et relu par celle du haut — **un seul rig, un seul point, deux passes.**
+     */
+    val bras = rememberPasseDesBras()
 
     /**
      * 🔴 **Le bouton *retour* du téléphone ferme le panneau, il ne quitte pas l'application.** Sans
@@ -168,20 +194,39 @@ fun MondeKokoro(
     ) {
         Decor(camera = { cameraDuDecor(parallaxe, vue.floatValue, inclinaison.floatValue) }, palette = palette)
 
-        positionsAutour(ancre).forEach { habitant ->
-            key(ecranEn(habitant)) {
+        /**
+         * 🔴 **L'habitant est peint ici, et l'ordre fait tout** (`PRESENCE.md` §1.3) : après le
+         * décor, **avant** les écrans. C'est la seule chose qui garantisse qu'il ne passe jamais
+         * devant un texte et qu'aucune ombre ne tombe sur un panneau — les cartes le recouvrent
+         * mécaniquement. Le monter d'un cran suffirait à casser les deux d'un coup.
+         *
+         * ⭐ **Il suit l'écran posé, pas la caméra** : c'est le changement de [position] qui le fait
+         * transiter, et il part avec son retard sur le décor.
+         */
+        Habitant(
+            perchoirs = perchoirs,
+            ecran = ecranEn(position),
+            sejour = sejour,
+            sortie = sortie,
+            largeur = taille.width,
+            bras = bras,
+        )
+
+        positionsAutour(ancre).forEach { rang ->
+            key(ecranEn(rang)) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .offset {
                             IntOffset(
-                                x = ((habitant - vue.floatValue) * taille.width).roundToInt(),
+                                x = ((rang - vue.floatValue) * taille.width).roundToInt(),
                                 y = 0,
                             )
                         },
                 ) {
                     ContenuEcran(
-                        ecran = ecranEn(habitant),
+                        ecran = ecranEn(rang),
+                        perchoirs = perchoirs,
                         contactNom = contactNom,
                         envoiEnCours = envoiEnCours,
                         accesPerdu = accesPerdu,
@@ -196,7 +241,19 @@ fun MondeKokoro(
             }
         }
 
-        EtapeOuverte(etape = affichee, visible = ouverte != null, onFermer = { ouverte = null })
+        /**
+         * 🔴 **La seule chose du personnage qui passe devant l'interface**, et elle est bornée à
+         * l'écran de crise : ses bras, posés sur l'arête du bouton *Mot code*. Partout ailleurs
+         * cette couche ne dessine rien.
+         */
+        BrasDeLHabitant(bras = bras)
+
+        EtapeOuverte(
+            etape = affichee,
+            visible = ouverte != null,
+            locuteur = locuteur,
+            onFermer = { ouverte = null },
+        )
 
         Accuse(
             texte = accuse,
@@ -237,6 +294,7 @@ private fun souffleDuPixel(largeur: Int): Float = 0.5f / largeur.coerceAtLeast(1
 @Composable
 private fun ContenuEcran(
     ecran: Ecran,
+    perchoirs: Perchoirs,
     contactNom: String,
     envoiEnCours: Boolean,
     accesPerdu: Boolean,
@@ -246,6 +304,7 @@ private fun ContenuEcran(
 ) {
     when (ecran) {
         Ecran.THERAPIE -> ContenuTherapie(
+            perchoirs = perchoirs,
             accesPerdu = accesPerdu,
             onReglages = onReglages,
             onOuvrir = { etape ->
@@ -256,9 +315,10 @@ private fun ContenuEcran(
             },
         )
 
-        Ecran.DOCUMENTATION -> ContenuDocumentation()
-        Ecran.BILAN -> ContenuBilan()
+        Ecran.DOCUMENTATION -> ContenuDocumentation(perchoirs = perchoirs)
+        Ecran.BILAN -> ContenuBilan(perchoirs = perchoirs)
         Ecran.CRISE -> ContenuCriseDuMonde(
+            perchoirs = perchoirs,
             contactNom = contactNom,
             envoiEnCours = envoiEnCours,
             onFonction = onFonction,
@@ -283,9 +343,18 @@ private fun ContenuEcran(
  *
  * ⭐ **C'est le contenu qui se garde de l'absence, pas l'animation** : pendant la descente, l'étape
  * est encore là *(`affichee` survit à `ouverte`)*, sinon le panneau se viderait en partant.
+ *
+ * ⭐ **Le panneau garde toujours sa bande de locuteur, occupée ou non** (**E12**) : [locuteur] ne
+ * commande que la parution du personnage, jamais la place. Sans ça le texte se remettrait en page
+ * à son arrivée, sous les yeux de qui lit.
  */
 @Composable
-private fun EtapeOuverte(etape: Etape?, visible: Boolean, onFermer: () -> Unit) {
+private fun EtapeOuverte(
+    etape: Etape?,
+    visible: Boolean,
+    locuteur: Boolean,
+    onFermer: () -> Unit,
+) {
     val detail = (etape?.ouverture as? Ouverture.Detail)?.texte
 
     AnimatedVisibility(
@@ -294,7 +363,12 @@ private fun EtapeOuverte(etape: Etape?, visible: Boolean, onFermer: () -> Unit) 
         exit = slideOutVertically(animationSpec = tween(MONTEE_ETAPE_MS)) { hauteur -> hauteur },
     ) {
         if (etape != null && detail != null) {
-            PanneauEtape(titre = etape.titre, detail = detail, onFermer = onFermer)
+            PanneauEtape(
+                titre = etape.titre,
+                detail = detail,
+                locuteur = locuteur,
+                onFermer = onFermer,
+            )
         }
     }
 }

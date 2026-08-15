@@ -39,6 +39,7 @@ import androidx.core.content.ContextCompat
 import io.allonsy.kokoro.alerte.creerCanalAlerte
 import io.allonsy.kokoro.alerte.programmerAlerteTest
 import io.allonsy.kokoro.corps.AtelierActivity
+import io.allonsy.kokoro.corps.Expression
 import io.allonsy.kokoro.crise.CriseActivity
 import io.allonsy.kokoro.crise.creerCanalAcces
 import io.allonsy.kokoro.crise.publierAccesCrise
@@ -205,6 +206,7 @@ private fun EcranReglages(
         titre = stringResource(R.string.controle_titre),
         couleur = LocalPaletteKokoro.current.beurre,
         ecart = 14.dp,
+        locuteur = Expression.SEREIN,
         onFermer = onFermer,
     ) {
         Explication(stringResource(R.string.controle_sous_titre))

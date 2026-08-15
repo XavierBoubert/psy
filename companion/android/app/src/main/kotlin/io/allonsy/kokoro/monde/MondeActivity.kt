@@ -11,6 +11,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import io.allonsy.kokoro.MainActivity
 import io.allonsy.kokoro.R
 import io.allonsy.kokoro.crise.ACTION_MOT_CODE_ENVOYE
@@ -27,11 +28,17 @@ import io.allonsy.kokoro.decor.DECOR_JOUR
 import io.allonsy.kokoro.decor.DECOR_NUIT
 import io.allonsy.kokoro.decor.PaletteDecor
 import io.allonsy.kokoro.journal.JournalActivity
+import io.allonsy.kokoro.journal.checkinDuJourExiste
+import io.allonsy.kokoro.journal.jourCourant
 import io.allonsy.kokoro.reglages.REGLAGES_INITIAUX
 import io.allonsy.kokoro.reglages.estNuit
 import io.allonsy.kokoro.reglages.lireReglages
 import io.allonsy.kokoro.reglages.minuteCourante
 import io.allonsy.kokoro.ui.ThemeMonde
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.time.LocalTime
 
 /**
  * Le monde — l'écran où Kokoro habite, et **l'interface principale de l'app** depuis la v2 de
@@ -63,6 +70,7 @@ class MondeActivity : ComponentActivity() {
     private val accuse = mutableStateOf<String?>(null)
     private val envoiEnCours = mutableStateOf(false)
     private val accesPerdu = mutableStateOf(false)
+    private val sejour = mutableStateOf(Sejour(heure = 0, checkinFait = false))
 
     /**
      * 🔴 **Le seul retour que l'envoi direct donne.** Un SMS parti n'affiche rien de lui-même : sans
@@ -96,6 +104,7 @@ class MondeActivity : ComponentActivity() {
                 MondeKokoro(
                     palette = paletteDuMoment(nuit.value),
                     contactNom = reglages.value.contactNom,
+                    sejour = sejour.value,
                     onFonction = { ouvrir(it) },
                     onReglages = { startActivity(Intent(this, MainActivity::class.java)) },
                     parallaxe = reglages.value.parallaxe,
@@ -139,6 +148,31 @@ class MondeActivity : ComponentActivity() {
         nuit.value = nuitDuMoment(this)
         reglages.value = lireReglages(this)
         accesPerdu.value = !publierAccesCrise(this)
+        relireLeSejour()
+    }
+
+    /**
+     * Ce que l'habitant sait du monde (`PRESENCE.md` §2) — **l'heure, et si le check-in du jour est
+     * écrit.**
+     *
+     * ⭐ **L'heure est lue à l'arrivée, comme celle du décor** : si 18 h passent pendant que le monde
+     * est ouvert, Kokoro ne change pas de place sous les yeux de Xavier. Il aura bougé à la
+     * prochaine venue, et **la prévisibilité est une fonctionnalité**.
+     *
+     * 🔴 **L'existence du fichier se lit hors du fil principal.** Le fournisseur de documents peut
+     * mettre une seconde à répondre — Google Drive le fait —, et une interface figée à l'ouverture
+     * du monde serait pire que l'expression qu'on attend.
+     *
+     * ⭐ **Le défaut est *pas fait*, et il ne se voit pas** : tant que la réponse n'est pas revenue,
+     * l'expression est celle de tous les jours. 🔴 **Aucun état intermédiaire ne s'affiche** — ni
+     * attente, ni point, ni grisé : il n'y a rien à attendre, et rien à interpréter.
+     */
+    private fun relireLeSejour() {
+        sejour.value = sejour.value.copy(heure = LocalTime.now().hour)
+        lifecycleScope.launch {
+            val fait = withContext(Dispatchers.IO) { checkinDuJourExiste(this@MondeActivity, jourCourant()) }
+            sejour.value = sejour.value.copy(checkinFait = fait)
+        }
     }
 
     /**
