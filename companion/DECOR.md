@@ -1,10 +1,10 @@
 # Kokoro — le décor
 
-**Spécification graphique du monde.** ⭐ **v1 — 14/08/2026.** Le décor est un **paysage peint en quatre couches**, glissé en parallaxe sous cinq écrans disposés en croix.
+**Spécification graphique du monde.** ⭐ **v1 — 14/08/2026.** Le décor est un **paysage peint en quatre couches**, glissé en parallaxe sous **quatre écrans en anneau horizontal** *(rangement refait le 15/08/2026 — [`INTERFACE.md`](INTERFACE.md) §7.7)*.
 
 > 📐 **Ce document ne décide rien de clinique.** Il décrit le monde dans lequel le personnage est posé. Le personnage, lui, est spécifié dans [`CORPS.md`](./CORPS.md) et la doctrine dans [`README.md`](README.md).
 >
-> ⏱️ **Il s'applique au jalon K7 (« la présence »), comme `CORPS.md`.** K5 et K6 passent d'abord. Ce qui existe aujourd'hui est le monde vide : le décor, la navigation, et Kokoro au centre.
+> ⏱️ **Il s'applique au jalon K7 (« la présence »), comme `CORPS.md`.** K5 et K6 passent d'abord. Ce qui existe aujourd'hui est le monde presque vide : le décor, la navigation, et Kokoro **en tête de l'écran d'entrée** *(§6)*.
 
 ---
 
@@ -75,14 +75,16 @@ npm run companion:decoupe -- decor-feuillage/01-b.png \
 
 ## 4. Le parallaxe
 
-La caméra est en **écrans** : `(0,0)` au centre, `(-1,0)` à gauche, `(0,1)` en bas. Une couche de profondeur *p* se déplace de *p* × un écran ; le contenu est à 1, donc il colle au doigt.
+La caméra est en **écrans**, et **sur le seul axe horizontal** *(15/08/2026 — [`INTERFACE.md`](INTERFACE.md) §7.7)* : `0` sur l'écran d'entrée, `1` sur son voisin de droite, `-1` sur celui de gauche. Une couche de profondeur *p* se déplace de *p* × un écran ; le contenu est à 1, donc il colle au doigt.
+
+🔴 **Elle n'est bornée d'aucun côté**, et c'est ce qui rend l'anneau gratuit : pour le décor, revenir sur le premier écran n'est **qu'un écran de plus dans le même sens**.
 
 | Point | Ce qui est fait, et pourquoi |
 |---|---|
 | ⭐ **Répétition en miroir** | Une tuile sur deux est retournée horizontalement. **Deux tuiles voisines se touchent par le même bord : il n'y a pas de raccord à faire coïncider, il n'y a pas de raccord du tout.** C'est ce qui permet de glisser indéfiniment sans trouver la fin du dessin |
-| ⭐ **Débattement vertical court** (0,10 contre 1 écran à l'horizontale) | Latéralement la tuile se répète ; verticalement, non — le ciel est en haut et le sol en bas, les échanger n'a aucun sens. Le mouvement vertical dit la profondeur sans défaire la composition |
-| **Décalage des couches basses** | Une couche ancrée en bas qui remonte de plus que son décalage **découvre le ciel sous elle**. En la posant un peu plus bas que le bord, la montée reste dans ce qu'on a déjà donné. ⭐ **Le seuil se calcule** : une couche remonte au plus `0,10 × profondeur` d'écran, soit 0,052 pour la prairie et 0,078 pour le feuillage ; les deux décalages sont au-dessus (0,055 et 0,080), donc **la tranche prolongée ne sert plus jamais**. Elle reste en dernier recours : chaque colonne se continue par sa propre couleur, donc sans raccord |
-| **Placement de Kokoro** | Biais vertical 0,62 : **les feuilles du premier plan lui passent devant les pieds.** Sans ce recouvrement il flotte au-dessus du décor, et le parallaxe perd ce qu'il venait chercher |
+| 🔴 **Aucun débattement vertical** *(15/08/2026)* | Il y en avait un, court (0,10), qui disait la profondeur quand la traversée était une croix. **La caméra n'a plus de composante verticale** — et un décor qui bougerait avec une liste qui défile lui donnerait une profondeur qu'il n'a pas. ⭐ **La tranche prolongée disparaît avec lui** : plus rien ne remonte, donc rien ne découvre le ciel |
+| **Décalage des couches basses** | 🔴 **Il ne descend jamais sous zéro** : une couche ancrée en bas doit garder son pied hors champ. Il ne paie plus une montée — il n'y en a plus — il cale la composition |
+| **Placement de Kokoro** | ⏳ **Rouvert par §7.7** : l'écran central où il se tenait n'existe plus, et il est provisoirement en tête de la liste de la thérapie. **Le biais 0,62 qui le faisait recouvrir par le feuillage attend son propre brainstorm** |
 
 ---
 
@@ -104,21 +106,23 @@ La caméra est en **écrans** : `(0,0)` au centre, `(-1,0)` à gauche, `(0,1)` e
 
 ---
 
-## 6. La navigation — une croix, pas une grille
+## 6. La navigation — **un anneau horizontal, sans bout** *(15/08/2026)*
 
 ```
-        HAUT
-GAUCHE  CENTRE  DROITE
-        BAS
+  ← … │ Thérapie │ Documentation │ Bilan │ Crise │ Thérapie │ … →
+        entrée                                      (le même)
 ```
 
-⭐ **Du centre on va aux quatre bords ; d'un bord on ne peut que revenir au centre.** Aucune diagonale, donc **aucun écran n'est à deux gestes**, et depuis n'importe où le centre est à un seul geste. Il n'y a rien à mémoriser d'autre que « on revient toujours ». `EcranTest` le vérifie.
+⭐ **Une seule direction, quatre écrans, aucun bout.** Après le dernier vient le premier, **et le décor continue dans le même sens** : ce n'est pas un retour en arrière, c'est un tour de plus. La crise est donc à **un seul geste de l'entrée**, dans le sens qu'on veut. `EcranTest` le vérifie.
+
+> 🔄 **C'était une croix jusqu'au 15/08/2026** — centre, haut, bas, gauche, droite. Voir [`INTERFACE.md`](INTERFACE.md) §7.7 pour ce que le changement coûte et ce qu'il rend.
 
 | Règle | Motif |
 |---|---|
 | **Le décor suit le doigt** pendant le geste, au lieu d'attendre qu'il se lève | Le geste montre son effet pendant qu'on le fait : rien à apprendre, rien à deviner, et quatre écrans deviennent découvrables **sans rien afficher pour les annoncer** |
-| ⭐ **L'axe se verrouille au premier mouvement** et ne se relâche qu'au lever du doigt | Sans verrou, un geste un peu oblique — et ils le sont tous — ferait hésiter le monde entre deux écrans. Ce serait le seul endroit du dispositif où le résultat dépendrait de la précision du geste |
-| 🔴 **Butée franche, sans élastique** | Quand il n'y a pas de voisin, rien ne bouge, plutôt que de céder puis revenir. Un mouvement qui part et se rétracte demande à être interprété (« est-ce que ça a marché ? ») |
+| ⭐ **Il n'y a plus d'axe à verrouiller** *(15/08/2026)* | Le monde n'écoute que le glissement **horizontal** ; le vertical ne lui parvient jamais et va à la liste de l'écran. **Deux gestes, deux destinataires, aucun arbitrage** — et plus aucun geste oblique dont le résultat dépendrait de sa précision |
+| ✅ **La butée franche disparaît sans rien laisser derrière** | Elle existait pour ne pas avoir d'élastique aux bords du monde. **Il n'y a plus de bord** : rien ne part et ne se rétracte, donc rien ne demande à être interprété |
+| ⭐ **On ne saute jamais deux écrans**, si lancé soit le geste | Un monde qui défile de trois écrans sur un coup de pouce demanderait de retrouver où l'on est ; d'un écran, on le sait sans regarder |
 | **Deux façons d'arriver au bout** : la distance (18 % d'un écran) **ou l'élan** (0,7 écran/s) | Un geste franc mais bref doit suffire. ⭐ **Sur la distance seule, un geste vif échouait** : le doigt part plus vite qu'il ne va loin, et le monde revenait en arrière alors que le geste était sans ambiguïté |
 | ⭐ **Un ressort, pas une durée fixe** *(14/08/2026)* | Une interpolation à durée fixe redémarre à vitesse nulle : **le monde s'arrêtait une fraction de seconde au lever du doigt**, puis repartait. Le ressort reprend la caméra **à la vitesse qu'elle avait** — il n'y a plus deux mouvements séparés par un arrêt, mais un seul, celui du doigt, prolongé |
 | **Amorti critique, ~600 ms** | Il rejoint sa cible **sans jamais osciller** — un rebond serait un mouvement à interpréter. Même tempo que les transitions du corps (`CORPS.md` §5) |
@@ -148,7 +152,6 @@ La caméra est une **valeur ordinaire**, écrite directement par le doigt ; l'an
 ## 8. Ce qui reste ouvert
 
 - ⏳ **L'arbitrage du §2** attend la confirmation de Xavier.
-- ⏳ **Le contenu des quatre écrans du bord** — programme, bibliothèque, bilans, crise. Il se décide en séance (`companion/PROGRAMME.md`), pas ici.
+- ⏳ **Le contenu des quatre écrans** — programme, bibliothèque, bilans, crise. Il se décide en séance (`companion/PROGRAMME.md`), pas ici.
 - ⏳ **L'axe de symétrie des tuiles en miroir**, sur le feuillage. ⚠️ **Le rétrécir à 1,50 l'a rapproché** : il se croise désormais une fois par écran traversé au lieu d'une fois toutes les 1,4. La prairie, elle, l'a beaucoup éloigné. Le supprimer demanderait un dessin bouclé, que le modèle ne sait pas produire de façon fiable. **À regarder à l'écran** — si c'est gênant, la sortie est d'élargir le feuillage et de compenser l'échelle en régénérant une planche aux feuilles plus petites.
-- ⏳ **Le débattement vertical est modeste** (0,10). Monter à 0,16 rend le haut et le bas plus distincts ; c'est maintenant abordable, les deux décalages du bas ayant de la marge — mais il faudrait les remonter d'autant. À regarder à l'écran, pas à trancher sur le papier.
 - ⏳ **La palette de nuit est un premier jet** : ciel `#08202E → #1A4A63`, teinte `#4C7691` multipliée. Elle tient sur les planches actuelles ; elle n'a pas été regardée longtemps.

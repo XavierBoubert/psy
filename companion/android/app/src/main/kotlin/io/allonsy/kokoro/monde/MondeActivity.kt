@@ -130,7 +130,7 @@ class MondeActivity : ComponentActivity() {
      * sonne, rien ne compte.** Elle refuse d'elle-même tant que l'autorisation n'est pas accordée —
      * **et aucun écran ne la réclame en ouverture** : la demande vit dans les réglages, à froid.
      *
-     * ⭐ **Quand elle refuse, l'écran central le dit en toutes lettres** *(15/08/2026, tranché par
+     * ⭐ **Quand elle refuse, l'écran d'entrée le dit en toutes lettres** *(15/08/2026, tranché par
      * Xavier)* — voir [AvisAcces]. 🔴 **Un défaut silencieux serait le pire des deux mondes** : la
      * porte du verrouillage aurait disparu, et rien ne l'aurait signalé.
      */

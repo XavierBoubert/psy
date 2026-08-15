@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
  *
  * 🔴 **Aucun n'est jamais porteur d'information.** Une étincelle ne dit pas *nouveau*, un cœur ne
  * dit pas *important*, un rivet ne dit rien du tout. **Et aucun ne se pose sur une carte de la
- * liste** : ils vivent sur les bandes de titre, les états vides et l'écran central — les endroits
+ * liste** : ils vivent sur les bandes de titre, les états vides et autour de Kokoro — les endroits
  * où il n'y a rien à lire de travers.
  *
  * 🔴 **L'écran de crise n'en porte aucun** (§4.5). En crise, la mignonnerie est du bruit.

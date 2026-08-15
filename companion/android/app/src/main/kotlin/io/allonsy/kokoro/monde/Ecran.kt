@@ -1,89 +1,59 @@
 package io.allonsy.kokoro.monde
 
-import androidx.compose.ui.geometry.Offset
 import kotlin.math.abs
+import kotlin.math.floor
 
 /**
- * Les cinq écrans du monde, et rien d'autre.
+ * Les quatre écrans du monde, **dans l'ordre où on les traverse** — et rien d'autre.
  *
- * ⭐ **Le monde est une croix, pas une grille.** Du centre on va aux quatre bords ; d'un bord on ne
- * peut que revenir au centre. Il n'y a pas de diagonale, donc **aucun écran n'est à deux gestes**,
- * et depuis n'importe où le centre est à un seul geste. C'est la propriété qui rend le monde
- * mémorisable sans le parcourir : il n'y a rien à retenir d'autre que « on revient toujours ».
+ * ```
+ *  ← … ┌──────────┐ ┌───────────────┐ ┌────────┐ ┌───────┐ ┌──────────┐ … →
+ *      │ Thérapie │ │ Documentation │ │ Bilan  │ │ Crise │ │ Thérapie │
+ *      └──────────┘ └───────────────┘ └────────┘ └───────┘ └──────────┘
+ *         entrée                                              (le même)
+ * ```
  *
- * La position est donnée en écrans — c'est aussi l'unité de la caméra, ce qui évite toute conversion.
+ * ⭐ **Le monde est un anneau, plus une croix** *(15/08/2026)*. Il n'y a plus de haut ni de bas :
+ * **tout est horizontal**, donc le glissement vertical est rendu au contenu et **n'importe quel
+ * écran peut défiler**. C'est ce qui lève le point dur **P1** — plus aucun contenu n'est logé
+ * ailleurs que là où il a du sens.
+ *
+ * ⭐ **La traversée ne bute jamais.** Après le dernier écran vient le premier, et le décor
+ * **continue de glisser dans le même sens** : ce n'est pas un retour en arrière, c'est un tour de
+ * plus. Rien ne rebondit, rien ne saute, rien ne dit qu'on est au bout — parce qu'il n'y a pas de
+ * bout.
+ *
+ * ⭐ **La crise est donc à un seul geste de l'entrée**, vers la gauche. Elle est la dernière de
+ * l'anneau et la voisine immédiate de la thérapie : **on n'a jamais à traverser le monde pour
+ * l'atteindre.**
  */
-enum class Ecran(val camera: Offset) {
-    CENTRE(Offset(0f, 0f)),
-    GAUCHE(Offset(-1f, 0f)),
-    DROITE(Offset(1f, 0f)),
-    HAUT(Offset(0f, -1f)),
-    BAS(Offset(0f, 1f)),
-}
-
-enum class Axe { HORIZONTAL, VERTICAL }
-
-/** La direction d'un geste, une fois l'axe verrouillé. Le vecteur est le déplacement de la caméra. */
-enum class Direction(val vecteur: Offset, val axe: Axe) {
-    VERS_LA_GAUCHE(Offset(-1f, 0f), Axe.HORIZONTAL),
-    VERS_LA_DROITE(Offset(1f, 0f), Axe.HORIZONTAL),
-    VERS_LE_HAUT(Offset(0f, -1f), Axe.VERTICAL),
-    VERS_LE_BAS(Offset(0f, 1f), Axe.VERTICAL),
-}
-
-/** Le voisin atteignable, ou `null` s'il n'y en a pas — auquel cas le geste ne déplace rien. */
-fun Ecran.versLe(direction: Direction): Ecran? = when (this) {
-    Ecran.CENTRE -> Ecran.entries.first { it.camera == direction.vecteur }
-    else -> Ecran.CENTRE.takeIf { camera + direction.vecteur == Ecran.CENTRE.camera }
-}
-
-/** La direction d'un écart, sur l'axe déjà verrouillé. `null` tant que l'écart est nul. */
-fun directionDe(ecart: Offset, axe: Axe): Direction? {
-    val composante = composante(ecart, axe)
-    if (composante == 0f) return null
-
-    return Direction.entries.first { it.axe == axe && (it.vecteur.x + it.vecteur.y > 0f) == (composante > 0f) }
-}
-
-fun composante(point: Offset, axe: Axe): Float = if (axe == Axe.HORIZONTAL) point.x else point.y
+enum class Ecran { THERAPIE, DOCUMENTATION, BILAN, CRISE }
 
 /**
- * La course ouverte depuis [depuis] sur cet axe — l'écran de départ et ses voisins, rien de plus.
+ * Une **position** est un rang sur la bande infinie ; un **écran** est ce qu'on y trouve. Deux
+ * positions distantes de quatre montrent le même écran, et c'est tout ce qui fait l'anneau.
  *
- * ⭐ **Elle ne dépend pas du sens du geste, et c'est ce qui la rend sûre.** Une borne calculée
- * direction par direction suppose qu'on parte pile sur un écran ; reprendre le monde en pleine
- * traversée le ferait alors sauter d'un bloc au premier contact. Une course fixe se contente de
- * retenir la caméra là où elle est.
+ * 🔴 **La position ne se replie jamais.** Elle continue de croître ou de décroître, et c'est elle
+ * qui commande la caméra : la replier remettrait le décor à zéro au passage du dernier écran,
+ * c'est-à-dire exactement le saut que l'anneau existe pour éviter.
  */
-fun course(depuis: Ecran, axe: Axe): ClosedFloatingPointRange<Float> {
-    val atteignables = Direction.entries
-        .filter { it.axe == axe }
-        .mapNotNull { depuis.versLe(it) }
-        .plus(depuis)
-        .map { composante(it.camera, axe) }
+fun ecranEn(position: Int): Ecran = Ecran.entries[position.mod(Ecran.entries.size)]
 
-    return atteignables.min()..atteignables.max()
-}
+/** La position de l'écran qui touche le bord gauche de la dalle. */
+fun ancreDe(camera: Float): Int = floor(camera).toInt()
 
 /**
- * La caméra ramenée dans la course ouverte.
+ * Les positions peintes autour de l'ancre — **exactement une par écran**, une de marge de chaque
+ * côté des deux qui sont à l'image.
  *
- * ⭐ **Butée franche, sans élastique.** Quand il n'y a pas de voisin, le décor ne bouge pas d'un
- * pixel plutôt que de céder puis revenir : un mouvement qui part et se rétracte demande à être
- * interprété (« est-ce que ça a marché ? »), et c'est exactement ce que le dispositif ne fait
- * jamais faire à Xavier.
+ * ⭐ **Quatre positions pour quatre écrans, donc aucun écran n'est monté deux fois.** C'est ce qui
+ * permet de garder l'état de chaque écran — le défilement d'une liste, par exemple — d'un tour à
+ * l'autre : ce n'est jamais une copie qui revient, c'est le même.
  */
-fun bornerCamera(brut: Offset, depuis: Ecran, axe: Axe): Offset {
-    val bornes = course(depuis, axe)
-
-    return when (axe) {
-        Axe.HORIZONTAL -> Offset(brut.x.coerceIn(bornes), brut.y)
-        Axe.VERTICAL -> Offset(brut.x, brut.y.coerceIn(bornes))
-    }
-}
+fun positionsAutour(ancre: Int): List<Int> = List(Ecran.entries.size) { rang -> ancre - 1 + rang }
 
 /**
- * L'écran où l'on atterrit quand le doigt se lève.
+ * La position où l'on atterrit quand le doigt se lève.
  *
  * Deux façons d'arriver au bout, et il en fallait deux : **la distance** — on a poussé le monde au
  * moins jusqu'à [SEUIL_BASCULE] — ou **l'élan** — on l'a lancé au moins à [VITESSE_BASCULE]. Sur la
@@ -93,21 +63,24 @@ fun bornerCamera(brut: Offset, depuis: Ecran, axe: Axe): Offset {
  * ⭐ **Un élan qui repart en arrière annule la traversée**, même si la distance est franchie : le
  * doigt s'est ravisé avant de se lever, et le dernier sens voulu est celui-là.
  *
- * [elan] est en écrans par seconde, déjà projeté sur l'axe verrouillé.
+ * ⭐ **On ne saute jamais deux écrans**, si lancé soit le geste. Un monde qui défile de trois écrans
+ * sur un coup de pouce demanderait de retrouver où l'on est ; d'un écran, on le sait sans regarder.
+ *
+ * [camera] et [elan] sont en écrans, [elan] par seconde.
  */
-fun aterrissage(camera: Offset, elan: Offset, depuis: Ecran, axe: Axe): Ecran {
-    val ecart = camera - depuis.camera
-    val direction = directionDe(ecart, axe) ?: return depuis
-    val voisin = depuis.versLe(direction) ?: return depuis
+fun aterrissage(camera: Float, elan: Float, depuis: Int): Int {
+    val ecart = camera - depuis
+    if (ecart == 0f) return depuis
 
-    val lance = composante(elan, axe) * composante(direction.vecteur, axe)
+    val sens = if (ecart > 0f) 1 else -1
+    val lance = elan * sens
     val franchi = when {
         lance >= VITESSE_BASCULE -> true
         lance <= -VITESSE_BASCULE -> false
-        else -> abs(composante(ecart, axe)) >= SEUIL_BASCULE
+        else -> abs(ecart) >= SEUIL_BASCULE
     }
 
-    return if (franchi) voisin else depuis
+    return if (franchi) depuis + sens else depuis
 }
 
 /**

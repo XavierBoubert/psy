@@ -9,26 +9,22 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.util.VelocityTracker
@@ -36,19 +32,11 @@ import androidx.compose.ui.input.pointer.util.addPointerInputChange
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
-import androidx.compose.ui.unit.dp
-import io.allonsy.kokoro.corps.CorpsKokoro
-import io.allonsy.kokoro.corps.HAUTEUR_VUE
-import io.allonsy.kokoro.corps.LARGEUR_VUE
-import io.allonsy.kokoro.corps.PALETTE_CLAIRE
-import io.allonsy.kokoro.corps.Posture
-import io.allonsy.kokoro.corps.rigAnime
 import io.allonsy.kokoro.decor.Decor
 import io.allonsy.kokoro.decor.PaletteDecor
 import io.allonsy.kokoro.ui.Accuse
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlin.math.abs
 import kotlin.math.roundToInt
 
 /**
@@ -66,31 +54,25 @@ private const val RAIDEUR = 120f
 /** Plafond de l'élan repris, en écrans par seconde — au-delà, le ressort dépasserait sa cible. */
 private const val ELAN_MAX = 6f
 
-/** Hauteur de Kokoro, en fraction de la hauteur de l'écran. */
-private const val TAILLE_KOKORO = 0.24f
-
-/**
- * Il se tient **dans** le feuillage, pas au-dessus.
- *
- * ⭐ Le biais est réglé pour que les feuilles du premier plan **lui passent devant les pieds** : sans
- * ce recouvrement, il flotte au-dessus du décor au lieu d'y être posé, et le parallaxe perd ce qu'il
- * venait chercher.
- */
-private val PLACE_DE_KOKORO = BiasAlignment(horizontalBias = 0f, verticalBias = 0.62f)
-
 /** La montée d'une étape ouverte. Assez lente pour se voir, assez courte pour ne pas se subir. */
 private const val MONTEE_ETAPE_MS = 320
 
-/** De quoi passer sous la roue dentée sans la toucher — elle fait 54 dp plus son épaisseur. */
-private val SOUS_LA_ROUE = 92.dp
-
 /**
- * Le monde de Kokoro — cinq écrans, un décor continu, aucun bouton.
+ * Le monde de Kokoro — quatre écrans en anneau, un décor continu, aucun bouton de navigation.
  *
  * ⭐ **On y navigue au doigt et le décor suit le doigt**, au lieu d'attendre qu'il se lève : le
  * geste montre son effet pendant qu'on le fait, donc il n'y a rien à apprendre ni à deviner. C'est
  * la seule façon de rendre quatre écrans découvrables sans jamais rien afficher pour les annoncer —
  * et rien ne les annonce, parce que Kokoro ne vient jamais vers Xavier.
+ *
+ * ⭐ **La traversée est horizontale, et elle seule** *(15/08/2026)*. Le glissement vertical
+ * n'appartient plus au monde : il est rendu au contenu de chaque écran, qui peut donc défiler. Le
+ * doigt tranche de lui-même — un mouvement horizontal déplace le monde, un mouvement vertical
+ * déplace la liste — **et aucun des deux ne peut plus rater à cause de l'autre.**
+ *
+ * ⭐ **Elle ne bute nulle part.** La caméra est un nombre qui court sans borne, et l'écran montré
+ * est sa position **modulo quatre** : après la crise revient la thérapie, dans le même sens, sans
+ * retour en arrière ni saut. **Rien n'indique un bout parce qu'il n'y en a pas.**
  *
  * ⭐ **Le geste ne s'interrompt jamais** *(14/08/2026)*. La caméra est une valeur ordinaire, écrite
  * directement par le doigt — pas une animation à qui l'on demanderait de se déplacer image par
@@ -114,13 +96,20 @@ fun MondeKokoro(
     accuse: String? = null,
     onAccuseFini: () -> Unit = {},
 ) {
-    var ecran by remember { mutableStateOf(Ecran.CENTRE) }
+    var position by remember { mutableIntStateOf(0) }
     var taille by remember { mutableStateOf(IntSize.Zero) }
     var ouverte by remember { mutableStateOf<Etape?>(null) }
     var affichee by remember { mutableStateOf<Etape?>(null) }
-    val vue = remember { mutableStateOf(Ecran.CENTRE.camera) }
+    val vue = remember { mutableFloatStateOf(0f) }
     val pose = remember { mutableStateOf<Job?>(null) }
     val portee = rememberCoroutineScope()
+
+    /**
+     * ⭐ **L'ancre ne change qu'au passage d'un écran**, alors que la caméra change à chaque image.
+     * Sans elle, lire la caméra pendant la composition recomposerait les quatre écrans soixante fois
+     * par seconde — le décalage, lui, se calcule à la mise en page et ne recompose rien.
+     */
+    val ancre by remember { derivedStateOf { ancreDe(vue.floatValue) } }
 
     /**
      * 🔴 **Le bouton *retour* du téléphone ferme le panneau, il ne quitte pas l'application.** Sans
@@ -137,60 +126,62 @@ fun MondeKokoro(
             .fillMaxSize()
             .onSizeChanged { taille = it }
             .pointerInput(taille, ouverte != null) {
-                if (taille.width == 0 || taille.height == 0) return@pointerInput
+                if (taille.width == 0) return@pointerInput
                 if (ouverte != null) return@pointerInput
 
                 suivreLeDoigt(
-                    taille = taille,
-                    ecranCourant = { ecran },
-                    vueCourante = { vue.value },
+                    largeur = taille.width,
+                    positionCourante = { position },
+                    vueCourante = { vue.floatValue },
                     onSaisie = { pose.value?.cancel() },
-                    onGlisse = { vue.value = it },
-                    onLever = { depuis, axe, elan ->
-                        val arrivee = aterrissage(vue.value, elan, depuis, axe)
-                        ecran = arrivee
+                    onGlisse = { vue.floatValue = it },
+                    onLever = { depuis, elan ->
+                        val arrivee = aterrissage(vue.floatValue, elan, depuis)
+                        position = arrivee
                         pose.value = portee.launch {
-                            Animatable(vue.value, Offset.VectorConverter).animateTo(
-                                targetValue = arrivee.camera,
+                            Animatable(vue.floatValue, Float.VectorConverter).animateTo(
+                                targetValue = arrivee.toFloat(),
                                 animationSpec = spring(
                                     dampingRatio = Spring.DampingRatioNoBouncy,
                                     stiffness = RAIDEUR,
-                                    visibilityThreshold = souffleDuPixel(taille),
+                                    visibilityThreshold = souffleDuPixel(taille.width),
                                 ),
                                 initialVelocity = elan,
                             ) {
-                                vue.value = value
+                                vue.floatValue = value
                             }
                         }
                     },
                 )
             },
     ) {
-        Decor(camera = { vue.value }, palette = palette)
+        Decor(camera = { vue.floatValue }, palette = palette)
 
-        Ecran.entries.forEach { habitant ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .offset {
-                        IntOffset(
-                            x = ((habitant.camera.x - vue.value.x) * taille.width).roundToInt(),
-                            y = ((habitant.camera.y - vue.value.y) * taille.height).roundToInt(),
-                        )
-                    },
-            ) {
-                ContenuEcran(
-                    ecran = habitant,
-                    contactNom = contactNom,
-                    envoiEnCours = envoiEnCours,
-                    accesPerdu = accesPerdu,
-                    onOuvrir = { etape ->
-                        affichee = etape
-                        ouverte = etape
-                    },
-                    onFonction = onFonction,
-                    onReglages = onReglages,
-                )
+        positionsAutour(ancre).forEach { habitant ->
+            key(ecranEn(habitant)) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .offset {
+                            IntOffset(
+                                x = ((habitant - vue.floatValue) * taille.width).roundToInt(),
+                                y = 0,
+                            )
+                        },
+                ) {
+                    ContenuEcran(
+                        ecran = ecranEn(habitant),
+                        contactNom = contactNom,
+                        envoiEnCours = envoiEnCours,
+                        accesPerdu = accesPerdu,
+                        onOuvrir = { etape ->
+                            affichee = etape
+                            ouverte = etape
+                        },
+                        onFonction = onFonction,
+                        onReglages = onReglages,
+                    )
+                }
             }
         }
 
@@ -213,17 +204,10 @@ fun MondeKokoro(
  * valeur **sautait** sur la cible d'un coup. Exprimé en fraction d'écran, un demi-pixel vaut
  * `0.5 / largeur`, et le saut passe sous la définition de la dalle.
  */
-private fun souffleDuPixel(taille: IntSize): Offset = Offset(
-    x = 0.5f / taille.width.coerceAtLeast(1),
-    y = 0.5f / taille.height.coerceAtLeast(1),
-)
+private fun souffleDuPixel(largeur: Int): Float = 0.5f / largeur.coerceAtLeast(1)
 
 /**
  * Ce qu'il y a dans chaque écran — **une rubrique par écran** (`companion/INTERFACE.md` §3).
- *
- * 🔴 **Kokoro garde les couleurs du SVG, jour et nuit** ([PALETTE_CLAIRE]) : il n'est pas posé sur
- * le fond de l'application, il est posé dans le décor. Le repeindre avec le ciel reviendrait à lui
- * donner une deuxième apparence à décoder — le décor change d'heure, lui non.
  */
 @Composable
 private fun ContenuEcran(
@@ -236,29 +220,9 @@ private fun ContenuEcran(
     onReglages: () -> Unit,
 ) {
     when (ecran) {
-        Ecran.CENTRE -> Box(modifier = Modifier.fillMaxSize()) {
-            CorpsKokoro(
-                rig = rigAnime(Posture.Repos),
-                modifier = Modifier
-                    .align(PLACE_DE_KOKORO)
-                    .fillMaxHeight(TAILLE_KOKORO)
-                    .aspectRatio(LARGEUR_VUE / HAUTEUR_VUE),
-                palette = PALETTE_CLAIRE,
-            )
-            RoueDentee(onClic = onReglages, modifier = Modifier.align(Alignment.TopEnd))
-            if (accesPerdu) {
-                AvisAcces(
-                    onReglages = onReglages,
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .windowInsetsPadding(WindowInsets.statusBars)
-                        .padding(horizontal = 24.dp)
-                        .padding(top = SOUS_LA_ROUE),
-                )
-            }
-        }
-
-        Ecran.GAUCHE -> ContenuTherapie(
+        Ecran.THERAPIE -> ContenuTherapie(
+            accesPerdu = accesPerdu,
+            onReglages = onReglages,
             onOuvrir = { etape ->
                 when (val ouverture = etape.ouverture) {
                     is Ouverture.Ecran -> onFonction(ouverture.fonction)
@@ -267,9 +231,9 @@ private fun ContenuEcran(
             },
         )
 
-        Ecran.DROITE -> ContenuDocumentation()
-        Ecran.HAUT -> ContenuBilan()
-        Ecran.BAS -> ContenuCriseDuMonde(
+        Ecran.DOCUMENTATION -> ContenuDocumentation()
+        Ecran.BILAN -> ContenuBilan()
+        Ecran.CRISE -> ContenuCriseDuMonde(
             contactNom = contactNom,
             envoiEnCours = envoiEnCours,
             onFonction = onFonction,
@@ -298,80 +262,55 @@ private fun EtapeOuverte(etape: Etape?, visible: Boolean, onFermer: () -> Unit) 
 }
 
 /**
- * Le geste : un axe verrouillé au premier mouvement, puis la caméra collée au doigt.
+ * Le geste : la caméra collée au doigt, **sur le seul axe horizontal**.
  *
- * ⭐ **L'axe se verrouille et ne se relâche plus jusqu'au lever du doigt.** Sans ce verrou, un geste
- * un peu oblique — et ils le sont tous — ferait hésiter le monde entre deux écrans pendant qu'on le
- * traverse. Ce serait le seul endroit du dispositif où le résultat d'un geste dépendrait de sa
- * précision.
+ * ⭐ **Il n'y a plus d'axe à verrouiller** *(15/08/2026)*. Le monde n'écoute que le glissement
+ * horizontal, donc un mouvement vertical ne lui parvient jamais : il va au contenu, qui le prend
+ * pour défiler. **Deux gestes, deux destinataires, aucun arbitrage** — et plus aucun geste oblique
+ * dont le résultat dépendrait de sa précision.
  *
  * ⭐ **Le geste repart d'où la caméra est**, et non du centre de l'écran de destination : reprendre
  * le monde pendant qu'il se pose ne le fait donc jamais sauter. Un simple appui, lui, ne déclenche
  * rien du tout — il n'y a de geste qu'à partir du seuil de glissement d'Android.
  */
 private suspend fun PointerInputScope.suivreLeDoigt(
-    taille: IntSize,
-    ecranCourant: () -> Ecran,
-    vueCourante: () -> Offset,
+    largeur: Int,
+    positionCourante: () -> Int,
+    vueCourante: () -> Float,
     onSaisie: () -> Unit,
-    onGlisse: (Offset) -> Unit,
-    onLever: (Ecran, Axe, Offset) -> Unit,
+    onGlisse: (Float) -> Unit,
+    onLever: (Int, Float) -> Unit,
 ) {
-    var axe: Axe? = null
-    var depuis = Ecran.CENTRE
-    var ancre = Offset.Zero
-    var cumul = Offset.Zero
+    var depuis = 0
+    var ancre = 0f
+    var cumul = 0f
     val suivi = VelocityTracker()
 
-    detectDragGestures(
+    detectHorizontalDragGestures(
         onDragStart = {
             onSaisie()
-            axe = null
-            depuis = ecranCourant()
+            depuis = positionCourante()
             ancre = vueCourante()
-            cumul = Offset.Zero
+            cumul = 0f
             suivi.resetTracking()
         },
-        onDragEnd = {
-            val verrou = axe ?: Axe.HORIZONTAL
-            onLever(depuis, verrou, elanDe(suivi, taille, verrou))
-        },
-        onDragCancel = { onLever(depuis, axe ?: Axe.HORIZONTAL, Offset.Zero) },
-        onDrag = { changement, ecart ->
+        onDragEnd = { onLever(depuis, elanDe(suivi, largeur)) },
+        onDragCancel = { onLever(depuis, 0f) },
+        onHorizontalDrag = { changement, ecart ->
             suivi.addPointerInputChange(changement)
             changement.consume()
             cumul += ecart
 
-            val verrou = axe ?: axeDe(ecart).also { axe = it }
-            val brut = when (verrou) {
-                Axe.HORIZONTAL -> Offset(ancre.x - cumul.x / taille.width, ancre.y)
-                Axe.VERTICAL -> Offset(ancre.x, ancre.y - cumul.y / taille.height)
-            }
-
-            onGlisse(bornerCamera(brut, depuis, verrou))
+            onGlisse(ancre - cumul / largeur)
         },
     )
 }
 
-private fun axeDe(ecart: Offset): Axe =
-    if (abs(ecart.x) >= abs(ecart.y)) Axe.HORIZONTAL else Axe.VERTICAL
-
 /**
- * La vitesse du doigt, retournée en vitesse de caméra — en écrans par seconde, sur le seul axe
- * verrouillé.
+ * La vitesse du doigt, retournée en vitesse de caméra — en écrans par seconde.
  *
  * Le signe s'inverse : pousser le doigt vers la droite emmène la caméra vers la gauche. Le plafond
  * n'est pas un confort, c'est ce qui garantit que le ressort ne dépasse pas visiblement sa cible.
  */
-private fun elanDe(suivi: VelocityTracker, taille: IntSize, axe: Axe): Offset {
-    val mesure = suivi.calculateVelocity()
-    val ecrans = when (axe) {
-        Axe.HORIZONTAL -> Offset(-mesure.x / taille.width, 0f)
-        Axe.VERTICAL -> Offset(0f, -mesure.y / taille.height)
-    }
-
-    return Offset(
-        x = ecrans.x.coerceIn(-ELAN_MAX, ELAN_MAX),
-        y = ecrans.y.coerceIn(-ELAN_MAX, ELAN_MAX),
-    )
-}
+private fun elanDe(suivi: VelocityTracker, largeur: Int): Float =
+    (-suivi.calculateVelocity().x / largeur).coerceIn(-ELAN_MAX, ELAN_MAX)

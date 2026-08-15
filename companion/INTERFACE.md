@@ -1,6 +1,6 @@
 # Kokoro — l'interface du monde
 
-**v2 — 14/08/2026.** Le monde devient **l'interface principale** de l'app, et jusqu'à l'écran de veille.
+**v2 — 14/08/2026**, *rangement refait le 15/08/2026 (§7.7)*. Le monde devient **l'interface principale** de l'app, et jusqu'à l'écran de veille.
 
 > 🔄 **v2 — le thème change, et lui seul.** Le verre dépoli de la v1 est abandonné au profit de **panneaux extrudés** (§4), après maquette. **Le rangement, les points durs, les onze décisions et tout le contenu sont inchangés** — seule la peau est réécrite, plus D6 qui la nommait et P4/P5 qui n'existaient qu'à cause du flou.
 
@@ -10,13 +10,15 @@
 >
 > ⏳ **Ce qui reste ouvert** — les bornes des nouveautés (§6.1), l'essai du fond d'écran vivant (§6.3), la cadence de l'entraînement en solo (§6.4), et le comportement du personnage, renvoyé à son propre brainstorm.
 >
-> 🏗️ **Écrit en Compose le 15/08/2026** — la matière (§4.1, §4.2) et les cinq écrans (§3) ; détail en **§7**. **Deux points ouverts ont été tranchés par Xavier pour que ça puisse être codé** : les pancartes gardent leurs deux couleurs *(§6.5, option B)*, et la police arrondie est **Varela Round** *(§4.3)*.
+> 🏗️ **Écrit en Compose le 15/08/2026** — la matière (§4.1, §4.2) et les écrans (§3) ; détail en **§7**. **Deux points ouverts ont été tranchés par Xavier pour que ça puisse être codé** : les pancartes gardent leurs deux couleurs *(§6.5, option B)*, et la police arrondie est **Varela Round** *(§4.3)*.
 >
 > ✅ **Le même jour, les quatre surfaces déjà éprouvées y sont passées aussi** — crise, check-in, réglages *(§7.1)*, **à la demande de Xavier**. **Il n'y a plus deux thèmes**, et le mot-code part désormais d'un seul appui.
 >
 > ✅ **Puis une deuxième passe le même jour** *(§7.2)* : **la notification devient muette** — §6.2 est câblé, il ne restait plus qu'elle — **la croix remplace le bouton *Fermer* sur tous les panneaux**, **la phrase pour le soignant devient une porte indépendante**, et **les deux entrées de la crise affichent littéralement le même écran**.
 >
 > ⭐ **Et une troisième, après le premier essai sur le téléphone** *(§7.3)* : **la notification garde `CriseActivity`** — le repli écrit d'avance au §6.2, **emprunté parce que le monde demandait de déverrouiller** — et **elle se republie à l'ouverture du monde**, ce qu'aucun écran ne faisait plus depuis **D10**. ⭐ **Puis l'écran central apprend à dire qu'une porte est tombée** *(§7.4)* — **en toutes lettres, pas par une pastille.**
+>
+> 🔄 **Puis le rangement lui-même est refait, à la demande de Xavier** *(§7.7)* : **la croix de cinq écrans devient un anneau de quatre, entièrement horizontal et sans bout.** On arrive sur la **thérapie** ; **P1 est levé**, donc tout écran peut défiler ; **la crise reste à un seul geste de l'entrée**, désormais dans les deux sens. **D1 garde sa règle et change de forme ; D2, D3, D4 et D5 sont amendés.**
 
 ---
 
@@ -31,7 +33,7 @@
 | **Tension appliquée** | K3 ✅ | 4 repères externes enchaînés, minuteur, critères d'arrêt à un tap | 1 écran plein, guidé |
 | **Phrase pour le soignant** | K3 ✅ | Texte montrable en plein écran. ⭐ **Porte indépendante** *(§7.2)* — elle n'est plus rangée sous la tension appliquée | 1 écran plein |
 | **Check-in du jour** | K4 ✅ | 11 champs fermés, aucune saisie de texte, écrit `journal/` | 1 écran, questions enchaînées |
-| **Le monde** | — ✅ | 5 écrans en croix, décor 4 couches, plage de nuit | le contenant |
+| **Le monde** | — ✅ | **4 écrans en anneau horizontal, sans bout** *(§7.7)*, décor 4 couches, plage de nuit | le contenant |
 | **Le corps** | K7 ⏸️ | 6 expressions · 5 postures + `allonge` · respiration · désignation | posé dans le décor |
 | **Écran de contrôle** | support | Contact, autorisations, dossier SAF, plage de nuit, test d'alerte | liste qui défile |
 | **Atelier du corps** | support | Outil de mise au point du rig | liste qui défile |
@@ -75,8 +77,8 @@ Aucun score · aucune progression · aucun historique · aucun palier atteint ·
 
 | # | Le point | Ce qu'il impose |
 |---|---|---|
-| 🔴 **P1** | **Un écran du haut ou du bas ne peut pas contenir de liste qui défile verticalement** — le glissement vertical est déjà pris par la traversée du monde. Sur la gauche et la droite, le vertical est libre : la butée y est franche, donc le geste n'y sert à rien d'autre | **Les deux contenus longs vont à gauche et à droite. Le haut et le bas ne portent que ce qui tient en un écran.** C'est ce qui a décidé le rangement du §3 |
-| **P2** | Les gestes système de One UI mordent les bords : volet de notifications en haut, retour à l'accueil en bas | Un geste de traversée verticale part **du milieu de l'écran**. À mesurer sur l'appareil |
+| ✅ **P1** | **Un écran du haut ou du bas ne peut pas contenir de liste qui défile verticalement** — le glissement vertical était pris par la traversée du monde. C'est ce qui avait décidé le rangement en croix : les deux contenus longs à gauche et à droite, le haut et le bas réduits à ce qui tient en un écran | ✅ **Levé le 15/08/2026** *(§7.7)* : **il n'y a plus de haut ni de bas**, la traversée est entièrement horizontale, et **le glissement vertical est rendu au contenu**. 🔴 **Le point reste écrit parce qu'il explique la forme précédente** — et parce qu'il condamne d'avance toute réintroduction d'un écran au-dessus ou au-dessous |
+| ✅ **P2** | Les gestes système de One UI mordent les bords : volet de notifications en haut, retour à l'accueil en bas | ✅ **Sans objet depuis §7.7** : plus aucun geste de traversée ne part du haut ni du bas. 🔴 **Le point reste écrit** — il vaut pour tout geste vertical qu'on serait tenté de câbler un jour |
 | **P3** | Le décor ne porte jamais de texte ([`DECOR.md`](./DECOR.md) §7) | Le texte est sur une **surface posée sur le décor**, jamais peint dessus |
 | ✅ **P4** | ⭐ **Le flou ne doit jamais venir du système.** `Window.setBackgroundBlurRadius` dépend d'un réglage Android que l'économiseur de batterie coupe — l'apparence changerait parce qu'un réglage étranger a bougé, **exactement ce que la doctrine interdit au thème sombre** | ✅ **Sans objet depuis §4 : il n'y a plus de flou du tout.** 🔴 **Le point reste écrit parce qu'il juge d'avance toute réintroduction** — une surface qui floute retombe sous P4, et devra calculer son flou elle-même |
 | ✅ **P5** | ⭐ **La lisibilité ne doit jamais dépendre de ce qui est derrière.** Un texte posé sur un décor flouté passe du feuillage sombre au ciel clair en glissant | ✅ **Réglé par l'opacité** : les panneaux de §4 sont pleins, le décor passe **entre** eux et jamais dessous. 🔴 **Le point reste écrit parce qu'il interdit toute surface semi-transparente portant du texte** |
@@ -86,32 +88,27 @@ Aucun score · aucune progression · aucun historique · aucun palier atteint ·
 
 ---
 
-## 3. Le rangement — acté (D1, D2)
+## 3. Le rangement — **un anneau horizontal** *(D1, D2, refaits le 15/08/2026 — §7.7)*
 
 ```
-                 HAUT
-              ┌─────────┐
-              │  Bilan  │
-              └─────────┘
-┌──────────┐  ┌─────────┐  ┌───────────────┐
-│ Thérapie │  │ Kokoro  │  │ Documentation │
-└──────────┘  └─────────┘  └───────────────┘
-   GAUCHE       CENTRE          DROITE
-              ┌─────────┐
-              │  Crise  │
-              └─────────┘
-                  BAS
+  ← … ┌──────────┐ ┌───────────────┐ ┌────────┐ ┌───────┐ ┌──────────┐ … →
+      │ Thérapie │ │ Documentation │ │ Bilan  │ │ Crise │ │ Thérapie │
+      └──────────┘ └───────────────┘ └────────┘ └───────┘ └──────────┘
+         entrée                                              (le même)
 ```
+
+**Quatre écrans, une seule direction, aucun bout.** On arrive sur la **thérapie** ; en glissant vers la gauche on va vers la documentation, le bilan, la crise, **puis la thérapie de nouveau** — 🔴 **le décor continue dans le même sens, il ne revient pas en arrière et ne saute pas.** ⭐ **La crise est donc aussi la voisine de droite de l'entrée** : elle est à **un seul geste** de l'ouverture de l'app, dans le sens qu'on veut.
 
 **Une rubrique par écran, celles du contrat §8.3.** Un contenu ne change donc jamais de place — la rubrique est écrite dans le JSON et ne bouge pas, alors que `quand` bouge tous les jours. L'interface n'arbitre rien : toute étape publiée sait déjà où elle va.
 
 | Écran | Contenu | Pourquoi là |
 |---|---|---|
-| **CENTRE** | **Kokoro qui respire** · la **roue dentée** en haut à droite (D4) · **les nouveautés**, quand il y en a (D5) | C'est le lieu où l'on revient |
-| **GAUCHE** | **Thérapie** — les prochaines actions de la thérapie en cours, groupées par *aujourd'hui* / *quand j'en ai besoin* / *sans date* | La liste la plus longue : elle défile, donc axe horizontal (**P1**) |
-| **DROITE** | **Documentation** — la bibliothèque, une fiche par ligne | Deuxième liste appelée à grandir. Même motif |
-| **HAUT** | **Bilan** — les questionnaires à passer, les comptes rendus écrits en séance | Rare, court, tient en un écran. Aucun chiffre, aucune courbe |
-| **BAS** | **Crise** — mot-code · tension appliquée · phrase pour le soignant | Trois grands boutons, **jamais de défilement** — c'est une exigence en soi, pas une conséquence |
+| **Thérapie** *(entrée)* | Les prochaines actions de la thérapie en cours, groupées par *aujourd'hui* / *quand j'en ai besoin* / *sans date* · **Kokoro** en tête de liste · la **roue dentée** sur la bande de titre (D4) · **les nouveautés**, quand il y en a (D5) | C'est là qu'on arrive, donc c'est là que vit ce qui n'appartient à aucune rubrique |
+| **Documentation** | La bibliothèque, une fiche par ligne | Deuxième liste appelée à grandir |
+| **Bilan** | Les questionnaires à passer, les comptes rendus écrits en séance. Aucun chiffre, aucune courbe | ⭐ **Il défile maintenant comme la documentation** — il ne le pouvait pas quand il était en haut |
+| **Crise** | Mot-code · tension appliquée · phrase pour le soignant | Trois grands boutons, **jamais de défilement** — 🔴 **c'est une exigence en soi, et elle survit à la levée de P1** |
+
+> ⏳ **La place de Kokoro est provisoire.** Il occupe le haut de la liste de la thérapie et s'en va avec elle quand on défile. **Comment il habite vraiment l'écran se décide à part** — ça touche au corps, pas au rangement.
 
 ### 3.1 À quoi ressemble un écran de bord
 
@@ -162,7 +159,7 @@ Aucun score · aucune progression · aucun historique · aucun palier atteint ·
 - **Les sous-titres de `quand` sont des pancartes** pleines, texte blanc gravé.
 - **Une carte est un panneau**, dans la couleur neutre du fond. **Toutes les cartes sont identiques** — aucune n'est plus grande, plus vive ni marquée.
 - **Un bouton est le même panneau**, plein quand il agit *(menthe, azur, lavande)*, neutre quand il ferme.
-- **Les ornements** — étincelles, cœurs, rivets — sont **du décor pur**. 🔴 **Aucun n'est jamais porteur d'information**, et aucun ne se pose sur une carte de la liste : ils vivent sur les bandes de titre, les états vides et l'écran central.
+- **Les ornements** — étincelles, cœurs, rivets — sont **du décor pur**. 🔴 **Aucun n'est jamais porteur d'information**, et aucun ne se pose sur une carte de la liste : ils vivent sur les bandes de titre, les états vides et autour de Kokoro.
 
 ### 4.3 Les règles qui ne bougent pas
 
@@ -195,11 +192,11 @@ Aucun score · aucune progression · aucun historique · aucun palier atteint ·
 
 | # | Décision | Ce qui est acté |
 |---|---|---|
-| **D1** | Le rangement | ✅ **Une rubrique par écran** (§3) |
-| **D2** | Le bord de la crise | ✅ **BAS** |
-| **D3** | Kokoro suit-il ? | ⏭️ **Il suivra l'interface — hors sujet ici, renvoyé à son propre brainstorm.** En attendant il reste au centre |
-| **D4** | L'écran de contrôle | ✅ **Une roue dentée en haut à droite de l'écran central.** ⚠️ **Exception assumée à « aucune icône seule »** : c'est le seul pictogramme universel du lot, et le centre n'a pas de place pour un mot. 🔴 **Jamais de pastille dessus** — ⭐ **réaffirmé le 15/08/2026 par Xavier**, à qui la question s'est posée en vrai *(§7.4)* : **un défaut se dit en toutes lettres sur l'écran central**, il ne se signale pas par un point |
-| **D5** | Les nouveautés | ✅ **Sur l'écran central.** Bornes au §6.1 |
+| **D1** | Le rangement | ✅ **Une rubrique par écran** (§3). 🔄 **La forme a changé le 15/08/2026** — la croix est devenue un **anneau horizontal** *(§7.7)* — **la règle, non** : c'est toujours une rubrique par écran, et un contenu ne change jamais de place |
+| **D2** | La place de la crise | 🔄 **Dernière de l'anneau** *(15/08/2026, §7.7)* — c'était **BAS**. ⭐ **La propriété qu'on cherchait est conservée et même renforcée** : elle reste **à un seul geste de l'entrée**, et maintenant dans les deux sens |
+| **D3** | Kokoro suit-il ? | ⏭️ **Il suivra l'interface — hors sujet ici, renvoyé à son propre brainstorm.** ⏳ **En attendant il est en tête de la liste de la thérapie** *(§7.7)* — l'écran central où il se tenait n'existe plus |
+| **D4** | L'écran de contrôle | ✅ **Une roue dentée**, 🔄 **désormais sur la bande de titre de l'écran d'entrée** *(15/08/2026, §7.7)* — c'était le coin haut droit de l'écran central. ⚠️ **Exception assumée à « aucune icône seule »** : c'est le seul pictogramme universel du lot, et la bande n'a pas la place d'un mot de plus. 🔴 **Jamais de pastille dessus** — ⭐ **réaffirmé le 15/08/2026 par Xavier**, à qui la question s'est posée en vrai *(§7.4)* : **un défaut se dit en toutes lettres sur l'écran d'entrée**, il ne se signale pas par un point |
+| **D5** | Les nouveautés | ✅ **Sur l'écran d'entrée — la thérapie** *(15/08/2026)*. Bornes au §6.1 |
 | **D6** | Le thème | ✅ **Panneaux extrudés, registre du GUI de jeu kawaii** (§4). ⚠️ **Corrige la décision du matin** : le verre dépoli avait été retenu, puis abandonné après maquette le même jour. **Le verre est archivé, il ne revient pas par morceaux** |
 | **D7** | L'écran de crise | ✅ **Adapté à la matière, structure inchangée** (§4.5) |
 | **D8** | L'overlay de veille | ✅ **À essayer — fond d'écran vivant** (§6.3) |
@@ -213,9 +210,9 @@ Aucun score · aucune progression · aucun historique · aucun palier atteint ·
 
 ### 6.1 Les bornes des nouveautés *(D5, à confirmer)*
 
-L'écran central est le seul qui soit vide par doctrine. Y poser les nouveautés est tenable **à quatre conditions**, sans quoi il devient un tableau de bord :
+🔄 **L'emplacement a changé le 15/08/2026** *(§7.7)* : l'écran central n'existe plus, **c'est la tête de l'écran d'entrée — la thérapie**. **Les quatre conditions, elles, ne changent pas d'une virgule**, sans quoi cet emplacement devient un tableau de bord :
 
-1. **Rien quand il n'y a rien.** Par défaut le centre est vide. C'est l'état des six jours sur sept.
+1. **Rien quand il n'y a rien.** Par défaut il n'y a **rien au-dessus de la liste**. C'est l'état des six jours sur sept.
 2. **Une carte, une phrase, un fait** : « Ta séance de dimanche a ajouté trois choses. » Pas de liste, pas de détail, pas de pastille.
 3. **Elle disparaît** quand les écrans concernés ont été ouverts. Elle ne revient pas, elle ne compte pas les jours.
 4. 🔴 **Elle n'apparaît qu'après une publication** — donc une fois par semaine, à la clôture d'une séance, une chose que Xavier a lui-même décidée. **Ce n'est pas Kokoro qui vient vers lui : c'est le programme qui a changé parce qu'ils l'ont changé ensemble.**
@@ -302,7 +299,7 @@ L'écran central est le seul qui soit vide par doctrine. Y poser les nouveautés
 
 ## 7. 🏗️ Où en est l'implémentation — 15/08/2026
 
-**Écrit, compilé, 78 tests au vert. ⏳ Pas encore posé sur le téléphone** *(aucun appareil branché au moment de l'écriture)* : **rien de ce qui suit n'est vérifié à l'œil.**
+**Écrit, compilé, tests au vert. ⏳ Pas encore posé sur le téléphone** *(aucun appareil branché au moment de l'écriture)* : **rien de ce qui suit n'est vérifié à l'œil.**
 
 | | Où | État |
 |---|---|---|
@@ -311,8 +308,8 @@ L'écran central est le seul qui soit vide par doctrine. Y poser les nouveautés
 | **Les ornements** — étincelle, cœur, rivet | `ui/Ornements.kt` | ✅ Décor pur, jamais sur une carte de liste |
 | **La police** (§4.3) | `res/font/varela_round.ttf` · `ui/Typographie.kt` | ✅ Embarquée. ⭐ **Interligne centré** — sans quoi un libellé court reste collé en haut d'un bouton haut |
 | **Le thème** jour / nuit | `ui/ThemeMonde.kt` | ✅ **Le thème de tout ce que Xavier voit.** L'ancien ne sert plus qu'aux deux outils de mise au point |
-| **Les cinq écrans** (§3) | `monde/Bords.kt` | ✅ Ruban fixe (D11), gauche et droite défilent, haut et bas non (**P1**), roue dentée (D4) |
-| **L'avis de porte fermée** (§6.1, §7.4) | `monde/Bords.kt` | ✅ Sur l'écran central, **et seulement quand la notification d'accès n'a pas pu s'afficher** |
+| **Les quatre écrans** (§3) | `monde/Bords.kt` | ✅ Ruban fixe (D11), **tous défilent sauf la crise** *(§7.7)*, roue dentée sur la bande d'entrée (D4) |
+| **L'avis de porte fermée** (§6.1, §7.4) | `monde/Bords.kt` | ✅ En tête de l'écran d'entrée, **et seulement quand la notification d'accès n'a pas pu s'afficher** |
 | **Une étape ouverte** (§3.1) | `monde/Etapes.kt` · `monde/MondeKokoro.kt` | ✅ Plein écran, traversée coupée, fermeture **à la croix ou au *retour* du téléphone** — jamais au geste |
 | **L'icône du lanceur** (D10) | `AndroidManifest.xml` · `mipmap-anydpi-v26/ic_lanceur.xml` | ✅ Ouvre le monde. ⭐ **C'est Kokoro qui y est depuis le 16/08/2026** *(§7.6)* — icône adaptative, couche monochrome, écran de démarrage et icône de notification tirés du même logo |
 | **La notification muette** (D10, §6.2) | `crise/AccesCrise.kt` | ✅ Icône et mot *Kokoro*. Elle ouvre **`CriseActivity`** *(§7.3)*, republiée à chaque ouverture du monde |
@@ -396,7 +393,7 @@ L'écran central est le seul qui soit vide par doctrine. Y poser les nouveautés
 | 🔴 **Le rouge n'est pas dans la palette** | Ce n'est pas un goût : c'est le registre de l'alarme, évacué partout (§4.5, retrait des numéros d'urgence). L'admettre ici aurait obligé à décider **où le rouge a le droit de réapparaître ensuite**, et à l'écrire |
 | ⭐ **Et surtout : une pastille est un sous-entendu** | Elle dit *va voir* sans dire **quoi**. 🔴 **L'invariant est explicite, littéral, sans sous-entendu ni attente implicite** — c'est celui-là qui a tranché, et il ne vient pas d'une règle d'interface |
 
-**Ce qui est fait :** une carte sur **l'écran central**, l'emplacement que §6.1 réserve déjà à *une carte, une phrase, un fait*. Elle porte le fait — *la notification d'accès n'est plus affichée* — **ce qu'il coûte** — *l'écran de crise n'est plus atteignable depuis l'écran verrouillé* — et **le geste**, un bouton vers les réglages.
+**Ce qui est fait :** une carte sur **l'écran central** *(⭐ déplacée en tête de l'écran d'entrée le même jour — §7.7)*, l'emplacement que §6.1 réserve déjà à *une carte, une phrase, un fait*. Elle porte le fait — *la notification d'accès n'est plus affichée* — **ce qu'il coûte** — *l'écran de crise n'est plus atteignable depuis l'écran verrouillé* — et **le geste**, un bouton vers les réglages.
 
 ⭐ **Ce n'est pas une relance :** elle ne compte pas les jours, elle n'insiste pas, elle ne revient pas — **elle constate, et elle s'en va d'elle-même dès que la porte est rouverte.** ⭐ **Et ce n'est pas Kokoro qui vient vers Xavier** : elle est sur un écran qu'il a ouvert, pas une notification.
 
@@ -468,3 +465,36 @@ npm run companion:fondu -- notification-fond.png \
 **Tout est fabriqué par [`companion/scripts/companion-icone.ts`](scripts/companion-icone.ts)** — `npm run companion:icone` — **en cinq densités**, à partir du seul JPEG. 🔴 **Aucune image d'icône ne se retouche à la main** : le logo change, on relance le script.
 
 > ⚠️ **Ce qui n'a pas bougé, et n'avait pas à bouger :** l'illustration de fond de la notification *(§7.5)*, qui vient d'une autre image et raconte une autre chose ; le corps animé du personnage *(`CORPS.md`)*, qui ne connaît toujours ni main ni clin d'œil ; et **aucun écran de l'app n'affiche le logo** — les deux seules icônes seules restent la roue dentée **(D4)** et la croix *(§7.2)*.
+
+---
+
+### 7.7 🔄 La croix devient un anneau horizontal — 15/08/2026
+
+**Demande de Xavier**, en cinq points : *plus de haut ni de bas · le parallaxe devient entièrement horizontal, ce qui rend le défilement vertical à tous les écrans · la navigation horizontale est infinie — au dernier écran, glisser encore donne le premier · **et ça continue le parallaxe, ce n'est pas un retour au premier écran** · on arrive sur la thérapie, avec Kokoro quelque part.*
+
+**Ordre acté : Thérapie → Documentation → Bilan → Crise → Thérapie…** ⭐ **Ce que ça donne gratuitement : la crise est aussi le voisin de gauche de l'entrée**, donc elle reste à **un seul geste** de l'ouverture de l'app — la propriété que D2 était allée chercher en la mettant en bas, obtenue cette fois **dans les deux sens**.
+
+#### Ce que la forme change, point par point
+
+| | |
+|---|---|
+| ✅ **P1 est levé** | Le glissement vertical n'appartient plus au monde : **il est rendu au contenu**. Le bilan défile désormais comme la documentation, et **plus aucun contenu n'est logé ailleurs que là où il a du sens** |
+| ⭐ **Il n'y a plus d'axe à verrouiller** | Le monde n'écoute que le glissement **horizontal** ; un mouvement vertical ne lui parvient jamais et va à la liste. **Deux gestes, deux destinataires, aucun arbitrage** — et plus aucun geste oblique dont le résultat dépendrait de sa précision |
+| 🔴 **La position ne se replie jamais** | La caméra est un nombre qui court **sans borne**, et l'écran montré est sa position **modulo quatre**. Replier la position au passage du dernier écran remettrait le décor à zéro : **c'est exactement le saut que l'anneau existe pour éviter** |
+| ⭐ **Quatre positions peintes, quatre écrans distincts** | On peint l'écran à l'image, son voisin, et une marge de chaque côté — soit exactement un exemplaire de chacun. **Aucun écran n'est monté deux fois**, donc l'état de chacun *(le défilement d'une liste, par exemple)* survit aux tours : ce n'est jamais une copie qui revient, c'est le même |
+| 🔴 **Le décor perd son débattement vertical** | Il disait la profondeur quand la traversée était une croix. **La caméra n'a plus de composante verticale** — un décor qui bougerait avec une liste qui défile lui donnerait une profondeur qu'il n'a pas. La répétition en miroir, elle, ne change pas : c'est elle qui rend l'anneau gratuit, **pour le décor, revenir sur le premier écran n'est qu'un écran de plus dans le même sens** |
+| ⭐ **La butée franche disparaît sans rien laisser derrière** | Elle existait pour ne pas avoir d'élastique aux bords du monde. **Il n'y a plus de bord** : rien ne part et ne se rétracte, rien ne demande à être interprété |
+
+#### Ce qui a dû déménager
+
+L'écran central n'existe plus, et il portait trois choses. **Toutes les trois vont sur l'écran d'entrée — la thérapie.**
+
+| | Où | Pourquoi là |
+|---|---|---|
+| **Kokoro** | ⏳ **En tête de la liste**, et il s'en va avec elle quand on défile | **Provisoire, et dit comme tel.** Comment il habite vraiment l'écran touche au corps, pas au rangement — ça se décide à part |
+| **La roue dentée** *(D4)* | **Sur la bande de titre**, à la place du rivet de droite — exactement où la croix se pose sur les panneaux *(§7.2)* | 🔴 **Le rivet de droite est la seule place où un bouton puisse paraître, et il n'en tient qu'un** : une bande porte **soit** la croix, **soit** la roue dentée, jamais les deux |
+| **L'avis de porte fermée** *(§7.4)* | **En tête de l'écran d'entrée**, au-dessus de Kokoro | Il ne paraît que sur défaut, et il disparaît de lui-même quand le défaut est réparé. **Toujours une phrase, jamais une pastille** |
+
+> ⭐ **La crise, elle, ne défile toujours pas** — 🔴 **et c'est une exigence propre, pas une conséquence de P1.** En crise, une liste qui bouge sous le doigt est une chose de plus à maîtriser. **La levée du point dur ne rouvre pas cette question-là.**
+
+> ⚠️ **Ce qui n'a pas bougé :** le seuil de bascule et l'élan *(inchangés à 0,18 écran et 0,7 écran/s)* · le ressort qui pose la caméra à la vitesse du doigt · le fait qu'**on ne saute jamais deux écrans**, si lancé soit le geste · les quatre couches du décor · la matière, les rubans, les cartes · **et toutes les portes de crise, qui n'ont pas été retouchées d'une ligne.**

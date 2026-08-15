@@ -28,14 +28,9 @@ data class Couche(
 )
 
 /**
- * ⭐ Le `decalage` des couches du bas n'est pas un réglage esthétique : il **paie d'avance la
- * montée**. Une couche ancrée en bas qui remonte de plus que son décalage découvre le ciel sous
- * elle, et il faut alors prolonger sa dernière tranche de pixels — un étirement visible. En posant
- * chaque couche un peu plus bas que le bord, la montée reste dans ce qu'on a déjà donné.
- *
- * Le seuil se calcule : une couche remonte au plus `DEBATTEMENT_VERTICAL × profondeur` d'écran, soit
- * 0,052 pour la prairie et 0,078 pour le feuillage. Les deux décalages sont **au-dessus**, donc la
- * tranche prolongée ne sert jamais.
+ * 🔴 **Le `decalage` d'une couche ancrée en bas ne descend jamais sous zéro** : elle sortirait alors
+ * de la dalle par le haut de son propre bord, et découvrirait le ciel sous elle. En la posant un peu
+ * plus bas que le bord, son pied reste hors champ quoi qu'il arrive.
  *
  * ⭐ **La `largeur` est aussi l'échelle** : une tuile plus large agrandit ce qu'elle contient. La
  * prairie du fond est large (3,60) parce qu'elle doit se lire comme une plaine et pas comme une

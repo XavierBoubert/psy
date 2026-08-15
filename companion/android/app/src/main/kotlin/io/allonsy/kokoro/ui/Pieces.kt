@@ -59,6 +59,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import io.allonsy.kokoro.R
 import kotlinx.coroutines.delay
+import kotlin.math.cos
+import kotlin.math.sin
 
 /**
  * Les pièces du thème — **le jeu de composables maison** annoncé par `companion/INTERFACE.md` §4.4.
@@ -170,7 +172,7 @@ fun Carte(
  * Un bouton — **pleine largeur, un par ligne, libellé en toutes lettres** (§4.3).
  *
  * `couleur` **plein** quand il agit, `null` quand il ferme. Aucune icône seule : la seule du
- * dispositif est la roue dentée de l'écran central (D4), et elle est justifiée à part.
+ * dispositif est la roue dentée de la bande d'entrée (D4), et elle est justifiée à part.
  *
  * ⭐ **Le libellé est centré dans la hauteur du panneau.** Il l'est par [Arrangement.Center] et par
  * l'interligne centré de [TypoKokoro] : sans les deux, un texte court reste collé en haut d'un
@@ -292,10 +294,14 @@ fun Ruban(texte: String, couleur: Teinte, modifier: Modifier = Modifier) {
  * d'état et la bande aurait l'air posée de travers. Le décor passe **sous** elle, comme partout —
  * jamais à travers (**P3**, **P5**).
  *
- * @param onFermer quand il est donné, **le rivet de droite laisse la place à la croix** — c'est la
- *   seule place de la fermeture, et elle est la même sur tous les panneaux *(15/08/2026)*. Le ruban
- *   garde alors la réserve des deux côtés : il reste centré, et un titre long se replie au lieu de
- *   passer sous la croix.
+ * 🔴 **Le rivet de droite est la seule place où un bouton puisse paraître**, et il n'en tient qu'un.
+ * Une bande porte donc **soit** la croix qui la ferme, **soit** la roue dentée — jamais les deux, et
+ * jamais ailleurs. Le ruban garde alors la réserve **des deux côtés** : il reste centré, et un titre
+ * long se replie au lieu de passer dessous.
+ *
+ * @param onFermer la croix — c'est la seule place de la fermeture, et elle est la même sur tous les
+ *   panneaux *(15/08/2026)*.
+ * @param onReglages la roue dentée — **elle ne paraît que sur l'écran d'entrée du monde** (**D4**).
  */
 @Composable
 fun BandeTitre(
@@ -303,8 +309,10 @@ fun BandeTitre(
     couleur: Teinte,
     modifier: Modifier = Modifier,
     onFermer: (() -> Unit)? = null,
+    onReglages: (() -> Unit)? = null,
 ) {
     val palette = LocalPaletteKokoro.current
+    val reserve = if (onFermer == null && onReglages == null) 0.dp else RESERVE_CROIX
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -317,12 +325,14 @@ fun BandeTitre(
         Ruban(
             texte = titre,
             couleur = couleur,
-            modifier = Modifier.padding(horizontal = if (onFermer == null) 0.dp else RESERVE_CROIX),
+            modifier = Modifier.padding(horizontal = reserve),
         )
         Rivet(Modifier.align(Alignment.CenterStart))
-        when (onFermer) {
-            null -> Rivet(Modifier.align(Alignment.CenterEnd))
-            else -> Croix(onFermer = onFermer, modifier = Modifier.align(Alignment.CenterEnd))
+        val fin = Modifier.align(Alignment.CenterEnd)
+        when {
+            onFermer != null -> Croix(onFermer = onFermer, modifier = fin)
+            onReglages != null -> RoueDentee(onClic = onReglages, modifier = fin)
+            else -> Rivet(fin)
         }
     }
 }
@@ -377,6 +387,59 @@ private val TAILLE_CROIX = 44.dp
 
 /** Ce que le ruban laisse **des deux côtés** pour que la croix ne le morde pas. */
 private val RESERVE_CROIX = TAILLE_CROIX + 4.dp
+
+/**
+ * La roue dentée — **l'écran de contrôle** (**D4**), à la place de la croix et sur la seule bande de
+ * l'écran d'entrée.
+ *
+ * ⚠️ **Première exception assumée à « aucune icône seule »**, avant la croix : c'est le seul
+ * pictogramme universel du lot, et la bande de titre n'a pas la place d'un mot de plus.
+ *
+ * 🔴 **Jamais de pastille dessus** — rien n'y compte, rien n'y attend. Quand la notification d'accès
+ * tombe, **c'est l'écran d'entrée qui le dit en toutes lettres** (`AvisAcces`) : un point coloré
+ * dirait *va voir* sans dire quoi, et le dispositif ne fait aucun sous-entendu.
+ */
+@Composable
+fun RoueDentee(onClic: () -> Unit, modifier: Modifier = Modifier) {
+    val palette = LocalPaletteKokoro.current
+    val interactions = remember { MutableInteractionSource() }
+    val nom = stringResource(R.string.monde_reglages)
+    Box(
+        modifier = modifier
+            .semantics { contentDescription = nom }
+            .clickable(interactionSource = interactions, indication = null, onClick = onClic)
+            .matiere(
+                palette = palette,
+                rayon = 999.dp,
+                epaisseur = 5.dp,
+                epaisseurReflet = 3.dp,
+                epaisseurCreux = 0.dp,
+            )
+            .padding(bottom = 5.dp)
+            .size(TAILLE_CROIX),
+        contentAlignment = Alignment.Center,
+    ) {
+        Canvas(Modifier.size(22.dp)) { rouage(palette.contour, 2.4.dp.toPx()) }
+    }
+}
+
+/** Un moyeu et huit rayons — le dessin de la maquette, tracé au trait. */
+private fun DrawScope.rouage(couleur: Color, trait: Float) {
+    val centre = Offset(size.width / 2f, size.height / 2f)
+    val moyen = size.minDimension / 2f
+    drawCircle(couleur, radius = moyen * 0.27f, center = centre, style = Stroke(width = trait))
+    repeat(8) { rang ->
+        val angle = rang * Math.PI / 4.0
+        val direction = Offset(cos(angle).toFloat(), sin(angle).toFloat())
+        drawLine(
+            color = couleur,
+            start = centre + direction * (moyen * 0.55f),
+            end = centre + direction * moyen,
+            strokeWidth = trait,
+            cap = StrokeCap.Round,
+        )
+    }
+}
 
 /**
  * L'état vide d'un écran — **une plaque creuse**, la recette retournée : le dégradé remonte, le
@@ -446,13 +509,12 @@ fun FondKokoro(modifier: Modifier = Modifier, contenu: @Composable ColumnScope.(
  * Une page hors du monde : le fond, la bande de titre qui ne défile pas (**D11**), et le contenu
  * dessous.
  *
- * ⚠️ **Ici le défilement vertical est permis** — **P1** interdit la liste qui défile *dans un écran
- * du haut ou du bas du monde*, parce que le geste vertical y traverse le monde. Une page ouverte,
- * elle, ne traverse rien.
+ * ⭐ **Le défilement vertical y est libre, comme partout depuis que le monde est un anneau**
+ * *(15/08/2026)* : la traversée est horizontale, donc plus aucune surface n'a à renoncer à sa liste.
  *
  * @param defilant à `false`, la page tient dans l'écran et **le contenu se place au lieu de
- *   défiler** — c'est ce qui permet à une page ouverte de reprendre exactement la mise en place d'un
- *   écran de bord, qui ne défile jamais.
+ *   défiler** — c'est ce qui permet à une page ouverte de reprendre exactement la mise en place de
+ *   l'écran de crise, **qui ne défile jamais, et par exigence propre**.
  * @param onFermer la croix de la bande de titre. `null` pour une page dont on ne sort pas par là.
  */
 @Composable

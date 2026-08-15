@@ -1,10 +1,8 @@
 package io.allonsy.kokoro.monde
 
-import androidx.compose.ui.geometry.Offset
 import io.allonsy.kokoro.decor.Ancrage
 import io.allonsy.kokoro.decor.COUCHES
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -18,74 +16,78 @@ import org.junit.Test
 class EcranTest {
 
     @Test
-    fun `le centre mene aux quatre bords`() {
-        assertEquals(Ecran.GAUCHE, Ecran.CENTRE.versLe(Direction.VERS_LA_GAUCHE))
-        assertEquals(Ecran.DROITE, Ecran.CENTRE.versLe(Direction.VERS_LA_DROITE))
-        assertEquals(Ecran.HAUT, Ecran.CENTRE.versLe(Direction.VERS_LE_HAUT))
-        assertEquals(Ecran.BAS, Ecran.CENTRE.versLe(Direction.VERS_LE_BAS))
+    fun `l ordre des ecrans est celui de la traversee`() {
+        assertEquals(
+            listOf(Ecran.THERAPIE, Ecran.DOCUMENTATION, Ecran.BILAN, Ecran.CRISE),
+            Ecran.entries,
+        )
     }
 
+    /** ⭐ On arrive sur la thérapie, et la crise est sa voisine de gauche. */
     @Test
-    fun `depuis un bord, le centre est a un seul geste`() {
-        assertEquals(Ecran.CENTRE, Ecran.GAUCHE.versLe(Direction.VERS_LA_DROITE))
-        assertEquals(Ecran.CENTRE, Ecran.DROITE.versLe(Direction.VERS_LA_GAUCHE))
-        assertEquals(Ecran.CENTRE, Ecran.HAUT.versLe(Direction.VERS_LE_BAS))
-        assertEquals(Ecran.CENTRE, Ecran.BAS.versLe(Direction.VERS_LE_HAUT))
+    fun `la crise est a un seul geste de l entree`() {
+        assertEquals(Ecran.THERAPIE, ecranEn(0))
+        assertEquals(Ecran.CRISE, ecranEn(-1))
     }
 
-    /** 🔴 Le monde est une croix : aucune diagonale, aucun écran à deux gestes du centre. */
+    /** 🔴 Après le dernier écran vient le premier, dans le même sens. */
     @Test
-    fun `aucun bord ne mene a un autre bord`() {
-        val bords = listOf(Ecran.GAUCHE, Ecran.DROITE, Ecran.HAUT, Ecran.BAS)
+    fun `l anneau boucle dans les deux sens`() {
+        assertEquals(Ecran.THERAPIE, ecranEn(4))
+        assertEquals(Ecran.DOCUMENTATION, ecranEn(5))
+        assertEquals(Ecran.CRISE, ecranEn(-5))
+        assertEquals(Ecran.BILAN, ecranEn(-6))
+    }
 
-        bords.forEach { bord ->
-            Direction.entries
-                .filter { bord.versLe(it) != Ecran.CENTRE }
-                .forEach { assertNull("$bord vers $it", bord.versLe(it)) }
+    /** ⭐ Quatre positions peintes, quatre écrans distincts : aucun n'est monté deux fois. */
+    @Test
+    fun `les positions peintes couvrent chaque ecran une fois`() {
+        listOf(-9, -1, 0, 3, 7).forEach { ancre ->
+            val ecrans = positionsAutour(ancre).map(::ecranEn)
+
+            assertEquals("ancre $ancre", Ecran.entries.size, ecrans.toSet().size)
         }
     }
 
+    /** ⭐ Les deux positions à l'image sont l'ancre et sa voisine de droite, marge comprise. */
     @Test
-    fun `un geste sans voisin ne deplace rien`() {
-        val brut = Offset(Ecran.GAUCHE.camera.x - 0.7f, 0f)
+    fun `les positions peintes encadrent celles qui sont a l image`() {
+        val ancre = ancreDe(2.4f)
 
-        assertEquals(Ecran.GAUCHE.camera, bornerCamera(brut, Ecran.GAUCHE, Axe.HORIZONTAL))
+        assertEquals(2, ancre)
+        assertTrue(positionsAutour(ancre).containsAll(listOf(2, 3)))
+        assertEquals(listOf(1, 2, 3, 4), positionsAutour(ancre))
     }
 
     @Test
-    fun `un geste hors axe ne deplace rien`() {
-        val brut = Offset(Ecran.GAUCHE.camera.x, 0.6f)
-
-        assertEquals(Ecran.GAUCHE.camera, bornerCamera(brut, Ecran.GAUCHE, Axe.VERTICAL))
-    }
-
-    @Test
-    fun `la camera ne depasse jamais l ecran vise`() {
-        val brut = Offset(2.4f, 0f)
-
-        assertEquals(Ecran.DROITE.camera, bornerCamera(brut, Ecran.CENTRE, Axe.HORIZONTAL))
-    }
-
-    /** ⭐ Reprendre le monde en pleine traversée ne doit pas le faire sauter au premier contact. */
-    @Test
-    fun `la course d un bord garde le centre a portee`() {
-        assertEquals(0f..1f, course(Ecran.DROITE, Axe.HORIZONTAL))
-        assertEquals(-1f..1f, course(Ecran.CENTRE, Axe.HORIZONTAL))
-        assertEquals(0f..0f, course(Ecran.DROITE, Axe.VERTICAL))
+    fun `l ancre suit la camera meme en negatif`() {
+        assertEquals(-1, ancreDe(-0.2f))
+        assertEquals(-3, ancreDe(-2.6f))
+        assertEquals(5, ancreDe(5f))
     }
 
     @Test
     fun `en deca du seuil on revient d ou l on vient`() {
-        val court = Offset(SEUIL_BASCULE - 0.01f, 0f)
+        val court = SEUIL_BASCULE - 0.01f
 
-        assertEquals(Ecran.CENTRE, aterrissage(court, Offset.Zero, Ecran.CENTRE, Axe.HORIZONTAL))
+        assertEquals(0, aterrissage(court, 0f, 0))
     }
 
     @Test
     fun `au dela du seuil on bascule`() {
-        val franc = Offset(SEUIL_BASCULE + 0.01f, 0f)
+        val franc = SEUIL_BASCULE + 0.01f
 
-        assertEquals(Ecran.DROITE, aterrissage(franc, Offset.Zero, Ecran.CENTRE, Axe.HORIZONTAL))
+        assertEquals(1, aterrissage(franc, 0f, 0))
+        assertEquals(-1, aterrissage(-franc, 0f, 0))
+    }
+
+    /** 🔴 La traversée ne bute nulle part : le dernier écran mène au suivant, pas au premier. */
+    @Test
+    fun `la position ne se replie jamais`() {
+        val franc = SEUIL_BASCULE + 0.01f
+
+        assertEquals(4, aterrissage(3f + franc, 0f, 3))
+        assertEquals(Ecran.THERAPIE, ecranEn(4))
     }
 
     /**
@@ -94,26 +96,24 @@ class EcranTest {
      */
     @Test
     fun `un geste lance bascule meme s il est court`() {
-        val court = Offset(0.04f, 0f)
-        val lance = Offset(VITESSE_BASCULE + 0.1f, 0f)
-
-        assertEquals(Ecran.DROITE, aterrissage(court, lance, Ecran.CENTRE, Axe.HORIZONTAL))
+        assertEquals(1, aterrissage(0.04f, VITESSE_BASCULE + 0.1f, 0))
     }
 
     /** ⭐ Le doigt s'est ravisé avant de se lever : le dernier sens voulu est celui-là. */
     @Test
     fun `un elan qui repart en arriere annule la traversee`() {
-        val loin = Offset(0.6f, 0f)
-        val retour = Offset(-VITESSE_BASCULE - 0.1f, 0f)
+        assertEquals(0, aterrissage(0.6f, -VITESSE_BASCULE - 0.1f, 0))
+    }
 
-        assertEquals(Ecran.CENTRE, aterrissage(loin, retour, Ecran.CENTRE, Axe.HORIZONTAL))
+    /** ⭐ On ne saute jamais deux écrans, si lancé soit le geste. */
+    @Test
+    fun `un geste tres lance n avance que d un ecran`() {
+        assertEquals(1, aterrissage(0.9f, 6f, 0))
     }
 
     @Test
-    fun `un elan sans voisin ne mene nulle part`() {
-        val lance = Offset(-VITESSE_BASCULE - 1f, 0f)
-
-        assertEquals(Ecran.GAUCHE, aterrissage(Offset(-1.2f, 0f), lance, Ecran.GAUCHE, Axe.HORIZONTAL))
+    fun `sans ecart on ne bouge pas`() {
+        assertEquals(2, aterrissage(2f, 5f, 2))
     }
 
     @Test
@@ -140,5 +140,13 @@ class EcranTest {
         val ancrages = COUCHES.map { it.ancrage }
 
         assertEquals(listOf(Ancrage.HAUT, Ancrage.HAUT, Ancrage.BAS, Ancrage.BAS), ancrages)
+    }
+
+    /** 🔴 Un décalage négatif découvrirait le ciel sous une couche ancrée en bas. */
+    @Test
+    fun `aucune couche du bas ne decolle du bord`() {
+        COUCHES.filter { it.ancrage == Ancrage.BAS }.forEach {
+            assertTrue("décalage = ${it.decalage}", it.decalage >= 0f)
+        }
     }
 }

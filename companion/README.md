@@ -136,7 +136,7 @@ npm run companion:kokoro   # depuis la racine
 |---|---|
 | 🔴 [`PROGRAMME.md`](PROGRAMME.md) | **NORMATIF — le format du programme et de la bibliothèque.** Les six types d'étape, les rubriques, les interdits |
 | [`CORPS.md`](CORPS.md) | ⭐ **Le corps de Kokoro** — un petit robot kawaii en 2D. Six expressions, cinq postures, deux jeux fermés, aucun sourcil, panneau-visage qui s'éteint. **Le livrable est vectoriel : aucune image du personnage n'entre dans l'APK** |
-| [`DECOR.md`](DECOR.md) | ⭐ **Le monde** — cinq écrans en croix, décor peint en quatre couches en parallaxe, verrou portrait, passage en nuit sur plage horaire. 🔴 **Seule dérogation à « aucun bitmap » : quatre WebP** |
+| [`DECOR.md`](DECOR.md) | ⭐ **Le monde** — **quatre écrans en anneau horizontal, sans bout** *(`INTERFACE.md` §7.7)*, décor peint en quatre couches en parallaxe, verrou portrait, passage en nuit sur plage horaire. 🔴 **Seule dérogation à « aucun bitmap » : quatre WebP** |
 | [`INTERFACE.md`](INTERFACE.md) | Le rendu des étapes du programme et de la bibliothèque à l'écran |
 | [`android/`](android/README.md) | **Le code** — Kotlin + Compose, Galaxy S22 / One UI, sideloadée |
 | [`ressources/`](ressources/) | **Ce dont le compagnon a besoin pour exister** : `prompts/` *(recherche graphique)*, `retenus/` *(les planches qui font foi)*, `sorties/` *(non versionné)* |
