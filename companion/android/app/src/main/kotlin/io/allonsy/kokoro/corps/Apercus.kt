@@ -26,7 +26,7 @@ private fun ApercuReposSombre() {
     Vignette(RigKokoro.pose(Posture.Repos), PALETTE_SOMBRE, 200.dp)
 }
 
-@Preview(name = "Kokoro — les six expressions", widthDp = 720, heightDp = 140)
+@Preview(name = "Kokoro — le jeu des expressions", widthDp = 720, heightDp = 140)
 @Composable
 private fun ApercuExpressions() {
     Row(
@@ -37,7 +37,7 @@ private fun ApercuExpressions() {
     ) {
         Expression.entries.forEach { expression ->
             CorpsKokoro(
-                rig = RigKokoro(visage = Visage.de(expression), regard = expression.regardParDefaut),
+                rig = RigKokoro(visage = Visage.de(expression)),
                 modifier = Modifier.size(116.dp),
                 palette = PALETTE_CLAIRE,
             )
@@ -45,22 +45,56 @@ private fun ApercuExpressions() {
     }
 }
 
-@Preview(name = "Kokoro — les cinq postures", widthDp = 720, heightDp = 200)
+/** Le regard ne vient plus d'une expression : il se règle par-dessus, la même partout. */
+@Preview(name = "Kokoro — les trois regards", widthDp = 400, heightDp = 140)
 @Composable
-private fun ApercuPostures() {
+private fun ApercuRegards() {
     Row(
         modifier = Modifier
             .background(PALETTE_CLAIRE.fond)
             .padding(8.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
+        listOf(-REGARD_DESIGNATION, 0f, REGARD_DESIGNATION).forEach { regard ->
+            CorpsKokoro(
+                rig = RigKokoro(visage = Visage.de(Expression.SEREIN), regard = regard),
+                modifier = Modifier.size(116.dp),
+                palette = PALETTE_CLAIRE,
+            )
+        }
+    }
+}
+
+@Preview(name = "Kokoro — les postures de départ", widthDp = 720, heightDp = 200)
+@Composable
+private fun ApercuPostures() {
+    Planche(
         listOf(
             Posture.Repos,
             Posture.Present,
             Posture.Montre(Cote.GAUCHE),
             Posture.CoteACote,
             Posture.Retrait,
-        ).forEach { posture ->
+        ),
+    )
+}
+
+/** Les quatre postures immobiles. Le geste de `notes` ne se voit qu'à l'atelier — il est animé. */
+@Preview(name = "Kokoro — les postures immobiles", widthDp = 720, heightDp = 200)
+@Composable
+private fun ApercuPosturesImmobiles() {
+    Planche(listOf(Posture.Pensif, Posture.Lecture, Posture.Notes, Posture.Attente, Posture.Sommeil))
+}
+
+@Composable
+private fun Planche(postures: List<Posture>) {
+    Row(
+        modifier = Modifier
+            .background(PALETTE_CLAIRE.fond)
+            .padding(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        postures.forEach { posture ->
             CorpsKokoro(
                 rig = RigKokoro.pose(posture),
                 modifier = Modifier.size(140.dp),

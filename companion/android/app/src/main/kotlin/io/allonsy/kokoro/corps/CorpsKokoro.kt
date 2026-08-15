@@ -140,33 +140,35 @@ private fun DrawScope.dessinerPiece(piece: Piece, palette: PaletteCorps) {
  * sont dessinés l'un sur l'autre. Voir [MorphingVisage.kt][Contour].
  */
 private fun DrawScope.dessinerVisage(rig: RigKokoro, couleur: Color) {
-    val visage = rig.visage
-    val avancement = if (visage.stable) 1f else visage.progression.coerceIn(0f, 1f)
-    dessinerTrace(visage.depuis.oeil, visage.vers.oeil, avancement, OEIL_GAUCHE, rig.regard, couleur)
-    dessinerTrace(visage.depuis.oeil, visage.vers.oeil, avancement, OEIL_DROIT, rig.regard, couleur)
-    dessinerTrace(visage.depuis.bouche, visage.vers.bouche, avancement, BOUCHE, 0f, couleur)
+    val yeux = Offset(rig.regard, rig.abaissement)
+    dessinerTrace(rig.visage.oeil, OEIL_GAUCHE, yeux, couleur)
+    dessinerTrace(rig.visage.oeil, OEIL_DROIT, yeux, couleur)
+    dessinerTrace(rig.visage.bouche, BOUCHE, Offset.Zero, couleur)
 }
 
 /**
- * Une pièce du visage en cours de déformation.
+ * Une pièce du visage en cours de déformation. 🔴 **Les yeux et la bouche ont chacun la leur** : un
+ * clignement déforme les premiers sans toucher à la seconde.
  *
- * Les deux bouts et les formes qui ne changent pas — l'œil reste ovale de `neutre` à `attentif` —
+ * Les deux bouts et les formes qui ne changent pas — l'œil reste ovale de `serein` à `attentif` —
  * sont tracés depuis le dessin lui-même : la silhouette échantillonnée n'est qu'une approche, et
  * elle ne sert que pendant le mouvement.
  */
 private fun DrawScope.dessinerTrace(
-    depuis: Trace,
-    vers: Trace,
-    avancement: Float,
+    morphing: Morphing,
     ancre: Ancre,
-    decalage: Float,
+    decalage: Offset,
     couleur: Color,
 ) {
-    withTransform({ translate(ancre.x + decalage, ancre.y) }) {
+    val avancement = morphing.progression.coerceIn(0f, 1f)
+    withTransform({ translate(ancre.x + decalage.x, ancre.y + decalage.y) }) {
         when {
-            depuis == vers || avancement >= 1f -> dessinerForme(vers, couleur)
-            avancement <= 0f -> dessinerForme(depuis, couleur)
-            else -> drawPath(polygone(depuis.contour.vers(vers.contour, avancement)), couleur)
+            morphing.stable -> dessinerForme(morphing.vers, couleur)
+            avancement <= 0f -> dessinerForme(morphing.depuis, couleur)
+            else -> drawPath(
+                polygone(morphing.depuis.contour.vers(morphing.vers.contour, avancement)),
+                couleur,
+            )
         }
     }
 }

@@ -22,8 +22,13 @@ data class RigKokoro(
     /** Degrés depuis la pose dessinée, autour de [CENTRE_VENTRE]. Positif = le pied s'écarte. */
     val orbitePiedGauche: Float = 0f,
     val orbitePiedDroit: Float = 0f,
-    /** Décalage horizontal des deux yeux, du même côté. Négatif = vers la gauche de l'écran. */
+    /**
+     * Décalage horizontal des deux yeux, du même côté. Négatif = vers la gauche de l'écran.
+     * ⭐ **C'est un axe à part entière** : il ne se déduit d'aucune expression, il se règle.
+     */
     val regard: Float = 0f,
+    /** Le second axe du regard : positif = les yeux descendent vers ce qui est sous le personnage. */
+    val abaissement: Float = 0f,
     /** Translation de la racine, en unités de la vue — le vol. */
     val decalage: Offset = Offset.Zero,
     /** Rotation de la racine, en degrés, autour de [PIVOT_RACINE] — l'inclinaison en vol. */
@@ -62,6 +67,7 @@ data class RigKokoro(
                 ouvertureBrasGauche = ouvertureBrasGauche,
                 ouvertureBrasDroit = ouvertureBrasDroit,
                 regard = regard,
+                abaissement = abaissement,
                 echelle = echelle,
             )
         }

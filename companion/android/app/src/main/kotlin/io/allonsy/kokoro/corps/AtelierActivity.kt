@@ -54,6 +54,8 @@ private fun EcranAtelier() {
     var expressionForcee by remember { mutableStateOf<Expression?>(null) }
     var brasForces by remember { mutableStateOf<Float?>(null) }
     var piedsForces by remember { mutableStateOf(0f) }
+    var regardForce by remember { mutableStateOf<Float?>(null) }
+    var balayage by remember { mutableStateOf<Balayage?>(null) }
     var vol by remember { mutableStateOf(Vol.AUCUN) }
     var paletteClaire by remember { mutableStateOf(false) }
 
@@ -66,7 +68,10 @@ private fun EcranAtelier() {
         ouvertureBrasDroit = brasForces ?: ouvertureEnVol(reglage.ouvertureBrasDroit, vol),
         orbitePiedGauche = piedsForces,
         orbitePiedDroit = piedsForces,
-        regard = expressionForcee?.regardParDefaut ?: reglage.regard,
+        regard = regardForce ?: reglage.regard,
+        abaissement = reglage.abaissement,
+        balayage = balayage,
+        ecriture = if (brasForces == null) reglage.ecriture else null,
         echelle = reglage.echelle,
         vol = vol,
     )
@@ -112,6 +117,11 @@ private fun EcranAtelier() {
                     stringResource(R.string.corps_posture_montre_droite) to Posture.Montre(Cote.DROITE),
                     stringResource(R.string.corps_posture_cote_a_cote) to Posture.CoteACote,
                     stringResource(R.string.corps_posture_retrait) to Posture.Retrait,
+                    stringResource(R.string.corps_posture_pensif) to Posture.Pensif,
+                    stringResource(R.string.corps_posture_lecture) to Posture.Lecture,
+                    stringResource(R.string.corps_posture_notes) to Posture.Notes,
+                    stringResource(R.string.corps_posture_attente) to Posture.Attente,
+                    stringResource(R.string.corps_posture_sommeil) to Posture.Sommeil,
                 ),
                 selection = posture,
                 onChoix = { posture = it },
@@ -122,14 +132,40 @@ private fun EcranAtelier() {
                 options = listOf(
                     stringResource(R.string.corps_expression_posture) to null,
                     stringResource(R.string.corps_expression_neutre) to Expression.NEUTRE,
+                    stringResource(R.string.corps_expression_serein) to Expression.SEREIN,
                     stringResource(R.string.corps_expression_attentif) to Expression.ATTENTIF,
                     stringResource(R.string.corps_expression_chaleureux) to Expression.CHALEUREUX,
                     stringResource(R.string.corps_expression_clignement) to Expression.CLIGNEMENT,
                     stringResource(R.string.corps_expression_veille) to Expression.VEILLE,
-                    stringResource(R.string.corps_expression_de_cote) to Expression.DE_COTE,
                 ),
                 selection = expressionForcee,
                 onChoix = { expressionForcee = it },
+            )
+
+            Section(stringResource(R.string.corps_section_regard))
+            LigneChoix(
+                options = listOf(
+                    stringResource(R.string.corps_regard_posture) to null,
+                    stringResource(R.string.corps_regard_gauche) to -REGARD_DESIGNATION,
+                    stringResource(R.string.corps_regard_centre) to 0f,
+                    stringResource(R.string.corps_regard_droite) to REGARD_DESIGNATION,
+                ),
+                selection = regardForce,
+                onChoix = { regardForce = it },
+            )
+
+            Section(stringResource(R.string.corps_section_balayage))
+            LigneChoix(
+                options = listOf(
+                    stringResource(R.string.corps_balayage_aucun) to null,
+                    stringResource(R.string.corps_balayage_lecture) to Balayage(),
+                    stringResource(R.string.corps_balayage_large) to
+                        Balayage(amplitude = 2f * REGARD_LECTURE),
+                    stringResource(R.string.corps_balayage_lente) to
+                        Balayage(ligneMillis = 2 * BALAYAGE_LIGNE_MILLIS),
+                ),
+                selection = balayage,
+                onChoix = { balayage = it },
             )
 
             Section(stringResource(R.string.corps_section_bras))

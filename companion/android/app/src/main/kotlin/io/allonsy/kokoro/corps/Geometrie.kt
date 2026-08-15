@@ -324,17 +324,44 @@ val BOUCHE_TRAIT = Trace("bouche-trait", Forme.Segment(-DEMI_BOUCHE, 0f, DEMI_BO
 val BOUCHE_BARRE = Trace("bouche-barre", Forme.Segment(-7.3f, 0f, 7.3f, 0f))
 
 /**
+ * Les trois chiffres du sourire. Ils sont nommés parce que le semi-sourire s'en déduit : 🔴 **la
+ * moitié est une opération du code, pas une valeur recopiée** — deux jeux de chiffres indépendants
+ * dériveraient l'un de l'autre à la première retouche.
+ */
+private const val DEMI_SOURIRE = 7.6f
+private const val EXTREMITES_SOURIRE = -2.4f
+private const val CONTROLE_SOURIRE = 4.6f
+
+/**
  * Le sourire, et c'est le seul arc de bouche qui existe : **les commissures montent, le milieu
  * descend.** Une bouche aux commissures tombantes n'est pas interdite par discipline — elle n'est
  * pas dessinée (§3), et `CorpsInvariantsTest` mesure le milieu de l'arc pour s'en assurer.
  */
-val BOUCHE_ARC = Trace("bouche-arc", arcSymetrique(7.6f, extremites = -2.4f, controle = 4.6f))
+val BOUCHE_ARC =
+    Trace("bouche-arc", arcSymetrique(DEMI_SOURIRE, EXTREMITES_SOURIRE, CONTROLE_SOURIRE))
+
+/**
+ * Le semi-sourire de `serein` — **le sourire divisé par deux** (`PRESENCE.md` §3). Sa flèche vaut
+ * 1,75 là où celle du sourire vaut 3,5, et sa largeur tombe à mi-chemin entre la bouche neutre et
+ * le sourire : c'est le même geste, à demi fait.
+ *
+ * ⭐ **Il ne demande rien et n'annonce rien.** `chaleureux` réagit à un fait accompli ; celui-ci est
+ * l'expression de tous les jours, et ne pas le remarquer ne fait rien perdre.
+ */
+val BOUCHE_SEMI = Trace(
+    nom = "bouche-semi",
+    forme = arcSymetrique(
+        demiLargeur = (DEMI_BOUCHE + DEMI_SOURIRE) / 2f,
+        extremites = EXTREMITES_SOURIRE / 2f,
+        controle = CONTROLE_SOURIRE / 2f,
+    ),
+)
 
 val BOUCHE_COURTE = Trace("bouche-courte", Forme.Segment(-6.4f, 0f, 6.4f, 0f))
 
 val TRACES = listOf(
     OEIL_OVALE, OEIL_TRAIT, OEIL_ARC_HAUT, OEIL_ARC_BAS,
-    BOUCHE_TRAIT, BOUCHE_BARRE, BOUCHE_ARC, BOUCHE_COURTE,
+    BOUCHE_TRAIT, BOUCHE_BARRE, BOUCHE_ARC, BOUCHE_SEMI, BOUCHE_COURTE,
 )
 
 // ————————————————————————————————————————————————————————————————————————————————————————————

@@ -1,54 +1,67 @@
 package io.allonsy.kokoro.corps
 
 /**
- * Les six expressions — `companion/CORPS.md` §3. **Le jeu est fermé.**
+ * Les expressions — `companion/CORPS.md` §3, amendé par `companion/PRESENCE.md` §1.2 et §5.
+ * **Le jeu est fermé.**
  *
- * Une expression est un jeu de trois formes : un œil (dessiné deux fois, symétrie stricte) et une
+ * Une expression est un jeu de trois tracés : un œil (dessiné deux fois, symétrie stricte) et une
  * bouche. Aucun sourcil n'existe dans le jeu de pièces, donc le reproche est indessinable.
+ *
+ * ⭐ **Une expression ne porte plus de regard.** Le regard est devenu un axe indépendant, réglé par
+ * la posture ([ReglagePosture.regard]) : c'est ce qui permet de regarder une liste sans inventer une
+ * forme de visage pour chaque direction. `de-cote` a donc quitté le jeu — elle n'était que `serein`
+ * plus un décalage des yeux.
  */
-enum class Expression(
-    val oeil: Trace,
-    val bouche: Trace,
-    val regardParDefaut: Float,
-) {
-    /** Par défaut : accueil, veille, overlay. */
-    NEUTRE(OEIL_OVALE, BOUCHE_TRAIT, 0f),
+enum class Expression(val oeil: Trace, val bouche: Trace) {
+    /** Le dessin de Xavier, tel quel. Reste dans le jeu ; aucune posture ne l'appelle plus. */
+    NEUTRE(OEIL_OVALE, BOUCHE_TRAIT),
+
+    /** ⭐ Par défaut : accueil, veille, overlay. Le semi-sourire ne demande rien et ne dit rien. */
+    SEREIN(OEIL_OVALE, BOUCHE_SEMI),
 
     /** Une étape est ouverte, un contenu est affiché. */
-    ATTENTIF(OEIL_OVALE, BOUCHE_BARRE, 0f),
+    ATTENTIF(OEIL_OVALE, BOUCHE_BARRE),
 
     /** Une étape est faite. Jamais en réaction à une étape non faite (§8 point 4). */
-    CHALEUREUX(OEIL_ARC_HAUT, BOUCHE_ARC, 0f),
+    CHALEUREUX(OEIL_ARC_HAUT, BOUCHE_ARC),
 
     /** Transition uniquement, jamais un état stable. */
-    CLIGNEMENT(OEIL_TRAIT, BOUCHE_COURTE, 0f),
+    CLIGNEMENT(OEIL_TRAIT, BOUCHE_COURTE),
 
     /** Mode shutdown, écran en veille. */
-    VEILLE(OEIL_ARC_BAS, BOUCHE_COURTE, 0f),
-
-    /** Accompagne une désignation : il regarde ce qu'il montre, jamais le lecteur. */
-    DE_COTE(OEIL_OVALE, BOUCHE_COURTE, -REGARD_DESIGNATION),
+    VEILLE(OEIL_ARC_BAS, BOUCHE_COURTE),
     ;
 
     val yeuxOuverts: Boolean get() = oeil == OEIL_OVALE
 }
 
-/** Décalage horizontal des yeux, en unités de la vue, quand Kokoro regarde ce qu'il montre. */
-const val REGARD_DESIGNATION = 5f
-
 /**
- * Une expression sortante, une expression entrante, et l'avancement de l'une vers l'autre.
- * ⭐ **Les formes se déforment l'une vers l'autre** (§9) : à aucun instant deux visages ne sont
+ * Un tracé sortant, un tracé entrant, et l'avancement de l'un vers l'autre.
+ * ⭐ **Les formes se déforment l'une vers l'autre** (§9) : à aucun instant deux tracés ne sont
  * dessinés l'un sur l'autre. La déformation est calculée par [Contour].
  */
-data class Visage(
-    val depuis: Expression,
-    val vers: Expression,
+data class Morphing(
+    val depuis: Trace,
+    val vers: Trace,
     val progression: Float,
 ) {
     val stable: Boolean get() = depuis == vers || progression >= 1f
 
     companion object {
-        fun de(expression: Expression) = Visage(expression, expression, 1f)
+        fun de(trace: Trace) = Morphing(trace, trace, 1f)
+    }
+}
+
+/**
+ * Le visage à un instant donné — **les yeux et la bouche se déforment séparément.**
+ *
+ * 🔴 C'est ce qu'exige le clignement : fermer les yeux 200 ms ne doit pas faire tressaillir la
+ * bouche. Tant que les deux axes suivent la même expression ils avancent ensemble ; un clignement
+ * ne touche que le premier, et la bouche reste celle de l'expression courante.
+ */
+data class Visage(val oeil: Morphing, val bouche: Morphing) {
+    companion object {
+        fun de(expression: Expression) =
+            Visage(Morphing.de(expression.oeil), Morphing.de(expression.bouche))
     }
 }
