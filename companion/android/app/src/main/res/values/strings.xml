@@ -13,18 +13,21 @@
     <string name="alerte_ecran_explication">Test K1 : cet écran s\'est ouvert par-dessus le verrouillage, sans son et sans vibration. Rien d\'autre n\'est demandé.</string>
     <string name="alerte_ecran_fermer">Fermer</string>
 
+    <!--
+      🔴 La notification d'accès est muette — companion/INTERFACE.md §6.2. Il ne reste que l'icône
+      et le mot « Kokoro » : pas de corps de texte, pas de boutons d'action. Ce qu'elle écrirait,
+      Xavier le relirait cent fois sur son écran verrouillé sans jamais en avoir besoin.
+      Le nom et la description du canal, eux, ne se voient que dans les réglages d'Android.
+    -->
     <string name="canal_acces_nom">Accès sans déverrouiller</string>
-    <string name="canal_acces_description">Notification permanente qui ouvre le mot-code et la tension appliquée depuis l\'écran verrouillé. Sans son, sans vibration.</string>
+    <string name="canal_acces_description">Notification permanente qui ouvre l\'écran de crise depuis l\'écran verrouillé. Sans son, sans vibration.</string>
     <string name="acces_titre">Kokoro</string>
-    <string name="acces_texte">mot-code · tension appliquée</string>
-    <string name="acces_action_mot_code">mot-code</string>
-    <string name="acces_action_tension">tension</string>
+
+    <!-- La croix de fermeture, en haut à droite de tous les panneaux. Lu par les lecteurs d'écran. -->
+    <string name="action_fermer">Fermer</string>
 
     <string name="crise_bouton_mot_code">Mot-code à %1$s</string>
-    <string name="crise_repere_mot_code">La parole est coupée</string>
     <string name="crise_bouton_tension">Tension appliquée</string>
-    <string name="crise_repere_tension">Aiguille, geste médical, sang</string>
-    <string name="crise_fermer">Fermer</string>
     <string name="crise_retour">Retour</string>
 
     <string name="mot_code_titre">Mot-code</string>
@@ -55,7 +58,6 @@
     <string name="tension_action_revenir">Revenir aux repères</string>
     <string name="tension_action_sequence">Séquence de soins</string>
     <string name="tension_repere_sequence">Prise de sang, cathéter, vaccin, collyre, geste invasif</string>
-    <string name="tension_lien_phrase">La phrase pour le soignant</string>
     <string name="tension_lien_arret">Quand arrêter</string>
 
     <string name="sequence_titre">Séquence de soins</string>
@@ -123,7 +125,6 @@
     <string name="journal_action_passer">Passer — aucune réponse</string>
     <string name="journal_action_arreter">Arrêter maintenant et enregistrer</string>
     <string name="journal_action_enregistrer">Enregistrer</string>
-    <string name="journal_action_fermer">Fermer</string>
     <string name="journal_action_dossier">Choisir le dossier</string>
 
     <string name="journal_dossier_explication">Kokoro écrit le check-in dans le dossier partagé avec le PC. Il faut le désigner une fois : sélectionner le dossier synchronisé par Syncthing. Kokoro n\'obtient de droit que sur celui-là, et sur rien d\'autre.</string>
@@ -162,7 +163,7 @@
     <string name="controle_action_sms">Autoriser l\'envoi de SMS</string>
 
     <string name="controle_section_acces">Accès depuis l\'écran verrouillé</string>
-    <string name="controle_acces_explication">Une notification permanente porte deux boutons — mot-code et tension. Elle est muette et ne peut pas être balayée.</string>
+    <string name="controle_acces_explication">Une notification permanente ne portant que le nom Kokoro : aucun bouton, aucun texte. Elle ouvre le monde posé sur l\'écran de crise, et ne peut pas être balayée.</string>
     <string name="controle_action_acces">Réafficher la notification d\'accès</string>
     <string name="controle_action_ouvrir_crise">Ouvrir l\'écran de crise</string>
 
@@ -193,7 +194,6 @@
     <string name="monde_quand_sans_date">Sans date</string>
 
     <string name="monde_duree_minutes">%1$d minutes</string>
-    <string name="monde_fermer">Fermer</string>
     <string name="monde_reglages">Écran de contrôle</string>
 
     <string name="monde_bilan_vide">Rien à passer pour l\'instant.</string>
@@ -205,9 +205,14 @@
     -->
     <string name="monde_mot_code_envoye">Mot-code envoyé à %1$s</string>
 
-    <string name="monde_crise_mot_code">Mot-code à Chourouk</string>
-    <string name="monde_crise_tension">Tension appliquée</string>
-    <string name="monde_crise_phrase">La phrase pour le soignant</string>
+    <!--
+      ⭐ L'avis de l'écran central — companion/INTERFACE.md §6.1, §7.4. Un fait, ce qu'il coûte, et
+      le geste. 🔴 Jamais une pastille : un point coloré dit « va voir » sans dire quoi, et le
+      dispositif ne fait aucun sous-entendu. Il s'en va tout seul dès que la porte est rouverte.
+    -->
+    <string name="monde_acces_perdu">La notification d\'accès n\'est plus affichée.</string>
+    <string name="monde_acces_effet">L\'autorisation de notification n\'est plus accordée. L\'écran de crise n\'est donc plus atteignable depuis l\'écran verrouillé.</string>
+    <string name="monde_acces_action">Ouvrir les réglages</string>
 
     <!--
       Les étapes de companion/inputs/programme.json v1, recopiées mot pour mot.

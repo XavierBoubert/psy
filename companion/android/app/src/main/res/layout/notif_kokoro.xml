@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  La vue des notifications de Kokoro. 🔴 **Il n'y en a qu'une** — pas de vue dépliée : la
+  notification d'accès n'a rien de plus à montrer en grand, et l'ouvrir ne servait à rien.
+
+  ⚠️ Seules les vues acceptées par RemoteViews entrent ici : FrameLayout, LinearLayout, ImageView,
+  TextView. Pas de `View` nu, pas de vue custom, pas de Compose.
+
+  🔴 **`fitXY` et pas `centerCrop`, et ce n'est pas un détail.** L'illustration porte son fondu vers
+  le transparent **dans son propre canal alpha** ; `centerCrop` recadre, donc il jetterait hors du
+  cadre précisément les bords qui adoucissent. `fitXY` ne recadre rien. **Le ratio de l'image (4,6)
+  est calé sur la zone de contenu mesurée sur l'appareil de Xavier**, ce qui rend l'étirement
+  imperceptible — et un fondu sur quatre côtés pardonne le reste.
+
+  🔴 **Aucun voile sous le texte.** La première version en posait un, opaque : sur le volet sombre
+  il faisait un bloc blanc franc au milieu de la carte. **C'est l'image qui s'efface à gauche**, et
+  le texte se lit sur la carte du système.
+
+  🔴 `notif_texte` est masquée par défaut : la notification d'accès à la crise n'a **aucune ligne de
+  corps**, décision du 15/08/2026 (`INTERFACE.md` §6.2). **Une ligne s'affiche parce qu'un appelant
+  la demande, jamais parce qu'un gabarit la prévoit.**
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:contentDescription="@null"
+        android:importantForAccessibility="no"
+        android:scaleType="fitXY"
+        android:src="@drawable/notif_bandeau" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <TextView
+            android:id="@+id/notif_titre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TexteNotifTitre" />
+
+        <TextView
+            android:id="@+id/notif_texte"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TexteNotifCorps"
+            android:visibility="gone" />
+    </LinearLayout>
+</FrameLayout>

@@ -13,6 +13,10 @@
 > 🏗️ **Écrit en Compose le 15/08/2026** — la matière (§4.1, §4.2) et les cinq écrans (§3) ; détail en **§7**. **Deux points ouverts ont été tranchés par Xavier pour que ça puisse être codé** : les pancartes gardent leurs deux couleurs *(§6.5, option B)*, et la police arrondie est **Varela Round** *(§4.3)*.
 >
 > ✅ **Le même jour, les quatre surfaces déjà éprouvées y sont passées aussi** — crise, check-in, réglages *(§7.1)*, **à la demande de Xavier**. **Il n'y a plus deux thèmes**, et le mot-code part désormais d'un seul appui.
+>
+> ✅ **Puis une deuxième passe le même jour** *(§7.2)* : **la notification devient muette** — §6.2 est câblé, il ne restait plus qu'elle — **la croix remplace le bouton *Fermer* sur tous les panneaux**, **la phrase pour le soignant devient une porte indépendante**, et **les deux entrées de la crise affichent littéralement le même écran**.
+>
+> ⭐ **Et une troisième, après le premier essai sur le téléphone** *(§7.3)* : **la notification garde `CriseActivity`** — le repli écrit d'avance au §6.2, **emprunté parce que le monde demandait de déverrouiller** — et **elle se republie à l'ouverture du monde**, ce qu'aucun écran ne faisait plus depuis **D10**. ⭐ **Puis l'écran central apprend à dire qu'une porte est tombée** *(§7.4)* — **en toutes lettres, pas par une pastille.**
 
 ---
 
@@ -22,10 +26,10 @@
 
 | Surface | Jalon | Ce que c'est | Taille à l'écran |
 |---|---|---|---|
-| **Accès crise** | K2 ✅ | Notification sur l'écran verrouillé — **une porte, pas un rappel** | hors monde |
-| **Mot-code à Chourouk** | K2 ✅ | SMS **envoyé en un appui** depuis l'écran **Crise** *(§7.1)*, téléphone verrouillé, sans réseau data. L'écran plein reste le chemin de la notification et le repli en cas d'échec | 1 écran plein |
+| **Accès crise** | K2 ✅ | Notification **muette** sur l'écran verrouillé *(§6.2, §7.2)* — **une porte, pas un rappel**. Icône et mot *Kokoro*, rien d'autre à lire. Elle ouvre l'écran de crise, **jamais le monde** *(§7.3)* | hors monde |
+| **Mot-code à Chourouk** | K2 ✅ | SMS **envoyé en un appui** depuis l'écran **Crise** *(§7.1)*, téléphone verrouillé, sans réseau data. Le bouton se grise le temps de l'envoi ; l'écran plein reste le repli en cas d'échec | 1 écran plein |
 | **Tension appliquée** | K3 ✅ | 4 repères externes enchaînés, minuteur, critères d'arrêt à un tap | 1 écran plein, guidé |
-| **Phrase pour le soignant** | K3 ✅ | Texte montrable en plein écran | 1 écran plein |
+| **Phrase pour le soignant** | K3 ✅ | Texte montrable en plein écran. ⭐ **Porte indépendante** *(§7.2)* — elle n'est plus rangée sous la tension appliquée | 1 écran plein |
 | **Check-in du jour** | K4 ✅ | 11 champs fermés, aucune saisie de texte, écrit `journal/` | 1 écran, questions enchaînées |
 | **Le monde** | — ✅ | 5 écrans en croix, décor 4 couches, plage de nuit | le contenant |
 | **Le corps** | K7 ⏸️ | 6 expressions · 5 postures + `allonge` · respiration · désignation | posé dans le décor |
@@ -115,7 +119,7 @@ Aucun score · aucune progression · aucun historique · aucun palier atteint ·
 - **Les trois `quand` sont des sous-titres écrits** — *Aujourd'hui* · *Quand j'en ai besoin* · *Sans date*. 🔴 **Aucune pastille, aucun badge.** ⭐ **La couleur distingue les sections, elle ne les classe jamais** *(§6.5, tranché le 14/08/2026)* — 🔴 **et il reste interdit d'aligner la palette sur une échelle d'urgence** : aucune teinte ne doit pouvoir se lire comme *urgent*, *en retard* ou *important*.
 - **Une carte par étape** : le titre, la durée si elle est connue, rien d'autre. Pas de chevron, pas d'aperçu, pas de compteur.
 - **Le décor reste visible** autour et entre les cartes — on est toujours dans le même monde, jamais dans une autre application.
-- **Une étape ouverte prend l'écran entier** et se ferme d'un bouton écrit *Fermer*, jamais d'un geste : rien ne doit concurrencer la traversée.
+- **Une étape ouverte prend l'écran entier** et se ferme **d'une croix en haut à droite** *(amendé le 15/08/2026, §7.2 — c'était un bouton écrit *Fermer* en pied de page)*, jamais d'un geste : rien ne doit concurrencer la traversée.
 
 ---
 
@@ -194,13 +198,13 @@ Aucun score · aucune progression · aucun historique · aucun palier atteint ·
 | **D1** | Le rangement | ✅ **Une rubrique par écran** (§3) |
 | **D2** | Le bord de la crise | ✅ **BAS** |
 | **D3** | Kokoro suit-il ? | ⏭️ **Il suivra l'interface — hors sujet ici, renvoyé à son propre brainstorm.** En attendant il reste au centre |
-| **D4** | L'écran de contrôle | ✅ **Une roue dentée en haut à droite de l'écran central.** ⚠️ **Exception assumée à « aucune icône seule »** : c'est le seul pictogramme universel du lot, et le centre n'a pas de place pour un mot. 🔴 **Jamais de pastille dessus** |
+| **D4** | L'écran de contrôle | ✅ **Une roue dentée en haut à droite de l'écran central.** ⚠️ **Exception assumée à « aucune icône seule »** : c'est le seul pictogramme universel du lot, et le centre n'a pas de place pour un mot. 🔴 **Jamais de pastille dessus** — ⭐ **réaffirmé le 15/08/2026 par Xavier**, à qui la question s'est posée en vrai *(§7.4)* : **un défaut se dit en toutes lettres sur l'écran central**, il ne se signale pas par un point |
 | **D5** | Les nouveautés | ✅ **Sur l'écran central.** Bornes au §6.1 |
 | **D6** | Le thème | ✅ **Panneaux extrudés, registre du GUI de jeu kawaii** (§4). ⚠️ **Corrige la décision du matin** : le verre dépoli avait été retenu, puis abandonné après maquette le même jour. **Le verre est archivé, il ne revient pas par morceaux** |
 | **D7** | L'écran de crise | ✅ **Adapté à la matière, structure inchangée** (§4.5) |
 | **D8** | L'overlay de veille | ✅ **À essayer — fond d'écran vivant** (§6.3) |
 | **D9** | Ce qu'on voit en veille | ✅ **Le décor et Kokoro qui respire, rien d'autre** |
-| **D10** | L'icône du lanceur, et la notification | ✅ **L'icône ouvre le monde** — 🏗️ **câblé le 15/08/2026**, l'écran de contrôle est passé au bout de la roue dentée. 🔴 **La notification est muette : plus de boutons, et plus un mot de son contenu** — elle ouvre le monde **directement posé sur l'écran de crise, sans animation** (§6.2). ⏳ **Cette moitié-là n'est pas faite** |
+| **D10** | L'icône du lanceur, et la notification | ✅ **Les deux sont câblées, le 15/08/2026.** L'icône ouvre le monde, l'écran de contrôle est passé au bout de la roue dentée. 🔴 **La notification est muette : plus de boutons, et plus un mot de son contenu** (§6.2, §7.2). ⚠️ **Elle ouvre `CriseActivity`, pas le monde** — le monde a été essayé et **il demandait de déverrouiller** *(§7.3)*. ⭐ **Et c'est le monde qui la republie** : elle était accrochée à l'écran de contrôle, que cette décision-ci a justement cessé de faire ouvrir |
 | **D11** | Le titre de l'écran | ✅ **Il ne défile pas.** *(La question posée était : quand on fait défiler la liste des étapes, le mot « Thérapie » part-il vers le haut avec elle ? Non — il reste posé sur sa bande en haut, sur son ruban. Savoir où l'on est ne doit pas dépendre d'où l'on en est dans la liste.)* |
 
 ---
@@ -216,7 +220,9 @@ L'écran central est le seul qui soit vide par doctrine. Y poser les nouveautés
 3. **Elle disparaît** quand les écrans concernés ont été ouverts. Elle ne revient pas, elle ne compte pas les jours.
 4. 🔴 **Elle n'apparaît qu'après une publication** — donc une fois par semaine, à la clôture d'une séance, une chose que Xavier a lui-même décidée. **Ce n'est pas Kokoro qui vient vers lui : c'est le programme qui a changé parce qu'ils l'ont changé ensemble.**
 
-### 6.2 🔴 La notification devient muette — acté le 14/08/2026
+> ⭐ **Un deuxième usage de cet emplacement est ouvert le 15/08/2026 : l'avis de défaut** *(§7.4)*. Il tient les quatre conditions à la lettre — **rien quand il n'y a rien**, une carte, une phrase, un fait, et il disparaît quand le défaut est réparé. 🔴 **La quatrième condition est amendée, et il faut le dire :** celui-là n'attend pas une publication, il paraît quand **une porte du dispositif a cessé de fonctionner**. **C'est le seul motif qui l'autorise** — un défaut, jamais une suggestion, jamais un rappel, jamais un contenu.
+
+### 6.2 ✅ La notification devient muette — acté le 14/08/2026, **câblé le 15/08/2026** *(§7.2)*
 
 **Le motif est clinique, et il est de Xavier :** *« avec les boutons sur la notification, je lis toute la journée mot code et tension appliquée. Ça n'aide pas mes angoisses. »*
 
@@ -226,11 +232,13 @@ L'écran central est le seul qui soit vide par doctrine. Y poser les nouveautés
 
 1. 🔴 **Les deux boutons d'action disparaissent.**
 2. 🔴 **Le corps de la notification aussi.** ⚠️ **Il porte aujourd'hui `mot-code · tension appliquée`** — enlever les boutons en le laissant n'aurait réglé que la moitié du problème. **Il ne reste que l'icône et le mot `Kokoro`.** Rien à lire, rien à relire.
-3. ✅ **Elle ouvre le monde directement posé sur l'écran de crise** — caméra déjà en place, **aucun glissement, aucune animation**. Un geste vers le haut ramène à Kokoro.
+3. ⛔ **Elle devait ouvrir le monde directement posé sur l'écran de crise** — caméra déjà en place, aucun glissement, aucune animation. ⚠️ **Essayé le 15/08/2026, et abandonné le jour même : le téléphone demandait de déverrouiller** *(§7.3)*. **C'est le repli ci-dessous qui s'applique** — elle garde `CriseActivity`.
 4. **Le nom du canal et sa description changent aussi** (« Accès sans déverrouiller », « …ouvre le mot-code et la tension appliquée… »). ⭐ **Ils sont visibles dans les réglages Android, pas sur l'écran verrouillé** — donc moins urgents, mais ils doivent dire la même chose. **Nom et description se mettent à jour sans changer l'identifiant du canal** : c'est l'importance, le son et la vibration qui sont figés, pas les libellés. `kokoro_acces_v1` reste.
 5. **`controle_acces_explication`, dans l'écran de contrôle, décrit les deux boutons** — à réécrire en même temps.
 
 > 🔴 **Ce qui reste non négociable, et qu'il faut vérifier sur l'appareil :** **le mot-code ne recule jamais au-delà de deux taps depuis l'écran verrouillé.** Aujourd'hui c'est un tap ; le nouveau chemin en fait deux (notification → bouton). **Repli écrit d'avance** si le monde ne s'affiche pas aussi vite et aussi sûrement au-dessus du verrouillage que `CriseActivity` : la notification garde `CriseActivity` — muette elle aussi — et l'écran du bas du monde affiche le même contenu pour les fois où Xavier vient de lui-même. **Deux portes, un seul contenu.**
+>
+> ✅ **Le repli a été emprunté le 15/08/2026, et il a suffi d'une ligne** — parce que depuis §7.2 `CriseActivity` affiche **le même composable** que l'écran du bas du monde, aux mêmes boutons et aux mêmes gestes. 🔴 **La condition prévue s'est réalisée telle quelle** : le monde ne s'affiche pas au-dessus du verrouillage, il **demande de déverrouiller** *(§7.3)*. **Deux portes, un seul contenu — et c'est ce qui a rendu le repli gratuit.**
 
 ### 6.3 L'essai du fond d'écran vivant *(D8)*
 
@@ -299,14 +307,16 @@ L'écran central est le seul qui soit vide par doctrine. Y poser les nouveautés
 | | Où | État |
 |---|---|---|
 | **La matière** (§4.1) — la recette à six couches, déclinée en couleur | `ui/Matiere.kt` | ✅ Une seule fonction, `Modifier.matiere` |
-| **Les pièces** (§4.2) — panneau, carte, bouton, ruban, pancarte, bande de titre, cadre vide, **page, champ de saisie, interrupteur, accusé, séparateur** | `ui/Pieces.kt` | ✅ **Aucun composant Material** hors `Text` |
+| **Les pièces** (§4.2) — panneau, carte, bouton, ruban, pancarte, bande de titre, cadre vide, **page, champ de saisie, interrupteur, accusé, séparateur, croix** | `ui/Pieces.kt` | ✅ **Aucun composant Material** hors `Text` |
 | **Les ornements** — étincelle, cœur, rivet | `ui/Ornements.kt` | ✅ Décor pur, jamais sur une carte de liste |
 | **La police** (§4.3) | `res/font/varela_round.ttf` · `ui/Typographie.kt` | ✅ Embarquée. ⭐ **Interligne centré** — sans quoi un libellé court reste collé en haut d'un bouton haut |
 | **Le thème** jour / nuit | `ui/ThemeMonde.kt` | ✅ **Le thème de tout ce que Xavier voit.** L'ancien ne sert plus qu'aux deux outils de mise au point |
 | **Les cinq écrans** (§3) | `monde/Bords.kt` | ✅ Ruban fixe (D11), gauche et droite défilent, haut et bas non (**P1**), roue dentée (D4) |
-| **Une étape ouverte** (§3.1) | `monde/Etapes.kt` · `monde/MondeKokoro.kt` | ✅ Plein écran, traversée coupée, fermeture au bouton **ou au *retour* du téléphone** — jamais au geste |
-| **L'icône du lanceur** (D10) | `AndroidManifest.xml` | ✅ Ouvre le monde |
-| **La phrase pour le soignant** | `crise/CriseActivity.kt` | ✅ Une porte à part entière, pour que les trois boutons de l'écran **Crise** mènent quelque part |
+| **L'avis de porte fermée** (§6.1, §7.4) | `monde/Bords.kt` | ✅ Sur l'écran central, **et seulement quand la notification d'accès n'a pas pu s'afficher** |
+| **Une étape ouverte** (§3.1) | `monde/Etapes.kt` · `monde/MondeKokoro.kt` | ✅ Plein écran, traversée coupée, fermeture **à la croix ou au *retour* du téléphone** — jamais au geste |
+| **L'icône du lanceur** (D10) | `AndroidManifest.xml` · `mipmap-anydpi-v26/ic_lanceur.xml` | ✅ Ouvre le monde. ⭐ **C'est Kokoro qui y est depuis le 16/08/2026** *(§7.6)* — icône adaptative, couche monochrome, écran de démarrage et icône de notification tirés du même logo |
+| **La notification muette** (D10, §6.2) | `crise/AccesCrise.kt` | ✅ Icône et mot *Kokoro*. Elle ouvre **`CriseActivity`** *(§7.3)*, republiée à chaque ouverture du monde |
+| **La phrase pour le soignant** | `crise/ContenuCrise.kt` | ✅ Une porte à part entière, **sortie de la tension appliquée** *(§7.2)* |
 
 ### 7.1 ✅ Les quatre surfaces éprouvées sont passées à la matière — 15/08/2026
 
@@ -314,7 +324,7 @@ L'écran central est le seul qui soit vide par doctrine. Y poser les nouveautés
 
 | Surface | Ce qui a changé |
 |---|---|
-| **Écrans de crise** — mot-code, tension appliquée, séquence de soins, rester assis, phrase pour le soignant, quand arrêter | Panneaux extrudés, ruban azur, **un titre par vue** au lieu d'un titre répété dans le corps. **Structure inchangée** (§4.5) : mêmes boutons, mêmes repères, mêmes critères d'arrêt |
+| **Écrans de crise** — mot-code, tension appliquée, séquence de soins, rester assis, phrase pour le soignant, quand arrêter | Panneaux extrudés, ruban azur, **un titre par vue** au lieu d'un titre répété dans le corps. **Structure inchangée** (§4.5) : mêmes boutons, mêmes repères, mêmes critères d'arrêt. *(Le rangement, lui, a bougé le soir même — §7.2)* |
 | **Check-in du jour** | Panneaux, ruban pêche. ⭐ **Le vert reste réservé à ce qui avance d'un pas** — *passer* et *arrêter* sont neutres, **jamais gris-triste ni barrés** |
 | **Écran de contrôle** → **Réglages** | Panneaux, ruban beurre, sections en pancartes, lignes groupées dans un panneau et séparées d'un trait, interrupteur maison |
 | **L'alerte K1 et l'atelier du corps** | ⚠️ **Gardent l'ancien thème.** Ce sont des outils de mise au point, pas des surfaces de soin |
@@ -335,4 +345,126 @@ L'écran central est le seul qui soit vide par doctrine. Y poser les nouveautés
 - 🔴 **Le contenu des écrans est écrit en dur** — les 11 étapes de `inputs/programme.json` v1, recopiées dans `strings.xml` *(et pas dans du Kotlin : c'est `strings.xml` que lisent les tests d'invariants)*. **C'est K5 qui le remplacera par une lecture du dossier synchronisé**, avec le filtrage des sept interdits de [`PROGRAMME.md`](PROGRAMME.md) §7.
 - ⏳ **Le bouton *Fait* n'existe pas encore** sur une démarche ouverte : il écrirait dans `reponses/`, ce que Kokoro ne sait pas faire. ⭐ **Un bouton qui n'écrit rien mentirait** — mieux vaut qu'il manque et que ça se voie.
 - ⏳ **Les nouveautés** (D5, §6.1) ne sont pas là : elles supposent de comparer deux versions du programme, donc K5.
-- ⏳ **§6.2 — la notification muette n'est pas faite.** Elle porte toujours ses deux boutons et son corps de texte.
+
+### 7.2 ✅ La deuxième passe — 15/08/2026
+
+**Cinq corrections de Xavier, toutes appliquées.** ⏳ **Toujours aucun appareil branché** : rien de ce qui suit n'est vérifié à l'œil non plus.
+
+| | Ce qui a changé, et pourquoi |
+|---|---|
+| ⭐ **Le mot-code se grise pendant l'envoi** | Le bouton cesse de répondre et passe à l'encre douce le temps que le SMS parte, aux deux entrées. L'accusé disait déjà *envoi en cours* ; **il informait sans empêcher.** 🔴 **Le bouton ne disparaît pas** — un bouton absent fait croire que la fonction n'existe pas. Il se réarme à l'accusé du réseau, et au plus tard quand l'accusé s'efface : **rien ne doit pouvoir rester mort.** |
+| 🔴 **Une seule croix, en haut à droite, sur tous les panneaux** | Le bouton *Fermer* était en pied de page sur les écrans de crise et sur une étape ouverte, absent des réglages, et présent une fois sur deux au check-in. **Il fallait donc lire la page jusqu'en bas pour savoir comment en sortir, et parfois ne pas l'y trouver.** La croix prend la place du rivet droit de la bande de titre : même place partout, quelle que soit la longueur de la page. ⚠️ **Deuxième exception assumée à « aucune icône seule »**, après la roue dentée (**D4**) |
+| 🔴 **Les deux entrées de la crise affichent le même écran** | `PortesDeCrise` — **un seul composable**, appelé par l'écran **BAS** du monde et par `CriseActivity`. Mêmes trois boutons, même hauteur, même écart, mêmes gestes, **mot-code compris : un appui, le message part.** ⭐ **Deux écrans qui font la même chose et ne se ressemblent pas obligent à vérifier lequel on a sous les yeux** — au moment précis où il n'y a rien à vérifier. Le libellé du mot-code porte maintenant le prénom enregistré des deux côtés, au lieu d'un *Chourouk* écrit en dur |
+| ⭐ **La phrase pour le soignant sort de la tension appliquée** | Elle était un lien répété dans quatre vues de la parade vasovagale, **et il fallait traverser une parade pour atteindre un texte à montrer.** Elle est maintenant une porte de l'écran de crise, et elle n'a plus de bouton *Retour* : **on n'y entre plus depuis ailleurs, il n'y a nulle part où revenir** |
+| 🔴 **La notification est muette** — §6.2, enfin câblé | Plus de boutons, **plus une ligne de corps** : l'icône et le mot *Kokoro*. ⚠️ **Sa destination a changé le soir même — voir §7.3** |
+
+**Ce que ça a déplacé ailleurs :**
+
+- Le nom et la description du canal `kokoro_acces_v1` disent maintenant *écran de crise* et non plus *le mot-code et la tension appliquée*. 🔴 **L'identifiant du canal ne change pas** : les libellés se mettent à jour, l'importance et le silence sont figés à la création — en changer l'identifiant rendrait à Android le droit de resonner.
+- `controle_acces_explication`, dans les réglages, décrivait les deux boutons. Réécrit.
+- Le check-in perd ses boutons *Fermer* ; l'écran *C'est enregistré* n'a donc plus de bouton du tout. **C'est un constat, pas une étape** : la croix en sort.
+
+⏳ **Ce qu'il reste à mesurer sur l'appareil, et qui ne se décide pas au clavier :** le mot-code doit rester **à deux taps de l'écran verrouillé** (§6.2). Si le monde met plus de temps à s'afficher au-dessus du verrouillage que `CriseActivity` n'en mettait, **le repli est prêt** — il suffit de renvoyer la notification sur `CriseActivity`, qui affiche désormais le même écran.
+
+> ✅ **Réponse le soir même : le repli a été pris — §7.3.** Ce n'était pas une question de vitesse, mais de keyguard.
+
+### 7.3 ✅ Ce que le téléphone a répondu — 15/08/2026
+
+**Premier essai réel de la passe précédente. Trois choses en sont revenues, et deux étaient des défauts.**
+
+| Ce que Xavier a constaté | Ce que ça voulait dire, et ce qui est fait |
+|---|---|
+| 🔴 **« La notification demande de déverrouiller le téléphone quand on est sur le lockscreen »** | ⭐ **C'est le point dur du §6.2 qui se réalise, et il ne se contourne pas au réglage.** Le monde vit dans **la tâche du lanceur** ; `setShowWhenLocked` posé à l'exécution dans `onCreate` **arrive après la décision du keyguard**, qui a déjà choisi de demander le code. `CriseActivity`, elle, le **déclare dans le manifeste**, avec sa propre tâche (`taskAffinity=""`, `singleTask`, `excludeFromRecents`) — **c'est cette configuration-là qui a été éprouvée le 10/08**, et elle n'a pas bougé depuis. 🔴 **Une porte de crise qui demande un code n'est pas une porte** : en shutdown, taper un code est exactement ce qui manque |
+| 🔴 **« La notification ouvre le monde sur l'écran du bas au lieu du panneau de crise »** | **Même cause, même correction : la notification revient sur `CriseActivity`.** ⭐ **Et le repli n'a rien coûté** — §7.2 avait rendu les deux écrans identiques la veille au soir. **C'est exactement pour ça que « deux portes, un seul contenu » était écrit d'avance** : une décision d'implémentation a pu être annulée sans que rien de ce que Xavier voit ne change. Le monde ne s'affiche donc **plus jamais** par-dessus le verrouillage |
+| 🔴 **« La notification ne s'est lancée ni à l'installation, ni à l'ouverture de l'app »** | **Elle n'était publiée que par l'écran de contrôle** — et **D10** a justement fait que cet écran ne s'ouvre plus tout seul. Depuis, elle n'existait que si Xavier allait la chercher dans les réglages. **Le monde la republie maintenant à chaque venue.** ⚠️ **Ce n'est pas une relance** : c'est la même notification permanente et muette, réécrite au même identifiant — rien de neuf ne paraît, rien ne sonne, rien ne compte |
+
+> ⚠️ **« À l'installation » n'existe pas, et il ne faut pas l'attendre.** Une application fraîchement installée est *arrêtée* pour Android : **aucun code ne s'y exécute avant le premier lancement manuel** — pas de `BOOT_COMPLETED`, pas de réveil. **Le premier lancement est le plus tôt possible**, et c'est là que ça se fait désormais.
+>
+> ⭐ **L'autorisation de notification, elle, reste demandée dans les réglages** — jamais à l'ouverture du monde. 🔴 **Kokoro ne vient jamais vers Xavier** : une application qui réclame une permission dès qu'on l'ouvre est exactement le contraire. Sans l'autorisation, `publierAccesCrise` renonce en silence.
+>
+> ✅ **Ce trou a été bouché dans la foulée — §7.4.**
+
+### 7.4 ✅ L'avis de porte fermée — 15/08/2026
+
+**Le défaut à couvrir :** si l'autorisation de notification n'est pas accordée — refusée, ou **révoquée par Android tout seul**, ce qu'il fait pour les applications peu utilisées, et Kokoro en est une par construction — **la porte du verrouillage disparaît sans que rien ne le dise.**
+
+**Xavier a proposé une pastille rouge sur la roue dentée. Elle a été écartée, par lui, pour trois raisons — et les trois étaient déjà écrites :**
+
+| | |
+|---|---|
+| 🔴 **D4 : « jamais de pastille dessus »** | La règle visait les pastilles qui **comptent** et qui **réclament** — *rien n'y compte, rien n'y attend*. Un défaut n'est pas ça, donc l'exception était défendable. **Elle n'a pas été prise** |
+| 🔴 **Le rouge n'est pas dans la palette** | Ce n'est pas un goût : c'est le registre de l'alarme, évacué partout (§4.5, retrait des numéros d'urgence). L'admettre ici aurait obligé à décider **où le rouge a le droit de réapparaître ensuite**, et à l'écrire |
+| ⭐ **Et surtout : une pastille est un sous-entendu** | Elle dit *va voir* sans dire **quoi**. 🔴 **L'invariant est explicite, littéral, sans sous-entendu ni attente implicite** — c'est celui-là qui a tranché, et il ne vient pas d'une règle d'interface |
+
+**Ce qui est fait :** une carte sur **l'écran central**, l'emplacement que §6.1 réserve déjà à *une carte, une phrase, un fait*. Elle porte le fait — *la notification d'accès n'est plus affichée* — **ce qu'il coûte** — *l'écran de crise n'est plus atteignable depuis l'écran verrouillé* — et **le geste**, un bouton vers les réglages.
+
+⭐ **Ce n'est pas une relance :** elle ne compte pas les jours, elle n'insiste pas, elle ne revient pas — **elle constate, et elle s'en va d'elle-même dès que la porte est rouverte.** ⭐ **Et ce n'est pas Kokoro qui vient vers Xavier** : elle est sur un écran qu'il a ouvert, pas une notification.
+
+> ⏳ **Ce qui reste non couvert, et qu'il faut savoir :** l'avis ne paraît **que quand Xavier ouvre le monde**. Si l'autorisation tombe et qu'il n'ouvre pas l'application, **rien ne le lui apprend** — et il n'y a pas de bonne réponse à ça : le seul moyen de le prévenir sans qu'il vienne serait une notification, **c'est-à-dire exactement la chose qui ne marche plus.**
+
+---
+### 7.5 ⭐ La notification d'accès prend une illustration de fond — 16/08/2026
+
+**Demande de Xavier :** une image de fond sur la notification — le monde de Kokoro, le personnage à droite, penché, clin d'œil, main en V. **Puis, après un premier essai sur l'appareil :** *« il faudrait que l'image soit transparente (60 %) et en dégradé vers le transparent sur les côtés pour qu'elle soit bien intégrée »*, **et plus de vue dépliée.**
+
+> ⚠️ **Première cible visée, et fausse :** l'alerte K1. **Elle ne paraît jamais d'elle-même** — seul le bouton de test de l'écran de contrôle la déclenche. 🔴 **La seule notification que Xavier voit est celle d'accès à la crise**, et c'est donc elle qui porte l'illustration.
+
+🔴 **Ce que ça touche à la décision du 15/08 (§6.2), et ce que ça ne touche pas.** Le motif de Xavier était une **ligne relue toute la journée** — *« je lis toute la journée mot code et tension appliquée »*. **Une image ne se relit pas comme une ligne**, et c'est ce qui autorise l'illustration. ⭐ **Aucune ligne de corps ne revient** : `avecIllustration` est appelée **sans `texte`**, le paramètre vaut `null` par défaut, et le gabarit masque le champ tant qu'un appelant ne le demande pas. **Le jour où une ligne y reparaît, c'est §6.2 qu'on défait** — pas un détail de gabarit.
+
+#### Une seule vue, et pas de chevron
+
+🔴 **Il n'y a pas de `bigContentView`.** La notification d'accès n'a **rien de plus** à montrer en grand — pas une ligne, pas un bouton — donc l'ouvrir ne donnait rien. ⭐ **Ne pas en poser retire aussi le chevron** : elle cesse d'annoncer un contenu qu'elle n'a pas. **Une affordance qui ne mène à rien est un sous-entendu**, et c'est l'invariant qui a déjà écarté la pastille de §7.4.
+
+#### L'intégration passe par le canal alpha, pas par du code
+
+**Le premier essai posait un rectangle net sur la carte du volet, bords francs sur les quatre côtés, et un voile de papier opaque sous le texte qui faisait un bloc blanc au milieu.** Trois corrections, et elles se tiennent :
+
+| | |
+|---|---|
+| ⭐ **La transparence est cuite dans le WebP** | 60 % d'opacité au centre, fondu vers le transparent sur les quatre côtés. 🔴 **Un masque alpha n'existe pas en drawable XML, et une `RemoteViews` ne sait pas composer deux couches** — il n'y avait pas d'autre voie |
+| 🔴 **`fitXY`, jamais `centerCrop`** | `centerCrop` recadre, donc il jetterait hors du cadre **précisément les bords qui adoucissent**. Le ratio du bandeau (**4,6**) est calé sur la zone de contenu mesurée sur l'appareil de Xavier, ce qui rend l'étirement imperceptible |
+| 🔴 **Le voile est supprimé** | C'était lui, le bloc blanc. **C'est l'image qui s'efface à gauche** — fondu large de ce côté, court à droite où vit le personnage — et le texte se lit sur la carte du système |
+
+⚠️ **Le texte ne porte plus de couleur en dur.** `#383838` était illisible dès que le volet passait au sombre, **ce qui est le cas sur l'appareil de Xavier**. `TexteNotifTitre` hérite désormais de `TextAppearance.Compat.Notification.Title` *(androidx)*, qui suit le thème de la notification. ⭐ **Varela Round est la seule chose qu'on ajoute** — la couleur ne nous appartient pas.
+
+#### Ce qui reproduit l'image
+
+⭐ **`npm run companion:fondu` est versionné**, et c'est ce qui rend le réglage possible : l'opacité, l'ancrage de la bande et les trois largeurs de fondu sont des drapeaux. **Sans lui, `notif_bandeau.webp` aurait été un binaire que plus personne ne sait refaire.**
+
+```
+npm run companion:fondu -- notification-fond.png \
+  companion/android/app/src/main/res/drawable-nodpi/notif_bandeau.webp
+```
+
+- 🔴 **Le fond d'une notification appartient au système, pas à l'application.** Depuis Android 12, une notification custom est enveloppée dans le gabarit d'Android. **Ce qui est peint, c'est la zone de contenu.** `DecoratedCustomViewStyle` est déclaré exprès : le système décorerait de toute façon, autant que le rendu soit prévisible.
+- 🔴 **`setContentTitle` reste posé**, et ce n'est pas un doublon : une `RemoteViews` n'atteint ni Wear, ni Auto, ni certaines surcouches. **Sans lui, la notification y serait vide.**
+- ⚠️ **Le poids compte** : une `RemoteViews` traverse un IPC borné. Le bandeau est en WebP, **30 ko**.
+- ⭐ **Les deux notifications partagent une seule fabrique** — `ui/VueNotification.kt`. L'alerte K1 y passe aussi, avec sa ligne de texte à elle.
+
+> 🔴 **Le personnage y déroge à quatre règles de [`CORPS.md`](CORPS.md)** — inclinaison, clin d'œil, main à doigts, geste d'évaluation. **L'écart a été présenté à Xavier point par point et il l'a demandé quand même ; il est acté, borné et écrit à [`CORPS.md` §10.1](CORPS.md).** ⭐ **Le rig ne bouge pas** : `kokoro-corps-v2.svg`, `Geometrie.kt` et `CorpsInvariantsTest` sont intacts, et **le corps animé de l'application ne connaît toujours ni main, ni clin d'œil, ni inclinaison.**
+
+---
+
+### 7.6 ⭐ Le logo de Kokoro devient l'icône de l'app — 16/08/2026
+
+**Xavier a dessiné le logo** — `companion/ressources/retenus/logo.jpg` : le personnage de face, clin d'œil, main en V, le 心 sur la poitrine, sur le bleu du ciel. **Il est appliqué partout où Android montre une icône, et ces endroits ne sont pas un seul.**
+
+| Où Android la montre | Ce qui la porte | Ce que ça change |
+|---|---|---|
+| **Écran d'accueil, tiroir, récents** | `mipmap-anydpi-v26/ic_lanceur.xml` — icône adaptative | Il n'y avait **aucune icône déclarée** : Android affichait son robot vert par défaut |
+| **Écran de démarrage** *(Android 12+)* | La **couche avant** de la même icône, sur `windowSplashScreenBackground` | Le fond du démarrage était le gris du thème Material ; il passe au noir de Kokoro |
+| **Icônes thématiques** *(Android 13+)* | La couche `monochrome` | Sans elle, le système fabriquerait sa propre pastille |
+| **Barre de statut et volet de notifications** | `drawable-*/ic_kokoro.png` | Remplace **le cercle vide** qui tenait la place depuis K2 |
+| **Réglages d'Android, gestionnaire d'applications** | `android:icon` sur `<application>` | Une seule déclaration, tous ces endroits |
+
+**Les trois choses qui se décident, et pourquoi elles se décident ainsi :**
+
+| | |
+|---|---|
+| 🔴 **Le logo est dans la couche *avant*, jamais dans le fond** | L'écran de démarrage d'Android **ne reprend que l'avant** de l'icône adaptative. Un logo posé au fond y disparaîtrait : le lancement s'ouvrirait sur un rond vide |
+| 🔴 **Le personnage est calé sur les 72 dp garantis, et son pourtour prolongé jusqu'aux bords** | Une icône adaptative fait 108 dp mais **n'en montre que 72 à coup sûr** — le reste, chaque lanceur en décide. ⭐ **Le logo déborde de son cadre : la main et le corps touchent les bords.** Le poser en pleine toile aurait fait couper la main par le masque rond ; le poser sur 72 dp en laissant le reste vide aurait montré une **couture carrée** dès qu'un masque en découvre plus. **Les pixels de bord sont donc étirés dans la marge** — le dégradé du logo étant vertical, une ligne étirée horizontalement le prolonge exactement |
+| ⭐ **Les deux icônes en aplat ne sont pas un détourage** | Une icône de notification est **repeinte d'une seule couleur** par le système : une photo y devient une tache. **On garde les aplats clairs du personnage et on perce ses traits** — yeux, sourire, contours redeviennent des trous. Le tri se fait sur la « froideur » du pixel *(bleu − rouge)* : le fond cyan la pousse au-delà de 45, la crème du personnage la rend négative, le gris des traits reste sous 20 |
+
+**Tout est fabriqué par [`companion/scripts/companion-icone.ts`](scripts/companion-icone.ts)** — `npm run companion:icone` — **en cinq densités**, à partir du seul JPEG. 🔴 **Aucune image d'icône ne se retouche à la main** : le logo change, on relance le script.
+
+> ⚠️ **Ce qui n'a pas bougé, et n'avait pas à bouger :** l'illustration de fond de la notification *(§7.5)*, qui vient d'une autre image et raconte une autre chose ; le corps animé du personnage *(`CORPS.md`)*, qui ne connaît toujours ni main ni clin d'œil ; et **aucun écran de l'app n'affiche le logo** — les deux seules icônes seules restent la roue dentée **(D4)** et la croix *(§7.2)*.

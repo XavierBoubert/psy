@@ -6,6 +6,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -39,16 +40,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.translate
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import io.allonsy.kokoro.R
 import kotlinx.coroutines.delay
 
 /**
@@ -282,9 +291,19 @@ fun Ruban(texte: String, couleur: Teinte, modifier: Modifier = Modifier) {
  * ⭐ **Elle déborde exprès** : sans ce débord, deux coins arrondis flotteraient sous la barre
  * d'état et la bande aurait l'air posée de travers. Le décor passe **sous** elle, comme partout —
  * jamais à travers (**P3**, **P5**).
+ *
+ * @param onFermer quand il est donné, **le rivet de droite laisse la place à la croix** — c'est la
+ *   seule place de la fermeture, et elle est la même sur tous les panneaux *(15/08/2026)*. Le ruban
+ *   garde alors la réserve des deux côtés : il reste centré, et un titre long se replie au lieu de
+ *   passer sous la croix.
  */
 @Composable
-fun BandeTitre(titre: String, couleur: Teinte, modifier: Modifier = Modifier) {
+fun BandeTitre(
+    titre: String,
+    couleur: Teinte,
+    modifier: Modifier = Modifier,
+    onFermer: (() -> Unit)? = null,
+) {
     val palette = LocalPaletteKokoro.current
     Box(
         modifier = modifier
@@ -295,11 +314,69 @@ fun BandeTitre(titre: String, couleur: Teinte, modifier: Modifier = Modifier) {
             .padding(start = 20.dp, end = 20.dp, top = 26.dp, bottom = 26.dp),
         contentAlignment = Alignment.Center,
     ) {
-        Ruban(texte = titre, couleur = couleur)
+        Ruban(
+            texte = titre,
+            couleur = couleur,
+            modifier = Modifier.padding(horizontal = if (onFermer == null) 0.dp else RESERVE_CROIX),
+        )
         Rivet(Modifier.align(Alignment.CenterStart))
-        Rivet(Modifier.align(Alignment.CenterEnd))
+        when (onFermer) {
+            null -> Rivet(Modifier.align(Alignment.CenterEnd))
+            else -> Croix(onFermer = onFermer, modifier = Modifier.align(Alignment.CenterEnd))
+        }
     }
 }
+
+/**
+ * La croix qui ferme un panneau — **en haut à droite, à la même place sur tous les panneaux**
+ * *(15/08/2026, demande de Xavier)*.
+ *
+ * ⭐ **C'est une place, pas un bouton de plus.** Avant, un bouton *Fermer* traînait au bas de
+ * certaines pages et manquait sur d'autres : il fallait donc lire la page jusqu'en bas pour savoir
+ * comment en sortir, et parfois ne pas l'y trouver. **Une sortie qui se cherche n'est pas une
+ * sortie.**
+ *
+ * ⚠️ **Deuxième exception assumée à « aucune icône seule »**, après la roue dentée (**D4**). Comme
+ * elle, la croix est un pictogramme que personne n'a à apprendre, et elle occupe une place où aucun
+ * mot ne tenait.
+ */
+@Composable
+fun Croix(onFermer: () -> Unit, modifier: Modifier = Modifier) {
+    val palette = LocalPaletteKokoro.current
+    val interactions = remember { MutableInteractionSource() }
+    val nom = stringResource(R.string.action_fermer)
+    Box(
+        modifier = modifier
+            .semantics { contentDescription = nom }
+            .clickable(interactionSource = interactions, indication = null, onClick = onFermer)
+            .matiere(
+                palette = palette,
+                rayon = 999.dp,
+                epaisseur = 5.dp,
+                epaisseurReflet = 3.dp,
+                epaisseurCreux = 0.dp,
+            )
+            .padding(bottom = 5.dp)
+            .size(TAILLE_CROIX),
+        contentAlignment = Alignment.Center,
+    ) {
+        Canvas(Modifier.size(16.dp)) { croix(palette.contour, 3.dp.toPx()) }
+    }
+}
+
+/** Deux traits, bouts arrondis — jamais un trait fin qui aurait l'air d'un autre registre. */
+private fun DrawScope.croix(couleur: Color, trait: Float) {
+    val marge = trait / 2f
+    val bas = size.height - marge
+    val droite = size.width - marge
+    drawLine(couleur, Offset(marge, marge), Offset(droite, bas), trait, StrokeCap.Round)
+    drawLine(couleur, Offset(droite, marge), Offset(marge, bas), trait, StrokeCap.Round)
+}
+
+private val TAILLE_CROIX = 44.dp
+
+/** Ce que le ruban laisse **des deux côtés** pour que la croix ne le morde pas. */
+private val RESERVE_CROIX = TAILLE_CROIX + 4.dp
 
 /**
  * L'état vide d'un écran — **une plaque creuse**, la recette retournée : le dégradé remonte, le
@@ -366,12 +443,17 @@ fun FondKokoro(modifier: Modifier = Modifier, contenu: @Composable ColumnScope.(
 }
 
 /**
- * Une page hors du monde : le fond, la bande de titre qui ne défile pas (**D11**), et le contenu qui
- * défile dessous.
+ * Une page hors du monde : le fond, la bande de titre qui ne défile pas (**D11**), et le contenu
+ * dessous.
  *
  * ⚠️ **Ici le défilement vertical est permis** — **P1** interdit la liste qui défile *dans un écran
  * du haut ou du bas du monde*, parce que le geste vertical y traverse le monde. Une page ouverte,
  * elle, ne traverse rien.
+ *
+ * @param defilant à `false`, la page tient dans l'écran et **le contenu se place au lieu de
+ *   défiler** — c'est ce qui permet à une page ouverte de reprendre exactement la mise en place d'un
+ *   écran de bord, qui ne défile jamais.
+ * @param onFermer la croix de la bande de titre. `null` pour une page dont on ne sort pas par là.
  */
 @Composable
 fun PageKokoro(
@@ -379,20 +461,25 @@ fun PageKokoro(
     couleur: Teinte,
     modifier: Modifier = Modifier,
     ecart: Dp = 18.dp,
+    defilant: Boolean = true,
+    alignement: Alignment.Vertical = Alignment.Top,
+    onFermer: (() -> Unit)? = null,
     contenu: @Composable ColumnScope.() -> Unit,
 ) {
     FondKokoro(modifier = modifier) {
-        BandeTitre(titre = titre, couleur = couleur)
+        BandeTitre(titre = titre, couleur = couleur, onFermer = onFermer)
+
+        val bas = Modifier
+            .weight(1f)
+            .fillMaxWidth()
+            .windowInsetsPadding(WindowInsets.navigationBars)
+            .imePadding()
+
         Column(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                .windowInsetsPadding(WindowInsets.navigationBars)
-                .imePadding()
-                .verticalScroll(rememberScrollState())
+            modifier = (if (defilant) bas.verticalScroll(rememberScrollState()) else bas)
                 .padding(horizontal = 20.dp)
                 .padding(top = 22.dp, bottom = 30.dp),
-            verticalArrangement = Arrangement.spacedBy(ecart),
+            verticalArrangement = Arrangement.spacedBy(ecart, alignement),
             content = contenu,
         )
     }

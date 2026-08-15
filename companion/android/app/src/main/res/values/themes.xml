@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--
+      ⭐ **L'écran de démarrage est peint par le système depuis Android 12, pas par l'app** : il
+      montre l'icône du lanceur sur `windowSplashScreenBackground`. Sans cette ligne, le fond
+      retomberait sur le gris du thème Material — un éclair clair avant le noir de Kokoro, à
+      chaque ouverture. **Il est posé au même noir que le reste** ; c'est la seule chose à dire,
+      l'icône, elle, vient de `mipmap/ic_lanceur`.
+    -->
     <style name="Theme.Kokoro" parent="android:Theme.Material.NoActionBar">
         <item name="android:windowBackground">@color/kokoro_fond</item>
+        <item name="android:windowSplashScreenBackground">@color/kokoro_fond</item>
     </style>
 </resources>

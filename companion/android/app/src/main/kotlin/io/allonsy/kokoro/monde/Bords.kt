@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -30,13 +32,14 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import io.allonsy.kokoro.R
+import io.allonsy.kokoro.crise.PortesDeCrise
 import io.allonsy.kokoro.ui.BoutonEpais
 import io.allonsy.kokoro.ui.CadreVide
 import io.allonsy.kokoro.ui.BandeTitre
 import io.allonsy.kokoro.ui.Carte
 import io.allonsy.kokoro.ui.LocalPaletteKokoro
 import io.allonsy.kokoro.ui.Pancarte
-import io.allonsy.kokoro.ui.PileDeBoutons
+import io.allonsy.kokoro.ui.PanneauExtrude
 import io.allonsy.kokoro.ui.Teinte
 import io.allonsy.kokoro.ui.TypoKokoro
 import io.allonsy.kokoro.ui.matiere
@@ -186,40 +189,64 @@ fun ContenuBilan() {
  * étincelle, aucun cœur, une seule couleur, texte à 21 sp et boutons à 88 dp. **En crise, la
  * mignonnerie est du bruit** — il se distingue en étant plus grand et plus vide, **pas plus vif**.
  *
- * ⭐ **Cet écran est la deuxième porte, pas la seule.** La première reste la notification sur
- * l'écran verrouillé, et **le mot-code n'y recule jamais au-delà de deux taps** (§6.2).
+ * ⭐ **Cet écran est la première porte, pas la seule.** La notification y mène aussi, et depuis le
+ * 15/08/2026 **elle mène ici même** : les boutons sont ceux de [PortesDeCrise], partagés à la
+ * lettre avec l'écran de crise ouvert hors du monde (§6.2).
  */
 @Composable
-fun ContenuCriseDuMonde(onFonction: (Fonction) -> Unit) {
-    val palette = LocalPaletteKokoro.current
+fun ContenuCriseDuMonde(
+    contactNom: String,
+    envoiEnCours: Boolean,
+    onFonction: (Fonction) -> Unit,
+) {
     EcranDeBord(
         titre = stringResource(R.string.monde_crise_titre),
-        couleur = palette.azur,
+        couleur = LocalPaletteKokoro.current.azur,
         defilant = false,
     ) {
-        PileDeBoutons(ecart = 26.dp) {
-            BoutonEpais(
-                libelle = stringResource(R.string.monde_crise_mot_code),
-                onClic = { onFonction(Fonction.MOT_CODE) },
-                couleur = palette.azur,
-                hauteurMinimale = 88.dp,
-                style = TypoKokoro.boutonCrise,
+        PortesDeCrise(
+            contactNom = contactNom,
+            envoiEnCours = envoiEnCours,
+            onFonction = onFonction,
+        )
+    }
+}
+
+/**
+ * **CENTRE — l'avis de porte fermée.** Il ne paraît que quand la notification d'accès n'a pas pu
+ * être affichée : l'autorisation a été refusée, ou **Android l'a révoquée tout seul** — il le fait
+ * pour les applications peu utilisées, et Kokoro en est une par construction.
+ *
+ * 🔴 **Une phrase, pas une pastille** *(tranché par Xavier le 15/08/2026)*. Un point coloré sur la
+ * roue dentée aurait dit *va voir* sans dire quoi : **c'est un sous-entendu, et le dispositif n'en
+ * fait aucun.** D4 tient donc — *jamais de pastille dessus* — et le rouge reste hors de la palette.
+ *
+ * ⭐ **Ce n'est pas une relance** : il ne compte pas les jours, il ne revient pas, il n'insiste pas.
+ * **Il constate un défaut, et il disparaît de lui-même quand le défaut est réparé.** C'est la seule
+ * chose que l'écran central ait le droit de porter (§6.1) : *une carte, une phrase, un fait*.
+ */
+@Composable
+fun AvisAcces(onReglages: () -> Unit, modifier: Modifier = Modifier) {
+    val palette = LocalPaletteKokoro.current
+    Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+        PanneauExtrude(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                text = stringResource(R.string.monde_acces_perdu),
+                style = TypoKokoro.corps,
+                color = palette.encre,
             )
-            BoutonEpais(
-                libelle = stringResource(R.string.monde_crise_tension),
-                onClic = { onFonction(Fonction.TENSION) },
-                couleur = palette.azur,
-                hauteurMinimale = 88.dp,
-                style = TypoKokoro.boutonCrise,
-            )
-            BoutonEpais(
-                libelle = stringResource(R.string.monde_crise_phrase),
-                onClic = { onFonction(Fonction.PHRASE) },
-                couleur = palette.azur,
-                hauteurMinimale = 88.dp,
-                style = TypoKokoro.boutonCrise,
+            Text(
+                text = stringResource(R.string.monde_acces_effet),
+                style = TypoKokoro.lecture,
+                color = palette.encreDouce,
+                modifier = Modifier.padding(top = 8.dp),
             )
         }
+        BoutonEpais(
+            libelle = stringResource(R.string.monde_acces_action),
+            onClic = onReglages,
+            hauteurMinimale = 56.dp,
+        )
     }
 }
 

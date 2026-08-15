@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      Le texte des notifications de Kokoro.
+
+      🔴 **Il hérite des styles `TextAppearance.Compat.Notification.*` d'androidx, et c'est le
+      point.** Une notification est peinte par le volet système, pas par le thème de l'app : le
+      volet peut être clair ou sombre, et il change **sans prévenir**. Ces styles-là suivent le
+      thème de la notification — poser `#383838` en dur rendait le texte illisible dès que le
+      volet passait au sombre, ce qui était le cas sur l'appareil de Xavier.
+
+      ⭐ **Varela Round est la seule chose qu'on ajoute** — la police de l'app (`INTERFACE.md` §4.3).
+      La couleur, elle, ne nous appartient pas.
+    -->
+    <style name="TexteNotifTitre" parent="TextAppearance.Compat.Notification.Title">
+        <item name="android:fontFamily">@font/varela_round</item>
+    </style>
+
+    <style name="TexteNotifCorps" parent="TextAppearance.Compat.Notification">
+        <item name="android:fontFamily">@font/varela_round</item>
+    </style>
+</resources>

@@ -13,8 +13,12 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +36,7 @@ import androidx.compose.ui.input.pointer.util.addPointerInputChange
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.dp
 import io.allonsy.kokoro.corps.CorpsKokoro
 import io.allonsy.kokoro.corps.HAUTEUR_VUE
 import io.allonsy.kokoro.corps.LARGEUR_VUE
@@ -76,6 +81,9 @@ private val PLACE_DE_KOKORO = BiasAlignment(horizontalBias = 0f, verticalBias = 
 /** La montée d'une étape ouverte. Assez lente pour se voir, assez courte pour ne pas se subir. */
 private const val MONTEE_ETAPE_MS = 320
 
+/** De quoi passer sous la roue dentée sans la toucher — elle fait 54 dp plus son épaisseur. */
+private val SOUS_LA_ROUE = 92.dp
+
 /**
  * Le monde de Kokoro — cinq écrans, un décor continu, aucun bouton.
  *
@@ -97,9 +105,12 @@ private const val MONTEE_ETAPE_MS = 320
 @Composable
 fun MondeKokoro(
     palette: PaletteDecor,
+    contactNom: String,
     onFonction: (Fonction) -> Unit,
     onReglages: () -> Unit,
     modifier: Modifier = Modifier,
+    envoiEnCours: Boolean = false,
+    accesPerdu: Boolean = false,
     accuse: String? = null,
     onAccuseFini: () -> Unit = {},
 ) {
@@ -170,6 +181,9 @@ fun MondeKokoro(
             ) {
                 ContenuEcran(
                     ecran = habitant,
+                    contactNom = contactNom,
+                    envoiEnCours = envoiEnCours,
+                    accesPerdu = accesPerdu,
                     onOuvrir = { etape ->
                         affichee = etape
                         ouverte = etape
@@ -214,6 +228,9 @@ private fun souffleDuPixel(taille: IntSize): Offset = Offset(
 @Composable
 private fun ContenuEcran(
     ecran: Ecran,
+    contactNom: String,
+    envoiEnCours: Boolean,
+    accesPerdu: Boolean,
     onOuvrir: (Etape) -> Unit,
     onFonction: (Fonction) -> Unit,
     onReglages: () -> Unit,
@@ -229,6 +246,16 @@ private fun ContenuEcran(
                 palette = PALETTE_CLAIRE,
             )
             RoueDentee(onClic = onReglages, modifier = Modifier.align(Alignment.TopEnd))
+            if (accesPerdu) {
+                AvisAcces(
+                    onReglages = onReglages,
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .windowInsetsPadding(WindowInsets.statusBars)
+                        .padding(horizontal = 24.dp)
+                        .padding(top = SOUS_LA_ROUE),
+                )
+            }
         }
 
         Ecran.GAUCHE -> ContenuTherapie(
@@ -242,7 +269,11 @@ private fun ContenuEcran(
 
         Ecran.DROITE -> ContenuDocumentation()
         Ecran.HAUT -> ContenuBilan()
-        Ecran.BAS -> ContenuCriseDuMonde(onFonction = onFonction)
+        Ecran.BAS -> ContenuCriseDuMonde(
+            contactNom = contactNom,
+            envoiEnCours = envoiEnCours,
+            onFonction = onFonction,
+        )
     }
 }
 

@@ -94,7 +94,8 @@ Depuis la racine, **scopés par rôle** ; les chemins sont résolus par rapport 
 | `npm run psy:sync` | Verse au dépôt ce que Kokoro a écrit. **N'écrase jamais un fichier existant** |
 | `npm run psy:pdf2md` · `psy:docx2md` · `psy:md2pdf` | Conversion de documents |
 | `npm run companion:kokoro` | Compile, teste, installe et ouvre Kokoro. **Jamais `gradlew` ni `adb` à la main** |
-| `npm run companion:image` · `companion:decoupe` | Planches de recherche graphique, et détourage du fond magenta |
+| `npm run companion:image` · `companion:decoupe` · `companion:fondu` | Planches de recherche graphique, détourage du fond magenta, et fondu du bandeau de notification |
+| `npm run companion:icone` | Fabrique les icônes de Kokoro depuis `ressources/retenus/logo.jpg`. 🔴 **Aucune image d'icône ne se retouche à la main** |
 | `npm run typecheck` | `tsc --noEmit` |
 
 ⚠️ **`psy:pdf2md` ne détecte pas les cases cochées en couleur** : un questionnaire rempli se transcrit à la main, par lecture visuelle des pages.

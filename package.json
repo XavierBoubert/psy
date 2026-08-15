@@ -12,6 +12,8 @@
     "companion:kokoro": "bash companion/android/kokoro",
     "companion:image": "node companion/scripts/companion-image.ts",
     "companion:decoupe": "node companion/scripts/companion-decoupe.ts",
+    "companion:fondu": "node companion/scripts/companion-fondu.ts",
+    "companion:icone": "node companion/scripts/companion-icone.ts",
     "typecheck": "tsc --noEmit"
   },
   "engines": {

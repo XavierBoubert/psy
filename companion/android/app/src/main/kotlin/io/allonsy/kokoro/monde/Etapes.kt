@@ -2,24 +2,22 @@ package io.allonsy.kokoro.monde
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.allonsy.kokoro.R
-import io.allonsy.kokoro.ui.BoutonEpais
+import io.allonsy.kokoro.ui.Croix
 import io.allonsy.kokoro.ui.LocalPaletteKokoro
 import io.allonsy.kokoro.ui.Teinte
 import io.allonsy.kokoro.ui.TypoKokoro
@@ -94,8 +92,12 @@ private fun demarche(titre: Int, detail: Int): Etape =
     Etape(titre = stringResource(titre), ouverture = Ouverture.Detail(stringResource(detail)))
 
 /**
- * Une étape ouverte — **elle prend l'écran entier et se ferme d'un bouton écrit *Fermer*, jamais
- * d'un geste** (`companion/INTERFACE.md` §3.1).
+ * Une étape ouverte — **elle prend l'écran entier et se ferme d'une croix, jamais d'un geste**
+ * (`companion/INTERFACE.md` §3.1).
+ *
+ * ⭐ **La croix est en haut à droite, comme sur tous les panneaux** *(15/08/2026, demande de
+ * Xavier)*. Le bouton *Fermer* qui était en pied de page obligeait à descendre une fiche longue pour
+ * en sortir ; **la sortie ne dépend plus d'où l'on en est dans la lecture.**
  *
  * ⭐ **Aucune poignée de glissement** : elle promettrait un geste qui n'existe pas, et qui entrerait
  * en concurrence avec la traversée du monde.
@@ -117,13 +119,21 @@ fun PanneauEtape(titre: String, detail: String, onFermer: () -> Unit) {
             }
             .safeDrawingPadding(),
     ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp)
+                .padding(top = 14.dp),
+        ) {
+            Croix(onFermer = onFermer, modifier = Modifier.align(Alignment.CenterEnd))
+        }
         Column(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 26.dp)
-                .padding(top = 20.dp, bottom = 24.dp),
+                .padding(top = 16.dp, bottom = 28.dp),
         ) {
             Text(
                 text = titre,
@@ -132,19 +142,6 @@ fun PanneauEtape(titre: String, detail: String, onFermer: () -> Unit) {
                 modifier = Modifier.padding(bottom = 20.dp),
             )
             Text(text = detail, style = TypoKokoro.lecture, color = palette.encre)
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .windowInsetsPadding(WindowInsets.navigationBars)
-                .padding(horizontal = 20.dp)
-                .padding(top = 12.dp, bottom = 14.dp),
-        ) {
-            BoutonEpais(
-                libelle = stringResource(R.string.monde_fermer),
-                onClic = onFermer,
-                hauteurMinimale = 62.dp,
-            )
         }
     }
 }

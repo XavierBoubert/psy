@@ -246,6 +246,26 @@ Le SVG place les pièces ; il ne dit pas autour de quoi elles tournent. **Les tr
 
 > ❌ **La surface web desktop est supprimée le 14/08/2026** *([`companion/README.md` §1](README.md))* — cette table n'a plus qu'une seule surface à décliner. ⭐ **Le rig en pièces séparées ne perd rien à la décision** : il n'a jamais été motivé par le web, mais par les **six expressions** et la **désignation d'un élément de l'écran**, qu'une forme unique et muette ne pouvait pas porter.
 
+### 10.1 🔴 L'illustration de la notification — une dérogation, demandée et assumée le 16/08/2026
+
+**Le fond de la notification d'accès à la crise porte une illustration peinte où Kokoro sort de ce document sur quatre points.** Xavier l'a demandée telle quelle après que l'écart lui a été présenté point par point. **Ce n'est donc pas une dérive, c'est une décision — et elle est bornée à cette seule image.**
+
+| Ce qui déroge | Ce que dit ce document | Ce que porte l'illustration |
+|---|---|---|
+| **L'inclinaison** | §2 — *« Vue de face, aucune perspective. Pas d'axe incliné »* | Le corps penche légèrement |
+| **Le clin d'œil** | §3 — le jeu des six est **fermé** ; `clignement` ferme **les deux** yeux | Un œil ouvert, un œil fermé souriant |
+| **La main et les doigts** | §2 et §6 garde-fou 3 — *« Aucune main, aucun doigt, aucune paume. Un doigt accuse ; un moignon ne peut pas »* | Une main à deux doigts, en V |
+| **Le geste** | §8 point 2 — faire signe, lever un bras au-dessus de l'épaule, **lever le pouce**, sont interdits comme **évaluations** | Un V adressé au lecteur, bras levé |
+
+🔴 **Ce que la dérogation ne fait pas, et ne fera pas :**
+
+1. **Elle n'entre pas dans le rig.** `kokoro-corps-v2.svg`, `Geometrie.kt` et `CorpsInvariantsTest` sont inchangés — **le corps animé de l'application ne connaît ni la main, ni le clin d'œil, ni l'inclinaison.** Les quatre règles ci-dessus restent tenues par la géométrie partout ailleurs.
+2. **Elle ne crée pas une septième expression.** §3 le dit : *« aucune septième expression ne s'ajoute sans passer par ce document et par une annonce préalable »*. Le clin d'œil est **peint dans une image**, il n'est pas une pièce du visage, et **rien ne peut le déclencher**.
+3. **Elle ne s'étend à aucun écran.** L'illustration vit dans le volet de notifications et **nulle part ailleurs** : ❌ **l'écran de crise ne porte toujours aucun personnage** (§10, et le motif n'a pas changé — *un compagnon décoratif au pire moment est du bruit*). **Ce qui est admis sur une porte ne l'est pas derrière.**
+4. **Elle ne ramène pas de texte.** La notification d'accès a été vidée le 15/08/2026 sur un motif de Xavier — *« je lis toute la journée mot code et tension appliquée »* — et **l'illustration s'y ajoute sans reprendre une seule ligne de corps** : `Kokoro` reste seul. ⭐ **C'est ce qui distingue une image d'une ligne** : elle ne se relit pas. 🔴 **Le jour où une ligne y revient, c'est [`INTERFACE.md` §6.2](INTERFACE.md) qu'on défait.**
+
+> ⚠️ **Ce qui reste ouvert, et qu'il faut regarder à l'usage plutôt que trancher ici** : le V et le clin d'œil sont des **signes sociaux à décoder**, et la règle centrale du dispositif est l'explicite et le littéral. **Une image qu'on ne peut pas rater ne demande rien en retour** — c'est ce qui la distingue d'un geste du personnage animé, et c'est le pari de cette dérogation. **Si l'image finit par se lire comme une attente, elle se retire ; elle ne se discute pas.**
+
 ---
 
 ## 11. Ce qui reste à trancher

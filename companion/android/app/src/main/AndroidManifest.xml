@@ -7,8 +7,14 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    <!--
+        🔴 `android:icon` est posé sur l'application, pas sur une activité : c'est lui qui donne
+        l'icône du lanceur, celle des récents, celle de l'écran de démarrage et celle des réglages
+        d'Android. Une seule déclaration, quatre endroits — `INTERFACE.md` D10.
+    -->
     <application
         android:allowBackup="false"
+        android:icon="@mipmap/ic_lanceur"
         android:label="@string/app_name"
         android:supportsRtl="false"
         android:theme="@style/Theme.Kokoro">

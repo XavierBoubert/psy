@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  L'icône de Kokoro sur l'écran d'accueil, dans le tiroir d'applications, dans les récents et sur
+  l'écran de démarrage. 🔴 **Elle ouvre le monde** — `INTERFACE.md` D10.
+
+  🔴 **Le logo est dans la couche avant, pas dans le fond, et ce n'est pas un détail.** L'écran de
+  démarrage d'Android 12+ ne reprend que **l'avant** de l'icône adaptative : un logo posé au fond y
+  disparaîtrait, et le lancement de l'app s'ouvrirait sur un rond vide.
+
+  ⭐ **La couche avant est opaque et couvre les 108 dp** — le personnage est calé sur les **72 dp
+  garantis** et son pourtour prolongé jusqu'aux bords *(voir `companion/scripts/companion-icone.ts`)*.
+  Le masque du lanceur — rond chez l'un, arrondi chez One UI — ne peut donc **rien couper de ce qui
+  compte**, ni découvrir de couture. Le dégradé du fond n'apparaît que si un lanceur décale les
+  couches ; il reprend exactement les deux bleus du logo.
+
+  ⭐ **`monochrome` est la même silhouette, percée de ses traits** : Android 13 la repeint aux
+  couleurs du fond d'écran quand Xavier active les icônes thématiques. **Sans elle, le système
+  fabriquerait lui-même une pastille**, et Kokoro deviendrait une tache.
+-->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@drawable/ic_lanceur_fond" />
+    <foreground android:drawable="@mipmap/ic_lanceur_avant" />
+    <monochrome android:drawable="@mipmap/ic_lanceur_mono" />
+</adaptive-icon>

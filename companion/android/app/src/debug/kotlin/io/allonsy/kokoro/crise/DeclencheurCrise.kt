@@ -40,7 +40,6 @@ class DeclencheurCrise : BroadcastReceiver() {
         val notification = NotificationCompat.Builder(context, ID_CANAL_ALERTE)
             .setSmallIcon(R.drawable.ic_kokoro)
             .setContentTitle(context.getString(R.string.acces_titre))
-            .setContentText(context.getString(R.string.acces_texte))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_REMINDER)
             .setDefaults(0)

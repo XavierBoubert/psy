@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Le fond de l'icône adaptative — les deux bleus du logo, relevés dans le fichier lui-même :
+  #56C5D9 en haut, #C6EDF4 en bas.
+
+  ⚠️ **On ne le voit presque jamais** : la couche avant est opaque et la recouvre. Il n'existe que
+  pour les lanceurs qui décalent les deux couches l'une par rapport à l'autre — sans lui, le
+  décalage montrerait du noir.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:angle="270"
+        android:endColor="#FFC6EDF4"
+        android:startColor="#FF56C5D9"
+        android:type="linear" />
+</shape>

@@ -58,10 +58,11 @@ fun ContenuJournal(
         titre = stringResource(R.string.journal_titre),
         couleur = LocalPaletteKokoro.current.peche,
         ecart = 16.dp,
+        onFermer = onFermer,
     ) {
         when (etape) {
-            EtapeJournal.DossierAbsent -> EcranDossierAbsent(onChoisirDossier, onFermer)
-            EtapeJournal.DejaEcrit -> EcranDejaEcrit(checkin.date, onFermer)
+            EtapeJournal.DossierAbsent -> EcranDossierAbsent(onChoisirDossier)
+            EtapeJournal.DejaEcrit -> EcranDejaEcrit(checkin.date)
             is EtapeJournal.Repondre -> EcranQuestion(
                 question = QUESTIONS[etape.index],
                 rang = etape.index,
@@ -70,23 +71,21 @@ fun ContenuJournal(
                 onArreter = onArreter,
             )
             EtapeJournal.Note -> EcranNote(onNote, onArreter)
-            is EtapeJournal.Enregistre -> EcranEnregistre(etape.nom, onFermer)
-            is EtapeJournal.Echoue -> EcranEchoue(etape.cause, onFermer)
+            is EtapeJournal.Enregistre -> EcranEnregistre(etape.nom)
+            is EtapeJournal.Echoue -> EcranEchoue(etape.cause)
         }
     }
 }
 
 @Composable
-private fun EcranDossierAbsent(onChoisirDossier: () -> Unit, onFermer: () -> Unit) {
+private fun EcranDossierAbsent(onChoisirDossier: () -> Unit) {
     Explication(stringResource(R.string.journal_dossier_explication))
     Principal(stringResource(R.string.journal_action_dossier), onChoisirDossier)
-    Discret(stringResource(R.string.journal_action_fermer), onFermer)
 }
 
 @Composable
-private fun EcranDejaEcrit(date: String, onFermer: () -> Unit) {
+private fun EcranDejaEcrit(date: String) {
     Explication(stringResource(R.string.journal_deja_ecrit, date))
-    Principal(stringResource(R.string.journal_action_fermer), onFermer)
 }
 
 @Composable
@@ -170,18 +169,16 @@ private fun EcranNote(onNote: (String?) -> Unit, onArreter: () -> Unit) {
 }
 
 @Composable
-private fun EcranEnregistre(nom: String, onFermer: () -> Unit) {
+private fun EcranEnregistre(nom: String) {
     Enonce(stringResource(R.string.journal_enregistre))
     Explication(nom)
-    Principal(stringResource(R.string.journal_action_fermer), onFermer)
 }
 
 @Composable
-private fun EcranEchoue(cause: String, onFermer: () -> Unit) {
+private fun EcranEchoue(cause: String) {
     Enonce(stringResource(R.string.journal_echec))
     Explication(cause)
     Explication(stringResource(R.string.journal_echec_suite))
-    Principal(stringResource(R.string.journal_action_fermer), onFermer)
 }
 
 @Composable

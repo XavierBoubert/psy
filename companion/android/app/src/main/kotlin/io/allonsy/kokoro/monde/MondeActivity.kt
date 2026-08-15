@@ -20,8 +20,9 @@ import io.allonsy.kokoro.crise.ECRAN_PHRASE
 import io.allonsy.kokoro.crise.ECRAN_TENSION
 import io.allonsy.kokoro.crise.EXTRA_ECHEC
 import io.allonsy.kokoro.crise.EXTRA_ECRAN
-import io.allonsy.kokoro.crise.envoiDirectDisponible
-import io.allonsy.kokoro.crise.envoyerMotCode
+import io.allonsy.kokoro.crise.creerCanalAcces
+import io.allonsy.kokoro.crise.publierAccesCrise
+import io.allonsy.kokoro.crise.tenterMotCode
 import io.allonsy.kokoro.decor.DECOR_JOUR
 import io.allonsy.kokoro.decor.DECOR_NUIT
 import io.allonsy.kokoro.decor.PaletteDecor
@@ -45,11 +46,23 @@ import io.allonsy.kokoro.ui.ThemeMonde
  * venue. Un décor qui vire sous les yeux serait un mouvement à interpréter, et le dispositif n'en
  * provoque aucun. **Le thème de l'interface suit la même heure que le décor** — jamais le thème
  * système.
+ *
+ * 🔴 **Le monde ne s'affiche jamais par-dessus le verrouillage** *(15/08/2026)*. On l'a essayé pour
+ * la notification, **et le téléphone a demandé le déverrouillage** : le monde vit dans la tâche du
+ * lanceur, et un `showWhenLocked` posé à l'exécution arrive après la décision du keyguard. **La
+ * porte du verrouillage reste `CriseActivity`**, qui le déclare dans le manifeste — voir
+ * `crise/AccesCrise.kt`.
+ *
+ * ⭐ **C'est lui qui republie la notification d'accès** *(15/08/2026)* : elle était accrochée à
+ * l'écran de contrôle, qui n'est plus le point d'entrée depuis **D10**. **Une porte de crise qui
+ * n'existe que si Xavier a pensé à ouvrir les réglages n'est pas une porte.**
  */
 class MondeActivity : ComponentActivity() {
     private val nuit = mutableStateOf(false)
     private val reglages = mutableStateOf(REGLAGES_INITIAUX)
     private val accuse = mutableStateOf<String?>(null)
+    private val envoiEnCours = mutableStateOf(false)
+    private val accesPerdu = mutableStateOf(false)
 
     /**
      * 🔴 **Le seul retour que l'envoi direct donne.** Un SMS parti n'affiche rien de lui-même : sans
@@ -58,6 +71,7 @@ class MondeActivity : ComponentActivity() {
      */
     private val accuseEnvoi = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
+            envoiEnCours.value = false
             when (resultCode) {
                 Activity.RESULT_OK -> accuse.value =
                     getString(R.string.monde_mot_code_envoye, reglages.value.contactNom)
@@ -75,15 +89,22 @@ class MondeActivity : ComponentActivity() {
             IntentFilter(ACTION_MOT_CODE_ENVOYE),
             ContextCompat.RECEIVER_NOT_EXPORTED,
         )
+        creerCanalAcces(this)
         relire()
         setContent {
             ThemeMonde(nuit = nuit.value) {
                 MondeKokoro(
                     palette = paletteDuMoment(nuit.value),
+                    contactNom = reglages.value.contactNom,
                     onFonction = { ouvrir(it) },
                     onReglages = { startActivity(Intent(this, MainActivity::class.java)) },
+                    envoiEnCours = envoiEnCours.value,
+                    accesPerdu = accesPerdu.value,
                     accuse = accuse.value,
-                    onAccuseFini = { accuse.value = null },
+                    onAccuseFini = {
+                        accuse.value = null
+                        envoiEnCours.value = false
+                    },
                 )
             }
         }
@@ -99,9 +120,24 @@ class MondeActivity : ComponentActivity() {
         super.onDestroy()
     }
 
+    /**
+     * 🔴 **La notification d'accès est republiée à chaque venue** *(15/08/2026)*. Elle ne l'était
+     * qu'à l'ouverture de l'écran de contrôle — donc **jamais**, depuis que l'icône du lanceur ouvre
+     * le monde (**D10**) : Xavier a dû aller la chercher dans les réglages.
+     *
+     * ⚠️ **Ce n'est pas une relance, et ça ne peut pas en devenir une** : [publierAccesCrise] réécrit
+     * une notification permanente, muette, au même identifiant. **Rien de neuf ne paraît, rien ne
+     * sonne, rien ne compte.** Elle refuse d'elle-même tant que l'autorisation n'est pas accordée —
+     * **et aucun écran ne la réclame en ouverture** : la demande vit dans les réglages, à froid.
+     *
+     * ⭐ **Quand elle refuse, l'écran central le dit en toutes lettres** *(15/08/2026, tranché par
+     * Xavier)* — voir [AvisAcces]. 🔴 **Un défaut silencieux serait le pire des deux mondes** : la
+     * porte du verrouillage aurait disparu, et rien ne l'aurait signalé.
+     */
     private fun relire() {
         nuit.value = nuitDuMoment(this)
         reglages.value = lireReglages(this)
+        accesPerdu.value = !publierAccesCrise(this)
     }
 
     /**
@@ -130,18 +166,18 @@ class MondeActivity : ComponentActivity() {
      * enregistré, ou autorisation SMS refusée. Il explique, et il propose l'application Messages.
      * **Un bouton qui n'envoie rien en silence serait pire que l'écran de trop.**
      *
-     * ⭐ **L'accusé paraît à l'appui, avant même la réponse du réseau**, puis il dit que le message
-     * est parti. Le SMS met parfois deux secondes à s'acquitter : sans ce premier mot, l'écran
-     * resterait figé assez longtemps pour qu'on re-tape, **et le message partirait deux fois**.
+     * ⭐ **L'accusé paraît à l'appui, avant même la réponse du réseau**, et **le bouton se grise le
+     * temps que le message parte** *(15/08/2026, demande de Xavier)*. Le SMS met parfois deux
+     * secondes à s'acquitter : sans ces deux-là, l'écran resterait figé assez longtemps pour qu'on
+     * re-tape, **et le message partirait deux fois**.
      */
     private fun envoyerLeMotCode() {
-        val etat = reglages.value
-        if (!etat.contactRenseigne || !envoiDirectDisponible(this)) {
+        if (!tenterMotCode(this, reglages.value)) {
             ouvrirMotCode(echec = false)
             return
         }
+        envoiEnCours.value = true
         accuse.value = getString(R.string.mot_code_en_cours)
-        envoyerMotCode(this, etat.contactNumero, etat.motCode)
     }
 
     private fun ouvrirMotCode(echec: Boolean) {

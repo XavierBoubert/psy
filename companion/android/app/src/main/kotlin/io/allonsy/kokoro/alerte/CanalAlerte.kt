@@ -13,6 +13,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import io.allonsy.kokoro.R
+import io.allonsy.kokoro.ui.avecIllustration
 
 const val ID_CANAL_ALERTE = "kokoro_alerte_v1"
 
@@ -71,6 +72,11 @@ fun publierAlerteTest(context: Context): Boolean {
         .setContentText(context.getString(R.string.alerte_texte))
         .setPriority(NotificationCompat.PRIORITY_HIGH)
         .setCategory(NotificationCompat.CATEGORY_REMINDER)
+        .avecIllustration(
+            context,
+            titre = context.getString(R.string.alerte_titre),
+            texte = context.getString(R.string.alerte_texte),
+        )
         .setDefaults(0)
         .setSound(null)
         .setVibrate(null)

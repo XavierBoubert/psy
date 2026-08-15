@@ -124,6 +124,7 @@ class MainActivity : ComponentActivity() {
                         relire()
                     },
                     onChoisirDossier = { choixDossier.launch(intentChoisirDossier()) },
+                    onFermer = { finish() },
                 )
             }
         }
@@ -186,6 +187,7 @@ private fun EcranReglages(
     onRelire: () -> Unit,
     onEnregistrer: (Reglages) -> Unit,
     onChoisirDossier: () -> Unit,
+    onFermer: () -> Unit,
 ) {
     val context = LocalContext.current
     val demandeNotifications = rememberLauncherForActivityResult(
@@ -201,6 +203,7 @@ private fun EcranReglages(
         titre = stringResource(R.string.controle_titre),
         couleur = LocalPaletteKokoro.current.beurre,
         ecart = 14.dp,
+        onFermer = onFermer,
     ) {
         Explication(stringResource(R.string.controle_sous_titre))
 

@@ -37,14 +37,13 @@ import io.allonsy.kokoro.tension.etatTension
 import io.allonsy.kokoro.tension.fractionPhase
 import io.allonsy.kokoro.tension.secondesDuBloc
 import io.allonsy.kokoro.ui.LocalPaletteKokoro
-import io.allonsy.kokoro.ui.PanneauExtrude
 import io.allonsy.kokoro.ui.TypoKokoro
 import kotlinx.coroutines.delay
 
 private const val PERIODE_TICK_MILLIS = 200L
 private const val DUREE_TRANSITION_MILLIS = 800
 
-private enum class VueTension { ACCUEIL, SEQUENCE, BLOC, ASSIS, PHRASE, ARRET }
+private enum class VueTension { ACCUEIL, SEQUENCE, BLOC, ASSIS, ARRET }
 
 private data class BlocEnCours(
     val debut: Long,
@@ -57,15 +56,14 @@ private data class BlocEnCours(
  * dans le corps de la page : **savoir où l'on est se lit à un seul endroit**, toujours le même,
  * toujours en haut, et il ne défile pas (**D11**).
  *
- * @param ouvrirSurLaPhrase entre directement sur **la phrase pour le soignant**, sans passer par
- *   l'accueil de la tension appliquée. ⭐ **Le retour reste l'accueil** : venir la lire ne doit pas
- *   enfermer, et repartir de là est le chemin normal.
+ * 🔴 **La phrase pour le soignant n'est plus ici** *(15/08/2026, demande de Xavier)*. Elle est une
+ * porte à part entière de l'écran de crise : **la ranger sous la tension appliquée obligeait à
+ * traverser une parade pour atteindre un texte à montrer**, alors que les deux ne servent pas au
+ * même moment.
  */
 @Composable
-fun ContenuTension(onFermer: () -> Unit, ouvrirSurLaPhrase: Boolean = false) {
-    var vue by remember {
-        mutableStateOf(if (ouvrirSurLaPhrase) VueTension.PHRASE else VueTension.ACCUEIL)
-    }
+fun ContenuTension(onFermer: () -> Unit) {
+    var vue by remember { mutableStateOf(VueTension.ACCUEIL) }
     var retour by remember { mutableStateOf(VueTension.ACCUEIL) }
     var bloc by remember { mutableStateOf<BlocEnCours?>(null) }
     var dernierFait by remember { mutableStateOf<EtapeSoins?>(null) }
@@ -97,7 +95,6 @@ fun ContenuTension(onFermer: () -> Unit, ouvrirSurLaPhrase: Boolean = false) {
         VueTension.ACCUEIL -> VueAccueil(
             onDemarrer = { demarrer(null) },
             onSequence = { vue = VueTension.SEQUENCE },
-            onPhrase = { allerVers(VueTension.PHRASE) },
             onArret = { allerVers(VueTension.ARRET) },
             onFermer = onFermer,
         )
@@ -105,7 +102,6 @@ fun ContenuTension(onFermer: () -> Unit, ouvrirSurLaPhrase: Boolean = false) {
         VueTension.SEQUENCE -> VueSequence(
             attendue = etapeAttendue(dernierFait),
             onRepere = { demarrer(it) },
-            onPhrase = { allerVers(VueTension.PHRASE) },
             onArret = { allerVers(VueTension.ARRET) },
             onFermer = onFermer,
         )
@@ -118,7 +114,6 @@ fun ContenuTension(onFermer: () -> Unit, ouvrirSurLaPhrase: Boolean = false) {
                 bloc = null
                 vue = VueTension.ASSIS
             },
-            onPhrase = { allerVers(VueTension.PHRASE) },
             onFermer = onFermer,
         )
 
@@ -128,8 +123,6 @@ fun ContenuTension(onFermer: () -> Unit, ouvrirSurLaPhrase: Boolean = false) {
             onFermer = onFermer,
         )
 
-        VueTension.PHRASE -> VuePhrase(onRetour = { vue = retour }, onFermer = onFermer)
-
         VueTension.ARRET -> VueArret(onRetour = { vue = retour }, onFermer = onFermer)
     }
 }
@@ -138,11 +131,10 @@ fun ContenuTension(onFermer: () -> Unit, ouvrirSurLaPhrase: Boolean = false) {
 private fun VueAccueil(
     onDemarrer: () -> Unit,
     onSequence: () -> Unit,
-    onPhrase: () -> Unit,
     onArret: () -> Unit,
     onFermer: () -> Unit,
 ) {
-    PageCrise(titre = stringResource(R.string.tension_titre)) {
+    PageCrise(titre = stringResource(R.string.tension_titre), onFermer = onFermer) {
         Explication(stringResource(R.string.tension_geste))
         GrandBouton(
             libelle = stringResource(R.string.tension_action_demarrer),
@@ -154,9 +146,7 @@ private fun VueAccueil(
             repere = stringResource(R.string.tension_repere_sequence),
             onClick = onSequence,
         )
-        Lien(stringResource(R.string.tension_lien_phrase), onPhrase)
         Lien(stringResource(R.string.tension_lien_arret), onArret)
-        Fermer(onFermer)
     }
 }
 
@@ -164,11 +154,10 @@ private fun VueAccueil(
 private fun VueSequence(
     attendue: EtapeSoins,
     onRepere: (EtapeSoins) -> Unit,
-    onPhrase: () -> Unit,
     onArret: () -> Unit,
     onFermer: () -> Unit,
 ) {
-    PageCrise(titre = stringResource(R.string.sequence_titre)) {
+    PageCrise(titre = stringResource(R.string.sequence_titre), onFermer = onFermer) {
         Explication(stringResource(R.string.sequence_consigne))
         Enonce(stringResource(R.string.sequence_attendu, stringResource(libelleDe(attendue))))
         SEQUENCE_SOINS.forEach { etape ->
@@ -178,9 +167,7 @@ private fun VueSequence(
                 onClick = { onRepere(etape) },
             )
         }
-        Lien(stringResource(R.string.tension_lien_phrase), onPhrase)
         Lien(stringResource(R.string.tension_lien_arret), onArret)
-        Fermer(onFermer)
     }
 }
 
@@ -189,7 +176,6 @@ private fun VueBloc(
     bloc: BlocEnCours,
     onQuitter: () -> Unit,
     onAssis: () -> Unit,
-    onPhrase: () -> Unit,
     onFermer: () -> Unit,
 ) {
     val palette = LocalPaletteKokoro.current
@@ -215,7 +201,11 @@ private fun VueBloc(
         label = "phase",
     )
 
-    PageCrise(titre = bloc.etape?.let { stringResource(libelleDe(it)) } ?: stringResource(R.string.tension_titre)) {
+    PageCrise(
+        titre = bloc.etape?.let { stringResource(libelleDe(it)) }
+            ?: stringResource(R.string.tension_titre),
+        onFermer = onFermer,
+    ) {
         EnGrand(
             stringResource(
                 when (etat.phase) {
@@ -262,8 +252,6 @@ private fun VueBloc(
             ),
             onClick = onQuitter,
         )
-        Lien(stringResource(R.string.tension_lien_phrase), onPhrase)
-        Fermer(onFermer)
     }
 }
 
@@ -283,7 +271,7 @@ private fun VueAssis(debut: Long, onQuitter: () -> Unit, onFermer: () -> Unit) {
     }
 
     val restantes = (SECONDES_ASSIS_APRES - secondes).coerceAtLeast(0L)
-    PageCrise(titre = stringResource(R.string.assis_titre)) {
+    PageCrise(titre = stringResource(R.string.assis_titre), onFermer = onFermer) {
         if (restantes > 0L) {
             Explication(stringResource(R.string.assis_consigne))
             Compte(stringResource(R.string.assis_restant, restantes / 60L, restantes % 60L))
@@ -293,41 +281,16 @@ private fun VueAssis(debut: Long, onQuitter: () -> Unit, onFermer: () -> Unit) {
         }
 
         Lien(stringResource(R.string.tension_action_revenir), onQuitter)
-        Fermer(onFermer)
-    }
-}
-
-/**
- * ⭐ **La phrase est écrite pour être tendue à quelqu'un d'autre** — c'est le seul écran du
- * dispositif dont un tiers est le lecteur. Elle est donc posée seule sur son panneau, en gros, sans
- * rien autour qui demanderait de faire le tri.
- */
-@Composable
-private fun VuePhrase(onRetour: () -> Unit, onFermer: () -> Unit) {
-    val palette = LocalPaletteKokoro.current
-    PageCrise(titre = stringResource(R.string.phrase_titre)) {
-        PanneauExtrude(modifier = Modifier.fillMaxWidth()) {
-            Text(
-                text = stringResource(R.string.phrase_texte),
-                style = TypoKokoro.titre,
-                color = palette.encre,
-            )
-        }
-        Explication(stringResource(R.string.phrase_montrer))
-        Explication(stringResource(R.string.phrase_appuis))
-        Lien(stringResource(R.string.crise_retour), onRetour)
-        Fermer(onFermer)
     }
 }
 
 @Composable
 private fun VueArret(onRetour: () -> Unit, onFermer: () -> Unit) {
-    PageCrise(titre = stringResource(R.string.arret_titre)) {
+    PageCrise(titre = stringResource(R.string.arret_titre), onFermer = onFermer) {
         Explication(stringResource(R.string.arret_douleur))
         Explication(stringResource(R.string.arret_syncope))
         Explication(stringResource(R.string.arret_discriminant))
         Lien(stringResource(R.string.crise_retour), onRetour)
-        Fermer(onFermer)
     }
 }
 
