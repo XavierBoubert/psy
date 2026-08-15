@@ -1,15 +1,14 @@
 package io.allonsy.kokoro.crise
 
 import android.os.SystemClock
+import androidx.annotation.StringRes
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,10 +18,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.annotation.StringRes
+import androidx.compose.foundation.shape.RoundedCornerShape
 import io.allonsy.kokoro.R
 import io.allonsy.kokoro.tension.EtapeSoins
 import io.allonsy.kokoro.tension.NOMBRE_CYCLES
@@ -34,6 +36,9 @@ import io.allonsy.kokoro.tension.etapeAttendue
 import io.allonsy.kokoro.tension.etatTension
 import io.allonsy.kokoro.tension.fractionPhase
 import io.allonsy.kokoro.tension.secondesDuBloc
+import io.allonsy.kokoro.ui.LocalPaletteKokoro
+import io.allonsy.kokoro.ui.PanneauExtrude
+import io.allonsy.kokoro.ui.TypoKokoro
 import kotlinx.coroutines.delay
 
 private const val PERIODE_TICK_MILLIS = 200L
@@ -48,6 +53,10 @@ private data class BlocEnCours(
 )
 
 /**
+ * ⭐ **Chaque vue porte son propre titre sur le ruban** *(15/08/2026)*. Le titre n'est pas répété
+ * dans le corps de la page : **savoir où l'on est se lit à un seul endroit**, toujours le même,
+ * toujours en haut, et il ne défile pas (**D11**).
+ *
  * @param ouvrirSurLaPhrase entre directement sur **la phrase pour le soignant**, sans passer par
  *   l'accueil de la tension appliquée. ⭐ **Le retour reste l'accueil** : venir la lire ne doit pas
  *   enfermer, et repartir de là est le chemin normal.
@@ -133,21 +142,22 @@ private fun VueAccueil(
     onArret: () -> Unit,
     onFermer: () -> Unit,
 ) {
-    Titre(stringResource(R.string.tension_titre))
-    Explication(stringResource(R.string.tension_geste))
-    GrandBouton(
-        libelle = stringResource(R.string.tension_action_demarrer),
-        repere = stringResource(R.string.tension_repere_demarrer),
-        onClick = onDemarrer,
-    )
-    GrandBouton(
-        libelle = stringResource(R.string.tension_action_sequence),
-        repere = stringResource(R.string.tension_repere_sequence),
-        onClick = onSequence,
-    )
-    Lien(stringResource(R.string.tension_lien_phrase), onPhrase)
-    Lien(stringResource(R.string.tension_lien_arret), onArret)
-    Fermer(onFermer)
+    PageCrise(titre = stringResource(R.string.tension_titre)) {
+        Explication(stringResource(R.string.tension_geste))
+        GrandBouton(
+            libelle = stringResource(R.string.tension_action_demarrer),
+            repere = stringResource(R.string.tension_repere_demarrer),
+            onClick = onDemarrer,
+        )
+        GrandBouton(
+            libelle = stringResource(R.string.tension_action_sequence),
+            repere = stringResource(R.string.tension_repere_sequence),
+            onClick = onSequence,
+        )
+        Lien(stringResource(R.string.tension_lien_phrase), onPhrase)
+        Lien(stringResource(R.string.tension_lien_arret), onArret)
+        Fermer(onFermer)
+    }
 }
 
 @Composable
@@ -158,23 +168,20 @@ private fun VueSequence(
     onArret: () -> Unit,
     onFermer: () -> Unit,
 ) {
-    Titre(stringResource(R.string.sequence_titre))
-    Explication(stringResource(R.string.sequence_consigne))
-    Text(
-        text = stringResource(R.string.sequence_attendu, stringResource(libelleDe(attendue))),
-        style = MaterialTheme.typography.bodyLarge,
-        color = MaterialTheme.colorScheme.onBackground,
-    )
-    SEQUENCE_SOINS.forEach { etape ->
-        GrandBouton(
-            libelle = stringResource(libelleDe(etape)),
-            repere = stringResource(blocDe(etape)),
-            onClick = { onRepere(etape) },
-        )
+    PageCrise(titre = stringResource(R.string.sequence_titre)) {
+        Explication(stringResource(R.string.sequence_consigne))
+        Enonce(stringResource(R.string.sequence_attendu, stringResource(libelleDe(attendue))))
+        SEQUENCE_SOINS.forEach { etape ->
+            GrandBouton(
+                libelle = stringResource(libelleDe(etape)),
+                repere = stringResource(blocDe(etape)),
+                onClick = { onRepere(etape) },
+            )
+        }
+        Lien(stringResource(R.string.tension_lien_phrase), onPhrase)
+        Lien(stringResource(R.string.tension_lien_arret), onArret)
+        Fermer(onFermer)
     }
-    Lien(stringResource(R.string.tension_lien_phrase), onPhrase)
-    Lien(stringResource(R.string.tension_lien_arret), onArret)
-    Fermer(onFermer)
 }
 
 @Composable
@@ -185,6 +192,7 @@ private fun VueBloc(
     onPhrase: () -> Unit,
     onFermer: () -> Unit,
 ) {
+    val palette = LocalPaletteKokoro.current
     val finMillis = secondesDuBloc(bloc.cycles)?.times(1000L)
     var millis by remember(bloc) { mutableLongStateOf(SystemClock.elapsedRealtime() - bloc.debut) }
 
@@ -200,84 +208,68 @@ private fun VueBloc(
     val termine = etat.phase == PhaseTension.TERMINE
     val couleur by animateColorAsState(
         targetValue = when (etat.phase) {
-            PhaseTension.CONTRACTE -> MaterialTheme.colorScheme.primary
-            else -> MaterialTheme.colorScheme.onSurfaceVariant
+            PhaseTension.CONTRACTE -> palette.azur.bas
+            else -> palette.encreDouce
         },
         animationSpec = tween(DUREE_TRANSITION_MILLIS),
         label = "phase",
     )
 
-    bloc.etape?.let {
-        Text(
-            text = stringResource(libelleDe(it)),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-    }
-
-    Text(
-        text = stringResource(
-            when (etat.phase) {
-                PhaseTension.CONTRACTE -> R.string.tension_phase_contracte
-                PhaseTension.RELACHE -> R.string.tension_phase_relache
-                PhaseTension.TERMINE -> R.string.tension_phase_termine
-            },
-        ),
-        style = MaterialTheme.typography.displaySmall,
-        color = MaterialTheme.colorScheme.onBackground,
-    )
-    Text(
-        text = when (etat.phase) {
-            PhaseTension.CONTRACTE -> stringResource(R.string.tension_consigne_contracte)
-            PhaseTension.RELACHE -> stringResource(R.string.tension_consigne_relache)
-            PhaseTension.TERMINE -> stringResource(R.string.tension_consigne_termine, etat.cycle)
-        },
-        style = MaterialTheme.typography.bodyLarge,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-    )
-
-    if (!termine) {
-        Text(
-            text = etat.secondesRestantes.toString(),
-            style = MaterialTheme.typography.displayLarge,
-            color = MaterialTheme.colorScheme.onBackground,
-        )
-        Barre(fraction = fractionPhase(millis, bloc.cycles), couleur = couleur)
-        Text(
-            text = when (bloc.cycles) {
-                null -> stringResource(R.string.tension_cycle_enchaine, etat.cycle)
-                else -> stringResource(R.string.tension_cycle, etat.cycle, bloc.cycles)
-            },
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-    }
-
-    if (termine && bloc.etape == EtapeSoins.APRES_GESTE) {
-        GrandBouton(
-            libelle = stringResource(R.string.assis_action),
-            repere = stringResource(R.string.assis_repere),
-            onClick = onAssis,
-        )
-    }
-
-    OutlinedButton(onClick = onQuitter, modifier = Modifier.fillMaxWidth()) {
-        Text(
+    PageCrise(titre = bloc.etape?.let { stringResource(libelleDe(it)) } ?: stringResource(R.string.tension_titre)) {
+        EnGrand(
             stringResource(
+                when (etat.phase) {
+                    PhaseTension.CONTRACTE -> R.string.tension_phase_contracte
+                    PhaseTension.RELACHE -> R.string.tension_phase_relache
+                    PhaseTension.TERMINE -> R.string.tension_phase_termine
+                },
+            ),
+        )
+        Explication(
+            when (etat.phase) {
+                PhaseTension.CONTRACTE -> stringResource(R.string.tension_consigne_contracte)
+                PhaseTension.RELACHE -> stringResource(R.string.tension_consigne_relache)
+                PhaseTension.TERMINE -> stringResource(R.string.tension_consigne_termine, etat.cycle)
+            },
+        )
+
+        if (!termine) {
+            Compte(etat.secondesRestantes.toString())
+            Barre(fraction = fractionPhase(millis, bloc.cycles), couleur = couleur)
+            Explication(
+                when (bloc.cycles) {
+                    null -> stringResource(R.string.tension_cycle_enchaine, etat.cycle)
+                    else -> stringResource(R.string.tension_cycle, etat.cycle, bloc.cycles)
+                },
+            )
+        }
+
+        if (termine && bloc.etape == EtapeSoins.APRES_GESTE) {
+            GrandBouton(
+                libelle = stringResource(R.string.assis_action),
+                repere = stringResource(R.string.assis_repere),
+                onClick = onAssis,
+            )
+        }
+
+        Lien(
+            libelle = stringResource(
                 when {
                     termine && bloc.etape != null -> R.string.tension_action_revenir
                     termine -> R.string.tension_action_recommencer
                     else -> R.string.tension_action_arreter
                 },
             ),
+            onClick = onQuitter,
         )
+        Lien(stringResource(R.string.tension_lien_phrase), onPhrase)
+        Fermer(onFermer)
     }
-    Lien(stringResource(R.string.tension_lien_phrase), onPhrase)
-    Fermer(onFermer)
 }
 
 @Composable
 private fun VueAssis(debut: Long, onQuitter: () -> Unit, onFermer: () -> Unit) {
+    val palette = LocalPaletteKokoro.current
     var secondes by remember(debut) {
         mutableLongStateOf((SystemClock.elapsedRealtime() - debut) / 1000L)
     }
@@ -291,70 +283,89 @@ private fun VueAssis(debut: Long, onQuitter: () -> Unit, onFermer: () -> Unit) {
     }
 
     val restantes = (SECONDES_ASSIS_APRES - secondes).coerceAtLeast(0L)
-    Titre(stringResource(R.string.assis_titre))
+    PageCrise(titre = stringResource(R.string.assis_titre)) {
+        if (restantes > 0L) {
+            Explication(stringResource(R.string.assis_consigne))
+            Compte(stringResource(R.string.assis_restant, restantes / 60L, restantes % 60L))
+            Barre(fraction = secondes.toFloat() / SECONDES_ASSIS_APRES, couleur = palette.azur.bas)
+        } else {
+            Explication(stringResource(R.string.assis_termine))
+        }
 
-    if (restantes > 0L) {
-        Explication(stringResource(R.string.assis_consigne))
-        Text(
-            text = stringResource(R.string.assis_restant, restantes / 60L, restantes % 60L),
-            style = MaterialTheme.typography.displayLarge,
-            color = MaterialTheme.colorScheme.onBackground,
-        )
-        Barre(
-            fraction = secondes.toFloat() / SECONDES_ASSIS_APRES,
-            couleur = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-    } else {
-        Explication(stringResource(R.string.assis_termine))
+        Lien(stringResource(R.string.tension_action_revenir), onQuitter)
+        Fermer(onFermer)
     }
-
-    OutlinedButton(onClick = onQuitter, modifier = Modifier.fillMaxWidth()) {
-        Text(stringResource(R.string.tension_action_revenir))
-    }
-    Fermer(onFermer)
 }
 
+/**
+ * ⭐ **La phrase est écrite pour être tendue à quelqu'un d'autre** — c'est le seul écran du
+ * dispositif dont un tiers est le lecteur. Elle est donc posée seule sur son panneau, en gros, sans
+ * rien autour qui demanderait de faire le tri.
+ */
 @Composable
 private fun VuePhrase(onRetour: () -> Unit, onFermer: () -> Unit) {
-    Titre(stringResource(R.string.phrase_titre))
-    Text(
-        text = stringResource(R.string.phrase_texte),
-        style = MaterialTheme.typography.headlineSmall,
-        color = MaterialTheme.colorScheme.onBackground,
-    )
-    Explication(stringResource(R.string.phrase_montrer))
-    Explication(stringResource(R.string.phrase_appuis))
-    OutlinedButton(onClick = onRetour, modifier = Modifier.fillMaxWidth()) {
-        Text(stringResource(R.string.crise_retour))
+    val palette = LocalPaletteKokoro.current
+    PageCrise(titre = stringResource(R.string.phrase_titre)) {
+        PanneauExtrude(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                text = stringResource(R.string.phrase_texte),
+                style = TypoKokoro.titre,
+                color = palette.encre,
+            )
+        }
+        Explication(stringResource(R.string.phrase_montrer))
+        Explication(stringResource(R.string.phrase_appuis))
+        Lien(stringResource(R.string.crise_retour), onRetour)
+        Fermer(onFermer)
     }
-    Fermer(onFermer)
 }
 
 @Composable
 private fun VueArret(onRetour: () -> Unit, onFermer: () -> Unit) {
-    Titre(stringResource(R.string.arret_titre))
-    Explication(stringResource(R.string.arret_douleur))
-    Explication(stringResource(R.string.arret_syncope))
-    Explication(stringResource(R.string.arret_discriminant))
-    OutlinedButton(onClick = onRetour, modifier = Modifier.fillMaxWidth()) {
-        Text(stringResource(R.string.crise_retour))
+    PageCrise(titre = stringResource(R.string.arret_titre)) {
+        Explication(stringResource(R.string.arret_douleur))
+        Explication(stringResource(R.string.arret_syncope))
+        Explication(stringResource(R.string.arret_discriminant))
+        Lien(stringResource(R.string.crise_retour), onRetour)
+        Fermer(onFermer)
     }
-    Fermer(onFermer)
 }
 
+/** Les secondes qui restent. **Un compte à l'écran, puisqu'il n'y a rien à percevoir.** */
+@Composable
+private fun Compte(texte: String) {
+    Text(
+        text = texte,
+        style = TypoKokoro.compte,
+        color = LocalPaletteKokoro.current.encre,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.fillMaxWidth(),
+    )
+}
+
+/**
+ * L'avancée de la phase en cours.
+ *
+ * ⭐ **Ce n'est pas une barre de progression au sens interdit par §4.3** : elle ne mesure ni un
+ * effort, ni une assiduité, ni un niveau atteint. **Elle montre le temps qui passe** pendant un bloc
+ * chronométré, et elle disparaît avec lui.
+ */
 @Composable
 private fun Barre(fraction: Float, couleur: Color) {
+    val palette = LocalPaletteKokoro.current
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(6.dp)
-            .background(MaterialTheme.colorScheme.surface),
+            .padding(vertical = 4.dp)
+            .height(14.dp)
+            .clip(RoundedCornerShape(999.dp))
+            .drawBehind { drawRect(palette.creux) },
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth(fraction.coerceIn(0f, 1f))
                 .fillMaxHeight()
-                .background(couleur),
+                .drawBehind { drawRect(couleur) },
         )
     }
 }

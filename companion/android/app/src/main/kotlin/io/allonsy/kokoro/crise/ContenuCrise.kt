@@ -1,26 +1,10 @@
 package io.allonsy.kokoro.crise
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import io.allonsy.kokoro.R
-import io.allonsy.kokoro.reglages.MOT_CODE
 import io.allonsy.kokoro.reglages.Reglages
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -37,35 +21,21 @@ fun ContenuCrise(
     onSecours: () -> Unit,
     onFermer: () -> Unit,
 ) {
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background,
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .safeDrawingPadding()
-                .verticalScroll(rememberScrollState())
-                .padding(24.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
-        ) {
-            when (ecran) {
-                EcranCrise.Accueil -> EcranAccueil(
-                    reglages = reglages,
-                    onAller = onAller,
-                    onFermer = onFermer,
-                )
-                EcranCrise.MotCode -> EcranMotCode(
-                    reglages = reglages,
-                    envoi = envoi,
-                    onEnvoyer = onEnvoyer,
-                    onSecours = onSecours,
-                    onFermer = onFermer,
-                )
-                EcranCrise.Tension -> ContenuTension(onFermer = onFermer)
-                EcranCrise.Phrase -> ContenuTension(onFermer = onFermer, ouvrirSurLaPhrase = true)
-            }
-        }
+    when (ecran) {
+        EcranCrise.Accueil -> EcranAccueil(
+            reglages = reglages,
+            onAller = onAller,
+            onFermer = onFermer,
+        )
+        EcranCrise.MotCode -> EcranMotCode(
+            reglages = reglages,
+            envoi = envoi,
+            onEnvoyer = onEnvoyer,
+            onSecours = onSecours,
+            onFermer = onFermer,
+        )
+        EcranCrise.Tension -> ContenuTension(onFermer = onFermer)
+        EcranCrise.Phrase -> ContenuTension(onFermer = onFermer, ouvrirSurLaPhrase = true)
     }
 }
 
@@ -75,19 +45,27 @@ private fun EcranAccueil(
     onAller: (EcranCrise) -> Unit,
     onFermer: () -> Unit,
 ) {
-    GrandBouton(
-        libelle = stringResource(R.string.crise_bouton_mot_code, reglages.contactNom),
-        repere = stringResource(R.string.crise_repere_mot_code),
-        onClick = { onAller(EcranCrise.MotCode) },
-    )
-    GrandBouton(
-        libelle = stringResource(R.string.crise_bouton_tension),
-        repere = stringResource(R.string.crise_repere_tension),
-        onClick = { onAller(EcranCrise.Tension) },
-    )
-    Fermer(onFermer)
+    PageCrise(titre = stringResource(R.string.monde_crise_titre)) {
+        GrandBouton(
+            libelle = stringResource(R.string.crise_bouton_mot_code, reglages.contactNom),
+            repere = stringResource(R.string.crise_repere_mot_code),
+            onClick = { onAller(EcranCrise.MotCode) },
+        )
+        GrandBouton(
+            libelle = stringResource(R.string.crise_bouton_tension),
+            repere = stringResource(R.string.crise_repere_tension),
+            onClick = { onAller(EcranCrise.Tension) },
+        )
+        Fermer(onFermer)
+    }
 }
 
+/**
+ * ⭐ **Cet écran n'est plus le chemin ordinaire du mot-code** *(15/08/2026)*. Depuis l'écran
+ * **Crise** du monde, le message part d'un seul appui. On n'arrive plus ici que par la notification
+ * de l'écran verrouillé, **ou parce que l'envoi direct n'a pas pu se faire** — pas de numéro,
+ * autorisation refusée, échec du réseau.
+ */
 @Composable
 private fun EcranMotCode(
     reglages: Reglages,
@@ -100,59 +78,39 @@ private fun EcranMotCode(
     val direct = remember { envoiDirectDisponible(context) }
     val heure = remember(envoi) { LocalTime.now().format(FORMAT_HEURE) }
 
-    Text(
-        text = stringResource(R.string.mot_code_destinataire, reglages.contactNom),
-        style = MaterialTheme.typography.bodyLarge,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-    )
-    Text(
-        text = MOT_CODE,
-        style = MaterialTheme.typography.displaySmall,
-        color = MaterialTheme.colorScheme.onBackground,
-    )
+    PageCrise(titre = stringResource(R.string.mot_code_titre)) {
+        Explication(stringResource(R.string.mot_code_destinataire, reglages.contactNom))
+        EnGrand(reglages.motCode)
 
-    when {
-        !reglages.contactRenseigne -> Text(
-            text = stringResource(R.string.mot_code_sans_numero),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
+        when {
+            !reglages.contactRenseigne -> Explication(stringResource(R.string.mot_code_sans_numero))
 
-        envoi == ResultatEnvoi.ENVOYE -> Text(
-            text = stringResource(R.string.mot_code_envoye, heure),
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.onBackground,
-        )
+            envoi == ResultatEnvoi.ENVOYE -> EnGrand(stringResource(R.string.mot_code_envoye, heure))
 
-        envoi == ResultatEnvoi.EN_COURS -> Text(
-            text = stringResource(R.string.mot_code_en_cours),
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
+            envoi == ResultatEnvoi.EN_COURS -> Explication(stringResource(R.string.mot_code_en_cours))
 
-        direct -> GrandBouton(
-            libelle = stringResource(R.string.mot_code_action_envoyer),
-            repere = stringResource(R.string.mot_code_repere_envoyer),
-            onClick = onEnvoyer,
-        )
+            envoi == ResultatEnvoi.ECHEC -> {
+                Explication(stringResource(R.string.mot_code_echec))
+                Action(
+                    libelle = stringResource(R.string.mot_code_action_messages),
+                    onClick = onSecours,
+                )
+                Explication(stringResource(R.string.mot_code_repere_messages))
+            }
 
-        else -> GrandBouton(
-            libelle = stringResource(R.string.mot_code_action_messages),
-            repere = stringResource(R.string.mot_code_repere_messages),
-            onClick = onSecours,
-        )
-    }
+            direct -> GrandBouton(
+                libelle = stringResource(R.string.mot_code_action_envoyer),
+                repere = stringResource(R.string.mot_code_repere_envoyer),
+                onClick = onEnvoyer,
+            )
 
-    if (envoi == ResultatEnvoi.ECHEC) {
-        Text(
-            text = stringResource(R.string.mot_code_echec),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-        OutlinedButton(onClick = onSecours, modifier = Modifier.fillMaxWidth()) {
-            Text(stringResource(R.string.mot_code_action_messages))
+            else -> GrandBouton(
+                libelle = stringResource(R.string.mot_code_action_messages),
+                repere = stringResource(R.string.mot_code_repere_messages),
+                onClick = onSecours,
+            )
         }
-    }
 
-    Fermer(onFermer)
+        Fermer(onFermer)
+    }
 }

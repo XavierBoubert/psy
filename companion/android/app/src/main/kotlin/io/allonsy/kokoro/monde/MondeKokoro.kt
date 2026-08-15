@@ -1,5 +1,6 @@
 package io.allonsy.kokoro.monde
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
@@ -39,6 +40,7 @@ import io.allonsy.kokoro.corps.Posture
 import io.allonsy.kokoro.corps.rigAnime
 import io.allonsy.kokoro.decor.Decor
 import io.allonsy.kokoro.decor.PaletteDecor
+import io.allonsy.kokoro.ui.Accuse
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlin.math.abs
@@ -98,6 +100,8 @@ fun MondeKokoro(
     onFonction: (Fonction) -> Unit,
     onReglages: () -> Unit,
     modifier: Modifier = Modifier,
+    accuse: String? = null,
+    onAccuseFini: () -> Unit = {},
 ) {
     var ecran by remember { mutableStateOf(Ecran.CENTRE) }
     var taille by remember { mutableStateOf(IntSize.Zero) }
@@ -106,6 +110,16 @@ fun MondeKokoro(
     val vue = remember { mutableStateOf(Ecran.CENTRE.camera) }
     val pose = remember { mutableStateOf<Job?>(null) }
     val portee = rememberCoroutineScope()
+
+    /**
+     * 🔴 **Le bouton *retour* du téléphone ferme le panneau, il ne quitte pas l'application.** Sans
+     * ça, le geste système le plus ancré du téléphone faisait disparaître Kokoro d'un coup depuis une
+     * étape ouverte — exactement le contraire de la prévisibilité annoncée.
+     *
+     * ⭐ **Il fait la même chose que le bouton *Fermer***, et rien de plus : le retour ne traverse
+     * pas le monde, il ne remonte pas d'écran en écran. **Un seul geste, un seul effet.**
+     */
+    BackHandler(enabled = ouverte != null) { ouverte = null }
 
     Box(
         modifier = modifier
@@ -127,7 +141,11 @@ fun MondeKokoro(
                         pose.value = portee.launch {
                             Animatable(vue.value, Offset.VectorConverter).animateTo(
                                 targetValue = arrivee.camera,
-                                animationSpec = spring(Spring.DampingRatioNoBouncy, RAIDEUR),
+                                animationSpec = spring(
+                                    dampingRatio = Spring.DampingRatioNoBouncy,
+                                    stiffness = RAIDEUR,
+                                    visibilityThreshold = souffleDuPixel(taille),
+                                ),
                                 initialVelocity = elan,
                             ) {
                                 vue.value = value
@@ -163,8 +181,28 @@ fun MondeKokoro(
         }
 
         EtapeOuverte(etape = affichee, visible = ouverte != null, onFermer = { ouverte = null })
+
+        Accuse(
+            texte = accuse,
+            onFini = onAccuseFini,
+            modifier = Modifier.align(Alignment.BottomCenter),
+        )
     }
 }
+
+/**
+ * Le seuil sous lequel le ressort considère qu'il est arrivé — **une demi-image de large**.
+ *
+ * 🔴 **C'est la cause du rattrapage d'un ou deux pixels en fin de traversée.** Sans seuil donné, le
+ * ressort prend celui de Compose, `0.01`, appliqué à des unités qui valent **un écran entier** :
+ * l'animation s'arrêtait donc à un centième d'écran de sa cible — une dizaine de pixels — et la
+ * valeur **sautait** sur la cible d'un coup. Exprimé en fraction d'écran, un demi-pixel vaut
+ * `0.5 / largeur`, et le saut passe sous la définition de la dalle.
+ */
+private fun souffleDuPixel(taille: IntSize): Offset = Offset(
+    x = 0.5f / taille.width.coerceAtLeast(1),
+    y = 0.5f / taille.height.coerceAtLeast(1),
+)
 
 /**
  * Ce qu'il y a dans chaque écran — **une rubrique par écran** (`companion/INTERFACE.md` §3).

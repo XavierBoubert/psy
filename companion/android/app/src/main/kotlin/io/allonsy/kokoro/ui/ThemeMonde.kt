@@ -10,11 +10,13 @@ import androidx.compose.runtime.CompositionLocalProvider
 /**
  * Le thème du monde — **panneaux extrudés** (`companion/INTERFACE.md` §4).
  *
- * ⚠️ **Il ne remplace pas [ThemeKokoro], il s'ajoute à côté.** Les surfaces déjà éprouvées sur le
- * téléphone — l'accès crise, la tension appliquée, le check-in, l'écran de contrôle — gardent leur
- * apparence actuelle tant que leur passage à cette matière n'a pas été **annoncé**. 🔴 **La
- * prévisibilité est une fonctionnalité** : aucun changement d'interface ni de format sans annonce,
- * et surtout pas sur un écran de crise qui sert en situation.
+ * ⭐ **C'est désormais le thème de tout ce que Xavier voit** *(15/08/2026)* : le monde, les écrans de
+ * crise, le check-in et les réglages. Le passage des quatre surfaces déjà éprouvées **a été demandé
+ * par Xavier lui-même** — 🔴 **la prévisibilité est une fonctionnalité, et c'est la seule chose qui
+ * autorisait à toucher à un écran qui sert en situation.**
+ *
+ * ⚠️ **[ThemeKokoro] survit pour les deux outils de mise au point** — l'alerte K1 et l'atelier du
+ * corps. Ils ne sont pas des surfaces de soin : ils n'ont rien à gagner à changer de peau.
  *
  * ⭐ **La nuit est décidée par l'appelant, à l'arrivée** — jamais lue au fil de l'eau, jamais prise
  * au thème système (`companion/DECOR.md` §5, §4.3).

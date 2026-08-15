@@ -78,6 +78,7 @@ fun EcranDeBord(
     couleur: Teinte,
     defilant: Boolean,
     modifier: Modifier = Modifier,
+    alignement: Alignment.Vertical = Alignment.CenterVertically,
     contenu: @Composable ColumnScope.() -> Unit,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
@@ -98,7 +99,7 @@ fun EcranDeBord(
         } else {
             Column(
                 modifier = bas.padding(horizontal = 20.dp).padding(top = 20.dp, bottom = 26.dp),
-                verticalArrangement = Arrangement.spacedBy(22.dp, Alignment.CenterVertically),
+                verticalArrangement = Arrangement.spacedBy(22.dp, alignement),
                 content = contenu,
             )
         }
@@ -159,6 +160,11 @@ fun ContenuDocumentation() {
  *
  * 🔴 **Aucun chiffre, aucune courbe, aucun score** : la cotation n'est pas dans Kokoro
  * (`companion/PROGRAMME.md` §3), et un score mal lu est pire qu'un score absent.
+ *
+ * ⭐ **Le contenu part du haut, comme à la documentation.** Cet écran ne défile pas (**P1**), mais un
+ * état vide posé au milieu de la page se lit comme un message adressé ; posé en haut, il se lit comme
+ * une liste qui n'a rien dedans — ce qu'il est. **Les deux écrans qui n'ont rien doivent se
+ * ressembler.**
  */
 @Composable
 fun ContenuBilan() {
@@ -166,6 +172,7 @@ fun ContenuBilan() {
         titre = stringResource(R.string.monde_bilan_titre),
         couleur = LocalPaletteKokoro.current.beurre,
         defilant = false,
+        alignement = Alignment.Top,
     ) {
         CadreVide(texte = stringResource(R.string.monde_bilan_vide))
     }

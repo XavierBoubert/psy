@@ -3,9 +3,13 @@ package io.allonsy.kokoro.journal
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.mutableStateOf
-import io.allonsy.kokoro.ui.ThemeKokoro
+import io.allonsy.kokoro.reglages.estNuit
+import io.allonsy.kokoro.reglages.lireReglages
+import io.allonsy.kokoro.reglages.minuteCourante
+import io.allonsy.kokoro.ui.ThemeMonde
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -23,6 +27,7 @@ class JournalActivity : ComponentActivity() {
     private val etape = mutableStateOf<EtapeJournal>(EtapeJournal.Repondre(0))
     private val checkin = mutableStateOf(Checkin.vide(""))
     private val repris = mutableStateOf<Map<Champ, Double>>(emptyMap())
+    private val nuit = mutableStateOf(false)
 
     private val choixDossier = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult(),
@@ -35,9 +40,11 @@ class JournalActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        nuit.value = estNuit(lireReglages(this).nuit, minuteCourante())
         demarrer()
         setContent {
-            ThemeKokoro {
+            ThemeMonde(nuit = nuit.value) {
                 ContenuJournal(
                     etape = etape.value,
                     checkin = checkin.value,

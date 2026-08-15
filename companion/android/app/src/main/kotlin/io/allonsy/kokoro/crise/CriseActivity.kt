@@ -9,17 +9,26 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
-import io.allonsy.kokoro.reglages.MOT_CODE
-import io.allonsy.kokoro.reglages.PLAGE_NUIT_PAR_DEFAUT
-import io.allonsy.kokoro.reglages.Reglages
+import io.allonsy.kokoro.reglages.REGLAGES_INITIAUX
+import io.allonsy.kokoro.reglages.estNuit
 import io.allonsy.kokoro.reglages.lireReglages
-import io.allonsy.kokoro.ui.ThemeKokoro
+import io.allonsy.kokoro.reglages.minuteCourante
+import io.allonsy.kokoro.ui.ThemeMonde
 
 const val EXTRA_ECRAN = "ecran"
 const val ECRAN_MOT_CODE = "mot_code"
 const val ECRAN_TENSION = "tension"
+
+/**
+ * ⭐ **L'écran s'ouvre en sachant que l'envoi direct vient d'échouer** *(15/08/2026)*. Depuis l'écran
+ * **Crise** du monde, le mot-code part d'un seul appui ; quand il ne part pas, c'est ici qu'on
+ * arrive, et **il faut le dire tout de suite** plutôt que de rejouer l'écran comme si rien ne
+ * s'était passé.
+ */
+const val EXTRA_ECHEC = "echec"
 
 /**
  * ⭐ **La phrase pour le soignant devient une porte à part entière** *(15/08/2026)*. Elle n'était
@@ -39,7 +48,8 @@ sealed interface EcranCrise {
 class CriseActivity : ComponentActivity() {
     private val ecran = mutableStateOf<EcranCrise>(EcranCrise.Accueil)
     private val envoi = mutableStateOf(ResultatEnvoi.INACTIF)
-    private val reglages = mutableStateOf(Reglages("", "", PLAGE_NUIT_PAR_DEFAUT))
+    private val reglages = mutableStateOf(REGLAGES_INITIAUX)
+    private val nuit = mutableStateOf(false)
 
     private val accuseEnvoi = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -55,6 +65,7 @@ class CriseActivity : ComponentActivity() {
         setShowWhenLocked(true)
         setTurnScreenOn(true)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        enableEdgeToEdge()
 
         ContextCompat.registerReceiver(
             this,
@@ -63,18 +74,17 @@ class CriseActivity : ComponentActivity() {
             ContextCompat.RECEIVER_NOT_EXPORTED,
         )
 
-        reglages.value = lireReglages(this)
-        ecran.value = ecranDemande(intent)
+        relire(intent)
 
         setContent {
-            ThemeKokoro {
+            ThemeMonde(nuit = nuit.value) {
                 ContenuCrise(
                     ecran = ecran.value,
                     reglages = reglages.value,
                     envoi = envoi.value,
                     onAller = { ecran.value = it },
                     onEnvoyer = { envoyer() },
-                    onSecours = { startActivity(intentApplicationSms(reglages.value.contactNumero, MOT_CODE)) },
+                    onSecours = { startActivity(intentSecours()) },
                     onFermer = { finish() },
                 )
             }
@@ -84,10 +94,21 @@ class CriseActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
-        reglages.value = lireReglages(this)
-        envoi.value = ResultatEnvoi.INACTIF
-        ecran.value = ecranDemande(intent)
+        relire(intent)
     }
+
+    private fun relire(depuis: Intent) {
+        reglages.value = lireReglages(this)
+        nuit.value = estNuit(reglages.value.nuit, minuteCourante())
+        envoi.value = when {
+            depuis.getBooleanExtra(EXTRA_ECHEC, false) -> ResultatEnvoi.ECHEC
+            else -> ResultatEnvoi.INACTIF
+        }
+        ecran.value = ecranDemande(depuis)
+    }
+
+    private fun intentSecours(): Intent =
+        intentApplicationSms(reglages.value.contactNumero, reglages.value.motCode)
 
     override fun onDestroy() {
         unregisterReceiver(accuseEnvoi)
@@ -96,7 +117,7 @@ class CriseActivity : ComponentActivity() {
 
     private fun envoyer() {
         envoi.value = ResultatEnvoi.EN_COURS
-        envoyerMotCode(this, reglages.value.contactNumero, MOT_CODE)
+        envoyerMotCode(this, reglages.value.contactNumero, reglages.value.motCode)
     }
 }
 

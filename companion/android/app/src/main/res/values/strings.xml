@@ -27,6 +27,7 @@
     <string name="crise_fermer">Fermer</string>
     <string name="crise_retour">Retour</string>
 
+    <string name="mot_code_titre">Mot-code</string>
     <string name="mot_code_destinataire">À %1$s</string>
     <string name="mot_code_action_envoyer">Envoyer</string>
     <string name="mot_code_repere_envoyer">Par SMS. Aucun réseau de données requis.</string>
@@ -132,21 +133,21 @@
     <string name="journal_echec_suite">Rien n\'est perdu du côté du dossier : aucun fichier n\'a été modifié.</string>
 
     <string name="controle_section_journal">Check-in quotidien</string>
-    <string name="controle_action_journal">Ouvrir le check-in du jour</string>
     <string name="controle_dossier_choisi">Dossier : %1$s</string>
     <string name="controle_dossier_absent">Aucun dossier désigné.</string>
     <string name="controle_action_dossier">Désigner le dossier synchronisé</string>
     <string name="controle_dossier_explication">Le check-in s\'écrit dans le sous-dossier « journal » du dossier désigné. Kokoro n\'a accès à aucun autre emplacement du téléphone.</string>
 
-    <string name="controle_titre">Kokoro — K4</string>
-    <string name="controle_sous_titre">Écran de réglage. Rien ici ne se règle en situation : tout se prépare à froid.</string>
+    <string name="controle_titre">Réglages</string>
+    <string name="controle_sous_titre">Rien ici ne se règle en situation : tout se prépare à froid.</string>
     <string name="controle_section_contact">Destinataire du mot-code</string>
     <string name="controle_champ_nom">Prénom</string>
     <string name="controle_champ_numero">Numéro de téléphone</string>
+    <string name="controle_champ_mot_code">Message envoyé</string>
     <string name="controle_action_enregistrer">Enregistrer</string>
     <string name="controle_contact_enregistre">Enregistré : %1$s — %2$s</string>
     <string name="controle_contact_absent">Aucun numéro enregistré.</string>
-    <string name="controle_mot_code">Message envoyé : « %1$s ». Il ne se modifie pas depuis l\'application — c\'est un mot convenu, pas un réglage.</string>
+    <string name="controle_mot_code_explication">Le message part seul, tel qu\'il est écrit ici. C\'est un mot convenu à froid avec la personne qui le reçoit : le changer dans Kokoro ne la prévient pas.</string>
 
     <string name="controle_section_autorisations">Autorisations</string>
     <string name="controle_etat_notifications">Notifications</string>
@@ -165,17 +166,15 @@
     <string name="controle_action_acces">Réafficher la notification d\'accès</string>
     <string name="controle_action_ouvrir_crise">Ouvrir l\'écran de crise</string>
 
-    <string name="controle_section_monde">Le monde de Kokoro</string>
-    <string name="controle_monde_explication">Cinq écrans, reliés par un décor continu. On passe de l\'un à l\'autre en glissant le doigt : depuis le centre vers la gauche, la droite, le haut ou le bas, et de partout on revient au centre. Au centre, Kokoro et la roue dentée qui ramène ici. À gauche la thérapie, à droite la documentation, en haut le bilan, en bas la crise.</string>
-    <string name="controle_action_monde">Ouvrir le monde</string>
-
     <string name="controle_section_nuit">La nuit du décor</string>
     <string name="controle_nuit_explication">Sur cette plage horaire, le décor du monde est en nuit. Il est décidé à l\'ouverture du monde et tenu tant qu\'il reste ouvert : rien ne bascule sous les yeux. Kokoro, lui, garde ses couleurs.</string>
     <string name="controle_nuit_active">Décor de nuit</string>
     <string name="controle_nuit_reglee">Nuit de %1$s à %2$s.</string>
     <string name="controle_nuit_coupee">Nuit coupée — le décor reste celui du jour.</string>
-    <string name="controle_champ_nuit_debut">Début (hh:mm)</string>
-    <string name="controle_champ_nuit_fin">Fin (hh:mm)</string>
+    <string name="controle_nuit_debut">Début</string>
+    <string name="controle_nuit_fin">Fin</string>
+    <string name="controle_nuit_heures">hh</string>
+    <string name="controle_nuit_minutes">mm</string>
     <string name="controle_action_nuit">Enregistrer la plage</string>
 
     <string name="monde_titre">Le monde de Kokoro</string>
@@ -199,6 +198,12 @@
 
     <string name="monde_bilan_vide">Rien à passer pour l\'instant.</string>
     <string name="monde_documentation_vide">Rien à lire pour l\'instant.</string>
+
+    <!--
+      ⭐ L'accusé de l'envoi direct — companion/INTERFACE.md §7. Il constate que le message est
+      parti, il ne félicite de rien et ne demande rien en retour.
+    -->
+    <string name="monde_mot_code_envoye">Mot-code envoyé à %1$s</string>
 
     <string name="monde_crise_mot_code">Mot-code à Chourouk</string>
     <string name="monde_crise_tension">Tension appliquée</string>

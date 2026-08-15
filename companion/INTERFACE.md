@@ -11,6 +11,8 @@
 > ⏳ **Ce qui reste ouvert** — les bornes des nouveautés (§6.1), l'essai du fond d'écran vivant (§6.3), la cadence de l'entraînement en solo (§6.4), et le comportement du personnage, renvoyé à son propre brainstorm.
 >
 > 🏗️ **Écrit en Compose le 15/08/2026** — la matière (§4.1, §4.2) et les cinq écrans (§3) ; détail en **§7**. **Deux points ouverts ont été tranchés par Xavier pour que ça puisse être codé** : les pancartes gardent leurs deux couleurs *(§6.5, option B)*, et la police arrondie est **Varela Round** *(§4.3)*.
+>
+> ✅ **Le même jour, les quatre surfaces déjà éprouvées y sont passées aussi** — crise, check-in, réglages *(§7.1)*, **à la demande de Xavier**. **Il n'y a plus deux thèmes**, et le mot-code part désormais d'un seul appui.
 
 ---
 
@@ -21,7 +23,7 @@
 | Surface | Jalon | Ce que c'est | Taille à l'écran |
 |---|---|---|---|
 | **Accès crise** | K2 ✅ | Notification sur l'écran verrouillé — **une porte, pas un rappel** | hors monde |
-| **Mot-code à Chourouk** | K2 ✅ | SMS composé et prêt, téléphone verrouillé, sans réseau data | 1 écran plein |
+| **Mot-code à Chourouk** | K2 ✅ | SMS **envoyé en un appui** depuis l'écran **Crise** *(§7.1)*, téléphone verrouillé, sans réseau data. L'écran plein reste le chemin de la notification et le repli en cas d'échec | 1 écran plein |
 | **Tension appliquée** | K3 ✅ | 4 repères externes enchaînés, minuteur, critères d'arrêt à un tap | 1 écran plein, guidé |
 | **Phrase pour le soignant** | K3 ✅ | Texte montrable en plein écran | 1 écran plein |
 | **Check-in du jour** | K4 ✅ | 11 champs fermés, aucune saisie de texte, écrit `journal/` | 1 écran, questions enchaînées |
@@ -292,24 +294,45 @@ L'écran central est le seul qui soit vide par doctrine. Y poser les nouveautés
 
 ## 7. 🏗️ Où en est l'implémentation — 15/08/2026
 
-**Écrit, compilé, 76 tests au vert. ⏳ Pas encore posé sur le téléphone** *(aucun appareil branché au moment de l'écriture)* : **rien de ce qui suit n'est vérifié à l'œil.**
+**Écrit, compilé, 78 tests au vert. ⏳ Pas encore posé sur le téléphone** *(aucun appareil branché au moment de l'écriture)* : **rien de ce qui suit n'est vérifié à l'œil.**
 
 | | Où | État |
 |---|---|---|
 | **La matière** (§4.1) — la recette à six couches, déclinée en couleur | `ui/Matiere.kt` | ✅ Une seule fonction, `Modifier.matiere` |
-| **Les pièces** (§4.2) — panneau, carte, bouton, ruban, pancarte, bande de titre, cadre vide | `ui/Pieces.kt` | ✅ **Aucun composant Material** |
+| **Les pièces** (§4.2) — panneau, carte, bouton, ruban, pancarte, bande de titre, cadre vide, **page, champ de saisie, interrupteur, accusé, séparateur** | `ui/Pieces.kt` | ✅ **Aucun composant Material** hors `Text` |
 | **Les ornements** — étincelle, cœur, rivet | `ui/Ornements.kt` | ✅ Décor pur, jamais sur une carte de liste |
-| **La police** (§4.3) | `res/font/varela_round.ttf` · `ui/Typographie.kt` | ✅ Embarquée |
-| **Le thème** jour / nuit | `ui/ThemeMonde.kt` | ✅ ⚠️ **Il s'ajoute à côté de l'ancien**, il ne le remplace pas — voir ci-dessous |
+| **La police** (§4.3) | `res/font/varela_round.ttf` · `ui/Typographie.kt` | ✅ Embarquée. ⭐ **Interligne centré** — sans quoi un libellé court reste collé en haut d'un bouton haut |
+| **Le thème** jour / nuit | `ui/ThemeMonde.kt` | ✅ **Le thème de tout ce que Xavier voit.** L'ancien ne sert plus qu'aux deux outils de mise au point |
 | **Les cinq écrans** (§3) | `monde/Bords.kt` | ✅ Ruban fixe (D11), gauche et droite défilent, haut et bas non (**P1**), roue dentée (D4) |
-| **Une étape ouverte** (§3.1) | `monde/Etapes.kt` | ✅ Plein écran, fermeture au bouton, **jamais au geste** — et la traversée est coupée tant qu'elle est ouverte |
+| **Une étape ouverte** (§3.1) | `monde/Etapes.kt` · `monde/MondeKokoro.kt` | ✅ Plein écran, traversée coupée, fermeture au bouton **ou au *retour* du téléphone** — jamais au geste |
 | **L'icône du lanceur** (D10) | `AndroidManifest.xml` | ✅ Ouvre le monde |
-| **La phrase pour le soignant** | `crise/CriseActivity.kt` | ✅ Devient une porte à part entière, pour que les trois boutons de l'écran **Crise** mènent quelque part |
+| **La phrase pour le soignant** | `crise/CriseActivity.kt` | ✅ Une porte à part entière, pour que les trois boutons de l'écran **Crise** mènent quelque part |
+
+### 7.1 ✅ Les quatre surfaces éprouvées sont passées à la matière — 15/08/2026
+
+**Demandé par Xavier, et c'est ce qui l'autorisait :** 🔴 **la prévisibilité est une fonctionnalité**, donc un écran qui sert en situation ne change pas d'apparence sans que Xavier l'ait décidé. Les deux thèmes ne cohabitent plus.
+
+| Surface | Ce qui a changé |
+|---|---|
+| **Écrans de crise** — mot-code, tension appliquée, séquence de soins, rester assis, phrase pour le soignant, quand arrêter | Panneaux extrudés, ruban azur, **un titre par vue** au lieu d'un titre répété dans le corps. **Structure inchangée** (§4.5) : mêmes boutons, mêmes repères, mêmes critères d'arrêt |
+| **Check-in du jour** | Panneaux, ruban pêche. ⭐ **Le vert reste réservé à ce qui avance d'un pas** — *passer* et *arrêter* sont neutres, **jamais gris-triste ni barrés** |
+| **Écran de contrôle** → **Réglages** | Panneaux, ruban beurre, sections en pancartes, lignes groupées dans un panneau et séparées d'un trait, interrupteur maison |
+| **L'alerte K1 et l'atelier du corps** | ⚠️ **Gardent l'ancien thème.** Ce sont des outils de mise au point, pas des surfaces de soin |
+
+**Trois changements de fond sont venus avec, tous demandés par Xavier :**
+
+1. ⭐ **Le mot-code part d'un seul appui** depuis l'écran **Crise** du monde — **plus d'écran de confirmation entre le bouton et l'envoi.** Demander *es-tu sûr ?* à quelqu'un qui vient de perdre la parole, c'est lui demander un tap de plus au moment précis où il n'en a plus. Un **accusé** paraît en bas de l'écran : *envoi en cours*, puis *mot-code envoyé à …*. 🔴 **Les deux cas d'impossibilité gardent l'ancien écran** — pas de numéro, autorisation SMS refusée, échec du réseau : il explique et propose l'application Messages.
+2. ⭐ **Le message du mot-code se règle dans l'application.** Ça ne le rend pas moins convenu : **le changer dans Kokoro ne prévient pas celle qui le reçoit**, et c'est écrit sous le champ.
+3. **Les réglages perdent deux boutons** — *Ouvrir le monde* et *Ouvrir le check-in du jour*. L'icône du lanceur ouvre le monde (D10), le check-in est une étape de la thérapie. **Une porte par chose.**
+
+**Et deux défauts de la traversée sont corrigés :**
+
+- ⭐ **Le rattrapage d'un ou deux pixels en fin de glissement.** Le ressort n'avait pas de seuil de visibilité : il prenait celui de Compose, `0.01`, appliqué à des unités qui valent **un écran entier**. L'animation s'arrêtait donc à un centième d'écran de sa cible — une dizaine de pixels — et la valeur y **sautait**. Le seuil est maintenant **un demi-pixel**, exprimé en fraction de la largeur mesurée.
+- ⭐ **Le bouton *retour* ferme le panneau** au lieu de quitter l'application.
 
 **⚠️ Ce qui est provisoire, et qu'il ne faut pas prendre pour acquis :**
 
 - 🔴 **Le contenu des écrans est écrit en dur** — les 11 étapes de `inputs/programme.json` v1, recopiées dans `strings.xml` *(et pas dans du Kotlin : c'est `strings.xml` que lisent les tests d'invariants)*. **C'est K5 qui le remplacera par une lecture du dossier synchronisé**, avec le filtrage des sept interdits de [`PROGRAMME.md`](PROGRAMME.md) §7.
 - ⏳ **Le bouton *Fait* n'existe pas encore** sur une démarche ouverte : il écrirait dans `reponses/`, ce que Kokoro ne sait pas faire. ⭐ **Un bouton qui n'écrit rien mentirait** — mieux vaut qu'il manque et que ça se voie.
 - ⏳ **Les nouveautés** (D5, §6.1) ne sont pas là : elles supposent de comparer deux versions du programme, donc K5.
-- ⚠️ **Les surfaces déjà éprouvées gardent leur apparence** — accès crise, tension appliquée, check-in, écran de contrôle. 🔴 **La prévisibilité est une fonctionnalité** : leur passage à cette matière est un changement d'interface, et **il s'annonce avant de se faire**. C'est ce qui fait cohabiter deux thèmes pour l'instant.
 - ⏳ **§6.2 — la notification muette n'est pas faite.** Elle porte toujours ses deux boutons et son corps de texte.

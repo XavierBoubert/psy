@@ -9,6 +9,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.allonsy.kokoro.R
@@ -33,11 +34,24 @@ import io.allonsy.kokoro.R
  */
 val VARELA = FontFamily(Font(R.font.varela_round))
 
+/**
+ * ⭐ **L'interligne se répartit au-dessus **et** en dessous de la ligne** — `LineHeightStyle.Center`.
+ *
+ * Par défaut, Compose pose tout l'espace supplémentaire **sous** la première ligne : un libellé seul
+ * dans un bouton se retrouve alors collé en haut, d'autant plus que l'interligne est large — et ils
+ * le sont tous ici. Le texte paraissait mal centré parce qu'il l'était, et **la mesure vient de la
+ * police, pas de la mise en page** : c'est donc ici que ça se corrige, une fois, pour tout le
+ * dispositif.
+ */
 private fun corps(taille: Int, interligne: Float, graisse: FontWeight = FontWeight.Normal) = TextStyle(
     fontFamily = VARELA,
     fontSize = taille.sp,
     lineHeight = (taille * interligne).sp,
     fontWeight = graisse,
+    lineHeightStyle = LineHeightStyle(
+        alignment = LineHeightStyle.Alignment.Center,
+        trim = LineHeightStyle.Trim.None,
+    ),
 )
 
 object TypoKokoro {
@@ -67,6 +81,17 @@ object TypoKokoro {
      * distingue en étant plus grand et plus vide, **pas plus vif**.
      */
     val boutonCrise = corps(21, 1.35f, FontWeight.SemiBold)
+
+    /** Le repère sous le libellé d'un grand bouton de crise — ce qui déclenche, jamais un ressenti. */
+    val repere = corps(16, 1.35f)
+
+    /**
+     * Ce qui se lit d'un coup d'œil et sans effort : le mot-code, la phase de la tension appliquée.
+     */
+    val fort = corps(30, 1.2f, FontWeight.Bold)
+
+    /** Les chiffres d'un minuteur. **Un compte, jamais un score.** */
+    val compte = corps(52, 1.1f, FontWeight.Bold)
 
     /** L'état vide d'un écran. */
     val vide = corps(18, 1.6f, FontWeight.SemiBold)

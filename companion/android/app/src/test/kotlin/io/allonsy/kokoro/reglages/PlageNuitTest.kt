@@ -71,20 +71,35 @@ class PlageNuitTest {
     }
 
     @Test
-    fun `les heures se lisent dans les formes usuelles`() {
-        assertEquals(21 * 60, lireHeure("21:00"))
-        assertEquals(21 * 60 + 30, lireHeure("21h30"))
-        assertEquals(6 * 60, lireHeure(" 6 "))
-        assertEquals(0, lireHeure("0:00"))
+    fun `une borne se lit en deux morceaux`() {
+        assertEquals(21 * 60, lireBorne("21", "00"))
+        assertEquals(21 * 60 + 30, lireBorne("21", "30"))
+        assertEquals(6 * 60, lireBorne(" 6 ", "0"))
+        assertEquals(0, lireBorne("0", "0"))
+    }
+
+    /** ⭐ Taper `21` puis rien est la façon normale d'écrire 21 h : les minutes vides valent zéro. */
+    @Test
+    fun `des minutes laissees vides valent zero`() {
+        assertEquals(21 * 60, lireBorne("21", ""))
+        assertEquals(7 * 60, lireBorne("7", "   "))
     }
 
     /** Une saisie qui ne se lit pas ne s'enregistre pas : rien n'est corrigé en silence. */
     @Test
     fun `une saisie qui n est pas une heure ne se lit pas`() {
-        assertNull(lireHeure(""))
-        assertNull(lireHeure("24:00"))
-        assertNull(lireHeure("21:75"))
-        assertNull(lireHeure("le soir"))
-        assertNull(lireHeure("21:00:00"))
+        assertNull(lireBorne("", "00"))
+        assertNull(lireBorne("24", "00"))
+        assertNull(lireBorne("21", "75"))
+        assertNull(lireBorne("le soir", "00"))
+        assertNull(lireBorne("21", "midi"))
+    }
+
+    @Test
+    fun `les deux moities d une borne s ecrivent sur deux chiffres`() {
+        assertEquals("21", ecrireHeures(21 * 60))
+        assertEquals("00", ecrireMinutes(21 * 60))
+        assertEquals("06", ecrireHeures(6 * 60 + 5))
+        assertEquals("05", ecrireMinutes(6 * 60 + 5))
     }
 }

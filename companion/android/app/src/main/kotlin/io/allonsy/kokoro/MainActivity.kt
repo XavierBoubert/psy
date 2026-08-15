@@ -12,23 +12,15 @@ import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -40,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -49,23 +42,36 @@ import io.allonsy.kokoro.corps.AtelierActivity
 import io.allonsy.kokoro.crise.CriseActivity
 import io.allonsy.kokoro.crise.creerCanalAcces
 import io.allonsy.kokoro.crise.publierAccesCrise
-import io.allonsy.kokoro.journal.JournalActivity
 import io.allonsy.kokoro.journal.cheminAffichable
 import io.allonsy.kokoro.journal.enregistrerDossier
 import io.allonsy.kokoro.journal.intentChoisirDossier
 import io.allonsy.kokoro.journal.lireDossier
-import io.allonsy.kokoro.monde.MondeActivity
-import io.allonsy.kokoro.reglages.MOT_CODE
-import io.allonsy.kokoro.reglages.PLAGE_NUIT_PAR_DEFAUT
 import io.allonsy.kokoro.reglages.PlageNuit
+import io.allonsy.kokoro.reglages.REGLAGES_INITIAUX
 import io.allonsy.kokoro.reglages.Reglages
 import io.allonsy.kokoro.reglages.ecrireHeure
+import io.allonsy.kokoro.reglages.ecrireHeures
+import io.allonsy.kokoro.reglages.ecrireMinutes
 import io.allonsy.kokoro.reglages.ecrireReglages
-import io.allonsy.kokoro.reglages.lireHeure
+import io.allonsy.kokoro.reglages.estNuit
+import io.allonsy.kokoro.reglages.lireBorne
 import io.allonsy.kokoro.reglages.lireReglages
-import io.allonsy.kokoro.ui.ThemeKokoro
+import io.allonsy.kokoro.reglages.minuteCourante
+import io.allonsy.kokoro.ui.BoutonEpais
+import io.allonsy.kokoro.ui.ChampTexte
+import io.allonsy.kokoro.ui.Interrupteur
+import io.allonsy.kokoro.ui.LocalPaletteKokoro
+import io.allonsy.kokoro.ui.PageKokoro
+import io.allonsy.kokoro.ui.Pancarte
+import io.allonsy.kokoro.ui.PanneauExtrude
+import io.allonsy.kokoro.ui.Separateur
+import io.allonsy.kokoro.ui.ThemeMonde
+import io.allonsy.kokoro.ui.TypoKokoro
 
 private const val DELAI_TEST_MILLIS = 20_000L
+
+/** Deux chiffres, pas plus — c'est tout ce qu'une moitié d'heure peut valoir. */
+private const val CHIFFRES_BORNE = 2
 
 data class EtatAutorisations(
     val notificationsAutorisees: Boolean,
@@ -73,10 +79,22 @@ data class EtatAutorisations(
     val smsAutorise: Boolean,
 )
 
+/**
+ * L'écran de réglages — **la matière du monde, et la forme d'un écran de paramètres**
+ * *(15/08/2026)*.
+ *
+ * ⭐ **Rien ici ne se règle en situation : tout se prépare à froid.** C'est ce qui autorise cet
+ * écran à être long et à porter des explications, là où un écran de crise ne porte que des boutons.
+ *
+ * 🔴 **Le monde et le check-in n'y ont plus de bouton** *(demande de Xavier)* : l'icône du lanceur
+ * ouvre le monde (D10), et le check-in est une étape de la thérapie. **Une porte par chose, pas
+ * deux.**
+ */
 class MainActivity : ComponentActivity() {
     private val autorisations = mutableStateOf(EtatAutorisations(false, false, false))
-    private val reglages = mutableStateOf(Reglages("", "", PLAGE_NUIT_PAR_DEFAUT))
+    private val reglages = mutableStateOf(REGLAGES_INITIAUX)
     private val dossier = mutableStateOf<String?>(null)
+    private val nuit = mutableStateOf(false)
 
     private val choixDossier = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult(),
@@ -89,13 +107,14 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         creerCanalAlerte(this)
         creerCanalAcces(this)
         relire()
         publierAccesCrise(this)
         setContent {
-            ThemeKokoro {
-                EcranControle(
+            ThemeMonde(nuit = nuit.value) {
+                EcranReglages(
                     autorisations = autorisations.value,
                     reglages = reglages.value,
                     dossier = dossier.value,
@@ -120,6 +139,7 @@ class MainActivity : ComponentActivity() {
         autorisations.value = lireAutorisations(this)
         reglages.value = lireReglages(this)
         dossier.value = cheminAffichable(this, lireDossier(this))
+        nuit.value = estNuit(reglages.value.nuit, minuteCourante())
     }
 }
 
@@ -159,7 +179,7 @@ private fun ouvrirReglageNotifications(context: Context) {
 }
 
 @Composable
-private fun EcranControle(
+private fun EcranReglages(
     autorisations: EtatAutorisations,
     reglages: Reglages,
     dossier: String?,
@@ -177,164 +197,150 @@ private fun EcranControle(
         onResult = { onRelire() },
     )
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background,
+    PageKokoro(
+        titre = stringResource(R.string.controle_titre),
+        couleur = LocalPaletteKokoro.current.beurre,
+        ecart = 14.dp,
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .safeDrawingPadding()
-                .verticalScroll(rememberScrollState())
-                .padding(28.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            Text(
-                text = stringResource(R.string.controle_titre),
-                style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.onBackground,
-            )
-            Text(
-                text = stringResource(R.string.controle_sous_titre),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+        Explication(stringResource(R.string.controle_sous_titre))
 
-            Section(stringResource(R.string.controle_section_contact))
-            ChampsContact(reglages = reglages, onEnregistrer = onEnregistrer)
-            Text(
-                text = stringResource(R.string.controle_mot_code, MOT_CODE),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+        Section(stringResource(R.string.controle_section_contact))
+        ChampsContact(reglages = reglages, onEnregistrer = onEnregistrer)
 
-            Section(stringResource(R.string.controle_section_autorisations))
+        Section(stringResource(R.string.controle_section_autorisations))
+        Groupe {
             LigneEtat(
                 libelle = stringResource(R.string.controle_etat_notifications),
                 accorde = autorisations.notificationsAutorisees,
             )
+            Separateur()
             LigneEtat(
                 libelle = stringResource(R.string.controle_etat_plein_ecran),
                 accorde = autorisations.pleinEcranAutorise,
             )
+            Separateur()
             LigneEtat(
                 libelle = stringResource(R.string.controle_etat_sms),
                 accorde = autorisations.smsAutorise,
             )
+        }
 
-            if (!autorisations.notificationsAutorisees) {
-                Action(stringResource(R.string.controle_action_notifications)) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        demandeNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)
-                    } else {
-                        ouvrirReglageNotifications(context)
-                    }
+        if (!autorisations.notificationsAutorisees) {
+            Action(stringResource(R.string.controle_action_notifications)) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    demandeNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)
+                } else {
+                    ouvrirReglageNotifications(context)
                 }
             }
+        }
 
-            if (!autorisations.pleinEcranAutorise) {
-                Explication(stringResource(R.string.controle_guidage_plein_ecran))
-                Action(stringResource(R.string.controle_action_plein_ecran)) {
-                    ouvrirReglagePleinEcran(context)
-                }
+        if (!autorisations.pleinEcranAutorise) {
+            Explication(stringResource(R.string.controle_guidage_plein_ecran))
+            Action(stringResource(R.string.controle_action_plein_ecran)) {
+                ouvrirReglagePleinEcran(context)
             }
+        }
 
-            if (!autorisations.smsAutorise) {
-                Explication(stringResource(R.string.controle_guidage_sms))
-                Action(stringResource(R.string.controle_action_sms)) {
-                    demandeSms.launch(Manifest.permission.SEND_SMS)
-                }
+        if (!autorisations.smsAutorise) {
+            Explication(stringResource(R.string.controle_guidage_sms))
+            Action(stringResource(R.string.controle_action_sms)) {
+                demandeSms.launch(Manifest.permission.SEND_SMS)
             }
+        }
 
-            Section(stringResource(R.string.controle_section_acces))
-            Explication(stringResource(R.string.controle_acces_explication))
-            Action(stringResource(R.string.controle_action_acces)) { publierAccesCrise(context) }
-            Action(stringResource(R.string.controle_action_ouvrir_crise)) {
-                context.startActivity(Intent(context, CriseActivity::class.java))
-            }
+        Section(stringResource(R.string.controle_section_acces))
+        Explication(stringResource(R.string.controle_acces_explication))
+        Action(stringResource(R.string.controle_action_acces)) { publierAccesCrise(context) }
+        Action(stringResource(R.string.controle_action_ouvrir_crise)) {
+            context.startActivity(Intent(context, CriseActivity::class.java))
+        }
 
-            Section(stringResource(R.string.controle_section_journal))
-            Text(
-                text = when (dossier) {
+        Section(stringResource(R.string.controle_section_journal))
+        Groupe {
+            Valeur(
+                when (dossier) {
                     null -> stringResource(R.string.controle_dossier_absent)
                     else -> stringResource(R.string.controle_dossier_choisi, dossier)
                 },
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onBackground,
             )
-            Explication(stringResource(R.string.controle_dossier_explication))
-            Action(stringResource(R.string.controle_action_dossier), onClick = onChoisirDossier)
-            Action(stringResource(R.string.controle_action_journal)) {
-                context.startActivity(Intent(context, JournalActivity::class.java))
-            }
+        }
+        Explication(stringResource(R.string.controle_dossier_explication))
+        Action(stringResource(R.string.controle_action_dossier), onClick = onChoisirDossier)
 
-            Section(stringResource(R.string.controle_section_monde))
-            Explication(stringResource(R.string.controle_monde_explication))
-            Action(stringResource(R.string.controle_action_monde)) {
-                context.startActivity(Intent(context, MondeActivity::class.java))
-            }
+        Section(stringResource(R.string.controle_section_nuit))
+        Explication(stringResource(R.string.controle_nuit_explication))
+        ChampsNuit(nuit = reglages.nuit, onEnregistrer = { onEnregistrer(reglages.copy(nuit = it)) })
 
-            Section(stringResource(R.string.controle_section_nuit))
-            Explication(stringResource(R.string.controle_nuit_explication))
-            ChampsNuit(nuit = reglages.nuit, onEnregistrer = { onEnregistrer(reglages.copy(nuit = it)) })
+        Section(stringResource(R.string.controle_section_corps))
+        Explication(stringResource(R.string.controle_corps_explication))
+        Action(stringResource(R.string.controle_action_corps)) {
+            context.startActivity(Intent(context, AtelierActivity::class.java))
+        }
 
-            Section(stringResource(R.string.controle_section_corps))
-            Explication(stringResource(R.string.controle_corps_explication))
-            Action(stringResource(R.string.controle_action_corps)) {
-                context.startActivity(Intent(context, AtelierActivity::class.java))
-            }
-
-            Section(stringResource(R.string.controle_section_test))
-            Explication(stringResource(R.string.controle_consigne_test))
-            Action(
-                libelle = stringResource(R.string.controle_action_test),
-                actif = autorisations.notificationsAutorisees,
-            ) {
-                programmerAlerteTest(context, DELAI_TEST_MILLIS)
-            }
+        Section(stringResource(R.string.controle_section_test))
+        Explication(stringResource(R.string.controle_consigne_test))
+        Action(
+            libelle = stringResource(R.string.controle_action_test),
+            actif = autorisations.notificationsAutorisees,
+        ) {
+            programmerAlerteTest(context, DELAI_TEST_MILLIS)
         }
     }
 }
 
+/**
+ * Le destinataire du mot-code, et **le message lui-même** *(15/08/2026, demande de Xavier)*.
+ *
+ * 🔴 **Le changer ici ne prévient personne.** Un mot-code n'a de valeur que parce que la personne qui
+ * le reçoit sait ce qu'il veut dire : le réglage sert à suivre un accord qui a bougé, **il ne le
+ * remplace pas**.
+ */
 @Composable
 private fun ChampsContact(reglages: Reglages, onEnregistrer: (Reglages) -> Unit) {
     var nom by remember(reglages) { mutableStateOf(reglages.contactNom) }
     var numero by remember(reglages) { mutableStateOf(reglages.contactNumero) }
+    var motCode by remember(reglages) { mutableStateOf(reglages.motCode) }
 
-    Text(
-        text = when {
-            reglages.contactRenseigne -> stringResource(
-                R.string.controle_contact_enregistre,
-                reglages.contactNom,
-                reglages.contactNumero,
-            )
-            else -> stringResource(R.string.controle_contact_absent)
-        },
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.onBackground,
-    )
-    OutlinedTextField(
-        value = nom,
-        onValueChange = { nom = it },
-        label = { Text(stringResource(R.string.controle_champ_nom)) },
-        singleLine = true,
-        modifier = Modifier.fillMaxWidth(),
-    )
-    OutlinedTextField(
-        value = numero,
-        onValueChange = { numero = it },
-        label = { Text(stringResource(R.string.controle_champ_numero)) },
-        singleLine = true,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-        modifier = Modifier.fillMaxWidth(),
-    )
-    Action(stringResource(R.string.controle_action_enregistrer)) {
-        onEnregistrer(reglages.copy(contactNom = nom, contactNumero = numero))
+    Groupe {
+        Valeur(
+            when {
+                reglages.contactRenseigne -> stringResource(
+                    R.string.controle_contact_enregistre,
+                    reglages.contactNom,
+                    reglages.contactNumero,
+                )
+                else -> stringResource(R.string.controle_contact_absent)
+            },
+        )
+        Separateur()
+        Champ(libelle = stringResource(R.string.controle_champ_nom), valeur = nom, onValeur = { nom = it })
+        Separateur()
+        Champ(
+            libelle = stringResource(R.string.controle_champ_numero),
+            valeur = numero,
+            onValeur = { numero = it },
+            clavier = KeyboardOptions(keyboardType = KeyboardType.Phone),
+        )
+        Separateur()
+        Champ(
+            libelle = stringResource(R.string.controle_champ_mot_code),
+            valeur = motCode,
+            onValeur = { motCode = it },
+        )
+    }
+    Explication(stringResource(R.string.controle_mot_code_explication))
+    Action(
+        libelle = stringResource(R.string.controle_action_enregistrer),
+        actif = motCode.isNotBlank(),
+    ) {
+        onEnregistrer(reglages.copy(contactNom = nom, contactNumero = numero, motCode = motCode))
     }
 }
 
 /**
- * Le réglage de la nuit — un interrupteur et deux heures.
+ * Le réglage de la nuit — un interrupteur et deux heures, **chacune en deux champs de deux
+ * chiffres** *(15/08/2026)*.
  *
  * ⭐ **Le bouton d'enregistrement reste inerte tant qu'une des deux heures ne se lit pas.** Rien
  * n'est corrigé en silence : un réglage qu'on croit posé et qui ne l'est pas serait pire qu'un
@@ -342,90 +348,164 @@ private fun ChampsContact(reglages: Reglages, onEnregistrer: (Reglages) -> Unit)
  */
 @Composable
 private fun ChampsNuit(nuit: PlageNuit, onEnregistrer: (PlageNuit) -> Unit) {
-    var debut by remember(nuit) { mutableStateOf(ecrireHeure(nuit.debut)) }
-    var fin by remember(nuit) { mutableStateOf(ecrireHeure(nuit.fin)) }
+    var debutHeures by remember(nuit) { mutableStateOf(ecrireHeures(nuit.debut)) }
+    var debutMinutes by remember(nuit) { mutableStateOf(ecrireMinutes(nuit.debut)) }
+    var finHeures by remember(nuit) { mutableStateOf(ecrireHeures(nuit.fin)) }
+    var finMinutes by remember(nuit) { mutableStateOf(ecrireMinutes(nuit.fin)) }
 
-    Text(
-        text = when {
-            nuit.active -> stringResource(
-                R.string.controle_nuit_reglee,
-                ecrireHeure(nuit.debut),
-                ecrireHeure(nuit.fin),
+    Groupe {
+        Valeur(
+            when {
+                nuit.active -> stringResource(
+                    R.string.controle_nuit_reglee,
+                    ecrireHeure(nuit.debut),
+                    ecrireHeure(nuit.fin),
+                )
+                else -> stringResource(R.string.controle_nuit_coupee)
+            },
+        )
+        Separateur()
+        Ligne(stringResource(R.string.controle_nuit_active)) {
+            Interrupteur(actif = nuit.active, onChange = { onEnregistrer(nuit.copy(active = it)) })
+        }
+        Separateur()
+        Ligne(stringResource(R.string.controle_nuit_debut)) {
+            Borne(
+                heures = debutHeures,
+                minutes = debutMinutes,
+                onHeures = { debutHeures = it },
+                onMinutes = { debutMinutes = it },
             )
-            else -> stringResource(R.string.controle_nuit_coupee)
+        }
+        Separateur()
+        Ligne(stringResource(R.string.controle_nuit_fin)) {
+            Borne(
+                heures = finHeures,
+                minutes = finMinutes,
+                onHeures = { finHeures = it },
+                onMinutes = { finMinutes = it },
+            )
+        }
+    }
+    Action(
+        libelle = stringResource(R.string.controle_action_nuit),
+        actif = lireBorne(debutHeures, debutMinutes) != null && lireBorne(finHeures, finMinutes) != null,
+    ) {
+        val ouverture = lireBorne(debutHeures, debutMinutes) ?: return@Action
+        val fermeture = lireBorne(finHeures, finMinutes) ?: return@Action
+        onEnregistrer(nuit.copy(debut = ouverture, fin = fermeture))
+    }
+}
+
+/**
+ * Une heure : deux champs de deux chiffres, séparés par un deux-points **écrit à l'écran et non à
+ * saisir** — le clavier numérique d'Android ne le porte pas.
+ */
+@Composable
+private fun Borne(
+    heures: String,
+    minutes: String,
+    onHeures: (String) -> Unit,
+    onMinutes: (String) -> Unit,
+) {
+    val palette = LocalPaletteKokoro.current
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        ChampChiffres(valeur = heures, onValeur = onHeures, repere = stringResource(R.string.controle_nuit_heures))
+        Text(
+            text = ":",
+            style = TypoKokoro.corps,
+            color = palette.encreDouce,
+            modifier = Modifier.padding(horizontal = 8.dp),
+        )
+        ChampChiffres(valeur = minutes, onValeur = onMinutes, repere = stringResource(R.string.controle_nuit_minutes))
+    }
+}
+
+@Composable
+private fun ChampChiffres(valeur: String, onValeur: (String) -> Unit, repere: String) {
+    ChampTexte(
+        valeur = valeur,
+        onValeur = { saisie ->
+            if (saisie.length <= CHIFFRES_BORNE && saisie.all(Char::isDigit)) onValeur(saisie)
         },
-        style = MaterialTheme.typography.bodyLarge,
-        color = MaterialTheme.colorScheme.onBackground,
+        modifier = Modifier.width(74.dp),
+        repere = repere,
+        clavier = KeyboardOptions(keyboardType = KeyboardType.Number),
+        alignement = TextAlign.Center,
     )
+}
+
+/** Le titre d'une section — une pancarte, la même que celles des écrans du monde. */
+@Composable
+private fun Section(libelle: String) {
+    Pancarte(texte = libelle, couleur = LocalPaletteKokoro.current.peche, modifier = Modifier.padding(top = 16.dp))
+}
+
+/** Ce qui range les lignes d'une section : **un seul panneau, des traits dedans.** */
+@Composable
+private fun Groupe(contenu: @Composable () -> Unit) {
+    PanneauExtrude(modifier = Modifier.fillMaxWidth()) { contenu() }
+}
+
+/** Une ligne de réglage : ce qu'elle règle à gauche, de quoi le régler à droite. */
+@Composable
+private fun Ligne(libelle: String, valeur: @Composable () -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text = stringResource(R.string.controle_nuit_active),
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onBackground,
+            text = libelle,
+            style = TypoKokoro.corps,
+            color = LocalPaletteKokoro.current.encre,
+            modifier = Modifier.padding(end = 14.dp),
         )
-        Switch(
-            checked = nuit.active,
-            onCheckedChange = { onEnregistrer(nuit.copy(active = it)) },
-        )
-    }
-    OutlinedTextField(
-        value = debut,
-        onValueChange = { debut = it },
-        label = { Text(stringResource(R.string.controle_champ_nuit_debut)) },
-        singleLine = true,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier.fillMaxWidth(),
-    )
-    OutlinedTextField(
-        value = fin,
-        onValueChange = { fin = it },
-        label = { Text(stringResource(R.string.controle_champ_nuit_fin)) },
-        singleLine = true,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier.fillMaxWidth(),
-    )
-    Action(
-        libelle = stringResource(R.string.controle_action_nuit),
-        actif = lireHeure(debut) != null && lireHeure(fin) != null,
-    ) {
-        val ouverture = lireHeure(debut) ?: return@Action
-        val fermeture = lireHeure(fin) ?: return@Action
-        onEnregistrer(nuit.copy(debut = ouverture, fin = fermeture))
+        Box(contentAlignment = Alignment.CenterEnd) { valeur() }
     }
 }
 
+/** Un champ nommé : le nom au-dessus, la saisie en dessous, jamais l'un dans l'autre. */
 @Composable
-private fun Section(libelle: String) {
-    HorizontalDivider(color = MaterialTheme.colorScheme.outline)
+private fun Champ(
+    libelle: String,
+    valeur: String,
+    onValeur: (String) -> Unit,
+    clavier: KeyboardOptions = KeyboardOptions.Default,
+) {
     Text(
         text = libelle,
-        style = MaterialTheme.typography.titleMedium,
-        color = MaterialTheme.colorScheme.onBackground,
+        style = TypoKokoro.discret,
+        color = LocalPaletteKokoro.current.encreDouce,
+        modifier = Modifier.padding(bottom = 8.dp),
     )
+    ChampTexte(
+        valeur = valeur,
+        onValeur = onValeur,
+        modifier = Modifier.fillMaxWidth(),
+        clavier = clavier,
+    )
+}
+
+/** Ce qui est enregistré aujourd'hui — un constat, jamais un commentaire. */
+@Composable
+private fun Valeur(texte: String) {
+    Text(text = texte, style = TypoKokoro.corps, color = LocalPaletteKokoro.current.encre)
 }
 
 @Composable
 private fun Explication(texte: String) {
     Text(
         text = texte,
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        style = TypoKokoro.lecture,
+        color = LocalPaletteKokoro.current.encreDouce,
+        modifier = Modifier.padding(horizontal = 4.dp),
     )
 }
 
 @Composable
 private fun Action(libelle: String, actif: Boolean = true, onClick: () -> Unit) {
-    OutlinedButton(
-        onClick = onClick,
-        enabled = actif,
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        Text(libelle)
-    }
+    BoutonEpais(libelle = libelle, onClic = onClick, actif = actif, hauteurMinimale = 62.dp)
 }
 
 @Composable
@@ -433,9 +513,7 @@ private fun LigneEtat(libelle: String, accorde: Boolean) {
     val marque = stringResource(
         if (accorde) R.string.controle_accorde else R.string.controle_refuse,
     )
-    Text(
-        text = "$libelle : $marque",
-        style = MaterialTheme.typography.bodyLarge,
-        color = MaterialTheme.colorScheme.onBackground,
-    )
+    Ligne(libelle) {
+        Text(text = marque, style = TypoKokoro.corps, color = LocalPaletteKokoro.current.encreDouce)
+    }
 }

@@ -43,17 +43,26 @@ fun minuteCourante(): Int = LocalTime.now().let { it.hour * 60 + it.minute }
 
 fun ecrireHeure(minute: Int): String = "%02d:%02d".format(minute / 60, minute % 60)
 
-/** `21:00`, `21h30`, `6` — et `null` dès que ce n'est pas une heure, pour que rien ne s'enregistre. */
-fun lireHeure(texte: String): Int? {
-    val morceaux = texte.trim().split(':', 'h', 'H', '.')
-    if (morceaux.size > 2) return null
+/** Les deux chiffres des heures d'une borne, tels qu'ils se saisissent. */
+fun ecrireHeures(minute: Int): String = "%02d".format(minute / 60)
 
-    val heures = morceaux[0].trim().toIntOrNull() ?: return null
-    val minutes = when (val reste = morceaux.getOrNull(1)?.trim().orEmpty()) {
-        "" -> 0
-        else -> reste.toIntOrNull() ?: return null
-    }
-    if (heures !in 0..23 || minutes !in 0..59) return null
+/** Les deux chiffres des minutes d'une borne. */
+fun ecrireMinutes(minute: Int): String = "%02d".format(minute % 60)
 
-    return heures * 60 + minutes
+/**
+ * Une borne lue **en deux morceaux séparés**, les heures d'un côté, les minutes de l'autre.
+ *
+ * ⭐ **Le deux-points a disparu de la saisie** *(15/08/2026)* : le clavier numérique d'Android ne le
+ * porte pas, et une heure ne s'écrivait donc pas du tout sans basculer sur le clavier de texte. Deux
+ * champs de deux chiffres ferment la question — **il n'y a plus de caractère à trouver.**
+ *
+ * `null` dès qu'une des deux moitiés ne se lit pas : **rien n'est corrigé en silence.** Des minutes
+ * laissées vides valent zéro, parce que taper `21` puis rien est la façon normale d'écrire 21 h.
+ */
+fun lireBorne(heures: String, minutes: String): Int? {
+    val h = heures.trim().toIntOrNull() ?: return null
+    val m = minutes.trim().ifBlank { "0" }.toIntOrNull() ?: return null
+    if (h !in 0..23 || m !in 0..59) return null
+
+    return h * 60 + m
 }

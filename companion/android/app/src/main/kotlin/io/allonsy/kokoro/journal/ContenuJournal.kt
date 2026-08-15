@@ -1,21 +1,10 @@
 package io.allonsy.kokoro.journal
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,7 +15,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import io.allonsy.kokoro.R
+import io.allonsy.kokoro.ui.BoutonEpais
+import io.allonsy.kokoro.ui.ChampTexte
+import io.allonsy.kokoro.ui.LocalPaletteKokoro
+import io.allonsy.kokoro.ui.PageKokoro
+import io.allonsy.kokoro.ui.TypoKokoro
 import java.util.Locale
+
+/**
+ * Le check-in, **dans la matière du monde** *(15/08/2026)* — `companion/INTERFACE.md` §4.
+ *
+ * ⭐ **Une question par écran, et rien d'autre à l'écran.** Le rang est écrit en petit, il ne compte
+ * rien d'un jour à l'autre. 🔴 **Aucune réponse n'est commentée** : Kokoro enregistre, il
+ * n'interprète pas — l'interprétation appartient à la séance.
+ *
+ * 🔴 **Le vert est réservé à ce qui avance d'un pas** : une réponse, un enregistrement. **Passer et
+ * arrêter sont neutres, jamais gris-triste ni barrés** — il n'y a pas de retard dans ce dispositif,
+ * donc pas de couleur pour en parler.
+ */
 
 sealed interface EtapeJournal {
     data object DossierAbsent : EtapeJournal
@@ -48,39 +54,30 @@ fun ContenuJournal(
     onArreter: () -> Unit,
     onFermer: () -> Unit,
 ) {
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background,
+    PageKokoro(
+        titre = stringResource(R.string.journal_titre),
+        couleur = LocalPaletteKokoro.current.peche,
+        ecart = 16.dp,
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .safeDrawingPadding()
-                .verticalScroll(rememberScrollState())
-                .padding(24.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            when (etape) {
-                EtapeJournal.DossierAbsent -> EcranDossierAbsent(onChoisirDossier, onFermer)
-                EtapeJournal.DejaEcrit -> EcranDejaEcrit(checkin.date, onFermer)
-                is EtapeJournal.Repondre -> EcranQuestion(
-                    question = QUESTIONS[etape.index],
-                    rang = etape.index,
-                    depart = departDe(QUESTIONS[etape.index], repris),
-                    onRepondre = onRepondre,
-                    onArreter = onArreter,
-                )
-                EtapeJournal.Note -> EcranNote(onNote, onArreter)
-                is EtapeJournal.Enregistre -> EcranEnregistre(etape.nom, onFermer)
-                is EtapeJournal.Echoue -> EcranEchoue(etape.cause, onFermer)
-            }
+        when (etape) {
+            EtapeJournal.DossierAbsent -> EcranDossierAbsent(onChoisirDossier, onFermer)
+            EtapeJournal.DejaEcrit -> EcranDejaEcrit(checkin.date, onFermer)
+            is EtapeJournal.Repondre -> EcranQuestion(
+                question = QUESTIONS[etape.index],
+                rang = etape.index,
+                depart = departDe(QUESTIONS[etape.index], repris),
+                onRepondre = onRepondre,
+                onArreter = onArreter,
+            )
+            EtapeJournal.Note -> EcranNote(onNote, onArreter)
+            is EtapeJournal.Enregistre -> EcranEnregistre(etape.nom, onFermer)
+            is EtapeJournal.Echoue -> EcranEchoue(etape.cause, onFermer)
         }
     }
 }
 
 @Composable
 private fun EcranDossierAbsent(onChoisirDossier: () -> Unit, onFermer: () -> Unit) {
-    Titre(stringResource(R.string.journal_titre))
     Explication(stringResource(R.string.journal_dossier_explication))
     Principal(stringResource(R.string.journal_action_dossier), onChoisirDossier)
     Discret(stringResource(R.string.journal_action_fermer), onFermer)
@@ -88,7 +85,6 @@ private fun EcranDossierAbsent(onChoisirDossier: () -> Unit, onFermer: () -> Uni
 
 @Composable
 private fun EcranDejaEcrit(date: String, onFermer: () -> Unit) {
-    Titre(stringResource(R.string.journal_titre))
     Explication(stringResource(R.string.journal_deja_ecrit, date))
     Principal(stringResource(R.string.journal_action_fermer), onFermer)
 }
@@ -101,12 +97,8 @@ private fun EcranQuestion(
     onRepondre: (Champ, Double?) -> Unit,
     onArreter: () -> Unit,
 ) {
-    Text(
-        text = stringResource(R.string.journal_rang, rang + 1, QUESTIONS.size),
-        style = MaterialTheme.typography.bodySmall,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-    )
-    Titre(stringResource(question.enonce))
+    Rang(stringResource(R.string.journal_rang, rang + 1, QUESTIONS.size))
+    Enonce(stringResource(question.enonce))
     question.precision?.let { Explication(stringResource(it)) }
 
     when (val saisie = question.saisie) {
@@ -131,14 +123,14 @@ private fun Compteur(saisie: Saisie.Compteur, depart: Double, onValider: (Double
 
     Text(
         text = afficher(valeur, saisie.unite),
-        style = MaterialTheme.typography.displayMedium,
-        color = MaterialTheme.colorScheme.onBackground,
+        style = TypoKokoro.compte,
+        color = LocalPaletteKokoro.current.encre,
         textAlign = TextAlign.Center,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
     )
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Pas(delta = -saisie.grandPas, unite = saisie.unite, modifier = Modifier.weight(1f), onClick = ajuster)
         Pas(delta = -saisie.pas, unite = saisie.unite, modifier = Modifier.weight(1f), onClick = ajuster)
@@ -150,27 +142,26 @@ private fun Compteur(saisie: Saisie.Compteur, depart: Double, onValider: (Double
 
 @Composable
 private fun Pas(delta: Double, unite: Unite, modifier: Modifier, onClick: (Double) -> Unit) {
-    OutlinedButton(
-        onClick = { onClick(delta) },
-        modifier = modifier.heightIn(min = 64.dp),
-    ) {
-        Text(
-            text = (if (delta > 0) "+" else "−") + afficher(kotlin.math.abs(delta), unite),
-            style = MaterialTheme.typography.titleMedium,
-        )
-    }
+    BoutonEpais(
+        libelle = (if (delta > 0) "+" else "−") + afficher(kotlin.math.abs(delta), unite),
+        onClic = { onClick(delta) },
+        modifier = modifier,
+        hauteurMinimale = 60.dp,
+        style = TypoKokoro.discret,
+    )
 }
 
 @Composable
 private fun EcranNote(onNote: (String?) -> Unit, onArreter: () -> Unit) {
     var texte by remember { mutableStateOf("") }
 
-    Titre(stringResource(R.string.journal_q_notes))
+    Enonce(stringResource(R.string.journal_q_notes))
     Explication(stringResource(R.string.journal_p_notes))
-    OutlinedTextField(
-        value = texte,
-        onValueChange = { texte = it },
+    ChampTexte(
+        valeur = texte,
+        onValeur = { texte = it },
         modifier = Modifier.fillMaxWidth(),
+        uneSeuleLigne = false,
     )
     Principal(stringResource(R.string.journal_action_enregistrer)) {
         onNote(texte.trim().ifBlank { null })
@@ -180,54 +171,47 @@ private fun EcranNote(onNote: (String?) -> Unit, onArreter: () -> Unit) {
 
 @Composable
 private fun EcranEnregistre(nom: String, onFermer: () -> Unit) {
-    Titre(stringResource(R.string.journal_enregistre))
+    Enonce(stringResource(R.string.journal_enregistre))
     Explication(nom)
     Principal(stringResource(R.string.journal_action_fermer), onFermer)
 }
 
 @Composable
 private fun EcranEchoue(cause: String, onFermer: () -> Unit) {
-    Titre(stringResource(R.string.journal_echec))
+    Enonce(stringResource(R.string.journal_echec))
     Explication(cause)
     Explication(stringResource(R.string.journal_echec_suite))
     Principal(stringResource(R.string.journal_action_fermer), onFermer)
 }
 
 @Composable
-private fun Titre(texte: String) {
-    Text(
-        text = texte,
-        style = MaterialTheme.typography.headlineSmall,
-        color = MaterialTheme.colorScheme.onBackground,
-    )
+private fun Rang(texte: String) {
+    Text(text = texte, style = TypoKokoro.discret, color = LocalPaletteKokoro.current.encreDouce)
+}
+
+@Composable
+private fun Enonce(texte: String) {
+    Text(text = texte, style = TypoKokoro.titre, color = LocalPaletteKokoro.current.encre)
 }
 
 @Composable
 private fun Explication(texte: String) {
-    Text(
-        text = texte,
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-    )
+    Text(text = texte, style = TypoKokoro.lecture, color = LocalPaletteKokoro.current.encreDouce)
 }
 
 @Composable
 private fun Principal(libelle: String, onClick: () -> Unit) {
-    OutlinedButton(
-        onClick = onClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(min = 72.dp),
-    ) {
-        Text(libelle, style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center)
-    }
+    BoutonEpais(
+        libelle = libelle,
+        onClic = onClick,
+        couleur = LocalPaletteKokoro.current.menthe,
+        hauteurMinimale = 72.dp,
+    )
 }
 
 @Composable
 private fun Discret(libelle: String, onClick: () -> Unit) {
-    TextButton(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
-        Text(libelle, textAlign = TextAlign.Center)
-    }
+    BoutonEpais(libelle = libelle, onClic = onClick, hauteurMinimale = 60.dp)
 }
 
 private fun arrondir(valeur: Double): Double = Math.round(valeur * 10.0) / 10.0
