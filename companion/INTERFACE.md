@@ -117,6 +117,7 @@ Aucun score · aucune progression · aucun historique · aucun palier atteint ·
 - **Une carte par étape** : le titre, la durée si elle est connue, rien d'autre. Pas de chevron, pas d'aperçu, pas de compteur.
 - **Le décor reste visible** autour et entre les cartes — on est toujours dans le même monde, jamais dans une autre application.
 - **Une étape ouverte prend l'écran entier** et se ferme **d'une croix en haut à droite** *(amendé le 15/08/2026, §7.2 — c'était un bouton écrit *Fermer* en pied de page)*, jamais d'un geste : rien ne doit concurrencer la traversée.
+- ⭐ **Tout ce qui s'ouvre monte du bas, en 320 ms** *(15/08/2026, §7.9)* — l'étape ouverte **et** les écrans hors du monde *(réglages, crise, check-in, atelier)*. 🔴 **Une seule façon d'ouvrir un panneau**, et l'écran de dessous reste en place derrière : c'est un panneau posé sur le monde, jamais un changement d'application.
 
 ---
 
@@ -309,6 +310,7 @@ Aucun score · aucune progression · aucun historique · aucun palier atteint ·
 | **La police** (§4.3) | `res/font/varela_round.ttf` · `ui/Typographie.kt` | ✅ Embarquée. ⭐ **Interligne centré** — sans quoi un libellé court reste collé en haut d'un bouton haut |
 | **Le thème** jour / nuit | `ui/ThemeMonde.kt` | ✅ **Le thème de tout ce que Xavier voit.** L'ancien ne sert plus qu'aux deux outils de mise au point |
 | **Les quatre écrans** (§3) | `monde/Bords.kt` | ✅ Ruban fixe (D11), **tous défilent sauf la crise** *(§7.7)*, roue dentée sur la bande d'entrée (D4) |
+| **Le décor en parallaxe** (`DECOR.md` §4) | `decor/Decor.kt` · `decor/Inclinaison.kt` | ✅ Quatre couches, anneau sans bout, **et l'inclinaison du téléphone depuis le 15/08/2026** *(§7.8)*. Les deux se coupent séparément à l'écran de contrôle |
 | **L'avis de porte fermée** (§6.1, §7.4) | `monde/Bords.kt` | ✅ En tête de l'écran d'entrée, **et seulement quand la notification d'accès n'a pas pu s'afficher** |
 | **Une étape ouverte** (§3.1) | `monde/Etapes.kt` · `monde/MondeKokoro.kt` | ✅ Plein écran, traversée coupée, fermeture **à la croix ou au *retour* du téléphone** — jamais au geste |
 | **L'icône du lanceur** (D10) | `AndroidManifest.xml` · `mipmap-anydpi-v26/ic_lanceur.xml` | ✅ Ouvre le monde. ⭐ **C'est Kokoro qui y est depuis le 16/08/2026** *(§7.6)* — icône adaptative, couche monochrome, écran de démarrage et icône de notification tirés du même logo |
@@ -498,3 +500,70 @@ L'écran central n'existe plus, et il portait trois choses. **Toutes les trois v
 > ⭐ **La crise, elle, ne défile toujours pas** — 🔴 **et c'est une exigence propre, pas une conséquence de P1.** En crise, une liste qui bouge sous le doigt est une chose de plus à maîtriser. **La levée du point dur ne rouvre pas cette question-là.**
 
 > ⚠️ **Ce qui n'a pas bougé :** le seuil de bascule et l'élan *(inchangés à 0,18 écran et 0,7 écran/s)* · le ressort qui pose la caméra à la vitesse du doigt · le fait qu'**on ne saute jamais deux écrans**, si lancé soit le geste · les quatre couches du décor · la matière, les rubans, les cartes · **et toutes les portes de crise, qui n'ont pas été retouchées d'une ligne.**
+
+---
+
+### 7.8 ⭐ Le décor suit aussi l'inclinaison du téléphone — 15/08/2026
+
+**Demande de Xavier**, en trois points : *bouger le téléphone déplace le décor · le glissement gauche ↔ droite continue de le déplacer aussi · un interrupteur pour l'inclinaison, un autre pour la parallaxe entière.*
+
+**Spécification complète : [`DECOR.md`](DECOR.md) §4.1.** Ce qui touche à l'interface :
+
+| | |
+|---|---|
+| ⭐ **Les deux sources s'additionnent** | Le doigt donne la traversée, l'inclinaison un débattement de **0,40 écran** au bout de **18°** *(🔄 revus en main le jour même — `DECOR.md` §4.2)*. **Rien n'est arbitré entre les deux** — il n'y a qu'une caméra, et elle est la somme |
+| 🔴 **L'inclinaison ne touche que le décor** | Le contenu des écrans ne la reçoit pas. Sinon **l'écran courant partirait de travers** dès qu'on tient le téléphone de biais, et le ruban de titre avec lui |
+| ⭐ **Une position, pas un mouvement** | On lit la direction du bas, **pas le gyroscope** : une vitesse s'intègre, une intégration dérive, et un décor qui glisse tout seul est précisément l'interdit de `DECOR.md` §7. **Téléphone posé, le décor est immobile** |
+| **Nouvelle section de l'écran de contrôle** | **« Le mouvement du décor »**, entre la nuit et le corps. Deux interrupteurs, **et ils prennent effet tout de suite** — pas de bouton *Enregistrer*, il n'y a aucune saisie qui pourrait ne pas se lire |
+| 🔴 **Aucun interrupteur inerte** | La ligne de l'inclinaison **disparaît** si la parallaxe est coupée, et si le téléphone n'a pas le capteur — où une phrase dit pourquoi. *Un réglage qu'on croit posé et qui ne l'est pas est pire qu'un réglage absent* |
+| **Les deux sont activés d'origine** | ⭐ **Ce n'est pas un changement non annoncé** : c'est exactement ce qui a été demandé, et chacun se coupe d'un geste |
+
+> 🔄 **Vu en main le jour même, et corrigé** *(`DECOR.md` §4.2)* : le glissement au doigt est juste, **l'inclinaison ne se voyait pas assez**. Course **26° → 18°**, débattement **0,18 → 0,40 écran** — ⭐ **il fallait les deux**, parce qu'un poignet ordinaire ne penche que de huit à dix degrés et ne parcourait donc jamais la course.
+
+> ⚠️ **Ce qui n'a pas bougé :** l'anneau et son ordre · le seuil de bascule et l'élan · le ressort · la répétition en miroir · les quatre couches et la plage de nuit · **et toutes les portes de crise.**
+
+---
+
+### 7.9 🔄 Tout ce qui s'ouvre monte du bas — 15/08/2026
+
+**Deux retours de Xavier, deux causes sans rapport, un seul symptôme : *un panneau ne s'ouvre pas comme les autres*.**
+
+#### a. Les activités s'ouvraient avec la transition d'Android
+
+Une étape de la thérapie est un panneau **de Compose**, posé sur le monde : il monte du bas en 320 ms. Les réglages, la crise, le check-in et l'atelier sont des **activités** : ils prenaient donc la transition par défaut d'Android — un fondu qui grandit. **Deux façons d'ouvrir un panneau, et rien pour dire laquelle on allait avoir.**
+
+| | |
+|---|---|
+| **Ce qui est fait** | `res/anim/panneau_montee · descente · repos` + `Animation.Kokoro.Panneau`, posée sur **`Theme.Kokoro`** *(`res/values/themes.xml`)*. Mêmes 320 ms, même courbe `fast_out_slow_in`, aucun rebond |
+| 🔴 **Posé sur le thème, pas écran par écran** | Une transition câblée activité par activité est une transition **qu'un écran neuf oublie** — et l'oubli ne se voit pas à la revue, seulement à l'usage. Toute surface qui porte `Theme.Kokoro` l'a par construction |
+| ⭐ **L'écran de dessous ne bouge pas** | `panneau_repos` est une animation **immobile**, et il faut l'écrire : sans elle Android reprend la sienne et fait reculer l'écran d'origine. **Un panneau posé sur le monde, pas un changement d'application** |
+| **La fermeture est la montée à l'envers** | Un panneau qui partirait autrement qu'il n'est venu demanderait d'apprendre deux gestes pour une seule chose |
+| ⚠️ **Hors de portée** | **L'ouverture depuis le lanceur** : c'est l'écran de démarrage d'Android qui la joue, il n'appartient pas à l'app |
+
+#### b. La première étape ouverte de la session ne montait pas
+
+🔴 **`AnimatedVisibility` ne joue son entrée que sur un *changement* d'état — née visible, elle s'affiche d'un coup.** Le panneau d'étape sortait de la composition tant qu'aucune étape n'avait été choisie : à la première ouverture il **naissait** donc visible, et apparaissait sec. Les suivantes montaient normalement, puisque la vitrine, elle, était désormais là.
+
+**Corrigé en la composant en permanence** — `visible = false` d'abord, `true` ensuite — **et en laissant le contenu se garder de l'absence d'étape** plutôt que l'animation. *(`monde/MondeKokoro.kt`)*
+
+> ⚠️ **Le genre de défaut qui ne se voit qu'à l'usage** : il ne se produit qu'une fois par session, et jamais chez qui vient de tester le panneau.
+
+---
+
+### 7.10 🔄 Le titre perd son panneau, et l'appui redevient visible — 15/08/2026
+
+**Deux retours de Xavier, deux corrections sans rapport l'une avec l'autre.**
+
+#### a. La bande de titre se lisait comme un gros bouton
+
+Le titre était posé sur **un panneau pleine largeur** — même matière, même contour, même épaisseur portée que ce sur quoi on appuie. **Sauf qu'on n'appuie jamais dessus.** ⭐ **Un titre n'est pas une commande et ne doit pas en avoir l'air.**
+
+**Le drapeau reste, et il suffit** : il porte le titre en toutes lettres, il ne défile pas (**D11**), et **le décor passe maintenant derrière lui** au lieu de s'arrêter à son bord. 🔴 **Les rivets s'en vont avec le panneau** — un rivet est ce qui visse une plaque ; sans plaque, il n'est qu'un point posé sur le ciel. **La croix et la roue dentée restent** : ce sont des sorties, pas des ornements, et **D4** tient sans changement.
+
+#### b. L'appui n'était visible que sur l'écran de crise
+
+🔴 **La cause n'est pas dans le dessin.** `clickable` **retarde l'appui de 100 ms quand il est posé dans une surface qui défile**, le temps de savoir si le doigt appuie ou fait défiler. Une frappe brève part avant ce délai : Compose émet alors *appuyé* et *relâché* **dans la même image**, et l'enfoncement n'a pas une seule image pour se produire. ⭐ **L'écran de crise ne défile pas, par exigence propre** *(§7.7)* — il n'a jamais eu le délai, et c'est pourquoi lui seul répondait.
+
+**Corrigé en tenant l'appui le temps de la descente** *(90 ms)* : la pièce descend à son tempo puis remonte au même, **et le retour au toucher ne dépend plus de la vitesse de la frappe**. 🔴 **Le plancher ne vaut que pour un appui qui aboutit** — un appui *annulé*, le doigt qui part faire défiler, retombe immédiatement. **Sans cette distinction, chaque geste de défilement enfoncerait au passage la carte sous le doigt.**
+
+> ⭐ **Les deux défauts se ressemblent** : ils ne se voient qu'à l'usage, sur un téléphone, en faisant autre chose que les regarder. Aucune revue de code ne les aurait sortis.

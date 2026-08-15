@@ -49,11 +49,21 @@ fun Decor(camera: () -> Float, palette: PaletteDecor, modifier: Modifier = Modif
 }
 
 /**
- * Une couche, répétée latéralement en miroir.
+ * Une couche, répétée latéralement — **de deux façons, et c'est la couche qui décide**
+ * *(15/08/2026)*.
  *
- * ⭐ **Le miroir est ce qui rend la répétition invisible** : deux tuiles voisines se touchent par le
- * même bord, donc il n'y a pas de raccord à faire coïncider — il n'y a pas de raccord du tout. C'est
- * ce qui permet de glisser d'un écran à l'autre sans jamais tomber sur la fin du dessin, **et de
+ * ⭐ **Une tuile à marges se répète simplement**, en avançant de sa seule partie peinte
+ * *(`Couche.pas`)* : les deux marges vides se recouvrent, le dessin reprend exactement là où il
+ * s'arrête, et **il n'y a aucun axe de symétrie**. C'est la façon propre, et elle demande un dessin
+ * qui laisse ses bords vides.
+ *
+ * ⭐ **Une tuile bord à bord se répète en miroir** : deux tuiles voisines se touchent par le même
+ * bord, donc il n'y a pas de raccord à faire coïncider — il n'y a pas de raccord du tout. 🔴 **Mais
+ * elle paie sa continuité en symétrie** : ce qui est coupé par le bord retrouve son reflet et forme
+ * un papillon. C'est le seul recours quand le dessin ne peut pas s'arrêter avant le bord — une
+ * couche de sol, qui découvrirait le ciel sous elle.
+ *
+ * Dans les deux cas on peut glisser indéfiniment sans jamais tomber sur la fin du dessin, **et
  * tourner indéfiniment autour de l'anneau**.
  */
 private fun DrawScope.dessinerCouche(
@@ -64,6 +74,7 @@ private fun DrawScope.dessinerCouche(
 ) {
     val largeur = size.width * couche.largeur
     val hauteur = largeur * image.height / image.width
+    val pas = size.width * couche.pas
 
     val haut = when (couche.ancrage) {
         Ancrage.HAUT -> couche.decalage * size.height
@@ -71,13 +82,13 @@ private fun DrawScope.dessinerCouche(
     }
 
     val origine = (size.width - largeur) / 2f - camera * size.width * couche.profondeur
-    val premier = floor(-origine / largeur).toInt()
+    val premier = floor((-largeur - origine) / pas).toInt() + 1
 
     generateSequence(premier) { it + 1 }
-        .map { rang -> rang to origine + rang * largeur }
+        .map { rang -> rang to origine + rang * pas }
         .takeWhile { (_, gauche) -> gauche < size.width }
         .forEach { (rang, gauche) ->
-            dessinerTuile(image, gauche, haut, largeur, hauteur, enMiroir(rang), filtre)
+            dessinerTuile(image, gauche, haut, largeur, hauteur, couche.enMiroir && enMiroir(rang), filtre)
         }
 }
 

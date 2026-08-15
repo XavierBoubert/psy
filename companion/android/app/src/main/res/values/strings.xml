@@ -178,6 +178,16 @@
     <string name="controle_nuit_minutes">mm</string>
     <string name="controle_action_nuit">Enregistrer la plage</string>
 
+    <string name="controle_section_parallaxe">Le mouvement du décor</string>
+    <string name="controle_parallaxe_explication">Le paysage glisse derrière les écrans, plus lentement au loin qu\'au premier plan. Il ne part jamais de lui-même : il suit le doigt qui traverse le monde, et l\'inclinaison du téléphone si elle est activée.</string>
+    <string name="controle_parallaxe_active">Décor en parallaxe</string>
+    <string name="controle_parallaxe_inclinaison">Suivre l\'inclinaison</string>
+    <string name="controle_parallaxe_inclinaison_explication">Le décor se déplace un peu selon la façon dont le téléphone est tenu, comme derrière une fenêtre. C\'est la verticale qui est mesurée, pas le mouvement : rien ne dérive, rien ne se recentre seul, et reposer le téléphone comme il était remet le décor où il était. Le débattement est court — il ne fait jamais changer d\'écran.</string>
+    <string name="controle_parallaxe_complete">Le décor suit le doigt et l\'inclinaison du téléphone.</string>
+    <string name="controle_parallaxe_doigt">Le décor suit le doigt. L\'inclinaison est coupée.</string>
+    <string name="controle_parallaxe_coupee">Décor immobile — il ne suit ni le doigt ni l\'inclinaison.</string>
+    <string name="controle_parallaxe_sans_capteur">Ce téléphone n\'a pas le capteur qu\'il faut : l\'inclinaison ne peut pas être suivie.</string>
+
     <string name="monde_titre">Le monde de Kokoro</string>
 
     <!--

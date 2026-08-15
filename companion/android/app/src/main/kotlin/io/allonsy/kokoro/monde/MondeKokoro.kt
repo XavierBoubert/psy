@@ -34,6 +34,9 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import io.allonsy.kokoro.decor.Decor
 import io.allonsy.kokoro.decor.PaletteDecor
+import io.allonsy.kokoro.decor.rememberInclinaison
+import io.allonsy.kokoro.reglages.PARALLAXE_PAR_DEFAUT
+import io.allonsy.kokoro.reglages.Parallaxe
 import io.allonsy.kokoro.ui.Accuse
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -81,8 +84,14 @@ private const val MONTEE_ETAPE_MS = 320
  * seul : celui du doigt, prolongé.
  *
  * 🔴 **Le décor ne bouge pas tout seul.** Aucune dérive, aucun nuage qui file, aucune animation
- * d'ambiance : hors la respiration de Kokoro, rien ne se déplace sans que le doigt le déplace
+ * d'ambiance : hors la respiration de Kokoro, rien ne se déplace sans que **la main** le déplace
  * (`companion/README.md` §5 — jamais de mouvement à interpréter).
+ *
+ * ⭐ **Deux mains, une seule caméra de décor** *(15/08/2026, demande de Xavier)*. Le doigt donne la
+ * traversée, l'inclinaison du téléphone donne un débattement court **qui s'y ajoute** — et qui ne
+ * touche **que** le décor : le contenu des écrans reste à sa place, sans quoi l'écran courant
+ * partirait de travers en tenant le téléphone de biais. **Les deux se coupent séparément**
+ * (`Parallaxe`).
  */
 @Composable
 fun MondeKokoro(
@@ -91,6 +100,7 @@ fun MondeKokoro(
     onFonction: (Fonction) -> Unit,
     onReglages: () -> Unit,
     modifier: Modifier = Modifier,
+    parallaxe: Parallaxe = PARALLAXE_PAR_DEFAUT,
     envoiEnCours: Boolean = false,
     accesPerdu: Boolean = false,
     accuse: String? = null,
@@ -103,6 +113,7 @@ fun MondeKokoro(
     val vue = remember { mutableFloatStateOf(0f) }
     val pose = remember { mutableStateOf<Job?>(null) }
     val portee = rememberCoroutineScope()
+    val inclinaison = rememberInclinaison(actif = parallaxe.actif && parallaxe.inclinaison)
 
     /**
      * ⭐ **L'ancre ne change qu'au passage d'un écran**, alors que la caméra change à chaque image.
@@ -155,7 +166,7 @@ fun MondeKokoro(
                 )
             },
     ) {
-        Decor(camera = { vue.floatValue }, palette = palette)
+        Decor(camera = { cameraDuDecor(parallaxe, vue.floatValue, inclinaison.floatValue) }, palette = palette)
 
         positionsAutour(ancre).forEach { habitant ->
             key(ecranEn(habitant)) {
@@ -194,6 +205,20 @@ fun MondeKokoro(
         )
     }
 }
+
+/**
+ * Ce que voit le décor : la traversée du doigt, plus le débattement de l'inclinaison.
+ *
+ * ⭐ **Elle est lue dans le dessin, pas dans la composition** — comme la caméra du doigt. Une valeur
+ * qui change à chaque relevé du capteur recomposerait sinon les quatre écrans cinquante fois par
+ * seconde, pour un décor qui n'a besoin que d'être **redessiné**.
+ *
+ * 🔴 **Parallaxe coupée : le décor se fige à zéro, il ne se fige pas où il était.** Une image fixe
+ * doit être la même à chaque venue — sans quoi le réglage rendrait le décor imprévisible au lieu de
+ * l'immobiliser.
+ */
+private fun cameraDuDecor(parallaxe: Parallaxe, vue: Float, inclinaison: Float): Float =
+    if (parallaxe.actif) vue + inclinaison else 0f
 
 /**
  * Le seuil sous lequel le ressort considère qu'il est arrivé — **une demi-image de large**.
@@ -248,16 +273,29 @@ private fun ContenuEcran(
  *
  * ⭐ **Elle monte en 320 ms et s'arrête.** Un panneau qui apparaît d'un coup se lit comme un
  * changement d'application ; un panneau qui rebondit serait l'animation brusque interdite.
+ *
+ * 🔴 **[AnimatedVisibility] est composée en permanence, y compris avant la première ouverture**
+ * *(15/08/2026)*. Elle ne joue son entrée que sur un **changement** d'état : née visible, elle
+ * s'affiche d'un coup. Tant qu'on sortait avant elle faute d'étape à montrer, **la toute première
+ * ouverture de la session n'était pas animée** — le panneau apparaissait sec, puis toutes les
+ * suivantes montaient normalement. ⚠️ **Le manque était invisible en revue et sautait aux yeux à
+ * l'usage**, parce qu'il ne se produit qu'une fois.
+ *
+ * ⭐ **C'est le contenu qui se garde de l'absence, pas l'animation** : pendant la descente, l'étape
+ * est encore là *(`affichee` survit à `ouverte`)*, sinon le panneau se viderait en partant.
  */
 @Composable
 private fun EtapeOuverte(etape: Etape?, visible: Boolean, onFermer: () -> Unit) {
-    val detail = (etape?.ouverture as? Ouverture.Detail)?.texte ?: return
+    val detail = (etape?.ouverture as? Ouverture.Detail)?.texte
+
     AnimatedVisibility(
-        visible = visible,
+        visible = visible && detail != null,
         enter = slideInVertically(animationSpec = tween(MONTEE_ETAPE_MS)) { hauteur -> hauteur },
         exit = slideOutVertically(animationSpec = tween(MONTEE_ETAPE_MS)) { hauteur -> hauteur },
     ) {
-        PanneauEtape(titre = etape.titre, detail = detail, onFermer = onFermer)
+        if (etape != null && detail != null) {
+            PanneauEtape(titre = etape.titre, detail = detail, onFermer = onFermer)
+        }
     }
 }
 

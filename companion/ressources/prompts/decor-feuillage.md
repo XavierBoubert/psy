@@ -9,7 +9,9 @@ Large leaves and blossoms rising from the BOTTOM EDGE of the frame, close to the
   them so the mass does not read as flat. A pale mint vein down the centre of the largest ones only.
 - Five or six blossoms on slender stems among the leaves: simple flat five-petal flowers, dusty pink
   and pale cream, each barely larger than a leaf tip. Spread evenly, never bunched.
-- The foliage runs along the full width but is NOT a continuous wall: leave generous magenta gaps
-  between the clumps so the layers behind stay visible.
+- The foliage is NOT a continuous wall: leave generous magenta gaps between the clumps so the layers
+  behind stay visible. The clumps begin a sixth of the way in from the left edge and end a sixth of
+  the way before the right edge: the first sixth and the last sixth of the width stay empty magenta
+  all the way down to the bottom of the frame. No leaf, stem or blossom is cut by a side edge.
 - The upper silhouette is open and airy — leaf tips and single stems against nothing, never a hedge.
 - Absolutely nothing else: no sky, no clouds, no grass field, no soil, no roots, no pot, no ground line.

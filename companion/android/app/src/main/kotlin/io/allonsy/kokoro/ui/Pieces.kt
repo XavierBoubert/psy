@@ -1,5 +1,6 @@
 package io.allonsy.kokoro.ui
 
+import android.os.SystemClock
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
@@ -8,8 +9,9 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,6 +36,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -78,6 +81,22 @@ import kotlin.math.sin
 
 private const val ENFONCEMENT_MS = 90
 
+/**
+ * Le temps minimum pendant lequel un appui **reste enfoncé**, même si le doigt est déjà reparti.
+ *
+ * 🔴 **Sans lui, l'enfoncement était invisible partout sauf sur l'écran de crise** *(15/08/2026,
+ * relevé par Xavier)*. La cause n'est pas dans le dessin : **`clickable` retarde l'appui de 100 ms
+ * quand il est posé dans une surface qui défile**, le temps de savoir si le doigt appuie ou fait
+ * défiler. Une frappe brève part avant ce délai — Compose émet alors *appuyé* et *relâché* **d'un
+ * seul coup**, dans la même image, et rien ne bouge à l'écran. ⭐ **L'écran de crise ne défile pas,
+ * par exigence propre** : il n'a jamais eu le délai, et c'est pourquoi lui seul répondait.
+ *
+ * ⭐ **Tenir l'appui le temps de la descente le rend visible sans rien accélérer** : la pièce
+ * descend à son tempo, puis remonte au même. Le retour au toucher ne dépend plus de la vitesse de
+ * la frappe.
+ */
+private const val APPUI_MINIMUM_MS = ENFONCEMENT_MS.toLong()
+
 /** Le cran taillé dans chaque bout du ruban. */
 private val CRAN = 18.dp
 
@@ -107,7 +126,7 @@ fun PanneauExtrude(
 ) {
     val palette = LocalPaletteKokoro.current
     val interactions = remember { MutableInteractionSource() }
-    val appuye by interactions.collectIsPressedAsState()
+    val appuye by appuiTenu(interactions)
     val descente by animateDpAsState(
         targetValue = if (appuye && onClic != null) epaisseur else 0.dp,
         animationSpec = tween(durationMillis = ENFONCEMENT_MS, easing = LinearOutSlowInEasing),
@@ -138,6 +157,41 @@ fun PanneauExtrude(
         verticalArrangement = arrangement,
         content = contenu,
     )
+}
+
+/**
+ * L'appui, **tenu au moins le temps de le voir** — voir [APPUI_MINIMUM_MS].
+ *
+ * ⭐ **Le plancher ne vaut que pour un appui qui aboutit.** Un appui *annulé* — le doigt part faire
+ * défiler la liste — retombe **immédiatement** : 🔴 sans cette distinction, chaque geste de
+ * défilement enfoncerait au passage la carte sous le doigt, et la liste clignoterait à chaque
+ * glissement. **Ce qui se voit doit être ce qui s'est produit.**
+ */
+@Composable
+private fun appuiTenu(interactions: InteractionSource): State<Boolean> {
+    val appuye = remember { mutableStateOf(false) }
+
+    LaunchedEffect(interactions) {
+        var depuis = 0L
+        interactions.interactions.collect { interaction ->
+            when (interaction) {
+                is PressInteraction.Press -> {
+                    depuis = SystemClock.uptimeMillis()
+                    appuye.value = true
+                }
+
+                is PressInteraction.Release -> {
+                    delay(APPUI_MINIMUM_MS - (SystemClock.uptimeMillis() - depuis))
+                    appuye.value = false
+                }
+
+                is PressInteraction.Cancel -> appuye.value = false
+                else -> Unit
+            }
+        }
+    }
+
+    return appuye
 }
 
 /**
@@ -287,17 +341,25 @@ fun Ruban(texte: String, couleur: Teinte, modifier: Modifier = Modifier) {
 }
 
 /**
- * La bande de titre d'un écran de bord — un panneau pleine largeur **qui sort de l'écran par le
- * haut**, portant le ruban et ses deux rivets.
+ * La bande de titre d'un écran — **le ruban seul, posé sur ce qu'il y a derrière** *(15/08/2026,
+ * demande de Xavier)*.
  *
- * ⭐ **Elle déborde exprès** : sans ce débord, deux coins arrondis flotteraient sous la barre
- * d'état et la bande aurait l'air posée de travers. Le décor passe **sous** elle, comme partout —
- * jamais à travers (**P3**, **P5**).
+ * 🔄 **C'était un panneau pleine largeur qui sortait de l'écran par le haut**, avec le ruban au
+ * milieu et deux rivets. **Il se lisait comme un gros bouton** : même matière, même contour, même
+ * épaisseur portée que ce sur quoi on appuie — sauf qu'on n'appuie jamais dessus. ⭐ **Un titre
+ * n'est pas une commande, et il ne doit pas en avoir l'air.**
  *
- * 🔴 **Le rivet de droite est la seule place où un bouton puisse paraître**, et il n'en tient qu'un.
- * Une bande porte donc **soit** la croix qui la ferme, **soit** la roue dentée — jamais les deux, et
- * jamais ailleurs. Le ruban garde alors la réserve **des deux côtés** : il reste centré, et un titre
- * long se replie au lieu de passer dessous.
+ * ⭐ **Le drapeau reste, et il suffit** : il porte le titre en toutes lettres, il ne défile pas
+ * (**D11**), et **le décor passe maintenant derrière lui** au lieu de s'arrêter à son bord. Ce qui
+ * est perdu au passage n'est que de la matière : la bande ne disait rien que le ruban ne dise.
+ *
+ * 🔴 **Les rivets s'en vont avec le panneau, la croix et la roue dentée restent.** Un rivet est ce
+ * qui visse une plaque ; sans plaque, il n'est plus qu'un point posé sur le ciel. **Les deux
+ * boutons, eux, sont des sorties** — ils ne sont pas là pour décorer, et ils gardent leur place :
+ * une bande porte **soit** la croix, **soit** la roue dentée, jamais les deux.
+ *
+ * ⭐ **La réserve reste des deux côtés** quand un bouton est là : le ruban demeure **centré**, et un
+ * titre long se replie au lieu de passer dessous.
  *
  * @param onFermer la croix — c'est la seule place de la fermeture, et elle est la même sur tous les
  *   panneaux *(15/08/2026)*.
@@ -311,15 +373,12 @@ fun BandeTitre(
     onFermer: (() -> Unit)? = null,
     onReglages: (() -> Unit)? = null,
 ) {
-    val palette = LocalPaletteKokoro.current
     val reserve = if (onFermer == null && onReglages == null) 0.dp else RESERVE_CROIX
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .matiere(palette = palette, debordHaut = RAYON)
-            .padding(bottom = EPAISSEUR)
             .windowInsetsPadding(WindowInsets.statusBars)
-            .padding(start = 20.dp, end = 20.dp, top = 26.dp, bottom = 26.dp),
+            .padding(start = 20.dp, end = 20.dp, top = 18.dp, bottom = 18.dp),
         contentAlignment = Alignment.Center,
     ) {
         Ruban(
@@ -327,12 +386,11 @@ fun BandeTitre(
             couleur = couleur,
             modifier = Modifier.padding(horizontal = reserve),
         )
-        Rivet(Modifier.align(Alignment.CenterStart))
         val fin = Modifier.align(Alignment.CenterEnd)
         when {
             onFermer != null -> Croix(onFermer = onFermer, modifier = fin)
             onReglages != null -> RoueDentee(onClic = onReglages, modifier = fin)
-            else -> Rivet(fin)
+            else -> Unit
         }
     }
 }

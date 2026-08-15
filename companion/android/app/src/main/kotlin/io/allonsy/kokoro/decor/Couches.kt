@@ -25,7 +25,22 @@ data class Couche(
     val largeur: Float,
     /** Écart au bord d'ancrage, en fraction de la hauteur de l'écran. */
     val decalage: Float,
-)
+    /**
+     * Fraction de la tuile **peinte en vide** à gauche comme à droite. `0` pour un dessin qui va
+     * bord à bord.
+     *
+     * ⭐ **C'est elle qui décide de la façon de répéter** *(15/08/2026)*, et il n'y a pas de second
+     * réglage : **une tuile à marges se répète simplement**, en avançant de sa partie peinte, si
+     * bien que les deux marges se recouvrent et que le dessin reprend exactement où il s'arrête.
+     * **Une tuile bord à bord n'a pas ce luxe** — elle ne peut être répétée qu'en miroir.
+     */
+    val marge: Float = 0f,
+) {
+    val enMiroir: Boolean get() = marge <= 0f
+
+    /** De combien on avance d'une tuile à la suivante, en multiples de la largeur de l'écran. */
+    val pas: Float get() = largeur * (1f - 2f * marge)
+}
 
 /**
  * 🔴 **Le `decalage` d'une couche ancrée en bas ne descend jamais sous zéro** : elle sortirait alors
@@ -34,16 +49,28 @@ data class Couche(
  *
  * ⭐ **La `largeur` est aussi l'échelle** : une tuile plus large agrandit ce qu'elle contient. La
  * prairie du fond est large (3,60) parce qu'elle doit se lire comme une plaine et pas comme une
- * bande au ras du bord ; le feuillage est étroit (1,50) parce qu'au premier plan, des feuilles trop
- * grandes mangent l'écran. C'est un compromis assumé : **plus une tuile est étroite, plus elle se
- * répète** — le feuillage croise donc son axe de symétrie plus souvent qu'avant, la prairie
- * beaucoup moins.
+ * bande au ras du bord ; le feuillage reste modeste parce qu'au premier plan, des feuilles trop
+ * grandes mangent l'écran.
+ *
+ * 🔄 **Deux couches ont perdu leur miroir le 15/08/2026** *(relevé par Xavier : « la jointure des
+ * nuages et des feuilles n'est pas très jolie »)*. **Le miroir ne faisait pas un raccord, il faisait
+ * un papillon** : le dessin allait bord à bord, donc un nuage coupé par le bord retrouvait sa propre
+ * image retournée et formait une masse symétrique — sans discontinuité, mais parfaitement
+ * reconnaissable. ⭐ **La sortie n'était pas d'élargir, c'était de vider les bords** : redessinées
+ * avec une marge latérale, les deux couches se répètent maintenant **sans miroir**, en avançant de
+ * leur partie peinte. Le dessin reprend là où il s'arrête, et il n'y a plus d'axe du tout.
+ *
+ * ⏳ **Les nuages lointains gardent le leur** : quatre planches ont été essayées, aucune n'a rendu
+ * un fond d'un seul ton *(le modèle peint les marges dans un magenta plus clair, que le détourage ne
+ * coupe pas)*. **C'est la couche la plus pâle et la plus lente** — son axe est le moins visible du
+ * lot. 🔴 **La prairie garde le sien pour une raison qui ne changera pas** : une couche de sol doit
+ * aller bord à bord, sinon elle découvre le ciel sous elle.
  */
 val COUCHES: List<Couche> = listOf(
     Couche(R.drawable.decor_nuages_loin, profondeur = 0.14f, ancrage = Ancrage.HAUT, largeur = 1.40f, decalage = 0.01f),
-    Couche(R.drawable.decor_nuages_pres, profondeur = 0.30f, ancrage = Ancrage.HAUT, largeur = 1.90f, decalage = 0.06f),
+    Couche(R.drawable.decor_nuages_pres, profondeur = 0.30f, ancrage = Ancrage.HAUT, largeur = 2.40f, decalage = 0.06f, marge = 0.16f),
     Couche(R.drawable.decor_collines, profondeur = 0.52f, ancrage = Ancrage.BAS, largeur = 3.60f, decalage = 0.055f),
-    Couche(R.drawable.decor_feuillage, profondeur = 0.78f, ancrage = Ancrage.BAS, largeur = 1.50f, decalage = 0.080f),
+    Couche(R.drawable.decor_feuillage, profondeur = 0.78f, ancrage = Ancrage.BAS, largeur = 1.90f, decalage = 0.080f, marge = 0.16f),
 )
 
 /**

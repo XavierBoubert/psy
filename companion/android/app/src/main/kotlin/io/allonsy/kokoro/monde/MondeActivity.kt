@@ -98,6 +98,7 @@ class MondeActivity : ComponentActivity() {
                     contactNom = reglages.value.contactNom,
                     onFonction = { ouvrir(it) },
                     onReglages = { startActivity(Intent(this, MainActivity::class.java)) },
+                    parallaxe = reglages.value.parallaxe,
                     envoiEnCours = envoiEnCours.value,
                     accesPerdu = accesPerdu.value,
                     accuse = accuse.value,

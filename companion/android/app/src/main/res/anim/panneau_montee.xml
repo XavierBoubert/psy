@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  La montée d'un panneau — **la même que celle d'une étape de la thérapie**, à la milliseconde et à
+  la courbe près : 320 ms, `fast_out_slow_in`, aucun rebond.
+
+  🔴 Le nombre est écrit deux fois, ici et dans `MONTEE_ETAPE_MS` (`monde/MondeKokoro.kt`), parce
+  que les deux mondes ne se parlent pas : un panneau de Compose et une transition d'activité sont
+  jouées par deux moteurs différents. **S'ils divergent, l'app a deux façons d'ouvrir un panneau** —
+  et c'est exactement ce que la demande du 15/08/2026 a corrigé.
+-->
+<translate xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="320"
+    android:fromYDelta="100%p"
+    android:interpolator="@android:interpolator/fast_out_slow_in"
+    android:toYDelta="0" />

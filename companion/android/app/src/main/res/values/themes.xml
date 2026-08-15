@@ -10,5 +10,26 @@
     <style name="Theme.Kokoro" parent="android:Theme.Material.NoActionBar">
         <item name="android:windowBackground">@color/kokoro_fond</item>
         <item name="android:windowSplashScreenBackground">@color/kokoro_fond</item>
+        <item name="android:windowAnimationStyle">@style/Animation.Kokoro.Panneau</item>
+    </style>
+
+    <!--
+      ⭐ **Tout ce qui s'ouvre monte du bas** *(15/08/2026, demande de Xavier)*. Les réglages, la
+      crise, le check-in et l'atelier sont des activités : ils s'ouvraient donc avec la transition
+      d'Android — un fondu qui grandit — pendant qu'une étape de la thérapie, elle, montait du bas.
+      **Deux façons d'ouvrir un panneau, et rien pour dire laquelle on allait avoir.**
+
+      🔴 **Posé sur le thème, pas dans le code de chaque écran.** Une transition câblée activité par
+      activité est une transition qu'un écran neuf oublie — et l'oubli ne se voit pas à la revue,
+      seulement à l'usage. Ici, toute surface qui porte `Theme.Kokoro` l'a par construction.
+
+      ⚠️ **L'ouverture depuis le lanceur n'en fait pas partie** : c'est l'écran de démarrage
+      d'Android qui la joue, et il n'appartient pas à l'app.
+    -->
+    <style name="Animation.Kokoro.Panneau" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/panneau_montee</item>
+        <item name="android:activityOpenExitAnimation">@anim/panneau_repos</item>
+        <item name="android:activityCloseEnterAnimation">@anim/panneau_repos</item>
+        <item name="android:activityCloseExitAnimation">@anim/panneau_descente</item>
     </style>
 </resources>

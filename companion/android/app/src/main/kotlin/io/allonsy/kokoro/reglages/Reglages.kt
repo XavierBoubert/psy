@@ -21,12 +21,15 @@ private const val CLE_MOT_CODE = "mot_code"
 private const val CLE_NUIT_ACTIVE = "nuit_active"
 private const val CLE_NUIT_DEBUT = "nuit_debut"
 private const val CLE_NUIT_FIN = "nuit_fin"
+private const val CLE_PARALLAXE_ACTIVE = "parallaxe_active"
+private const val CLE_PARALLAXE_INCLINAISON = "parallaxe_inclinaison"
 
 data class Reglages(
     val contactNom: String,
     val contactNumero: String,
     val nuit: PlageNuit,
     val motCode: String = MOT_CODE_PAR_DEFAUT,
+    val parallaxe: Parallaxe = PARALLAXE_PAR_DEFAUT,
 ) {
     val contactRenseigne: Boolean get() = contactNumero.isNotBlank()
 }
@@ -57,6 +60,13 @@ fun lireReglages(context: Context): Reglages {
             debut = prefs.getInt(CLE_NUIT_DEBUT, PLAGE_NUIT_PAR_DEFAUT.debut),
             fin = prefs.getInt(CLE_NUIT_FIN, PLAGE_NUIT_PAR_DEFAUT.fin),
         ),
+        parallaxe = Parallaxe(
+            actif = prefs.getBoolean(CLE_PARALLAXE_ACTIVE, PARALLAXE_PAR_DEFAUT.actif),
+            inclinaison = prefs.getBoolean(
+                CLE_PARALLAXE_INCLINAISON,
+                PARALLAXE_PAR_DEFAUT.inclinaison,
+            ),
+        ),
     )
 }
 
@@ -69,5 +79,7 @@ fun ecrireReglages(context: Context, reglages: Reglages) {
         .putBoolean(CLE_NUIT_ACTIVE, reglages.nuit.active)
         .putInt(CLE_NUIT_DEBUT, reglages.nuit.debut)
         .putInt(CLE_NUIT_FIN, reglages.nuit.fin)
+        .putBoolean(CLE_PARALLAXE_ACTIVE, reglages.parallaxe.actif)
+        .putBoolean(CLE_PARALLAXE_INCLINAISON, reglages.parallaxe.inclinaison)
         .apply()
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ⭐ **Ce que fait l'écran de dessous : rien, et il faut le dire.** Sans cette animation immobile,
+  Android reprend la sienne — l'écran d'origine recule et s'efface pendant que le panneau monte. Le
+  panneau d'une étape, lui, laisse le monde en place derrière lui ; c'est ça qui fait un panneau
+  posé sur le monde plutôt qu'un changement d'application.
+
+  La durée doit être celle de la montée : c'est elle qui tient l'écran de dessous visible tout le
+  temps que le panneau met à arriver.
+-->
+<translate xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="320"
+    android:fromYDelta="0"
+    android:toYDelta="0" />

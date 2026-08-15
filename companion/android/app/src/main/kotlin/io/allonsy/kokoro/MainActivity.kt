@@ -42,10 +42,12 @@ import io.allonsy.kokoro.corps.AtelierActivity
 import io.allonsy.kokoro.crise.CriseActivity
 import io.allonsy.kokoro.crise.creerCanalAcces
 import io.allonsy.kokoro.crise.publierAccesCrise
+import io.allonsy.kokoro.decor.capteurInclinaisonPresent
 import io.allonsy.kokoro.journal.cheminAffichable
 import io.allonsy.kokoro.journal.enregistrerDossier
 import io.allonsy.kokoro.journal.intentChoisirDossier
 import io.allonsy.kokoro.journal.lireDossier
+import io.allonsy.kokoro.reglages.Parallaxe
 import io.allonsy.kokoro.reglages.PlageNuit
 import io.allonsy.kokoro.reglages.REGLAGES_INITIAUX
 import io.allonsy.kokoro.reglages.Reglages
@@ -275,6 +277,14 @@ private fun EcranReglages(
         Explication(stringResource(R.string.controle_nuit_explication))
         ChampsNuit(nuit = reglages.nuit, onEnregistrer = { onEnregistrer(reglages.copy(nuit = it)) })
 
+        Section(stringResource(R.string.controle_section_parallaxe))
+        Explication(stringResource(R.string.controle_parallaxe_explication))
+        ChampsParallaxe(
+            parallaxe = reglages.parallaxe,
+            capteurPresent = remember(context) { capteurInclinaisonPresent(context) },
+            onEnregistrer = { onEnregistrer(reglages.copy(parallaxe = it)) },
+        )
+
         Section(stringResource(R.string.controle_section_corps))
         Explication(stringResource(R.string.controle_corps_explication))
         Action(stringResource(R.string.controle_action_corps)) {
@@ -397,6 +407,61 @@ private fun ChampsNuit(nuit: PlageNuit, onEnregistrer: (PlageNuit) -> Unit) {
         val ouverture = lireBorne(debutHeures, debutMinutes) ?: return@Action
         val fermeture = lireBorne(finHeures, finMinutes) ?: return@Action
         onEnregistrer(nuit.copy(debut = ouverture, fin = fermeture))
+    }
+}
+
+/**
+ * Le mouvement du décor — **deux interrupteurs, et ils prennent effet tout de suite**
+ * *(15/08/2026, demande de Xavier)*.
+ *
+ * ⭐ **Pas de bouton *Enregistrer* ici, contrairement à la nuit.** Un interrupteur n'a rien à
+ * valider : il n'y a pas de saisie qui pourrait ne pas se lire, donc rien qui puisse partir de
+ * travers en silence. C'est déjà la règle de l'interrupteur de la nuit, juste au-dessus.
+ *
+ * 🔴 **La ligne de l'inclinaison disparaît quand la parallaxe est coupée** — elle ne ferait alors
+ * rien du tout — **et quand le téléphone n'a pas le capteur**, où une phrase dit pourquoi. Un
+ * interrupteur inerte est un réglage qu'on croit posé.
+ */
+@Composable
+private fun ChampsParallaxe(
+    parallaxe: Parallaxe,
+    capteurPresent: Boolean,
+    onEnregistrer: (Parallaxe) -> Unit,
+) {
+    val suivi = parallaxe.inclinaison && capteurPresent
+
+    Groupe {
+        Valeur(
+            stringResource(
+                when {
+                    !parallaxe.actif -> R.string.controle_parallaxe_coupee
+                    suivi -> R.string.controle_parallaxe_complete
+                    else -> R.string.controle_parallaxe_doigt
+                },
+            ),
+        )
+        Separateur()
+        Ligne(stringResource(R.string.controle_parallaxe_active)) {
+            Interrupteur(
+                actif = parallaxe.actif,
+                onChange = { onEnregistrer(parallaxe.copy(actif = it)) },
+            )
+        }
+        if (parallaxe.actif && capteurPresent) {
+            Separateur()
+            Ligne(stringResource(R.string.controle_parallaxe_inclinaison)) {
+                Interrupteur(
+                    actif = parallaxe.inclinaison,
+                    onChange = { onEnregistrer(parallaxe.copy(inclinaison = it)) },
+                )
+            }
+        }
+    }
+    when {
+        !capteurPresent -> Explication(stringResource(R.string.controle_parallaxe_sans_capteur))
+        parallaxe.actif -> Explication(
+            stringResource(R.string.controle_parallaxe_inclinaison_explication),
+        )
     }
 }
 
