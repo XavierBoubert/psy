@@ -1,8 +1,6 @@
 # Kokoro — l'interface du monde
 
-**v2 — 14/08/2026**, *rangement refait le 15/08/2026 (§7.7)*. Le monde devient **l'interface principale** de l'app, et jusqu'à l'écran de veille.
-
-> 🔄 **v2 — le thème change, et lui seul.** Le verre dépoli de la v1 est abandonné au profit de **panneaux extrudés** (§4), après maquette. **Le rangement, les points durs, les onze décisions et tout le contenu sont inchangés** — seule la peau est réécrite, plus D6 qui la nommait et P4/P5 qui n'existaient qu'à cause du flou.
+Le monde est **l'interface principale** de l'app, et jusqu'à l'écran de veille.
 
 > 📐 **Onze décisions tranchées par Xavier le 14/08/2026** — §5. Le décor est spécifié dans [`DECOR.md`](./DECOR.md), le personnage dans [`CORPS.md`](./CORPS.md), le contrat de contenu dans [`companion/PROGRAMME.md`](PROGRAMME.md) — **ce document ne fait que ranger** ce que ces trois-là ont décidé.
 >
@@ -10,15 +8,9 @@
 >
 > ⏳ **Ce qui reste ouvert** — les bornes des nouveautés (§6.1), l'essai du fond d'écran vivant (§6.3), la cadence de l'entraînement en solo (§6.4), et le comportement du personnage, renvoyé à son propre brainstorm.
 >
-> 🏗️ **Écrit en Compose le 15/08/2026** — la matière (§4.1, §4.2) et les écrans (§3) ; détail en **§7**. **Deux points ouverts ont été tranchés par Xavier pour que ça puisse être codé** : les pancartes gardent leurs deux couleurs *(§6.5, option B)*, et la police arrondie est **Varela Round** *(§4.3)*.
+> 🏗️ **Écrit en Compose** — la matière (§4.1, §4.2) et les écrans (§3) ; détail en **§7**. Les pancartes gardent leurs deux couleurs *(§6.5, option B)*, et la police arrondie est **Varela Round** *(§4.3)*.
 >
-> ✅ **Le même jour, les quatre surfaces déjà éprouvées y sont passées aussi** — crise, check-in, réglages *(§7.1)*, **à la demande de Xavier**. **Il n'y a plus deux thèmes**, et le mot-code part désormais d'un seul appui.
->
-> ✅ **Puis une deuxième passe le même jour** *(§7.2)* : **la notification devient muette** — §6.2 est câblé, il ne restait plus qu'elle — **la croix remplace le bouton *Fermer* sur tous les panneaux**, **la phrase pour le soignant devient une porte indépendante**, et **les deux entrées de la crise affichent littéralement le même écran**.
->
-> ⭐ **Et une troisième, après le premier essai sur le téléphone** *(§7.3)* : **la notification garde `CriseActivity`** — le repli écrit d'avance au §6.2, **emprunté parce que le monde demandait de déverrouiller** — et **elle se republie à l'ouverture du monde**, ce qu'aucun écran ne faisait plus depuis **D10**. ⭐ **Puis l'écran central apprend à dire qu'une porte est tombée** *(§7.4)* — **en toutes lettres, pas par une pastille.**
->
-> 🔄 **Puis le rangement lui-même est refait, à la demande de Xavier** *(§7.7)* : **la croix de cinq écrans devient un anneau de quatre, entièrement horizontal et sans bout.** On arrive sur la **thérapie** ; **P1 est levé**, donc tout écran peut défiler ; **la crise reste à un seul geste de l'entrée**, désormais dans les deux sens. **D1 garde sa règle et change de forme ; D2, D3, D4 et D5 sont amendés.**
+> 🔴 **Le rangement est un anneau de quatre écrans, entièrement horizontal et sans bout** — pas la croix des versions antérieures. On arrive sur la **thérapie** ; tout écran peut défiler ; **la crise reste à un seul geste de l'entrée**, dans les deux sens.
 
 ---
 

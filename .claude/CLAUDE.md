@@ -14,6 +14,11 @@
 - **Toujours utiliser bash, jamais PowerShell.**
 - **Toujours charger la skill `ay-typescript`** avant de toucher ou d'évaluer du TypeScript / JavaScript — écriture, revue de PR, application de corrections. **Aucune exception**, pas même pour un « petit » diff.
 - **Le rôle et le nom ne se confondent pas** : les rôles sont `psy` · `superviseur` · `companion` · `patient` · `aidant` ; les noms sont **Claude Psy** · **Claude Superviseur** · **Kokoro** · **Xavier** · **Chourouk**. Un répertoire porte un rôle ; une phrase clinique nomme qui agit.
+- 🔴 **Tout fichier markdown écrit par le dispositif est concis, actionnable et acté** — ces fichiers sont rechargés en entier à chaque intervention, leur poids se paie en tokens à chaque session. Concrètement :
+  - **Pas de version ni de changelog dans le corps du texte.** Le suivi des versions est le rôle de git (`git log`, `git blame`), pas d'un en-tête `v2.2` ou d'une section « historique des modifications ». Un fichier décrit ce qui est vrai *maintenant*.
+  - **Pas de section « reste à trancher » qui s'accumule.** Une question ouverte se tranche avant d'écrire, ou se pose une fois à l'utilisateur — elle ne vit pas indéfiniment comme note en bas de fichier. Ce qui est décidé s'écrit comme un fait, pas comme une option en attente.
+  - **Pas de récit du cheminement.** On écrit la conclusion, pas l'historique de la réflexion qui y a mené — sauf quand le *pourquoi* est lui-même l'information utile (ex. un invariant clinique dont l'origine évite une régression).
+  - **Ne s'applique pas** aux documents source non écrits par le dispositif (`patient/ressources/`, `psy/docs/references/`) ni aux constats datés (`seances/`, `mesures/`, `supervision/`, `briefs/`) — un compte-rendu d'un jour donné est déjà acté par nature, ce n'est pas lui qu'on flatte.
 
 ---
 

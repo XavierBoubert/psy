@@ -1,6 +1,6 @@
 # Kokoro — le décor
 
-**Spécification graphique du monde.** ⭐ **v1 — 14/08/2026.** Le décor est un **paysage peint en quatre couches**, glissé en parallaxe sous **quatre écrans en anneau horizontal** *(rangement refait le 15/08/2026 — [`INTERFACE.md`](INTERFACE.md) §7.7)*.
+**Spécification graphique du monde.** Le décor est un **paysage peint en quatre couches**, glissé en parallaxe sous **quatre écrans en anneau horizontal** *(rangement — [`INTERFACE.md`](INTERFACE.md) §7.7)*.
 
 > 📐 **Ce document ne décide rien de clinique.** Il décrit le monde dans lequel le personnage est posé. Le personnage, lui, est spécifié dans [`CORPS.md`](./CORPS.md) et la doctrine dans [`README.md`](README.md).
 >

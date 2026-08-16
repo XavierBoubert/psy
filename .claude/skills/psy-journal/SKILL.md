@@ -117,7 +117,7 @@ Kokoro (K4) sait écrire le check-in depuis le téléphone, avec `"source": "and
 
 Puis **s'arrêter**. Pas de synthèse, pas de conseil, pas de « pense à… », pas de proposition d'enchaîner sur autre chose.
 
-**Une seule exception — la détection d'alerte, à coût de refus nul.** Si un seuil est franchi (`etat.md` §8 : les shutdowns sont l'indicateur n° 1 du burnout autistique), une **et une seule** phrase est permise, dans ce format exact :
+**Une seule exception — la détection d'alerte, à coût de refus nul.** Si un seuil est franchi (`etat.md` §7 : les shutdowns sont l'indicateur n° 1 du burnout autistique), une **et une seule** phrase est permise, dans ce format exact :
 
 > « Je te signale une chose, avec la raison : **3 shutdowns cette semaine contre 0 la précédente**. On peut en parler à la prochaine séance, ou pas. Dis juste "pas maintenant" si tu préfères — ça ne redemandera rien. »
 

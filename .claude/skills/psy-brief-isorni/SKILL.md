@@ -106,7 +106,7 @@ Copier `psy/docs/gabarits/brief-isorni.md` → `psy/outputs/dossier/briefs/AAAA-
 2. **Lire le brief à Xavier** — ou lui dire où il est. **La supervision ne remplace pas son arbitrage, elle le précède.**
 3. `transmis: false` **reste faux** tant qu'il n'a pas décidé.
 4. **Ne rien transmettre soi-même.** Le dispositif n'écrit à aucun praticien.
-5. **Mettre à jour `etat.md`** §5 (questions restantes) et §7 (ce qui vient de changer) — comme à toute clôture de séance.
+5. **Mettre à jour `etat.md`** §5 (questions restantes) et le pied de page (une ligne, dans le tableau `Version | Date | Modification`) — comme à toute clôture de séance.
 
 ---
 

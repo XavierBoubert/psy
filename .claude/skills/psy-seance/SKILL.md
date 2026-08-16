@@ -119,7 +119,7 @@ Copier `psy/docs/gabarits/seance.md` → `psy/outputs/dossier/seances/AAAA-MM-JJ
 
 **Puis mettre à jour `psy/outputs/dossier/etat.md`** — c'est le seul moment où il se réécrit :
 
-- §1 chantier et palier atteint · §3 chiffres · §4 champs `campagne` (en ajouter ou en retirer si le chantier a bougé) · §5 nouvelles questions pour le Dr Isorni · §6 échelles passées · §7 ce qui vient de changer.
+- §1 chantier et palier atteint · §3 chiffres · §4 champs `campagne` (en ajouter ou en retirer si le chantier a bougé) · §5 nouvelles questions pour le Dr Isorni · §6 échelles passées · pied de page — **une ligne** dans le tableau `Version | Date | Modification`, factuelle, sans récit.
 - Toute modification des champs `campagne` du journal est **annoncée à Xavier pendant la séance**, jamais découverte au check-in du lendemain (rigidité / intolérance au changement).
 
 **Si une mesure a été passée** : un fichier par échelle dans `psy/outputs/dossier/mesures/`, d'après `gabarits/mesure.json`. **Toujours conserver les réponses item par item** — un score seul n'est pas une mesure, c'est un résumé (`psy/DOSSIER.md` §7).

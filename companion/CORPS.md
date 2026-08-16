@@ -1,12 +1,10 @@
 # Kokoro — le corps
 
-**Spécification graphique du personnage.** ⭐ **v2.3 — 16/08/2026 — retenue.** Le corps de Kokoro est un **petit robot kawaii en 2D**, dessiné **en pièces séparées pour être riggé et animé**.
+**Spécification graphique du personnage.** Le corps de Kokoro est un **petit robot kawaii en 2D**, dessiné **en pièces séparées pour être riggé et animé**.
 
-> ⭐ **v2.3 — *« Kokoro veille sur toi »*** *(arbitrage de Xavier, 16/08/2026)*. **L'écran de crise du monde porte un personnage** : `attente` devient **`accoude`**, panneau **allumé**, accoudé au bouton *Mot code*, la tête penchée de 6°. **Détail, motifs et six bornes au [§10.2](#102--kokoro-veille-sur-toi--la-dérogation-de-lécran-de-crise-arbitrée-le-16082026).** 🔴 **La borne qui compte : `CriseActivity`, la tension appliquée et la phrase pour le soignant n'en portent aucun**, et un test de sources l'interdit.
+> ⭐ **L'écran de crise du monde porte un personnage** : la posture `accoude`, panneau **allumé**, accoudé au bouton *Mot code*, la tête penchée de 6° — motif *« Kokoro veille sur toi »*. Détail, motifs et six bornes au [§10.2](#102--kokoro-veille-sur-toi--la-dérogation-de-lécran-de-crise-arbitrée-le-16082026). 🔴 **La borne qui compte : `CriseActivity`, la tension appliquée et la phrase pour le soignant n'en portent aucun**, et un test de sources l'interdit.
 >
-> ⭐ **v2.2 — la présence est redescendue ici** *(étape E14 de [`PRESENCE.md`](PRESENCE.md))*. Six sections changent : le visage garde **six** expressions mais **`serein` entre et `de-cote` sort** (§3) · le clignement n'agit plus que sur les yeux (§5) · les postures passent de cinq à **dix** (§7) · les interdits de mouvement sont **réécrits, pas contournés** (§8 points 1, 7 et 8) · les tailles deviennent celles des **deux régimes** (§10) · le point ouvert §11.6 est tranché.
->
-> ⭐ **v2.1 :** le visage passe au **morphing** — une forme se déforme vers la suivante au lieu de s'échanger en fondu croisé. **Ce que la v2.0 écrivait au §9 (« échange de forme, pas de déformation ») est corrigé, pas nuancé.** Motif et mécanisme : [§9](#-le-morphing-du-visage-14082026).
+> ⭐ **Le visage se déforme (morphing)** : une forme se déforme vers la suivante au lieu de s'échanger en fondu croisé. Motif et mécanisme : [§9](#-le-morphing-du-visage-14082026).
 
 > 📐 **Ce document n'est pas de la doctrine.** La doctrine du personnage tient dans [`companion/README.md` §4](README.md) et les invariants dans [`companion/README.md` §5](README.md) et [`companion/README.md` §6](README.md). **Ici on ne décide rien de clinique : on dessine ce qui a déjà été décidé.**
 >
@@ -322,8 +320,7 @@ Le SVG place les pièces ; il ne dit pas autour de quoi elles tournent. **Les tr
 3. ⭐ **Le personnage est devenu monochrome** — la plaque céladon a disparu avec la v1, le 心 est à l'encre. **Est-ce l'intention, ou une conséquence non voulue ?** Si Xavier veut une couleur, elle n'a plus d'endroit évident où se poser : le 心 lui-même est le seul candidat, et le colorer en ferait un signal à décoder. *(Alternatives si besoin : céladon `#8FA99B`, terre cuite sourde `#B08968`, ardoise `#7C8B99`. Un accent unique, quel qu'il soit — le nombre n'est pas négociable, la teinte oui.)*
 4. ⭐ **Les pieds ont un pivot et aucun usage.** Xavier a placé leur centre de rotation dans le ventre ; rien ne s'en sert encore, et **§8 point 7 interdit qu'ils bougent tout seuls**. À décider : quelle posture le mérite — probablement `allonge`.
 5. **La posture `retrait`** reste la plus risquée du jeu : à valider en la voyant animée, pas sur le papier.
-6. ✅ ~~**Le clignement déforme aussi la bouche**~~ — **tranché le 15/08/2026 (E4)** : le clignement n'agit plus que sur **les yeux**, la bouche garde la forme de l'expression courante, et la cadence passe à 2 800–6 500 ms. **Le tressaillement était bien un tressaillement.** Détail au §5.
-7. ✅ ~~**L'écran de crise**~~ — **arbitré par Xavier le 16/08/2026** *(§10.2)* : `accoude` remplace `attente`, **panneau allumé**, sur l'écran de crise **du monde** uniquement. ⏳ **Ce qui reste à juger à l'écran, et qui ne se tranche pas sur le papier** : les bras exactement à l'horizontale sur l'arête du bouton *(le §6 garde-fou 1 est **atteint**, pas dépassé — et symétriquement, un seul bras à cette hauteur serait un salut)*, l'inclinaison de 6°, et **si le regard au centre se lit comme bienveillant ou comme fixe.**
+6. **Écran de crise `accoude`** : les bras exactement à l'horizontale sur l'arête du bouton restent à juger à l'écran *(le §6 garde-fou 1 est **atteint**, pas dépassé)*, de même que l'inclinaison de 6° et la lecture du regard au centre — bienveillant ou fixe.
 
 ---
 
