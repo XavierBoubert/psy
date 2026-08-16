@@ -38,9 +38,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import io.allonsy.kokoro.alerte.creerCanalAlerte
 import io.allonsy.kokoro.alerte.programmerAlerteTest
-import io.allonsy.kokoro.corps.AtelierActivity
 import io.allonsy.kokoro.corps.Expression
-import io.allonsy.kokoro.crise.CriseActivity
 import io.allonsy.kokoro.crise.creerCanalAcces
 import io.allonsy.kokoro.crise.publierAccesCrise
 import io.allonsy.kokoro.decor.capteurInclinaisonPresent
@@ -209,8 +207,6 @@ private fun EcranReglages(
         locuteur = Expression.SEREIN,
         onFermer = onFermer,
     ) {
-        Explication(stringResource(R.string.controle_sous_titre))
-
         Section(stringResource(R.string.controle_section_contact))
         ChampsContact(reglages = reglages, onEnregistrer = onEnregistrer)
 
@@ -257,11 +253,7 @@ private fun EcranReglages(
         }
 
         Section(stringResource(R.string.controle_section_acces))
-        Explication(stringResource(R.string.controle_acces_explication))
         Action(stringResource(R.string.controle_action_acces)) { publierAccesCrise(context) }
-        Action(stringResource(R.string.controle_action_ouvrir_crise)) {
-            context.startActivity(Intent(context, CriseActivity::class.java))
-        }
 
         Section(stringResource(R.string.controle_section_journal))
         Groupe {
@@ -276,22 +268,14 @@ private fun EcranReglages(
         Action(stringResource(R.string.controle_action_dossier), onClick = onChoisirDossier)
 
         Section(stringResource(R.string.controle_section_nuit))
-        Explication(stringResource(R.string.controle_nuit_explication))
         ChampsNuit(nuit = reglages.nuit, onEnregistrer = { onEnregistrer(reglages.copy(nuit = it)) })
 
         Section(stringResource(R.string.controle_section_parallaxe))
-        Explication(stringResource(R.string.controle_parallaxe_explication))
         ChampsParallaxe(
             parallaxe = reglages.parallaxe,
             capteurPresent = remember(context) { capteurInclinaisonPresent(context) },
             onEnregistrer = { onEnregistrer(reglages.copy(parallaxe = it)) },
         )
-
-        Section(stringResource(R.string.controle_section_corps))
-        Explication(stringResource(R.string.controle_corps_explication))
-        Action(stringResource(R.string.controle_action_corps)) {
-            context.startActivity(Intent(context, AtelierActivity::class.java))
-        }
 
         Section(stringResource(R.string.controle_section_test))
         Explication(stringResource(R.string.controle_consigne_test))
@@ -318,17 +302,6 @@ private fun ChampsContact(reglages: Reglages, onEnregistrer: (Reglages) -> Unit)
     var motCode by remember(reglages) { mutableStateOf(reglages.motCode) }
 
     Groupe {
-        Valeur(
-            when {
-                reglages.contactRenseigne -> stringResource(
-                    R.string.controle_contact_enregistre,
-                    reglages.contactNom,
-                    reglages.contactNumero,
-                )
-                else -> stringResource(R.string.controle_contact_absent)
-            },
-        )
-        Separateur()
         Champ(libelle = stringResource(R.string.controle_champ_nom), valeur = nom, onValeur = { nom = it })
         Separateur()
         Champ(
@@ -344,7 +317,6 @@ private fun ChampsContact(reglages: Reglages, onEnregistrer: (Reglages) -> Unit)
             onValeur = { motCode = it },
         )
     }
-    Explication(stringResource(R.string.controle_mot_code_explication))
     Action(
         libelle = stringResource(R.string.controle_action_enregistrer),
         actif = motCode.isNotBlank(),
@@ -430,19 +402,7 @@ private fun ChampsParallaxe(
     capteurPresent: Boolean,
     onEnregistrer: (Parallaxe) -> Unit,
 ) {
-    val suivi = parallaxe.inclinaison && capteurPresent
-
     Groupe {
-        Valeur(
-            stringResource(
-                when {
-                    !parallaxe.actif -> R.string.controle_parallaxe_coupee
-                    suivi -> R.string.controle_parallaxe_complete
-                    else -> R.string.controle_parallaxe_doigt
-                },
-            ),
-        )
-        Separateur()
         Ligne(stringResource(R.string.controle_parallaxe_active)) {
             Interrupteur(
                 actif = parallaxe.actif,
@@ -459,12 +419,7 @@ private fun ChampsParallaxe(
             }
         }
     }
-    when {
-        !capteurPresent -> Explication(stringResource(R.string.controle_parallaxe_sans_capteur))
-        parallaxe.actif -> Explication(
-            stringResource(R.string.controle_parallaxe_inclinaison_explication),
-        )
-    }
+    if (!capteurPresent) Explication(stringResource(R.string.controle_parallaxe_sans_capteur))
 }
 
 /**

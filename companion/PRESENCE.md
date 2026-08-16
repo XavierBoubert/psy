@@ -40,7 +40,7 @@ ciel · nuages loin · nuages près · prairie · feuillage │ OMBRE · KOKORO 
 ```
 
 - **L'ombre est peinte dans la couche du personnage**, juste sous lui : un panneau la recouvre mécaniquement. 🔴 **Aucune découpe, aucun test — « pas d'ombre sur l'interface » est une conséquence de l'ordre.**
-- **Seule exception** : sur l'écran de crise, le corps passe **sous** le bouton et les bras **dessus** — deux passes de peinture.
+- **Seule exception** : sur l'écran de crise, le corps passe **sous** le bouton et les bras **dessus** — deux passes de peinture. 🔄 **Chacune est coupée** *(16/08/2026)* : le corps au **bas** du bouton, sans quoi il dépasse dessous en sortant de derrière lui ; les bras à son **arête**, qui redescend de 11,5 unités à l'arrivée pour les poser dessus. **Sans ces deux coupes, on voyait des bras monter seuls, détachés d'un corps caché.**
 - **L'ombre est solidaire du personnage en `x`**, sinon elle dérive au parallaxe. Ellipse floue, très aplatie, posée **bas** — c'est elle qui dit la hauteur de vol.
 
 ### 1.4 Les tailles
@@ -58,11 +58,11 @@ ciel · nuages loin · nuages près · prairie · feuillage │ OMBRE · KOKORO 
 
 | Écran | Place | Posture | Détail |
 |---|---|---|---|
-| **Thérapie**, avant 18 h | À côté de *Sans date* | `pensif` | Regard qui glisse d'une carte à l'autre. Aucun geste |
+| **Thérapie**, avant 18 h | À côté de *Sans date* | `pensif` | 🔄 **Aucun geste et aucune lecture** *(demande de Xavier, 16/08/2026 — « ne le fais pas lire dans Thérapie »)*. Le regard qui glissait d'une carte à l'autre est retiré ; **il ne reste que la respiration**, qui n'appartient à aucune posture |
 | **Thérapie**, à partir de 18 h | À côté du check-in | `montre` | Bras tendu vers le check-in — **il n'a pas de doigt**. Le geste est identique que le check-in soit fait ou non ; **l'expression passe à `chaleureux` s'il est fait** |
 | **Documentation** | Au-dessus de la liste | `lecture` | Balayage des yeux, gauche → droite, retour bref, un peu plus bas. Bras avancés vers le bas |
 | **Bilan** | Au-dessus de la liste | `notes` | Un bras en bas, petits allers-retours horizontaux, yeux baissés vers ce bras |
-| **Crise** *(du monde)* | ⭐ **Accoudé au bouton *Mot code*** | `accoude` | Bras posés sur l'arête, corps derrière, tête un peu penchée, **panneau allumé** — *« Kokoro veille sur toi »*. 🔴 **Immobile hors respiration et clignement**, et **jamais sur les autres surfaces de crise** *(§6 E13)* |
+| **Crise** *(du monde)* | ⭐ **Accoudé au bouton *Mot code*** | `accoude` | Bras posés sur l'arête, corps derrière, tête un peu penchée, **panneau allumé** — *« Kokoro veille sur toi »*. 🔄 **Immobile, souffle compris** *(demande de Xavier, 16/08/2026)* : une fois posé il ne reste que le clignement. **Jamais sur les autres surfaces de crise** *(§6 E13)* |
 | **Liste vide**, tout écran | Inchangée | `sommeil` | Yeux fermés au repos, lévitation ralentie, Zzz en fondu. **Le cadre vide textuel reste affiché** |
 | **Panneau ouvert** | Bas à gauche de la bulle | *(régime locuteur)* | Expression liée au contenu affiché |
 
@@ -78,14 +78,15 @@ ciel · nuages loin · nuages près · prairie · feuillage │ OMBRE · KOKORO 
 
 | | Valeur | Note |
 |---|---|---|
-| Lévitation | Période **4 500 ms**, amplitude **3 %** de la hauteur, déphasage ¼ | 🔴 **La même horloge que la respiration** — deux périodes distinctes produisent un battement, donc une information involontaire |
-| Transit entre écrans | **420 ms**, arc de **26 dp**, easing continu, **120 ms de retard** sur le décor | Aucun changement de direction net, aucune apparition, aucune disparition |
+| Lévitation | Période **3 800 ms**, amplitude **9 %** de la hauteur *(portée à trois fois sa valeur d'origine, demande de Xavier, 16/08/2026 — à 3 % le flottement ne se voyait pas)*, déphasage ¼ | 🔄 **Garde son horloge propre** — c'est **la respiration qui s'en détache** le 16/08/2026 (`CORPS.md` §5) pour paraître plus réelle : souffle et vol stationnaire ne culminent plus jamais ensemble |
+| Transit entre écrans | **700 ms**, arc de **26 dp**, easing continu, **200 ms de retard** sur le décor | Aucun changement de direction net, aucune apparition, aucune disparition. 🔄 **Il vole dans la posture de départ et prend celle d'arrivée en se posant** *(16/08/2026)* — l'adopter dès le premier instant faisait jouer l'animation de l'écran suivant pendant tout le vol, et noyait la pose de vol dessous |
+| 🆕 **Pose de vol** | **Les douze pièces** de `kokoro-corps-v2-right.svg` — tête tournée en trois-quarts, visage resserré, corps affiné, membres emportés —, **prise en 25 %, tenue, rendue sur les 22 derniers %** *(le ragdoll suit la même enveloppe)* | ⭐ **Le dessin fait foi, le vol vers la gauche en est le miroir calculé** *(`CORPS.md` §9)*. 🔴 **Elle remplace la posture, elle ne s'y ajoute pas** — sans quoi un bras déjà tendu le reste, et un dormeur ne bouge que les pieds. 🔴 **Yeux ouverts et aucun Zzz en vol** : on ne dort pas en volant, le sommeil est l'état d'une liste vide **une fois posé**. ⭐ **La posture d'arrivée est prise sous la pose de vol**, jamais à l'atterrissage — sinon celle de départ se rejoue avant elle. ⚠️ **Un demi-sinus la rendait invisible** : sa pleine valeur ne durait qu'un instant, et Kokoro traverse l'écran à plus de 2 000 px/s. 🔴 **Toujours pas un mouvement continu** : nulle aux deux bouts, le temps d'un transit, et rien ne la déclenche qu'un doigt |
 | Clignement | Intervalle aléatoire **2 800–6 500 ms**, morphing **80 ms**, **yeux seuls** | La borne basse évite le papillonnement |
 | Balayage de lecture | Une ligne ≈ **3 000 ms**, retour ≤ **200 ms** | Seul mouvement de la posture `lecture` |
 | Geste d'écriture | **4 000 ms** de geste, **10 000–20 000 ms** d'arrêt | 🔴 Intermittent, jamais continu |
-| Sommeil | Lévitation à **½ vitesse**, amplitude **½** | 🔴 **Obtenue en divisant la phase par deux, pas en ouvrant une horloge** — c'est pourquoi le tour d'horloge vaut **deux** respirations *(9 000 ms)* |
+| Sommeil | Lévitation à **½ vitesse**, amplitude **½** | 🔴 **Obtenue en divisant la phase par deux, pas en ouvrant une horloge** — c'est pourquoi le tour d'horloge vaut **deux** respirations *(7 600 ms)* |
 | Semi-sourire | **La moitié de la flèche du sourire** | §6 E1 |
-| Ombre | Demi-largeur **39,3** *(le demi-écart d'épaules du dessin)*, aplatissement **0,16**, opacité **0,18**, noyau plein **45 %** du rayon | 🔴 **Aucune de ces quatre valeurs ne varie dans le temps** — c'est ce qui interdit à l'ombre de pulser. Seule la demi-largeur est dérivée du dessin ; les trois autres sont à régler à l'œil |
+| Ombre | Demi-largeur **39,3** *(le demi-écart d'épaules du dessin)*, aplatissement **0,16**, opacité **0,22 posée → 0,08 au sommet du vol**, noyau plein **45 %** du rayon, posée **4 unités sous** le bas des pieds | 🔄 **L'opacité varie avec la hauteur de vol, et rien d'autre** *(demande de Xavier, 16/08/2026 — plus sombre proche, plus transparente loin)* : une fonction pure de l'écart pieds-ombre, donc rien qui pulse tout seul. **Elle est aussi posée plus bas** — au ras des pieds, il la touchait, ce qui cassait l'effet de vol. Demi-largeur, aplatissement et noyau restent des valeurs fixes |
 
 ---
 
@@ -134,7 +135,7 @@ ciel · nuages loin · nuages près · prairie · feuillage │ OMBRE · KOKORO 
 >
 > ⭐ **Le flottement de la v1 est mort à E8.** Il battait sur trois périodes distinctes — 3,2 s de hauteur, 5,1 s de dérive latérale, 4,3 s de bascule — donc exactement l'information involontaire que §3 interdit. La lévitation ne garde qu'un axe, sur l'horloge de la respiration. **Et le bras entrouvert « en vol » de l'atelier a disparu avec lui** : la posture est seule maîtresse des bras.
 >
-> ✅ **Le balayage est attaché depuis E9.** `lecture` porte celui du §3 ; `pensif` en porte un **plus lent et plus court** — il parcourt une liste, pas une ligne. Les deux restent des réglages passés à la posture, jamais des propriétés d'elle.
+> ✅ **Le balayage est attaché depuis E9**, et 🔄 **il ne reste plus qu'à `lecture`** *(16/08/2026)* : `pensif` en portait un plus lent et plus court, Xavier l'a retiré — il ne lit pas dans Thérapie. Il reste un réglage passé à la posture, jamais une propriété d'elle.
 >
 > ⭐ **L'horloge du corps fait maintenant deux respirations par tour** *(E11)*. 🔴 **Ce n'est pas une seconde horloge, c'est la même vue plus loin** : le sommeil demande une lévitation à ½ vitesse, et une phase divisée par deux ne se referme que si le tour est double. **La respiration, elle, n'a pas changé de rythme** — elle en fait simplement deux par tour, et §4.6 tient à la lettre.
 >

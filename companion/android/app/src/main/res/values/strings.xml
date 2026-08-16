@@ -140,15 +140,11 @@
     <string name="controle_dossier_explication">Le check-in s\'écrit dans le sous-dossier « journal » du dossier désigné. Kokoro n\'a accès à aucun autre emplacement du téléphone.</string>
 
     <string name="controle_titre">Réglages</string>
-    <string name="controle_sous_titre">Rien ici ne se règle en situation : tout se prépare à froid.</string>
     <string name="controle_section_contact">Destinataire du mot-code</string>
     <string name="controle_champ_nom">Prénom</string>
     <string name="controle_champ_numero">Numéro de téléphone</string>
     <string name="controle_champ_mot_code">Message envoyé</string>
     <string name="controle_action_enregistrer">Enregistrer</string>
-    <string name="controle_contact_enregistre">Enregistré : %1$s — %2$s</string>
-    <string name="controle_contact_absent">Aucun numéro enregistré.</string>
-    <string name="controle_mot_code_explication">Le message part seul, tel qu\'il est écrit ici. C\'est un mot convenu à froid avec la personne qui le reçoit : le changer dans Kokoro ne la prévient pas.</string>
 
     <string name="controle_section_autorisations">Autorisations</string>
     <string name="controle_etat_notifications">Notifications</string>
@@ -163,12 +159,9 @@
     <string name="controle_action_sms">Autoriser l\'envoi de SMS</string>
 
     <string name="controle_section_acces">Accès depuis l\'écran verrouillé</string>
-    <string name="controle_acces_explication">Une notification permanente ne portant que le nom Kokoro : aucun bouton, aucun texte. Elle ouvre le monde posé sur l\'écran de crise, et ne peut pas être balayée.</string>
     <string name="controle_action_acces">Réafficher la notification d\'accès</string>
-    <string name="controle_action_ouvrir_crise">Ouvrir l\'écran de crise</string>
 
     <string name="controle_section_nuit">La nuit du décor</string>
-    <string name="controle_nuit_explication">Sur cette plage horaire, le décor du monde est en nuit. Il est décidé à l\'ouverture du monde et tenu tant qu\'il reste ouvert : rien ne bascule sous les yeux. Kokoro, lui, garde ses couleurs.</string>
     <string name="controle_nuit_active">Décor de nuit</string>
     <string name="controle_nuit_reglee">Nuit de %1$s à %2$s.</string>
     <string name="controle_nuit_coupee">Nuit coupée — le décor reste celui du jour.</string>
@@ -179,13 +172,8 @@
     <string name="controle_action_nuit">Enregistrer la plage</string>
 
     <string name="controle_section_parallaxe">Le mouvement du décor</string>
-    <string name="controle_parallaxe_explication">Le paysage glisse derrière les écrans, plus lentement au loin qu\'au premier plan. Il ne part jamais de lui-même : il suit le doigt qui traverse le monde, et l\'inclinaison du téléphone si elle est activée.</string>
     <string name="controle_parallaxe_active">Décor en parallaxe</string>
     <string name="controle_parallaxe_inclinaison">Suivre l\'inclinaison</string>
-    <string name="controle_parallaxe_inclinaison_explication">Le décor se déplace un peu selon la façon dont le téléphone est tenu, comme derrière une fenêtre. C\'est la verticale qui est mesurée, pas le mouvement : rien ne dérive, rien ne se recentre seul, et reposer le téléphone comme il était remet le décor où il était. Le débattement est court — il ne fait jamais changer d\'écran.</string>
-    <string name="controle_parallaxe_complete">Le décor suit le doigt et l\'inclinaison du téléphone.</string>
-    <string name="controle_parallaxe_doigt">Le décor suit le doigt. L\'inclinaison est coupée.</string>
-    <string name="controle_parallaxe_coupee">Décor immobile — il ne suit ni le doigt ni l\'inclinaison.</string>
     <string name="controle_parallaxe_sans_capteur">Ce téléphone n\'a pas le capteur qu\'il faut : l\'inclinaison ne peut pas être suivie.</string>
 
     <string name="monde_titre">Le monde de Kokoro</string>
@@ -208,6 +196,15 @@
 
     <string name="monde_bilan_vide">Rien à passer pour l\'instant.</string>
     <string name="monde_documentation_vide">Rien à lire pour l\'instant.</string>
+
+    <!--
+      🧪 Les bascules de test du monde — jamais montrées hors build debug (BuildConfig.DEBUG).
+      Elles comparent les affichages de Kokoro à l'écran ; elles ne pilotent rien du dossier.
+    -->
+    <string name="debug_kokoro_ici">Test : Kokoro ici</string>
+    <string name="debug_exemple_fiche">Exemple de fiche</string>
+    <string name="debug_afficher_exemple">Test : afficher un exemple</string>
+    <string name="debug_afficher_vide">Test : afficher vide</string>
 
     <!--
       ⭐ L'accusé de l'envoi direct — companion/INTERFACE.md §7. Il constate que le message est
@@ -244,61 +241,6 @@
     <string name="etape_ppc_voyage_detail">Départ le 07/09. Bagage cabine (l\'appareil est un matériel médical, généralement hors franchise sur présentation de l\'ordonnance), adaptateur et tension, eau de l\'humidificateur. Réponse écrite avant le départ.</string>
     <string name="etape_email_isorni">Envoyer l\'email préparé au Dr Isorni</string>
     <string name="etape_email_isorni_detail">Le brouillon est prêt dans le dossier. Il a vocation à partir avant la consultation du 03/09, pour qu\'il arrive préparé — pas à être lu sur place.</string>
-
-    <string name="controle_section_corps">Le corps de Kokoro</string>
-    <string name="controle_corps_explication">Le personnage est dessiné en vectoriel, pièce par pièce. Il se règle ici et n\'apparaît sur aucun écran de la thérapie.</string>
-    <string name="controle_action_corps">Ouvrir l\'atelier du corps</string>
-
-    <string name="corps_titre">Atelier du corps</string>
-    <string name="corps_sous_titre">Écran de mise au point du personnage. On y cherche ce que Kokoro fait — rien n\'y est arrêté.</string>
-    <string name="corps_section_posture">Posture</string>
-    <string name="corps_section_expression">Expression</string>
-    <string name="corps_section_bras">Bras — pivot dans l\'épaule</string>
-    <string name="corps_bras_posture">ceux de la posture</string>
-    <string name="corps_bras_repos">le dessin</string>
-    <string name="corps_bras_mi_chemin">mi-chemin</string>
-    <string name="corps_bras_horizontale">horizontale</string>
-    <string name="corps_bras_repli">à la verticale</string>
-    <string name="corps_section_pieds">Pieds — pivot au centre du ventre</string>
-    <string name="corps_pieds_dessin">le dessin</string>
-    <string name="corps_pieds_serres">serrés</string>
-    <string name="corps_pieds_ecartes">écartés</string>
-    <string name="corps_section_regard">Regard — un axe, indépendant de l\'expression</string>
-    <string name="corps_section_balayage">Balayage du regard</string>
-    <string name="corps_section_vol">Vol et ombre — déplacement de la racine</string>
-    <string name="corps_section_palette">Palette</string>
-    <string name="corps_posture_repos">repos</string>
-    <string name="corps_posture_present">présent</string>
-    <string name="corps_posture_montre_gauche">montre à gauche</string>
-    <string name="corps_posture_montre_droite">montre à droite</string>
-    <string name="corps_posture_cote_a_cote">côte à côte</string>
-    <string name="corps_posture_retrait">retrait</string>
-    <string name="corps_posture_pensif">pensif</string>
-    <string name="corps_posture_lecture">lecture</string>
-    <string name="corps_posture_notes">notes</string>
-    <string name="corps_posture_accoude">accoudé</string>
-    <string name="corps_posture_sommeil">sommeil</string>
-    <string name="corps_expression_posture">celle de la posture</string>
-    <string name="corps_expression_neutre">neutre</string>
-    <string name="corps_expression_serein">serein</string>
-    <string name="corps_expression_attentif">attentif</string>
-    <string name="corps_expression_chaleureux">chaleureux</string>
-    <string name="corps_expression_clignement">clignement</string>
-    <string name="corps_expression_veille">veille</string>
-    <string name="corps_regard_posture">celui de la posture</string>
-    <string name="corps_regard_gauche">vers la gauche</string>
-    <string name="corps_regard_centre">au centre</string>
-    <string name="corps_regard_droite">vers la droite</string>
-    <string name="corps_balayage_aucun">aucun</string>
-    <string name="corps_balayage_lecture">lecture</string>
-    <string name="corps_balayage_large">lecture, large</string>
-    <string name="corps_balayage_lente">lecture, lente</string>
-    <string name="corps_vol_aucun">posé</string>
-    <string name="corps_vol_levitation">lévitation</string>
-    <string name="corps_vol_sommeil">sommeil</string>
-    <string name="corps_vol_traversee">traversée</string>
-    <string name="corps_palette_sombre">sombre</string>
-    <string name="corps_palette_claire">claire</string>
 
     <string name="controle_section_test">Test K1</string>
     <string name="controle_consigne_test">Test : appuie sur le bouton, puis éteins l\'écran avec le bouton latéral. Au bout de 20 secondes, l\'écran doit se rallumer sur Kokoro, sans aucun son ni vibration.</string>

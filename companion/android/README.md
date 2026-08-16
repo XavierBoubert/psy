@@ -134,7 +134,7 @@ Ensuite, l'adresse est retenue dans `.kokoro-sansfil` *(non versionné)* et rejo
 
 ⭐ **Le script ne sort qu'un verdict par étape, et en cas d'échec, seulement l'extrait qui l'explique** — la ligne du compilateur, ou le test tombé avec son message d'assertion, tiré du XML de résultats *(le journal Gradle, lui, ne dit pas **pourquoi** un test tombe)*. **Rien n'est perdu pour autant :** tout part dans `build/kokoro.log`, que `./kokoro journal` relit. C'est ce qui rend une passe de vérification lisible d'un coup d'œil — pour Xavier comme pour Claude, dont chaque ligne de sortie coûte.
 
-⚠️ **`./kokoro pose` ouvre l'activité du lanceur, jamais un écran interne** : One UI refuse `am start` sur une activité non exportée. Depuis INTERFACE.md v2 c'est **`MondeActivity`** *(corrigé le 15/08/2026 — le script visait encore `MainActivity`, devenue non exportée, et échouait à l'étape `ouvert`)* ; l'écran de contrôle est au bout de la roue dentée, et l'atelier du corps se prend depuis là, section **« Le corps de Kokoro »**.
+⚠️ **`./kokoro pose` ouvre l'activité du lanceur, jamais un écran interne** : One UI refuse `am start` sur une activité non exportée. Depuis INTERFACE.md v2 c'est **`MondeActivity`** *(corrigé le 15/08/2026 — le script visait encore `MainActivity`, devenue non exportée, et échouait à l'étape `ouvert`)* ; l'écran de contrôle est au bout de la roue dentée.
 
 Les deux commandes brutes, si le script est indisponible :
 

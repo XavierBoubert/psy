@@ -73,6 +73,17 @@ class MondeActivity : ComponentActivity() {
     private val sejour = mutableStateOf(Sejour(heure = 0, checkinFait = false))
 
     /**
+     * 🧪 Les bascules de test de l'affichage — **jamais montrées hors build debug**
+     * ([BuildConfig.DEBUG]). Elles ne touchent à rien du dossier : elles forcent ce que Kokoro
+     * montre, le temps de comparer ses affichages à l'écran sans attendre l'heure ou une vraie liste.
+     *
+     * ⭐ `null` dans [affichageForce] veut dire *l'heure réelle décide*, comme toujours.
+     */
+    private val affichageForce = mutableStateOf<Boolean?>(null)
+    private val documentationVide = mutableStateOf(true)
+    private val bilanVide = mutableStateOf(true)
+
+    /**
      * 🔴 **Le seul retour que l'envoi direct donne.** Un SMS parti n'affiche rien de lui-même : sans
      * cet accusé, l'écran resterait exactement tel qu'avant l'appui, et **rien ne dirait si le
      * message est parti** — le doute conduirait à re-taper.
@@ -104,7 +115,17 @@ class MondeActivity : ComponentActivity() {
                 MondeKokoro(
                     palette = paletteDuMoment(nuit.value),
                     contactNom = reglages.value.contactNom,
-                    sejour = sejour.value,
+                    sejour = sejour.value.copy(
+                        heure = when (affichageForce.value) {
+                            null -> sejour.value.heure
+                            true -> HEURE_DU_CHECKIN
+                            false -> 0
+                        },
+                        vides = setOfNotNull(
+                            Ecran.DOCUMENTATION.takeIf { documentationVide.value },
+                            Ecran.BILAN.takeIf { bilanVide.value },
+                        ),
+                    ),
                     onFonction = { ouvrir(it) },
                     onReglages = { startActivity(Intent(this, MainActivity::class.java)) },
                     parallaxe = reglages.value.parallaxe,
@@ -115,6 +136,13 @@ class MondeActivity : ComponentActivity() {
                         accuse.value = null
                         envoiEnCours.value = false
                     },
+                    debug = DebugMonde(
+                        documentationVide = documentationVide.value,
+                        bilanVide = bilanVide.value,
+                        onBasculerAffichageTherapie = { affichageForce.value = it },
+                        onBasculerDocumentationVide = { documentationVide.value = !documentationVide.value },
+                        onBasculerBilanVide = { bilanVide.value = !bilanVide.value },
+                    ),
                 )
             }
         }

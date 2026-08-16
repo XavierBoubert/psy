@@ -106,12 +106,18 @@ private fun DrawScope.dessinerKokoro(rig: RigKokoro, palette: PaletteCorps, pass
         if (passe != Passe.BRAS) {
             dessinerTorse(rig, palette)
             dessinerTete(rig, palette)
-            dessinerAutour(PIED_GAUCHE, CENTRE_VENTRE, rig.rotationPiedGauche, palette)
-            dessinerAutour(PIED_DROIT, CENTRE_VENTRE, rig.rotationPiedDroit, palette)
+            // 🔴 Les pieds ne suivent jamais le souffle (§5, RigKokoro.decalageRespirationHaut) :
+            // seule leur pose empruntée (sommeil, vol) s'ajoute à leur orbite normale.
+            dessinerMembre(PIED_GAUCHE, CENTRE_VENTRE, rig.rotationPiedGauche, rig.posePiedGauche, palette)
+            dessinerMembre(PIED_DROIT, CENTRE_VENTRE, rig.rotationPiedDroit, rig.posePiedDroit, palette)
         }
         if (passe != Passe.CORPS) {
-            dessinerAutour(BRAS_GAUCHE, EPAULE_GAUCHE, rig.rotationBrasGauche, palette)
-            dessinerAutour(BRAS_DROIT, EPAULE_DROITE, rig.rotationBrasDroit, palette)
+            // ⭐ Les bras suivent le sommet du ventre qui respire (§1.2 de la demande du 16/08/2026) :
+            // à la même hauteur du corps qu'au repos, ni plus enfoncés, ni plus sortis.
+            withTransform({ translate(0f, rig.decalageRespirationHaut) }) {
+                dessinerMembre(BRAS_GAUCHE, EPAULE_GAUCHE, rig.rotationBrasGauche, rig.poseBrasGauche, palette)
+                dessinerMembre(BRAS_DROIT, EPAULE_DROITE, rig.rotationBrasDroit, rig.poseBrasDroit, palette)
+            }
         }
     }
 }
@@ -127,7 +133,7 @@ private fun DrawScope.dessinerKokoro(rig: RigKokoro, palette: PaletteCorps, pass
  */
 private fun DrawScope.dessinerOmbre(ombre: Ombre, rig: RigKokoro, encre: Color) {
     val centre = Offset(AXE, ombre.sol)
-    val teinte = encre.copy(alpha = ombre.opacite)
+    val teinte = encre.copy(alpha = ombre.opaciteA(rig.decalage.y))
     withTransform({
         translate(rig.decalage.x, 0f)
         scale(rig.echelle, rig.echelle, PIVOT_RACINE.offset)
@@ -147,14 +153,24 @@ private fun DrawScope.dessinerOmbre(ombre: Ombre, rig: RigKokoro, encre: Color) 
     }
 }
 
-/** Le torse respire autour de sa base ; la ligne du ventre et le 心 sont dessus, donc ils suivent. */
+/**
+ * Le torse respire autour de sa base ; la ligne du ventre et le 心 sont dessus, donc ils suivent.
+ * ⭐ **Vers le haut uniquement** (demande de Xavier, 16/08/2026) : plus de rétraction en largeur.
+ */
 private fun DrawScope.dessinerTorse(rig: RigKokoro, palette: PaletteCorps) {
-    withTransform({
-        scale(rig.retractionCorps, rig.etirementCorps, PIVOT_RESPIRATION.offset)
-    }) {
-        dessinerPiece(TORSE, palette)
-        dessinerPiece(LIGNE_VENTRE, palette)
-        KANJI.forEach { dessinerPiece(it, palette) }
+    // Le corps du vol enveloppe le souffle : le torse respire dans son repère, et c'est l'ensemble
+    // qui se resserre — l'ordre du dessin de variante, où le groupe porte tout. Le 心 y a un
+    // glissement propre, comme dans le dessin.
+    withTransform({ transform(rig.vol.torse.matrice()) }) {
+        withTransform({ scale(1f, rig.etirementCorps, PIVOT_RESPIRATION.offset) }) {
+            dessinerPiece(TORSE, palette)
+            dessinerPiece(LIGNE_VENTRE, palette)
+        }
+    }
+    withTransform({ transform(rig.vol.kanji.matrice()) }) {
+        withTransform({ scale(1f, rig.etirementCorps, PIVOT_RESPIRATION.offset) }) {
+            KANJI.forEach { dessinerPiece(it, palette) }
+        }
     }
 }
 
@@ -167,11 +183,17 @@ private fun DrawScope.dessinerTorse(rig: RigKokoro, palette: PaletteCorps) {
  * l'inclinaison vaut zéro et cette rotation ne fait rien.
  */
 private fun DrawScope.dessinerTete(rig: RigKokoro, palette: PaletteCorps) {
-    withTransform({ rotate(rig.inclinaisonTete, PIVOT_TETE.offset) }) {
-        dessinerPiece(TETE, palette)
-        dessinerPiece(PANNEAU, palette)
-        if (rig.panneauAllume) {
-            dessinerVisage(rig, palette.trait)
+    // ⭐ Suit le sommet du ventre qui respire, comme les bras (§1.2 de la demande du 16/08/2026) —
+    // avant l'inclinaison d'`accoude`, qui continue de tourner autour de sa propre ancre.
+    withTransform({ translate(0f, rig.decalageRespirationHaut) }) {
+        withTransform({ rotate(rig.inclinaisonTete, PIVOT_TETE.offset) }) {
+            // Coque, panneau et visage portent chacun leur part du vol : c'est leur resserrement
+            // séparé qui donne la tête tournée, et le dessin les traite bien comme trois pièces.
+            withTransform({ transform(rig.vol.coque.matrice()) }) { dessinerPiece(TETE, palette) }
+            withTransform({ transform(rig.vol.panneau.matrice()) }) { dessinerPiece(PANNEAU, palette) }
+            if (rig.panneauAllume) {
+                dessinerVisage(rig, palette.trait)
+            }
         }
     }
 }
@@ -184,6 +206,23 @@ private fun DrawScope.dessinerAutour(
 ) {
     withTransform({ rotate(rotation, pivot.offset) }) {
         dessinerPiece(piece, palette)
+    }
+}
+
+/**
+ * Un membre (bras ou pied), sa rotation normale **puis, par-dessus, une pose empruntée à un autre
+ * dessin** — sommeil, vol (`Geometrie.kt`, [PoseMembre]). Identité par défaut : au repos la
+ * transformation ne change rien, et le membre est exactement celui du SVG.
+ */
+private fun DrawScope.dessinerMembre(
+    piece: Piece,
+    pivot: Ancre,
+    rotation: Float,
+    pose: Transformation,
+    palette: PaletteCorps,
+) {
+    withTransform({ transform(pose.matrice()) }) {
+        dessinerAutour(piece, pivot, rotation, palette)
     }
 }
 
@@ -201,9 +240,11 @@ private fun DrawScope.dessinerPiece(piece: Piece, palette: PaletteCorps) {
  */
 private fun DrawScope.dessinerVisage(rig: RigKokoro, couleur: Color) {
     val yeux = Offset(rig.regard, rig.abaissement)
-    dessinerTrace(rig.visage.oeil, OEIL_GAUCHE, yeux, couleur)
-    dessinerTrace(rig.visage.oeil, OEIL_DROIT, yeux, couleur)
-    dessinerTrace(rig.visage.bouche, BOUCHE, Offset.Zero, couleur)
+    // Les trois tracés ne glissent pas ensemble en vol : les yeux se rapprochent en même temps
+    // qu'ils partent du côté du vol, ce qui est tout le trois-quarts du dessin.
+    dessinerTrace(rig.visage.oeil, OEIL_GAUCHE, yeux + rig.vol.oeilGauche.decalage, couleur)
+    dessinerTrace(rig.visage.oeil, OEIL_DROIT, yeux + rig.vol.oeilDroit.decalage, couleur)
+    dessinerTrace(rig.visage.bouche, BOUCHE, rig.vol.bouche.decalage, couleur)
 }
 
 /**

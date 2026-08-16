@@ -1,25 +1,32 @@
 package io.allonsy.kokoro.monde
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import io.allonsy.kokoro.BuildConfig
 import io.allonsy.kokoro.R
 import io.allonsy.kokoro.crise.PortesDeCrise
 import io.allonsy.kokoro.ui.BandeTitre
@@ -113,6 +120,7 @@ fun ContenuTherapie(
     accesPerdu: Boolean,
     onReglages: () -> Unit,
     onOuvrir: (Etape) -> Unit,
+    onBasculerAffichage: (aujourdhui: Boolean) -> Unit = {},
 ) {
     EcranDeBord(
         titre = stringResource(R.string.monde_therapie_titre),
@@ -125,11 +133,22 @@ fun ContenuTherapie(
         }
         sectionsTherapie().forEach { section ->
             BandeDeSection(perchoirs = perchoirs, perchoir = section.perchoir) {
-                Pancarte(
-                    texte = section.quand,
-                    couleur = section.couleur,
-                    modifier = Modifier.padding(start = 2.dp),
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                ) {
+                    Pancarte(
+                        texte = section.quand,
+                        couleur = section.couleur,
+                        modifier = Modifier.padding(start = 2.dp),
+                    )
+                    if (BuildConfig.DEBUG) {
+                        BoutonDebug(
+                            libelle = stringResource(R.string.debug_kokoro_ici),
+                            onClic = { onBasculerAffichage(section.perchoir == Perchoir.AUJOURDHUI) },
+                        )
+                    }
+                }
             }
             section.etapes.forEach { etape ->
                 Carte(
@@ -146,8 +165,11 @@ fun ContenuTherapie(
 /**
  * La bande d'une section : **la pancarte à gauche, la place de l'habitant à droite.**
  *
- * ⭐ **Elle est au moins aussi haute que sa vue** ([CADRE_HABITANT]) — sinon la carte suivante le
- * recouvrirait par le simple ordre de peinture, et il disparaîtrait sans que rien ne le signale.
+ * 🔴 **Elle ne réserve plus la hauteur de la vue de l'habitant** *(demande de Xavier, 16/08/2026)*
+ * : Kokoro est peint **par-dessus** l'interface ([HabitantSurInterface]), jamais glissé dedans, donc
+ * rien n'a plus à lui faire de place — l'ajouter ici ne ferait plus qu'écarter le titre de la
+ * section qui suit. Il peut déborder de la bande, à droite, sans recouvrir un texte : l'ordre de
+ * peinture s'en charge, pas la mise en page.
  */
 @Composable
 private fun BandeDeSection(
@@ -159,11 +181,30 @@ private fun BandeDeSection(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 20.dp, bottom = 16.dp)
-            .heightIn(min = CADRE_HABITANT.height)
             .perchoir(perchoirs, perchoir),
         contentAlignment = Alignment.CenterStart,
         content = { contenu() },
     )
+}
+
+/**
+ * 🧪 Un bouton de test — **jamais montré hors build debug** ([BuildConfig.DEBUG]). Il ne pilote rien
+ * du dossier : il force un affichage pour le comparer à l'écran, le temps de vérifier Kokoro sans
+ * attendre l'heure ou une vraie liste.
+ */
+@Composable
+private fun BoutonDebug(libelle: String, onClic: () -> Unit, modifier: Modifier = Modifier) {
+    val palette = LocalPaletteKokoro.current
+    val interactions = remember { MutableInteractionSource() }
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(999.dp))
+            .background(palette.encre.copy(alpha = 0.10f))
+            .clickable(interactionSource = interactions, indication = null, onClick = onClic)
+            .padding(horizontal = 14.dp, vertical = 8.dp),
+    ) {
+        Text(text = libelle, style = TypoKokoro.discret, color = palette.encreDouce)
+    }
 }
 
 /**
@@ -189,16 +230,40 @@ private fun BandeDeTete(perchoirs: Perchoirs, perchoir: Perchoir) {
  * Elle est vide : `companion/inputs/bibliotheque/` ne contient aujourd'hui que son README.
  * 🔴 **Les protocoles de `psy/docs/protocoles/` ne s'y copient pas** — ils se réécrivent pour
  * Xavier (contrôle **C9**), et ça se décide en séance.
+ *
+ * ⭐ **Sans liste, Kokoro se tient au milieu de l'écran** *(demande de Xavier, 16/08/2026)* : la
+ * bande qui le porte et le cadre vide se centrent comme un seul bloc, au lieu de rester collés en
+ * haut de la page.
+ *
+ * 🧪 [videDebug] et [onBasculerVideDebug] posent un bouton de test, **jamais montré hors build
+ * debug** : de quoi comparer à l'écran le sommeil de Kokoro sur une liste vide et sa posture de
+ * lecture sur une liste pleine, avant que K5 ne branche la vraie bibliothèque.
  */
 @Composable
-fun ContenuDocumentation(perchoirs: Perchoirs) {
+fun ContenuDocumentation(
+    perchoirs: Perchoirs,
+    videDebug: Boolean = true,
+    onBasculerVideDebug: () -> Unit = {},
+) {
     EcranDeBord(
         titre = stringResource(R.string.monde_documentation_titre),
         couleur = LocalPaletteKokoro.current.lavande,
-        defilant = true,
+        defilant = false,
     ) {
         BandeDeTete(perchoirs = perchoirs, perchoir = Perchoir.DOCUMENTATION)
-        CadreVide(texte = stringResource(R.string.monde_documentation_vide))
+        if (videDebug) {
+            CadreVide(texte = stringResource(R.string.monde_documentation_vide))
+        } else {
+            Carte(titre = stringResource(R.string.debug_exemple_fiche), onClic = {})
+        }
+        if (BuildConfig.DEBUG) {
+            BoutonDebug(
+                libelle = stringResource(
+                    if (videDebug) R.string.debug_afficher_exemple else R.string.debug_afficher_vide,
+                ),
+                onClic = onBasculerVideDebug,
+            )
+        }
     }
 }
 
@@ -216,16 +281,38 @@ fun ContenuDocumentation(perchoirs: Perchoirs) {
  * ⭐ **Ils se ressemblent jusque dans l'habitant** : les deux listes étant vides, Kokoro y dort
  * (`PRESENCE.md` §2), **et leur texte reste affiché sous lui**. 🔴 **Les Zzz ne remplacent pas le
  * cadre vide** — ils n'informent de rien qu'il ne dise déjà en toutes lettres.
+ *
+ * ⭐ **Sans liste, Kokoro se tient au milieu de l'écran** *(demande de Xavier, 16/08/2026)*, comme
+ * la documentation.
+ *
+ * 🧪 [videDebug] et [onBasculerVideDebug] posent un bouton de test, **jamais montré hors build
+ * debug** — voir [ContenuDocumentation].
  */
 @Composable
-fun ContenuBilan(perchoirs: Perchoirs) {
+fun ContenuBilan(
+    perchoirs: Perchoirs,
+    videDebug: Boolean = true,
+    onBasculerVideDebug: () -> Unit = {},
+) {
     EcranDeBord(
         titre = stringResource(R.string.monde_bilan_titre),
         couleur = LocalPaletteKokoro.current.beurre,
-        defilant = true,
+        defilant = false,
     ) {
         BandeDeTete(perchoirs = perchoirs, perchoir = Perchoir.BILAN)
-        CadreVide(texte = stringResource(R.string.monde_bilan_vide))
+        if (videDebug) {
+            CadreVide(texte = stringResource(R.string.monde_bilan_vide))
+        } else {
+            Carte(titre = stringResource(R.string.debug_exemple_fiche), onClic = {})
+        }
+        if (BuildConfig.DEBUG) {
+            BoutonDebug(
+                libelle = stringResource(
+                    if (videDebug) R.string.debug_afficher_exemple else R.string.debug_afficher_vide,
+                ),
+                onClic = onBasculerVideDebug,
+            )
+        }
     }
 }
 

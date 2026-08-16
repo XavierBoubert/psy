@@ -28,8 +28,13 @@ enum class Vol { AUCUN, LEVITATION, SOMMEIL, TRAVERSEE }
 /** Le déplacement de la racine à un instant donné. */
 data class Deplacement(val decalage: Offset, val inclinaison: Float)
 
-/** L'amplitude de la lévitation : **3 % de la hauteur du personnage** (§3), soit ≈ 5,3 unités. */
-const val LEVITATION_AMPLITUDE = 0.03f * HAUTEUR_PERSONNAGE
+/**
+ * L'amplitude de la lévitation — **9 % de la hauteur du personnage**, soit ≈ 16 unités.
+ *
+ * ⭐ **Portée à trois fois son ancienne valeur** *(demande de Xavier, 16/08/2026)* : à 3 % le
+ * flottement ne se voyait pas. C'est toujours le même mouvement, seulement plus visible.
+ */
+const val LEVITATION_AMPLITUDE = 0.09f * HAUTEUR_PERSONNAGE
 
 /**
  * Le quart de période qui sépare la lévitation du souffle (§3) — un quart de tour de phase.
@@ -102,9 +107,12 @@ data class Ombre(
     /** L'empreinte au sol : la moitié de la largeur d'épaules du dessin. */
     val demiLargeur: Float = DEMI_LARGEUR_OMBRE,
     val aplatissement: Float = APLATISSEMENT_OMBRE,
-    /** L'altitude du sol dans la vue — le bas des pieds tels qu'ils sont dessinés. */
-    val sol: Float = BAS_PIEDS,
-    val opacite: Float = OPACITE_OMBRE,
+    /**
+     * L'altitude du sol dans la vue — **un peu sous les pieds tels qu'ils sont dessinés**
+     * *(demande de Xavier, 16/08/2026)* : au ras des pieds, il la touchait, et l'effet de vol s'en
+     * trouvait cassé. Le décalage l'en éloigne, même posé.
+     */
+    val sol: Float = BAS_PIEDS + DECALAGE_SOL_OMBRE,
     /** La part pleine avant que le flou ne commence, en fraction du rayon. */
     val noyau: Float = NOYAU_OMBRE,
 )
@@ -120,8 +128,33 @@ val DEMI_LARGEUR_OMBRE = (EPAULE_DROITE.x - EPAULE_GAUCHE.x) / 2f
  * discrète parce qu'elle n'a rien à annoncer.
  */
 const val APLATISSEMENT_OMBRE = 0.16f
-const val OPACITE_OMBRE = 0.18f
 const val NOYAU_OMBRE = 0.45f
+
+/**
+ * ⏳ L'écart entre le sol de l'ombre et le bas des pieds dessinés — à ajuster à l'usage.
+ * 🔴 **Borné par la vue** : au-delà de ≈ 4,8, l'ellipse la plus aplatie déborderait de [HAUTEUR_VUE]
+ * en bas ; `CorpsInvariantsTest` le vérifie.
+ */
+const val DECALAGE_SOL_OMBRE = 4f
+
+/**
+ * ⭐ **L'opacité varie avec la hauteur de vol** *(demande de Xavier, 16/08/2026)* — plus sombre quand
+ * Kokoro s'approche du sol, plus transparente quand il s'en éloigne. Ce n'est pas une horloge de
+ * plus : elle ne dépend que de [Deplacement.decalage], donc de la hauteur déjà tirée de l'horloge du
+ * vol — rien ne peut y pulser tout seul.
+ */
+const val OPACITE_OMBRE_PROCHE = 0.22f
+const val OPACITE_OMBRE_LOINTAINE = 0.08f
+
+/**
+ * L'opacité de l'ombre à une hauteur de vol donnée — **0 au sol, 1 au sommet de la lévitation.**
+ * `hauteur` est négative en montant ([levitation]) ; on la ramène à une fraction positive avant de
+ * l'utiliser, et [LEVITATION_AMPLITUDE] sert de référence même en vol du sommeil, plus bas.
+ */
+fun Ombre.opaciteA(hauteur: Float): Float {
+    val fraction = (-hauteur / LEVITATION_AMPLITUDE).coerceIn(0f, 1f)
+    return OPACITE_OMBRE_PROCHE + (OPACITE_OMBRE_LOINTAINE - OPACITE_OMBRE_PROCHE) * fraction
+}
 
 /** 🔴 **Le vol porte son ombre** : ce qui ne vole pas n'en a pas, et il n'y a rien à régler. */
 fun Vol.ombre(): Ombre? = if (this == Vol.AUCUN) null else Ombre()

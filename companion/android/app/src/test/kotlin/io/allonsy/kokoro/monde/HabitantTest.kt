@@ -5,6 +5,8 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import io.allonsy.kokoro.corps.Cote
 import io.allonsy.kokoro.corps.Expression
+import io.allonsy.kokoro.corps.OUVERTURE_BRAS_LEVES
+import io.allonsy.kokoro.corps.OUVERTURE_HORIZONTALE
 import io.allonsy.kokoro.corps.Posture
 import io.allonsy.kokoro.corps.Vol
 import io.allonsy.kokoro.corps.ombre
@@ -299,6 +301,79 @@ class HabitantTest {
         assertTrue(
             "Les épaules sont dans la moitié haute du dessin : le corps passe derrière",
             HAUTEUR_EPAULES in 0.4f..0.7f,
+        )
+    }
+
+    /**
+     * 🔴 **L'enveloppe du vol tient, elle ne fait pas que passer** — c'est ce qui a fait échouer les
+     * deux premières tentatives *(16/08/2026 : « les animations de vol n'apparaissent pas du tout »)*.
+     *
+     * ⭐ **Le pic d'un demi-sinus ne dure rien**, et pendant ce rien Kokoro traverse l'écran à plus de
+     * 2 000 px/s — quand il n'est pas encore rentré dans le champ. **Ce test dit la seule chose qui
+     * compte : la pose est pleine pendant au moins la moitié du transit**, donc elle est vue.
+     */
+    @Test
+    fun `l'enveloppe du vol tient pendant la traversee`() {
+        assertEquals("Rien au départ", 0f, enveloppeDuVol(0f), PRECISION)
+        assertEquals("Rien à l'arrivée", 0f, enveloppeDuVol(1f), PRECISION)
+
+        val pleine = (0..100).count { enveloppeDuVol(it / 100f) > 0.99f }
+        assertTrue("La pose est pleine sur au moins la moitié du transit ($pleine %)", pleine >= 50)
+
+        assertTrue("Elle est déjà franche quand il rentre dans le champ", enveloppeDuVol(0.3f) > 0.9f)
+        assertTrue("Et elle s'est relâchée en se posant", enveloppeDuVol(0.95f) < 0.15f)
+    }
+
+    /**
+     * 🔴 **Elle ne saute nulle part, et elle ne fait pas de marche** — ni au démarrage, ni à la
+     * bascule du plateau, ni à l'atterrissage (`CORPS.md` §5 : aucune animation brusque).
+     */
+    @Test
+    fun `l'enveloppe du vol est continue`() {
+        val pas = (0..1000).map { enveloppeDuVol(it / 1000f) }
+        pas.zipWithNext().forEach { (avant, apres) ->
+            assertTrue("Saut de ${apres - avant} dans l'enveloppe", kotlin.math.abs(apres - avant) < 0.02f)
+        }
+        assertTrue("Elle ne sort jamais de ses bornes", pas.all { it in 0f..1f })
+    }
+
+    /**
+     * ⭐ **Les bras de la crise descendent sur la seconde moitié de la montée, et finissent avec
+     * elle** *(demande de Xavier, 16/08/2026)*. 🔴 Le geste ne remonte jamais et ne démarre pas d'un
+     * coup — sa dérivée s'annule aux deux bouts.
+     */
+    @Test
+    fun `les bras de la crise descendent sur la seconde moitie de la montee`() {
+        assertEquals("Levés à mi-montée encore", 0f, secondeMoitie(0.5f), PRECISION)
+        assertEquals("Levés au départ", 0f, secondeMoitie(0f), PRECISION)
+        assertEquals("Posés à l'arrivée du corps", 1f, secondeMoitie(1f), PRECISION)
+        assertTrue("À mi-descente, à mi-chemin", secondeMoitie(0.75f) in 0.4f..0.6f)
+
+        val course = (0..200).map { secondeMoitie(it / 200f) }
+        course.zipWithNext().forEach { (avant, apres) ->
+            assertTrue("Les bras remontent : $avant -> $apres", apres >= avant - PRECISION)
+            assertTrue("Départ sec dans la descente", apres - avant < 0.02f)
+        }
+    }
+
+    /**
+     * 🔴 **Les bras levés sont à la verticale, et c'est de la géométrie, pas un goût** : le bouton
+     * cache tout ce qui passe sous son arête et les bras pivotent aux épaules, qui n'y arrivent qu'à
+     * la fin de la montée. Plus bas que la verticale, l'affaissement se joue **derrière le bouton**.
+     */
+    @Test
+    fun `les bras leves de la crise sont a la verticale`() {
+        assertEquals(
+            "Un quart de tour au-dessus de l'horizontale",
+            90f,
+            OUVERTURE_BRAS_LEVES - OUVERTURE_HORIZONTALE,
+            PRECISION,
+        )
+        assertEquals(
+            "Et la pose tenue reste l'horizontale",
+            OUVERTURE_HORIZONTALE,
+            Posture.Accoude.reglage().ouvertureBrasGauche,
+            PRECISION,
         )
     }
 

@@ -30,6 +30,12 @@ enum class Expression(val oeil: Trace, val bouche: Trace) {
 
     /** Mode shutdown, écran en veille. */
     VEILLE(OEIL_ARC_BAS, BOUCHE_COURTE),
+
+    /**
+     * ⭐ **Le locuteur du panneau, à l'arrivée** *(demande de Xavier, 16/08/2026)* — la bouche
+     * entrouverte, comme s'il venait de se poser pour dire ce qui est écrit à côté.
+     */
+    PARLE(OEIL_OVALE, BOUCHE_OUVERTE),
     ;
 
     val yeuxOuverts: Boolean get() = oeil == OEIL_OVALE

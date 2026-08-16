@@ -24,7 +24,11 @@ sealed interface Posture {
 
     /**
      * ⭐ Écran de thérapie avant 18 h — `PRESENCE.md` §1.2 : *serein × regard vers la liste × repos*.
-     * **Aucun geste** : le corps est celui du dessin, seuls les yeux sont sur la liste.
+     *
+     * **Aucun geste** : le corps est celui du dessin, les yeux sont baissés vers la liste. 🔄 **Et
+     * ils ne la parcourent plus** *(demande de Xavier, 16/08/2026 : il ne lit pas dans Thérapie)* —
+     * le balayage est retiré côté place ([io.allonsy.kokoro.monde.place]), **il ne reste que la
+     * respiration**.
      */
     data object Pensif : Posture
 
@@ -80,8 +84,41 @@ const val OUVERTURE_HORIZONTALE = 90f - INCLINAISON_REPOS
  */
 const val OUVERTURE_MINIMALE = -INCLINAISON_REPOS
 
+/**
+ * Les bras levés de l'arrivée à la crise — *« les bras pointent vers le haut, puis s'affaissent sur
+ * le bouton »*. **À la verticale, donc un quart de tour au-dessus de l'horizontale**, calculé depuis
+ * elle et non choisi.
+ *
+ * ⚠️ **45° ne se voyait pas, et c'est de la géométrie** : le bouton cache tout ce qui passe sous son
+ * arête, les bras pivotent aux épaules, et les épaules n'atteignent l'arête qu'à la toute fin de la
+ * montée. Un bras à 45° ne dépasse alors jamais l'arête — il s'affaissait **derrière le bouton**. À
+ * la verticale il la franchit dès la mi-montée, exactement quand l'affaissement commence.
+ *
+ * ⚠️ **C'est un état de passage, jamais une pose tenue** : il ne dure que le temps de sortir de
+ * derrière le bouton, et [io.allonsy.kokoro.monde.Habitant] le ramène à [OUVERTURE_HORIZONTALE],
+ * qui est la pose arbitrée. **Aucune posture du jeu ne le porte.**
+ */
+const val OUVERTURE_BRAS_LEVES = OUVERTURE_HORIZONTALE + 90f
+
 /** Bras ramenés vers l'avant et le bas, à mi-chemin de la verticale — la posture de qui lit. */
 const val OUVERTURE_AVANCEE = OUVERTURE_MINIMALE / 2f
+
+/**
+ * ⭐ **Le bras droit de `lecture`, main contre le menton** *(demande de Xavier, 16/08/2026 —
+ * « plus basse, sur le menton plutôt »)* : la rotation, autour de [EPAULE_GAUCHE], qui amène le bout
+ * du bras (le bouchon du bas, loin de l'épaule) sous le visage. Dérivée du dessin, pas choisie :
+ * `atan2` de la cible moins `atan2` du bout de bras, tous deux depuis l'épaule.
+ *
+ * ⭐ **La cible est le menton, plus la bouche** : le bouchon arrive à `y ≈ 85,8`, entre la bouche
+ * *(74,6)* et le bas de la coque *(90,8)*. À la bouche il fallait -151,66°, et la main montait sur
+ * le visage.
+ *
+ * ⚠️ **Elle dépasse la ligne des épaules** (§6 garde-fou 1, [OUVERTURE_HORIZONTALE]) — la seule
+ * posture du jeu qui le fasse. La borne protège un geste tourné vers Xavier ; celui-ci se tourne
+ * vers Kokoro lui-même, jamais vers le lecteur, donc il n'a pas le sens que la borne exclut. **Elle
+ * ne s'applique qu'ici** : `OUVERTURE_HORIZONTALE` continue de border la désignation sans changement.
+ */
+const val OUVERTURE_MAIN_AU_MENTON = -139.217f
 
 /**
  * ⭐ **L'inclinaison de la tête d'`accoude`** — négatif : elle penche vers la gauche de l'écran.
@@ -128,6 +165,8 @@ data class ReglagePosture(
     val ecriture: Cote?,
     val inclinaisonTete: Float,
     val echelle: Float,
+    /** Vrai pour `Posture.Sommeil` seul — c'est ce qui amène bras et pieds à leur pose de sommeil. */
+    val sommeil: Boolean = false,
 )
 
 fun Posture.reglage(): ReglagePosture = when (this) {
@@ -153,8 +192,13 @@ fun Posture.reglage(): ReglagePosture = when (this) {
 
     Posture.Pensif -> reglageDeBase(Expression.SEREIN).copy(abaissement = REGARD_BAISSE)
 
+    /**
+     * ⭐ **Le bras droit main contre le menton** *(demande de Xavier, 16/08/2026)* : seul
+     * `ouvertureBrasGauche` change — c'est lui qui porte le bras droit de Kokoro, `arm-right` dans
+     * le SVG ([Geometrie.kt][BRAS_GAUCHE]). Le bras gauche garde sa posture de lecture inchangée.
+     */
     Posture.Lecture -> reglageDeBase(Expression.SEREIN).copy(
-        ouvertureBrasGauche = OUVERTURE_AVANCEE,
+        ouvertureBrasGauche = OUVERTURE_MAIN_AU_MENTON,
         ouvertureBrasDroit = OUVERTURE_AVANCEE,
         abaissement = REGARD_BAISSE,
     )
@@ -178,7 +222,12 @@ fun Posture.reglage(): ReglagePosture = when (this) {
         inclinaisonTete = INCLINAISON_TETE,
     )
 
-    Posture.Sommeil -> reglageDeBase(Expression.VEILLE)
+    /**
+     * ⭐ **Bras et pieds à la pose du sommeil** *(demande de Xavier, 16/08/2026)*, lue dans
+     * `retenus/kokoro-corps-v2-sleep.svg` ([Geometrie.kt][POSE_SOMMEIL_BRAS_GAUCHE]) — `sommeil`
+     * anime le passage de la pose de repos à celle-ci, dans [rigAnime].
+     */
+    Posture.Sommeil -> reglageDeBase(Expression.VEILLE).copy(sommeil = true)
 }
 
 /** Le regard part au centre : une posture qui regarde ailleurs le dit, sinon il ne se décale pas. */

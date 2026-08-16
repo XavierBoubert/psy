@@ -23,6 +23,18 @@ data class RigKokoro(
     val orbitePiedGauche: Float = 0f,
     val orbitePiedDroit: Float = 0f,
     /**
+     * Une pose empruntée à un autre dessin — sommeil, vol — **surimposée** à l'ouverture normale du
+     * membre ([PoseMembre]). ⭐ **Une transformation, pas un couple angle/pivot** : c'est la seule
+     * forme sous laquelle deux poses se composent sans avoir à départager leurs pivots. Identité par
+     * défaut — le repos, c'est le dessin.
+     */
+    val poseBrasGauche: Transformation = Transformation(),
+    val poseBrasDroit: Transformation = Transformation(),
+    val posePiedGauche: Transformation = Transformation(),
+    val posePiedDroit: Transformation = Transformation(),
+    /** Corps, tête et visage empruntés au dessin de vol ([PoseTronc]). Identité au repos. */
+    val vol: PoseTronc = PoseTronc(),
+    /**
      * Décalage horizontal des deux yeux, du même côté. Négatif = vers la gauche de l'écran.
      * ⭐ **C'est un axe à part entière** : il ne se déduit d'aucune expression, il se règle.
      */
@@ -58,11 +70,23 @@ data class RigKokoro(
 
     val rotationPiedDroit: Float get() = -orbitePiedDroit
 
-    /** Étirement vertical du torse sous l'effet de la respiration. */
+    /**
+     * Étirement vertical du torse sous l'effet de la respiration — **vers le haut uniquement**
+     * (demande de Xavier, 16/08/2026) : plus de rétraction en largeur, le ventre grossit sans se
+     * resserrer.
+     */
     val etirementCorps: Float get() = 1f + AMPLITUDE_HAUTEUR * respiration.coerceIn(0f, 1f)
 
-    /** Rétraction horizontale correspondante. */
-    val retractionCorps: Float get() = 1f - AMPLITUDE_LARGEUR * respiration.coerceIn(0f, 1f)
+    /**
+     * ⭐ **Ce que la tête et les bras suivent** pour rester à la même hauteur du ventre qu'au repos
+     * (demande de Xavier) : le sommet du torse monte de `etirementCorps` autour de
+     * [PIVOT_RESPIRATION] — sa base —, donc ce même décalage, appliqué à la tête et aux bras, les
+     * garde à la place que le souffle leur donne, au lieu de les laisser s'enfoncer dans un ventre
+     * qui grossit sous eux. **Négatif = vers le haut.** Les pieds ne le reçoivent jamais (§1.3) : ils
+     * ne bougent pas.
+     */
+    val decalageRespirationHaut: Float
+        get() = (EPAULE_GAUCHE.y - PIVOT_RESPIRATION.y) * (etirementCorps - 1f)
 
     fun deplace(decalage: Offset, inclinaison: Float = 0f) =
         copy(decalage = decalage, inclinaison = inclinaison)
@@ -85,5 +109,16 @@ data class RigKokoro(
     }
 }
 
-const val AMPLITUDE_HAUTEUR = 0.02f
-const val AMPLITUDE_LARGEUR = 0.01f
+/**
+ * ⚠️ **×1,13, et non le ×1,03 d'origine — parce que le souffle se mesure contre la lévitation.**
+ *
+ * Xavier a demandé ×1,03 le 16/08/2026, puis *« on ne le voit pas respirer »*, puis *« augmente
+ * vraiment »*. **Les trois sont vrais, et c'est de l'arithmétique** : le mouvement de référence à
+ * l'écran est la lévitation, **10 dp**. ×1,03 donnait 1,1 dp de montée de tête *(11 % — trois
+ * pixels)*, ×1,08 en donnait 2,9 *(29 %)*. **À ×1,18 elle monte de 6,5 dp, les deux tiers de la
+ * lévitation** : le souffle cesse d'être un détail sous le flottement.
+ *
+ * ⏳ **Le ventre grandit alors de 13 unités** — c'est franc, et c'est le prix d'un souffle visible à
+ * 110 dp. **Une seule valeur à changer** pour le rendre plus discret.
+ */
+const val AMPLITUDE_HAUTEUR = 0.13f

@@ -23,11 +23,17 @@ import kotlin.random.Random
 /**
  * Cycle complet inspiration + expiration (CORPS.md §5). Il ne change jamais.
  *
- * 🔴 **C'est aussi la période de la lévitation** (`PRESENCE.md` §3) : le corps n'a qu'une horloge,
- * et [Vol.kt][levitation] s'y branche par un déphasage. Une seconde période battrait contre
- * celle-ci, et le battement se lirait comme une information.
+ * 🔄 **Sa propre horloge, détachée de la lévitation** *(demande de Xavier, 16/08/2026 : « non calée
+ * sur la vitesse du haut/bas pour faire plus réelle »)*. Jusqu'ici le corps n'avait qu'une horloge,
+ * partagée avec [Vol.kt][levitation] par un déphasage — c'était voulu, pour qu'aucun battement lent
+ * ne naisse entre les deux. **C'est cette dérive-là que Xavier demande** : vues côte à côte, la
+ * respiration et le vol stationnaire ne culminent plus ensemble, ce qui les fait lire comme deux
+ * mouvements distincts plutôt qu'un seul mécanisme. La période ne change pas ; c'est la source qui
+ * se dédouble ([respirationAnime]).
+ *
+ * 🔴 Le rythme reste fixe : ce que §4.6 interdit est qu'il **varie**, pas qu'il soit réglé une fois.
  */
-const val RESPIRATION_MILLIS = 4_500
+const val RESPIRATION_MILLIS = 3_800
 
 /**
  * Le tour complet de l'horloge du corps — **deux respirations, et toujours une seule horloge.**
@@ -95,9 +101,13 @@ fun rigAnime(
     vol: Vol = Vol.AUCUN,
     expression: Expression? = null,
     balayage: Balayage? = null,
+    respire: Boolean = true,
+    partDuVol: Float = 0f,
 ): RigKokoro = with(posture.reglage()) {
     rigAnime(
         expression = expression ?: this.expression,
+        respire = respire,
+        partDuVol = partDuVol,
         panneauAllume = panneauAllume,
         ouvertureBrasGauche = ouvertureBrasGauche,
         ouvertureBrasDroit = ouvertureBrasDroit,
@@ -107,6 +117,7 @@ fun rigAnime(
         ecriture = ecriture,
         inclinaisonTete = inclinaisonTete,
         echelle = echelle,
+        sommeil = sommeil,
         vol = vol,
     )
 }
@@ -125,8 +136,25 @@ fun rigAnime(
     ecriture: Cote? = null,
     inclinaisonTete: Float = 0f,
     echelle: Float = 1f,
+    sommeil: Boolean = false,
     vol: Vol = Vol.AUCUN,
+    /**
+     * Le souffle s'arrête sur l'écran de crise, et là seulement.
+     * 🔴 C'est l'amplitude qui tombe, jamais l'horloge : couper la source figerait le ventre là où il
+     * en était — un saut, et une taille de corps différente à chaque venue.
+     */
+    respire: Boolean = true,
+    /**
+     * La part que le dessin de vol prend sur la posture — 0 la posture seule, 1 le dessin seul.
+     *
+     * 🔴 Le vol **remplace**, il ne s'ajoute pas. Un bras déjà tendu par `montre` auquel on ajoute la
+     * rotation du dessin reste un bras tendu : c'est ce qui faisait que le vol ne se voyait pas. Ce
+     * qui s'efface ici, c'est l'ouverture des bras, la pose de sommeil et le regard de la posture ;
+     * ce qui prend la place est appliqué par-dessus, dans [io.allonsy.kokoro.monde.Habitant].
+     */
+    partDuVol: Float = 0f,
 ): RigKokoro {
+    val posture = 1f - partDuVol.coerceIn(0f, 1f)
     val yeuxFermes = clignementAnime(expression, actif = panneauAllume)
     val visage = visageAnime(expression, yeuxFermes)
     val battement = battementAnime()
@@ -141,17 +169,23 @@ fun rigAnime(
     val teteInclinee by animateFloatAsState(inclinaisonTete, transition(), label = "inclinaison-tete")
     val parcours = balayageAnime(balayage)
     val taille by animateFloatAsState(echelle, transition(), label = "echelle")
+    val poseSommeil by animateFloatAsState(if (sommeil) 1f else 0f, transition(), label = "pose-sommeil")
+    val ampleur by animateFloatAsState(if (respire) 1f else 0f, transition(), label = "ampleur-souffle")
 
     return RigKokoro(
         visage = visage,
         panneauAllume = panneauAllume,
-        respiration = souffle(battement),
-        ouvertureBrasGauche = brasGauche + geste.sur(ecriture, Cote.GAUCHE),
-        ouvertureBrasDroit = brasDroit + geste.sur(ecriture, Cote.DROITE),
-        orbitePiedGauche = piedGauche,
-        orbitePiedDroit = piedDroit,
-        regard = oeillade + parcours,
-        abaissement = yeuxBaisses,
+        respiration = souffle(respirationAnime()) * ampleur,
+        ouvertureBrasGauche = brasGauche * posture + geste.sur(ecriture, Cote.GAUCHE),
+        ouvertureBrasDroit = brasDroit * posture + geste.sur(ecriture, Cote.DROITE),
+        orbitePiedGauche = piedGauche * posture,
+        orbitePiedDroit = piedDroit * posture,
+        poseBrasGauche = POSE_SOMMEIL_BRAS_GAUCHE.echelle(poseSommeil * posture).transformation,
+        poseBrasDroit = POSE_SOMMEIL_BRAS_DROIT.echelle(poseSommeil * posture).transformation,
+        posePiedGauche = POSE_SOMMEIL_PIED_GAUCHE.echelle(poseSommeil * posture).transformation,
+        posePiedDroit = POSE_SOMMEIL_PIED_DROIT.echelle(poseSommeil * posture).transformation,
+        regard = (oeillade + parcours) * posture,
+        abaissement = yeuxBaisses * posture,
         inclinaisonTete = teteInclinee,
         decalage = mouvement.decalage,
         inclinaison = mouvement.inclinaison,
@@ -319,14 +353,13 @@ private fun balayageAnime(balayage: Balayage?): Float {
 }
 
 /**
- * L'horloge du corps — 🔴 **une seule pour tout ce qui bat.**
- *
- * La respiration et la lévitation en sortent l'une et l'autre (`PRESENCE.md` §3) : deux horloges
- * produiraient un battement lent entre elles, donc une information involontaire. La phase avance
- * linéairement et se referme sur elle-même, donc le retour à zéro ne fait pas de saut.
+ * L'horloge du vol — 🔄 **celle de la lévitation et du sommeil, plus seule celle de la respiration**
+ * *(16/08/2026 : voir [RESPIRATION_MILLIS])*. La phase avance linéairement et se referme sur
+ * elle-même, donc le retour à zéro ne fait pas de saut.
  *
  * ⭐ **Un tour vaut deux respirations** ([HORLOGE_MILLIS]) : c'est ce qui laisse le sommeil ralentir
- * son vol de moitié **sans horloge à lui**, en se contentant de diviser la phase par deux.
+ * son vol de moitié **sans horloge à lui**, en se contentant de diviser la phase par deux. Le nom
+ * garde le tour de respiration comme unité de mesure ; ce n'est plus la respiration elle-même.
  */
 @Composable
 private fun battementAnime(): Float {
@@ -338,6 +371,26 @@ private fun battementAnime(): Float {
             repeatMode = RepeatMode.Restart,
         ),
         label = "battement-phase",
+    )
+    return phase
+}
+
+/**
+ * L'horloge de la respiration, **détachée de celle du vol** *(demande de Xavier, 16/08/2026)* — même
+ * période ([RESPIRATION_MILLIS]), une source indépendante. Les deux horloges démarrent ensemble à la
+ * composition, donc elles dérivent l'une de l'autre plutôt que de sauter : c'est cette dérive lente
+ * qui fait qu'un souffle et un vol stationnaire ne se ressemblent plus jamais tout à fait.
+ */
+@Composable
+private fun respirationAnime(): Float {
+    val phase by rememberInfiniteTransition(label = "respiration").animateFloat(
+        initialValue = 0f,
+        targetValue = 2f * PI.toFloat(),
+        animationSpec = infiniteRepeatable(
+            animation = tween(RESPIRATION_MILLIS, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart,
+        ),
+        label = "respiration-phase",
     )
     return phase
 }

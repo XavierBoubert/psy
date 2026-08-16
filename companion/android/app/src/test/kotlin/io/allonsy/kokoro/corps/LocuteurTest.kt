@@ -100,16 +100,14 @@ class LocuteurTest {
 
     /**
      * ⭐ **Ce qui se lit est un visage** (§1.4) : du sommet du crâne à la ligne des épaules, la tête
-     * mesure une soixantaine de dp — le chiffre du tableau —, soit près du double de celle de
-     * l'habitant.
+     * du locuteur est nettement plus grande que celle de l'habitant — c'est ce grossissement qui
+     * donne l'impression qu'il vient se poser dans le coin du panneau.
      */
     @Test
-    fun `la tete du locuteur mesure une soixantaine de dp`() {
+    fun `la tete du locuteur est nettement plus grande que celle de l'habitant`() {
         val tete = (unitePour(HAUTEUR_LOCUTEUR) * (EPAULE_GAUCHE.y - SOMMET_TETE)).value
-        assertEquals("La tête du locuteur", 60f, tete, 3f)
-
         val habitant = (unitePour(HAUTEUR_HABITANT) * (EPAULE_GAUCHE.y - SOMMET_TETE)).value
-        assertTrue("Le locuteur montre un visage, pas une silhouette", tete > 1.7f * habitant)
+        assertTrue("Le locuteur montre un visage, pas une silhouette", tete > 1.3f * habitant)
     }
 
     /** La vue se déduit du personnage, jamais l'inverse — et elle garde les proportions du dessin. */

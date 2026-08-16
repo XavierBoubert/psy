@@ -4,11 +4,14 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.unit.dp
 
 /**
@@ -37,14 +40,14 @@ import androidx.compose.ui.unit.dp
 /**
  * §1.4 — **la hauteur du personnage**, pas celle de sa vue.
  *
- * ⭐ **Les trois chiffres du tableau ne se referment que comme ça** : à 110 dp de personnage la tête
- * en fait 57 — *« ≈ 60 dp »* — et le contour, qui vaut 1,1 % de la hauteur, sort à 3,7 px sur trois
- * densités — *« ≈ 3,5 px »*. **Ce qui doit se lire est un visage**, donc c'est la tête qui fixe
- * l'échelle, et le reste en découle.
+ * ⭐ **Portée à 150 dp** *(demande de Xavier, 16/08/2026)* — l'habitant du monde vaut désormais
+ * lui-même 110 dp ([io.allonsy.kokoro.monde.HAUTEUR_HABITANT]) : sans cet écart, le personnage
+ * n'aurait plus rien à gagner en arrivant sur le panneau. **Ce qui doit se lire est un visage**, donc
+ * c'est la tête qui fixe l'échelle, et le reste en découle.
  *
- * ⏳ **À revérifier sur l'appareil**, comme les 60 dp de l'habitant.
+ * ⏳ **À revérifier sur l'appareil.**
  */
-val HAUTEUR_LOCUTEUR = 110.dp
+val HAUTEUR_LOCUTEUR = 150.dp
 
 /**
  * La coupe du cadrage — **le thorax** (§1.1).
@@ -68,11 +71,18 @@ val HAUTEUR_BANDE_LOCUTEUR = UNITE_LOCUTEUR * COUPE_LOCUTEUR
 /**
  * La parution du locuteur, **quand l'habitant vient de sortir du champ**.
  *
- * ⭐ **Un fondu, jamais une apparition sèche** (§3) — et il ne joue qu'à l'ouverture : à la
- * fermeture, **le panneau l'emporte avec lui** en redescendant, donc il n'y a rien à faire
- * disparaître.
+ * ⭐ **Il arrive, il ne surgit pas** *(demande de Xavier, 16/08/2026)* — un fondu, un léger glissé
+ * depuis le bas et un grossissement : **c'est le Kokoro du monde qui vient se poser dans le coin du
+ * panneau**, plus grand qu'il ne l'était dans le décor. Il ne joue qu'à l'ouverture : à la fermeture,
+ * **le panneau l'emporte avec lui** en redescendant, donc il n'y a rien à faire disparaître.
  */
-private const val PARUTION_LOCUTEUR_MILLIS = 400
+private const val PARUTION_LOCUTEUR_MILLIS = 500
+
+/** L'ampleur du grossissement à l'arrivée — il part un peu plus petit, jamais à sa taille finale. */
+private const val PARUTION_ECHELLE_DEPART = 0.7f
+
+/** Le glissé qui accompagne l'arrivée — un quart de sa hauteur, jamais plus. */
+private const val PARUTION_GLISSE_FRACTION = 4
 
 /**
  * 🔴 **L'alternance des deux régimes, en une seule bascule** (§1.1) — [sortie] vaut 0 quand
@@ -107,7 +117,15 @@ fun Locuteur(expression: Expression, modifier: Modifier = Modifier, present: Boo
     ) {
         AnimatedVisibility(
             visible = present,
-            enter = fadeIn(tween(PARUTION_LOCUTEUR_MILLIS)),
+            enter = fadeIn(tween(PARUTION_LOCUTEUR_MILLIS)) +
+                scaleIn(
+                    initialScale = PARUTION_ECHELLE_DEPART,
+                    animationSpec = tween(PARUTION_LOCUTEUR_MILLIS),
+                    transformOrigin = TransformOrigin(0f, 1f),
+                ) +
+                slideInVertically(animationSpec = tween(PARUTION_LOCUTEUR_MILLIS)) {
+                    it / PARUTION_GLISSE_FRACTION
+                },
             exit = fadeOut(tween(PARUTION_LOCUTEUR_MILLIS)),
         ) {
             CorpsKokoro(

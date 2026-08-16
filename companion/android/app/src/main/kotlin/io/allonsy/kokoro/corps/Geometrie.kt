@@ -1,8 +1,12 @@
 package io.allonsy.kokoro.corps
 
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
+import kotlin.math.PI
 import kotlin.math.abs
+import kotlin.math.cos
+import kotlin.math.sin
 import kotlin.math.sqrt
 
 /**
@@ -86,8 +90,23 @@ data class Transformation(
 
     fun applique(point: Ancre) = Ancre(a * point.x + c * point.y + e, b * point.x + d * point.y + f)
 
+    /**
+     * Vers l'identité — `t` = 0 rend l'identité, `t` = 1 rend celle-ci.
+     * 🔴 Exact tant qu'il n'y a pas de rotation : interpoler les termes d'une échelle autour d'un
+     * point revient à interpoler le facteur autour du **même** point. Une rotation, elle, y perdrait
+     * sa longueur en cours de route — c'est [PoseMembre] qui s'en charge.
+     */
+    fun versIdentite(t: Float) =
+        Transformation(1f + (a - 1f) * t, b * t, c * t, 1f + (d - 1f) * t, e * t, f * t)
+
+    /** Le miroir autour de [AXE] : `M ∘ this ∘ M`. */
+    fun miroir() = Transformation(a, -b, -c, d, 2f * AXE * (1f - a) - e, 2f * AXE * b + f)
+
     /** L'image de l'origine du repère local — le point que la transformation pose dans la vue. */
     val origine: Ancre get() = Ancre(e, f)
+
+    /** La même, en décalage — pour les tracés du visage, que seule une translation déplace. */
+    val decalage: Offset get() = Offset(e, f)
 
     /**
      * Facteur d'échelle du trait sous une matrice non uniforme, règle SVG : `sqrt(|det|)`.
@@ -380,9 +399,16 @@ val BOUCHE_SEMI = Trace(
 
 val BOUCHE_COURTE = Trace("bouche-courte", Forme.Segment(-6.4f, 0f, 6.4f, 0f))
 
+/**
+ * La bouche entrouverte — **le locuteur du panneau, dès qu'il vient de se poser**
+ * *(demande de Xavier, 16/08/2026)*. Un petit ovale plein, à l'image des yeux : symétrique, donc
+ * indifférent au demi-tour du repère de la bouche.
+ */
+val BOUCHE_OUVERTE = Trace("bouche-ouverte", Forme.Ellipse(4.2f, 2.8f), epaisseur = 0f)
+
 val TRACES = listOf(
     OEIL_OVALE, OEIL_TRAIT, OEIL_ARC_HAUT, OEIL_ARC_BAS,
-    BOUCHE_TRAIT, BOUCHE_BARRE, BOUCHE_ARC, BOUCHE_SEMI, BOUCHE_COURTE,
+    BOUCHE_TRAIT, BOUCHE_BARRE, BOUCHE_ARC, BOUCHE_SEMI, BOUCHE_COURTE, BOUCHE_OUVERTE,
 )
 
 // ————————————————————————————————————————————————————————————————————————————————————————————
@@ -401,6 +427,30 @@ const val AXE = 119.959189f
  */
 val EPAULE_GAUCHE = Ancre(80.634638f, 111.095240f)
 val EPAULE_DROITE = Ancre(159.283740f, 111.095252f)
+
+/**
+ * ⭐ **Le bout du bras — « la main », qui n'en est pas une** *(§2 : aucune main, aucun doigt)*. Le
+ * milieu de la corde du bouchon arrondi qui termine le bras **en bas**, symétrique de [EPAULE_GAUCHE]
+ * à l'autre extrémité du fuseau. Il est à 50,2 unités de l'épaule.
+ *
+ * Il ne sert qu'à **dériver** l'angle d'une posture qui porte la main quelque part — `lecture` et son
+ * menton ([OUVERTURE_MAIN_AU_MENTON]) —, jamais à dessiner : aucune pièce ne s'accroche ici.
+ */
+val BOUT_DU_BRAS = Ancre(64.254500f, 158.603500f)
+
+/** Le bas de la coque de la tête dans la vue — **le menton**, s'il en avait un. */
+const val BAS_DE_LA_TETE = 90.845f
+
+/**
+ * ⭐ **De combien le bras descend sous la ligne des épaules une fois amené à l'horizontale**
+ * ([OUVERTURE_HORIZONTALE]) — mesuré sur le tracé échantillonné, demi-trait compris.
+ *
+ * 🔴 **C'est ce qui rend `accoude` impossible à peindre en une seule couche** : les bras débordent de
+ * **11,5 unités** sous l'arête du bouton, soit près de 10 dp. Le chiffre sert à couper la passe des
+ * bras exactement là où ils s'arrêtent — ni plus haut *(on les tronquerait au repos)*, ni plus bas
+ * *(ils flotteraient sur le bouton pendant qu'il sort de derrière)*.
+ */
+const val DESCENTE_DU_BRAS_HORIZONTAL = 11.544f
 
 /**
  * Le centre du ventre — **écrit dans le dessin, pas choisi ici.**
@@ -427,3 +477,155 @@ val PIVOT_TETE = Ancre(AXE, EPAULE_GAUCHE.y)
 
 /** Pivot de la racine : les transformations de vol tournent et redimensionnent autour de ce point. */
 val PIVOT_RACINE = Ancre(AXE, HAUTEUR_VUE / 2f)
+
+// ————————————————————————————————————————————————————————————————————————————————————————————
+// Les poses empruntées à un autre dessin — sommeil, vol (demande de Xavier, 16/08/2026)
+// ————————————————————————————————————————————————————————————————————————————————————————————
+
+/**
+ * Un membre placé hors de sa pose de repos, **lu dans un autre dessin de Xavier** plutôt que choisi
+ * ici — même principe que [CENTRE_VENTRE] : le SVG donne la transformation, le code n'invente rien.
+ *
+ * `retenus/kokoro-corps-v2-sleep.svg` et `retenus/kokoro-corps-v2-right.svg` reposent chacun un
+ * bras ou un pied à un autre endroit ; l'écart entre leur matrice et celle de
+ * `retenus/kokoro-corps-v2.svg` se décompose exactement en une rotation autour d'un pivot propre à
+ * ce mouvement (le sien, pas [EPAULE_GAUCHE] ni [CENTRE_VENTRE] — Xavier n'a pas tourné la pièce
+ * autour de son articulation en la dessinant), plus, pour les pieds du sommeil, une simple
+ * translation.
+ *
+ * 🔴 **Les pivots sont écrits dans l'espace de la vue**, celui où le rendu travaille — c'est-à-dire
+ * le pivot brut **transporté par [RACINE]**. La décomposition redonne alors la matrice du dessin de
+ * variante à 1e-7 près ; sans ce transport elle tombe à une unité, ce qui se voit.
+ */
+data class PoseMembre(
+    val angle: Float = 0f,
+    val pivot: Ancre = Ancre(AXE, 0f),
+    val decalage: Offset = Offset.Zero,
+) {
+    /** Vers cette pose à mi-chemin — `t` = 0 le repos, `t` = 1 la pose entière. */
+    fun echelle(t: Float): PoseMembre = copy(angle = angle * t, decalage = decalage * t)
+
+    /**
+     * L'inverse, côté gauche de l'écran — **calculé, jamais redessiné** (demande de Xavier :
+     * *« fais les calculs inverses de la droite »*). Un miroir autour de [AXE] : le pivot passe de
+     * l'autre côté de l'axe, l'angle change de sens, et la part horizontale d'une translation aussi.
+     */
+    fun miroir(): PoseMembre =
+        copy(angle = -angle, pivot = Ancre(2f * AXE - pivot.x, pivot.y), decalage = Offset(-decalage.x, decalage.y))
+
+    /**
+     * La pose en tant que transformation — 🔴 **c'est sous cette forme que deux poses se combinent.**
+     *
+     * ⚠️ **Les combiner champ à champ ne marche pas, et l'a prouvé** : additionner deux angles oblige
+     * à choisir *lequel des deux pivots* garder, donc à tester un angle contre zéro — et une enveloppe
+     * en `sin(π·t)` vaut `-8,7e-8` à `t = 1`, pas `0`. La pose de sommeil s'appliquait alors autour du
+     * pivot du vol, à vingt unités de sa place. **Deux matrices, elles, se composent sans rien
+     * décider.**
+     */
+    val transformation: Transformation
+        get() = translation(decalage.x, decalage.y).sous(rotationAutour(angle, pivot))
+}
+
+/**
+ * Le tronc, la tête et le visage dans la pose d'un autre dessin — **une transformation par pièce**,
+ * en repère de vue, à composer par-dessus le placement de repos.
+ *
+ * 🔴 Aucune n'est une rotation : le dessin de vol **étire et glisse**, il ne tourne pas. C'est ce qui
+ * rend la tête *tournée* — coque et panneau resserrés vers la droite, yeux rapprochés et déportés —
+ * sans jamais sortir de la vue de face que `CORPS.md` §2 impose au corps. Les membres, eux, tournent
+ * vraiment : c'est [PoseMembre].
+ *
+ * 🔴 Lu dans le dessin, jamais choisi : chaque valeur est la matrice de la variante rapportée à celle
+ * du repos. `VolInvariantsTest` refait le calcul à chaque build.
+ */
+data class PoseTronc(
+    val torse: Transformation = Transformation(),
+    val kanji: Transformation = Transformation(),
+    val coque: Transformation = Transformation(),
+    val panneau: Transformation = Transformation(),
+    val oeilGauche: Transformation = Transformation(),
+    val oeilDroit: Transformation = Transformation(),
+    val bouche: Transformation = Transformation(),
+) {
+    /** `t` = 0 le repos, `t` = 1 le dessin de variante au pixel près. */
+    fun echelle(t: Float) = PoseTronc(
+        torse.versIdentite(t),
+        kanji.versIdentite(t),
+        coque.versIdentite(t),
+        panneau.versIdentite(t),
+        oeilGauche.versIdentite(t),
+        oeilDroit.versIdentite(t),
+        bouche.versIdentite(t),
+    )
+
+    /** Les côtés s'échangent en même temps qu'ils passent l'axe. */
+    fun miroir() = PoseTronc(
+        torse = torse.miroir(),
+        kanji = kanji.miroir(),
+        coque = coque.miroir(),
+        panneau = panneau.miroir(),
+        oeilGauche = oeilDroit.miroir(),
+        oeilDroit = oeilGauche.miroir(),
+        bouche = bouche.miroir(),
+    )
+}
+
+/** Une rotation autour d'un point, en degrés, dans le sens du dessin (y vers le bas). */
+fun rotationAutour(degres: Float, pivot: Ancre): Transformation {
+    val radians = degres * PI.toFloat() / 180f
+    val cos = cos(radians)
+    val sin = sin(radians)
+    return Transformation(
+        a = cos,
+        b = sin,
+        c = -sin,
+        d = cos,
+        e = pivot.x - cos * pivot.x + sin * pivot.y,
+        f = pivot.y - sin * pivot.x - cos * pivot.y,
+    )
+}
+
+/**
+ * Le sommeil (`retenus/kokoro-corps-v2-sleep.svg`) — **seuls les bras et les pieds en sont tirés**
+ * (demande de Xavier) : la tête et le corps du dessin de sommeil ne sont pas repris.
+ *
+ * Les bras y tournent autour d'un point propre à ce mouvement, loin de l'épaule — Xavier les a
+ * pivotés à la main dans son éditeur, pas autour de l'articulation. Les pieds, eux, gardent
+ * exactement la rotation du dessin original : seule une translation les déplace.
+ */
+val POSE_SOMMEIL_BRAS_GAUCHE = PoseMembre(angle = -14.047611f, pivot = Ancre(68.477912f, 33.020633f))
+val POSE_SOMMEIL_BRAS_DROIT = PoseMembre(angle = 16.723473f, pivot = Ancre(170.388053f, 57.166890f))
+val POSE_SOMMEIL_PIED_GAUCHE = PoseMembre(decalage = Offset(3.236246f, -4.118859f))
+val POSE_SOMMEIL_PIED_DROIT = PoseMembre(decalage = Offset(-0.882613f, -5.001471f))
+
+/**
+ * Le vol vers la droite (`retenus/kokoro-corps-v2-right.svg`) — bras et pieds seulement, même
+ * réserve que le sommeil. Le vol vers la gauche n'a pas de troisième dessin : c'est [PoseMembre.miroir]
+ * qui le donne, côté gauche contre côté droit échangés.
+ */
+val POSE_VOL_DROITE_BRAS_GAUCHE = PoseMembre(angle = 17.178528f, pivot = Ancre(96.150744f, 140.625816f))
+val POSE_VOL_DROITE_BRAS_DROIT = PoseMembre(angle = 35.983749f, pivot = Ancre(158.925797f, 96.667499f))
+val POSE_VOL_DROITE_PIED_GAUCHE = PoseMembre(angle = 26.486476f, pivot = Ancre(120.348649f, 132.838997f))
+val POSE_VOL_DROITE_PIED_DROIT = PoseMembre(angle = 34.941106f, pivot = Ancre(120.121253f, 132.150208f))
+
+/**
+ * Le reste du même dessin — voir [PoseTronc]. **Le corps s'affine et s'allonge, la tête se resserre
+ * vers la droite, les yeux se rapprochent en glissant du même côté** : c'est ce qui donne le
+ * trois-quarts.
+ */
+val POSE_VOL_DROITE_TRONC = PoseTronc(
+    torse = Transformation(0.939725f, 0f, 0f, 1.037005f, 7.240213f, -4.896660f),
+    kanji = Transformation(0.939725f, 0f, 0f, 1.037005f, 10.240213f, -4.896660f),
+    coque = Transformation(0.871917f, 0f, 0f, 1f, 22.364748f, 0f),
+    panneau = Transformation(0.752093f, 0f, 0f, 1f, 50.773043f, 0f),
+    oeilGauche = translation(37f, 0f),
+    oeilDroit = translation(27f, 0f),
+    bouche = translation(34.059429f, 0f),
+)
+
+/** ⭐ Le côté droit et le côté gauche échangent leur pose, mise en miroir — jamais redessinés à part. */
+val POSE_VOL_GAUCHE_BRAS_GAUCHE = POSE_VOL_DROITE_BRAS_DROIT.miroir()
+val POSE_VOL_GAUCHE_BRAS_DROIT = POSE_VOL_DROITE_BRAS_GAUCHE.miroir()
+val POSE_VOL_GAUCHE_PIED_GAUCHE = POSE_VOL_DROITE_PIED_DROIT.miroir()
+val POSE_VOL_GAUCHE_PIED_DROIT = POSE_VOL_DROITE_PIED_GAUCHE.miroir()
+val POSE_VOL_GAUCHE_TRONC = POSE_VOL_DROITE_TRONC.miroir()

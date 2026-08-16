@@ -7,6 +7,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.File
 import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.random.Random
 
 private val FICHIER_SVG = File("../../ressources/retenus/kokoro-corps-v2.svg")
@@ -252,24 +253,52 @@ class CorpsInvariantsTest {
      * 🔴 Le garde-fou vaut pour **toutes** les postures, geste d'écriture compris : le bras ne monte
      * jamais au-dessus de la ligne des épaules (+70,5°) et ne croise jamais le corps (-19,5°, la
      * verticale). Une posture ajoutée sans y penser tombe ici.
+     *
+     * 🔴 **Une seule exception, nommée** : le bras gauche (le droit de Kokoro) de `lecture`, main
+     * contre la bouche — voir le test dédié juste après, qui pin ce chiffre-là précisément parce que
+     * ce sweep-ci ne le vérifie plus.
      */
     @Test
     fun `aucune posture ne sort de la course des bras`() {
         POSTURES.forEach { posture ->
             val reglage = posture.reglage()
             val geste = if (reglage.ecriture == null) 0f else ECRITURE_AMPLITUDE
-            listOf(reglage.ouvertureBrasGauche, reglage.ouvertureBrasDroit).forEach { ouverture ->
+            val membres = mapOf("gauche" to reglage.ouvertureBrasGauche, "droit" to reglage.ouvertureBrasDroit)
+            membres.forEach membre@{ (cote, ouverture) ->
+                if (posture == Posture.Lecture && cote == "gauche") return@membre
                 assertTrue(
-                    "$posture — le bras passe au-dessus de l'épaule : ${ouverture + geste}",
+                    "$posture ($cote) — le bras passe au-dessus de l'épaule : ${ouverture + geste}",
                     ouverture + geste <= OUVERTURE_HORIZONTALE,
                 )
                 assertTrue(
-                    "$posture — le bras croise le corps : $ouverture",
+                    "$posture ($cote) — le bras croise le corps : $ouverture",
                     ouverture >= OUVERTURE_MINIMALE,
                 )
             }
         }
         assertEquals(-INCLINAISON_REPOS, OUVERTURE_MINIMALE, 0f)
+    }
+
+    /**
+     * ⭐ **L'exception nommée du test précédent** : `lecture` porte la main droite de Kokoro contre
+     * son menton (demande de Xavier, 16/08/2026), donc au-dessus de la ligne des épaules — la seule
+     * posture du jeu qui le fasse. Un geste tourné vers lui-même, jamais vers le lecteur : ce n'est
+     * pas le salut que le garde-fou du §6 exclut, donc la borne ne s'y applique pas. Le bras gauche
+     * de Kokoro, lui, reste dans la course normale de `lecture`.
+     *
+     * 🔴 **La main reste sous le visage, pas dessus** : le test refait le calcul du dessin — le
+     * bouchon du bras doit arriver **sous la bouche** et **au-dessus du bas de la coque**.
+     */
+    @Test
+    fun `la lecture porte la main droite de Kokoro contre son menton`() {
+        val lecture = Posture.Lecture.reglage()
+        assertEquals(OUVERTURE_MAIN_AU_MENTON, lecture.ouvertureBrasGauche, 0f)
+        assertEquals(OUVERTURE_AVANCEE, lecture.ouvertureBrasDroit, 0f)
+
+        val main = rotationAutour(OUVERTURE_MAIN_AU_MENTON, EPAULE_GAUCHE).applique(BOUT_DU_BRAS)
+        assertTrue("La main monte sur le visage : ${main.y}", main.y > BOUCHE.y)
+        assertTrue("La main descend sous le menton : ${main.y}", main.y < BAS_DE_LA_TETE)
+        assertTrue("La main s'écarte du visage : ${main.x}", abs(main.x - AXE) < 10f)
     }
 
     /**
@@ -293,7 +322,11 @@ class CorpsInvariantsTest {
         val sommeil = Posture.Sommeil.reglage()
         assertEquals("Le sommeil réutilise veille", Expression.VEILLE, sommeil.expression)
         assertTrue("Des yeux fermés se voient : le panneau reste allumé", sommeil.panneauAllume)
-        assertTrue("Le sommeil ne bouge pas les bras", sommeil.ouvertureBrasGauche == OUVERTURE_REPOS)
+        assertTrue(
+            "Le geste de désignation reste neutre : c'est la pose empruntée qui bouge les bras",
+            sommeil.ouvertureBrasGauche == OUVERTURE_REPOS,
+        )
+        assertTrue("Le sommeil demande sa pose empruntée", sommeil.sommeil)
     }
 
     /**
@@ -380,6 +413,26 @@ class CorpsInvariantsTest {
      * garde-fou 1 du §6 tient à la lettre** : la borne n'est pas dépassée, elle est **atteinte**, et
      * elle l'est symétriquement — un seul bras à cette hauteur serait un salut.
      */
+    /**
+     * ⭐ **Les bras levés de l'arrivée à la crise** *(demande de Xavier, 16/08/2026)* : ils sortent
+     * pointés vers le haut, puis s'affaissent sur le bouton. 🔴 **C'est un état de passage, et le
+     * test tient les deux bouts** — la pose levée est bien au-dessus de l'horizontale, et **la
+     * posture, elle, rend toujours l'horizontale** : rien ne reste levé à l'arrêt.
+     */
+    @Test
+    fun `les bras leves de la crise ne sont qu'un passage`() {
+        assertTrue(
+            "Les bras doivent partir au-dessus de l'horizontale",
+            OUVERTURE_BRAS_LEVES > OUVERTURE_HORIZONTALE,
+        )
+        assertEquals(
+            "La pose tenue reste l'horizontale, pas la levée",
+            OUVERTURE_HORIZONTALE,
+            Posture.Accoude.reglage().ouvertureBrasGauche,
+            0f,
+        )
+    }
+
     @Test
     fun `accoude pose les deux bras sur la ligne des epaules`() {
         val accoude = Posture.Accoude.reglage()
@@ -519,13 +572,22 @@ class CorpsInvariantsTest {
         assertEquals("Le ventre est sur l'axe", AXE, CENTRE_VENTRE.x, 0.2f)
     }
 
+    /**
+     * ⭐ **Vers le haut uniquement** (demande de Xavier, 16/08/2026) : plus de rétraction en
+     * largeur, et la tête comme les bras suivent le sommet du ventre pour rester à la même hauteur
+     * de lui qu'au repos ([RigKokoro.decalageRespirationHaut]).
+     */
     @Test
     fun `la respiration reste dans l'amplitude annoncee`() {
         val expiration = RigKokoro(visage = Visage.de(Expression.NEUTRE), respiration = 0f)
         val inspiration = RigKokoro(visage = Visage.de(Expression.NEUTRE), respiration = 1f)
         assertEquals(1f, expiration.etirementCorps, 0f)
         assertEquals(1f + AMPLITUDE_HAUTEUR, inspiration.etirementCorps, 1e-6f)
-        assertEquals(1f - AMPLITUDE_LARGEUR, inspiration.retractionCorps, 1e-6f)
+        assertEquals(0f, expiration.decalageRespirationHaut, 0f)
+        assertTrue(
+            "La tête et les bras montent quand le ventre grossit",
+            inspiration.decalageRespirationHaut < 0f,
+        )
     }
 
     /**
@@ -533,11 +595,11 @@ class CorpsInvariantsTest {
      * période. Deux périodes distinctes feraient battre le vol contre le souffle — un rythme lent,
      * donc quelque chose à décoder. Le test tient la phase pour unique, comme le code, et vérifie
      * ce qu'on en tire : le cycle se referme, il ne descend jamais sous la pose dessinée, il monte
-     * de 3 % de la hauteur, et les deux mouvements ne culminent jamais ensemble.
+     * de 9 % de la hauteur, et les deux mouvements ne culminent jamais ensemble.
      */
     @Test
     fun `la levitation bat sur l'horloge de la respiration`() {
-        assertEquals(0.03f * HAUTEUR_PERSONNAGE, LEVITATION_AMPLITUDE, PRECISION)
+        assertEquals(0.09f * HAUTEUR_PERSONNAGE, LEVITATION_AMPLITUDE, PRECISION)
         assertEquals(PI.toFloat() / 2f, LEVITATION_DEPHASAGE, PRECISION)
 
         val hauteurs = (0..TOUR).map { levitation(phase(it)) }
@@ -616,16 +678,18 @@ class CorpsInvariantsTest {
     }
 
     /**
-     * 🔴 §1.3 : l'ombre dit la hauteur de vol, **et rien d'autre**. Elle est posée au sol du dessin
-     * — le bas des pieds —, très aplatie, large comme le corps, et elle tient dans la vue.
+     * 🔴 §1.3 : l'ombre dit la hauteur de vol, **et rien d'autre**. Elle est posée **un peu sous**
+     * le sol du dessin *(demande de Xavier, 16/08/2026 : il la touchait avec ses pieds)*, très
+     * aplatie, large comme le corps, et elle tient dans la vue.
      *
-     * 🔴 **Son opacité est une valeur, pas une animation** : rien dans [Ombre] ne dépend du temps,
-     * donc rien ne peut pulser. C'est le type qui porte l'invariant, pas la vigilance.
+     * ⭐ **Son opacité varie avec la hauteur, et rien d'autre** *(16/08/2026)* — une fonction pure de
+     * [RigKokoro.decalage], donc toujours la même à hauteur égale : rien n'y pulse tout seul.
      */
     @Test
-    fun `l'ombre est posee au sol et ne dit rien d'autre`() {
+    fun `l'ombre est posee un peu sous le sol et ne dit rien d'autre que la hauteur`() {
         val ombre = Ombre()
-        assertEquals("L'ombre est posée au sol du dessin", BAS_PIEDS, ombre.sol, 0f)
+        assertEquals("L'ombre est posée sous le sol du dessin", BAS_PIEDS + DECALAGE_SOL_OMBRE, ombre.sol, 0f)
+        assertTrue("Elle ne touche plus les pieds", ombre.sol > BAS_PIEDS)
         assertEquals(
             "L'empreinte au sol est celle des épaules",
             (EPAULE_DROITE.x - EPAULE_GAUCHE.x) / 2f,
@@ -637,7 +701,14 @@ class CorpsInvariantsTest {
             "L'ombre déborde de la vue",
             ombre.sol + ombre.demiLargeur * ombre.aplatissement <= HAUTEUR_VUE,
         )
-        assertTrue("L'opacité reste discrète", ombre.opacite > 0f && ombre.opacite < 0.3f)
+        assertTrue(
+            "Posé, il est le plus sombre ; loin, le plus transparent",
+            ombre.opaciteA(0f) > ombre.opaciteA(-LEVITATION_AMPLITUDE),
+        )
+        assertTrue(
+            "L'opacité reste discrète aux deux bouts",
+            ombre.opaciteA(0f) < 0.3f && ombre.opaciteA(-LEVITATION_AMPLITUDE) > 0f,
+        )
 
         assertNull("Ce qui ne vole pas n'a pas d'ombre", Vol.AUCUN.ombre())
         assertEquals("Le vol porte son ombre", Ombre(), Vol.LEVITATION.ombre())

@@ -1,8 +1,15 @@
 package io.allonsy.kokoro.ui
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
@@ -15,6 +22,8 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlin.math.PI
+import kotlin.math.sin
 
 /**
  * Les ornements — **du décor pur** (`companion/INTERFACE.md` §4.2).
@@ -49,6 +58,15 @@ fun Coeur(modifier: Modifier = Modifier, taille: Dp = 20.dp) {
     }
 }
 
+/** Le tour complet du chapelet des Zzz — chacun a son tour, avec un décalage sur le suivant. */
+private const val ZZZ_CYCLE_MILLIS = 1_800
+
+/**
+ * Le décalage entre deux Zzz, en fraction du cycle — **le même principe que le texte de chargement
+ * de Claude** : une vague de clarté qui passe d'un élément au suivant, jamais un battement commun.
+ */
+private const val ZZZ_DECALAGE = 1f / 3f
+
 /**
  * Les Zzz du sommeil — `PRESENCE.md` §4.5.
  *
@@ -56,9 +74,10 @@ fun Coeur(modifier: Modifier = Modifier, taille: Dp = 20.dp) {
  * l'état vide reste affiché sous eux : ne pas les voir, ou ne pas les comprendre, ne fait donc rien
  * perdre.
  *
- * 🔴 **Ils ne clignotent pas et ne montent pas.** Un Zzz qui pulse serait un mouvement continu dans
- * le champ (§4.3), donc un rythme à décoder. Ils **paraissent en fondu et se tiennent** — c'est
- * l'appelant qui porte le fondu, parce que c'est lui qui sait quand le sommeil commence.
+ * ⭐ **Chacun fond et s'efface à son tour, avec un décalage** *(demande de Xavier, 16/08/2026)* —
+ * comme un texte de chargement dont la clarté se déplace mot après mot. Ils **paraissent d'abord en
+ * fondu, à l'appel** — c'est l'appelant qui porte cette entrée, parce que c'est lui qui sait quand
+ * le sommeil commence.
  *
  * 🔴 **Aucune lettre n'est écrite ici** : ce sont trois tracés, comme le cœur et l'étincelle. Le
  * décor ne porte jamais de texte (**P3**).
@@ -66,22 +85,33 @@ fun Coeur(modifier: Modifier = Modifier, taille: Dp = 20.dp) {
 @Composable
 fun Zzz(modifier: Modifier = Modifier, taille: Dp = 26.dp) {
     val palette = LocalPaletteKokoro.current
-    Canvas(modifier.size(taille)) { zzz(palette.contour, TRAIT_ORNEMENT.toPx()) }
+    val phase by rememberInfiniteTransition(label = "zzz").animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(ZZZ_CYCLE_MILLIS, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart,
+        ),
+        label = "zzz-phase",
+    )
+    Canvas(modifier.size(taille)) { zzz(palette.contour, TRAIT_ORNEMENT.toPx(), phase) }
 }
 
 /** Trois Z qui s'éloignent de la tête en grandissant — l'ordre du plus petit au plus grand. */
-private fun DrawScope.zzz(couleur: Color, trait: Float) {
+private fun DrawScope.zzz(couleur: Color, trait: Float, phase: Float) {
     val poses = listOf(
         Offset(0.00f, 0.72f) to 0.28f,
         Offset(0.28f, 0.36f) to 0.34f,
         Offset(0.56f, 0.00f) to 0.42f,
     )
-    poses.forEach { (coin, part) ->
+    poses.forEachIndexed { rang, (coin, part) ->
         val cote = part * size.minDimension
         val origine = Offset(coin.x * size.width, coin.y * size.height)
+        val decale = ((phase - rang * ZZZ_DECALAGE).mod(1f))
+        val alpha = (sin(decale * 2f * PI.toFloat()) + 1f) / 2f
         drawPath(
             path = lettreZ(origine, cote),
-            color = couleur,
+            color = couleur.copy(alpha = alpha),
             style = Stroke(
                 width = trait,
                 cap = StrokeCap.Round,

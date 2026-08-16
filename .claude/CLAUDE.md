@@ -14,9 +14,10 @@
 - **Toujours utiliser bash, jamais PowerShell.**
 - **Toujours charger la skill `ay-typescript`** avant de toucher ou d'évaluer du TypeScript / JavaScript — écriture, revue de PR, application de corrections. **Aucune exception**, pas même pour un « petit » diff.
 - **Le rôle et le nom ne se confondent pas** : les rôles sont `psy` · `superviseur` · `companion` · `patient` · `aidant` ; les noms sont **Claude Psy** · **Claude Superviseur** · **Kokoro** · **Xavier** · **Chourouk**. Un répertoire porte un rôle ; une phrase clinique nomme qui agit.
+- 🔴 **Tout fichier de code ne contient pas de commentaire fait pour Xavier mais uniquement pour Claude dans le cas où c'est vraiement necessaire.**
 - 🔴 **Tout fichier markdown écrit par le dispositif est concis, actionnable et acté** — ces fichiers sont rechargés en entier à chaque intervention, leur poids se paie en tokens à chaque session. Concrètement :
-  - **Pas de version ni de changelog dans le corps du texte.** Le suivi des versions est le rôle de git (`git log`, `git blame`), pas d'un en-tête `v2.2` ou d'une section « historique des modifications ». Un fichier décrit ce qui est vrai *maintenant*.
-  - **Pas de section « reste à trancher » qui s'accumule.** Une question ouverte se tranche avant d'écrire, ou se pose une fois à l'utilisateur — elle ne vit pas indéfiniment comme note en bas de fichier. Ce qui est décidé s'écrit comme un fait, pas comme une option en attente.
+  - **Pas de version ni de changelog dans le corps du texte.**, pas d'un en-tête `v2.2` ou d'une section « historique des modifications ». Un fichier décrit ce qui est vrai *maintenant*.
+  - **Pas de section « reste à trancher » qui s'accumule.** Une question ouverte se tranche avant d'écrire, ou se pose une fois à l'utilisateur — elle ne vit pas indéfiniment comme note en bas de fichier.
   - **Pas de récit du cheminement.** On écrit la conclusion, pas l'historique de la réflexion qui y a mené — sauf quand le *pourquoi* est lui-même l'information utile (ex. un invariant clinique dont l'origine évite une régression).
   - **Ne s'applique pas** aux documents source non écrits par le dispositif (`patient/ressources/`, `psy/docs/references/`) ni aux constats datés (`seances/`, `mesures/`, `supervision/`, `briefs/`) — un compte-rendu d'un jour donné est déjà acté par nature, ce n'est pas lui qu'on flatte.
 
@@ -57,7 +58,7 @@ Ils viennent des contraintes de Xavier *(détail : [`patient/README.md`](../pati
 
 > 🔴 **La fiche de crise qui fait foi est [`psy/docs/protocoles/crise-escalade.md`](../psy/docs/protocoles/crise-escalade.md)** — `profil.md` §4 n'en est que le résumé.
 >
-> 🔴 **Les numéros d'appel d'urgence — 15, 112, 114 — ont été retirés de tout le dispositif**, à la demande de Xavier : aucun n'a jamais servi · ⭐ **une syncope vasovagale ne s'appelle pas, elle s'allonge** — proposer un appel au lieu de la tension appliquée était une erreur d'orientation · l'affichage permanent était anxiogène. **Ne jamais les réintroduire, sous aucune forme, dans aucune surface.**
+> 🔴 **Les numéros d'appel d'urgence — 15, 112, 114 — ont été retirés de tout le dispositif**, à la demande de Xavier : aucun n'a jamais servi · ⭐ **une syncope vasovagale ne s'appelle pas, elle s'allonge** · l'affichage permanent était anxiogène. **Ne jamais les réintroduire, sous aucune forme, dans aucune surface.**
 >
 > ⭐ **Le 3114 est le seul numéro conservé** — prévention du suicide, déclenché **uniquement** par une idéation suicidaire ou une détresse aiguë, **jamais affiché en ouverture ni « au cas où », et jamais dans Kokoro.** En shutdown il est inaccessible : c'est un numéro de téléphone. Voies sans parole : mot-code « shutdown », canal écrit.
 
@@ -117,12 +118,4 @@ Depuis la racine, **scopés par rôle** ; les chemins sont résolus par rapport 
 | [`patient/`](../patient/README.md) | **Xavier** — `ressources/`, ses documents source. 🔴 **`ressources/originales/` est une archive : jamais une entrée** |
 | [`aidant/`](../aidant/README.md) | **Chourouk** — `ressources/fiche-chourouk.md`, la seule chose écrite qu'elle reçoit |
 
-🔴 **Il n'y a pas de `ressources/` ni de `scripts/` à la racine.** Un fichier qui n'appartient à aucun rôle n'a pas de domicile — c'est le signe qu'il faut nommer son rôle, pas créer un fourre-tout.
-
-⭐ **Deux archives `originales/` existent et ne se confondent pas** : `patient/ressources/originales/` *(documents de Xavier)* et `psy/docs/references/originales/` *(littérature)*. **Ne jamais lire leurs fichiers comme entrée** — les documents exploitables sont les Markdown à côté.
-
----
-
-## Compétences disponibles
-
-`ay-typescript` *(patterns de typage)* · `ay-functional` *(immutabilité, composition)* · `ay-refactor` *(méthodologie)* · `ay-api` *(design REST / interfaces)* · `ay-12factor` *(services déployables)* · `/ay-teach [topic]` *(apprentissage structuré)*.
+⭐ **Deux archives `patient/ressources/originales/` et `psy/docs/references/originales/` existent et ne se confondent pas**. **Ne jamais lire leurs fichiers comme entrée** — les documents exploitables sont les Markdown à côté.

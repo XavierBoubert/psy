@@ -112,6 +112,7 @@ fun MondeKokoro(
     accesPerdu: Boolean = false,
     accuse: String? = null,
     onAccuseFini: () -> Unit = {},
+    debug: DebugMonde = DebugMonde(),
 ) {
     var position by remember { mutableIntStateOf(0) }
     val perchoirs = rememberPerchoirs()
@@ -147,6 +148,7 @@ fun MondeKokoro(
      * par la couche du bas et relu par celle du haut — **un seul rig, un seul point, deux passes.**
      */
     val bras = rememberPasseDesBras()
+    val entier = rememberEntierAnime()
 
     /**
      * 🔴 **Le bouton *retour* du téléphone ferme le panneau, il ne quitte pas l'application.** Sans
@@ -195,10 +197,11 @@ fun MondeKokoro(
         Decor(camera = { cameraDuDecor(parallaxe, vue.floatValue, inclinaison.floatValue) }, palette = palette)
 
         /**
-         * 🔴 **L'habitant est peint ici, et l'ordre fait tout** (`PRESENCE.md` §1.3) : après le
-         * décor, **avant** les écrans. C'est la seule chose qui garantisse qu'il ne passe jamais
-         * devant un texte et qu'aucune ombre ne tombe sur un panneau — les cartes le recouvrent
-         * mécaniquement. Le monter d'un cran suffirait à casser les deux d'un coup.
+         * ⭐ **Ce qui se peint ici, désormais, ne concerne que la crise** *(16/08/2026, demande de
+         * Xavier)* : ailleurs, [Habitant] ne fait plus que calculer et publier — c'est
+         * [HabitantSurInterface], plus bas dans cette couche, qui peint le personnage entier
+         * **par-dessus** le contenu des écrans. Seule la crise garde son corps peint ici, sous le
+         * bouton *Mot code* ; ses bras viennent d'une seconde passe, plus bas.
          *
          * ⭐ **Il suit l'écran posé, pas la caméra** : c'est le changement de [position] qui le fait
          * transiter, et il part avec son retard sur le décor.
@@ -210,6 +213,7 @@ fun MondeKokoro(
             sortie = sortie,
             largeur = taille.width,
             bras = bras,
+            entier = entier,
         )
 
         positionsAutour(ancre).forEach { rang ->
@@ -236,15 +240,25 @@ fun MondeKokoro(
                         },
                         onFonction = onFonction,
                         onReglages = onReglages,
+                        debug = debug,
                     )
                 }
             }
         }
 
         /**
-         * 🔴 **La seule chose du personnage qui passe devant l'interface**, et elle est bornée à
-         * l'écran de crise : ses bras, posés sur l'arête du bouton *Mot code*. Partout ailleurs
-         * cette couche ne dessine rien.
+         * ⭐ **Kokoro flotte devant l'interface, partout sauf à la crise** *(demande de Xavier,
+         * 16/08/2026)* : le personnage entier, peint par-dessus le contenu des écrans qu'on vient de
+         * poser juste au-dessus. Cette couche ne dessine rien à la crise — [Habitant] n'y publie
+         * jamais [EtatEntier].
+         */
+        HabitantSurInterface(entier = entier)
+
+        /**
+         * 🔴 **La seconde passe de l'écran de crise** : ses bras, posés sur l'arête du bouton
+         * *Mot code*, peints par-dessus le bouton pendant que le corps reste dessous. Partout
+         * ailleurs cette couche ne dessine rien — [HabitantSurInterface], juste au-dessus, porte
+         * déjà le personnage entier.
          */
         BrasDeLHabitant(bras = bras)
 
@@ -301,6 +315,7 @@ private fun ContenuEcran(
     onOuvrir: (Etape) -> Unit,
     onFonction: (Fonction) -> Unit,
     onReglages: () -> Unit,
+    debug: DebugMonde,
 ) {
     when (ecran) {
         Ecran.THERAPIE -> ContenuTherapie(
@@ -313,10 +328,21 @@ private fun ContenuEcran(
                     is Ouverture.Detail -> onOuvrir(etape)
                 }
             },
+            onBasculerAffichage = debug.onBasculerAffichageTherapie,
         )
 
-        Ecran.DOCUMENTATION -> ContenuDocumentation(perchoirs = perchoirs)
-        Ecran.BILAN -> ContenuBilan(perchoirs = perchoirs)
+        Ecran.DOCUMENTATION -> ContenuDocumentation(
+            perchoirs = perchoirs,
+            videDebug = debug.documentationVide,
+            onBasculerVideDebug = debug.onBasculerDocumentationVide,
+        )
+
+        Ecran.BILAN -> ContenuBilan(
+            perchoirs = perchoirs,
+            videDebug = debug.bilanVide,
+            onBasculerVideDebug = debug.onBasculerBilanVide,
+        )
+
         Ecran.CRISE -> ContenuCriseDuMonde(
             perchoirs = perchoirs,
             contactNom = contactNom,
@@ -325,6 +351,19 @@ private fun ContenuEcran(
         )
     }
 }
+
+/**
+ * 🧪 Les bascules de test posées sur le monde — **jamais montrées hors build debug**
+ * ([io.allonsy.kokoro.BuildConfig.DEBUG]). Elles ne pilotent rien du dossier : elles forcent un
+ * affichage pour le comparer à l'écran, avant que **K5** ne branche de vraies données.
+ */
+data class DebugMonde(
+    val documentationVide: Boolean = true,
+    val bilanVide: Boolean = true,
+    val onBasculerAffichageTherapie: (aujourdhui: Boolean) -> Unit = {},
+    val onBasculerDocumentationVide: () -> Unit = {},
+    val onBasculerBilanVide: () -> Unit = {},
+)
 
 /**
  * L'étape ouverte, posée **au-dessus du monde entier** et non dans son écran : elle prend l'écran

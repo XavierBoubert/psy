@@ -1,5 +1,6 @@
 package io.allonsy.kokoro.monde
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -16,8 +17,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.allonsy.kokoro.R
@@ -117,9 +121,16 @@ fun sectionsTherapie(): List<Section> {
 private fun demarche(titre: Int, detail: Int): Etape =
     Etape(titre = stringResource(titre), ouverture = Ouverture.Detail(stringResource(detail)))
 
+/** Le rayon des coins de la bulle, et la taille de la queue qui pointe vers Kokoro. */
+private val BULLE_RAYON = 22.dp
+private val BULLE_QUEUE = 20.dp
+
+/** L'assombrissement du monde derrière la bulle — de quoi la détacher, jamais l'effacer. */
+private const val OPACITE_SCRIM = 0.28f
+
 /**
- * Une étape ouverte — **elle prend l'écran entier et se ferme d'une croix, jamais d'un geste**
- * (`companion/INTERFACE.md` §3.1).
+ * Une étape ouverte — **une bulle de dialogue, comme dans un RPG** *(16/08/2026, demande de
+ * Xavier)*, et elle se ferme d'une croix, jamais d'un geste (`companion/INTERFACE.md` §3.1).
  *
  * ⭐ **La croix est en haut à droite, comme sur tous les panneaux** *(15/08/2026, demande de
  * Xavier)*. Le bouton *Fermer* qui était en pied de page obligeait à descendre une fiche longue pour
@@ -133,7 +144,12 @@ private fun demarche(titre: Int, detail: Int): Etape =
  * manque et que ça se voie.
  *
  * ⭐ **C'est une bulle de discussion** (`PRESENCE.md` §1.1), donc elle porte le locuteur en bas à
- * gauche, avec l'expression `attentif` — *une étape est ouverte, un contenu est affiché*.
+ * gauche, avec l'expression `parle` — *Kokoro vient de se poser, la bouche entrouverte.*
+ *
+ * 🔴 **La bulle s'arrête au-dessus de Kokoro, elle ne l'occupe jamais** *(16/08/2026)* : elle n'est
+ * qu'un enfant de plus dans la colonne, posé avant la bande du locuteur — **sa hauteur s'arrête donc
+ * mécaniquement là où la bande commence**, sans le moindre calcul de position. Une queue pointe vers
+ * lui, en bas à gauche de la bulle, et le monde traversé reste visible, assombri, autour d'elle.
  *
  * 🔴 **Le bas de la page n'est plus dans les marges système**, et c'est ce qui coupe le personnage
  * **au bord de la dalle** plutôt qu'en plein panneau : ce qui manque de lui est hors de l'écran,
@@ -142,14 +158,12 @@ private fun demarche(titre: Int, detail: Int): Etape =
 @Composable
 fun PanneauEtape(titre: String, detail: String, locuteur: Boolean, onFermer: () -> Unit) {
     val palette = LocalPaletteKokoro.current
+    val brushBulle = Brush.verticalGradient(listOf(palette.panneauHaut, palette.panneauBas))
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .drawBehind {
-                drawRect(
-                    Brush.verticalGradient(listOf(palette.panneauHaut, palette.panneauBas)),
-                )
-            }
+            .background(palette.encre.copy(alpha = OPACITE_SCRIM))
             .windowInsetsPadding(
                 WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
             ),
@@ -166,9 +180,12 @@ fun PanneauEtape(titre: String, detail: String, locuteur: Boolean, onFermer: () 
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
+                .padding(horizontal = 20.dp)
+                .padding(bottom = 4.dp)
+                .drawBehind { dessinerBulle(brushBulle) }
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 26.dp)
-                .padding(top = 16.dp, bottom = 28.dp),
+                .padding(horizontal = 20.dp)
+                .padding(top = 20.dp, bottom = 24.dp),
         ) {
             Text(
                 text = titre,
@@ -178,6 +195,20 @@ fun PanneauEtape(titre: String, detail: String, locuteur: Boolean, onFermer: () 
             )
             Text(text = detail, style = TypoKokoro.lecture, color = palette.encre)
         }
-        Locuteur(expression = Expression.ATTENTIF, present = locuteur)
+        Locuteur(expression = Expression.PARLE, present = locuteur)
     }
+}
+
+/** La bulle : un rectangle arrondi, et une queue qui pointe vers Kokoro, en bas à gauche. */
+private fun DrawScope.dessinerBulle(brush: Brush) {
+    drawRoundRect(brush = brush, cornerRadius = CornerRadius(BULLE_RAYON.toPx()))
+
+    val queue = BULLE_QUEUE.toPx()
+    val chemin = Path().apply {
+        moveTo(queue * 0.6f, size.height - queue * 0.3f)
+        lineTo(queue * 0.1f, size.height + queue)
+        lineTo(queue * 1.8f, size.height - queue * 0.1f)
+        close()
+    }
+    drawPath(chemin, brush = brush)
 }
