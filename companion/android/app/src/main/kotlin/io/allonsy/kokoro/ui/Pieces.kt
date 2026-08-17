@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,7 +26,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -46,6 +49,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
@@ -62,6 +66,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import io.allonsy.kokoro.R
 import io.allonsy.kokoro.corps.Expression
+import io.allonsy.kokoro.corps.LARGEUR_BANDE_LOCUTEUR
 import io.allonsy.kokoro.corps.Locuteur
 import kotlinx.coroutines.delay
 import kotlin.math.cos
@@ -447,6 +452,111 @@ fun PageKokoro(
         )
 
         if (locuteur != null) Locuteur(expression = locuteur)
+    }
+}
+
+private val MARGE_PANNEAU = 20.dp
+private val BULLE_RAYON = 24.dp
+private val BULLE_QUEUE_LARGEUR = 34.dp
+private val BULLE_QUEUE_HAUTEUR = 20.dp
+private val BULLE_QUEUE_MORSURE = 6.dp
+
+private const val BULLE_QUEUE_POINTE = 0.42f
+
+// Le locuteur est centré dans sa bande : la pointe tombe donc sur l'axe du personnage sans dépendre de sa taille.
+private val BULLE_QUEUE_DECALAGE =
+    LARGEUR_BANDE_LOCUTEUR / 2f - MARGE_PANNEAU - BULLE_QUEUE_LARGEUR * BULLE_QUEUE_POINTE
+
+private const val OPACITE_SCRIM = 0.28f
+
+// Le panneau de toute ouverture de contexte (démarche, réglages, check-in, tension, phrase) : une seule forme,
+// une seule expression, jamais une page plein écran à bandeau — Xavier, 17/08/2026.
+@Composable
+fun PanneauDialogue(
+    titre: String,
+    onFermer: () -> Unit,
+    modifier: Modifier = Modifier,
+    ecart: Dp = 18.dp,
+    contenu: @Composable ColumnScope.() -> Unit,
+) {
+    val palette = LocalPaletteKokoro.current
+    val blocageScrim = remember { MutableInteractionSource() }
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            // Consomme l'appui, et rien d'autre : consommer aussi les mouvements annulerait la croix et le défilement
+            // du panneau lui-même, qui abandonnent leur geste dès qu'une consommation leur revient en passe Final.
+            .clickable(interactionSource = blocageScrim, indication = null, onClick = {})
+            .drawBehind { drawRect(palette.encre.copy(alpha = OPACITE_SCRIM)) }
+            .windowInsetsPadding(
+                WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
+            ),
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = MARGE_PANNEAU)
+                .padding(top = 14.dp),
+        ) {
+            Croix(onFermer = onFermer, modifier = Modifier.align(Alignment.CenterEnd))
+        }
+
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .padding(horizontal = MARGE_PANNEAU),
+        ) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .matiere(palette = palette, rayon = BULLE_RAYON)
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = MARGE_PANNEAU)
+                    .padding(top = 20.dp, bottom = 24.dp + EPAISSEUR),
+                verticalArrangement = Arrangement.spacedBy(ecart),
+            ) {
+                Text(
+                    text = titre,
+                    style = TypoKokoro.titre,
+                    color = palette.encre,
+                )
+                contenu()
+            }
+
+            // Remontée dans la bulle du relief plus la morsure : la couture disparaît sous le recouvrement.
+            QueueBulle(
+                modifier = Modifier.offset(
+                    x = BULLE_QUEUE_DECALAGE,
+                    y = -(EPAISSEUR + BULLE_QUEUE_MORSURE),
+                ),
+            )
+        }
+
+        Locuteur(expression = Expression.PARLE, modifier = Modifier.align(Alignment.Start))
+    }
+}
+
+// Triangle porté par le même relief que la bulle ; son bord haut, caché sous elle, ne porte donc pas de trait.
+@Composable
+private fun QueueBulle(modifier: Modifier = Modifier) {
+    val palette = LocalPaletteKokoro.current
+    Canvas(modifier.size(width = BULLE_QUEUE_LARGEUR, height = BULLE_QUEUE_HAUTEUR + EPAISSEUR)) {
+        val relief = EPAISSEUR.toPx()
+        val pointe = Offset(size.width * BULLE_QUEUE_POINTE, size.height - relief)
+        val chemin = Path().apply {
+            moveTo(0f, 0f)
+            lineTo(pointe.x, pointe.y)
+            lineTo(size.width, 0f)
+            close()
+        }
+        translate(top = relief) { drawPath(chemin, palette.contour) }
+        drawPath(path = chemin, color = palette.panneauBas)
+        val trait = CONTOUR.toPx()
+        drawLine(palette.contour, Offset(0f, 0f), pointe, trait, StrokeCap.Round)
+        drawLine(palette.contour, Offset(size.width, 0f), pointe, trait, StrokeCap.Round)
     }
 }
 

@@ -17,8 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import io.allonsy.kokoro.R
-import io.allonsy.kokoro.journal.JournalActivity
+import io.allonsy.kokoro.monde.EXTRA_OUVRIR_CHECKIN
 import io.allonsy.kokoro.monde.Fonction
+import io.allonsy.kokoro.monde.MondeActivity
 import io.allonsy.kokoro.reglages.REGLAGES_INITIAUX
 import io.allonsy.kokoro.reglages.estNuit
 import io.allonsy.kokoro.reglages.lireReglages
@@ -124,7 +125,12 @@ class CriseActivity : ComponentActivity() {
 
     private fun ouvrir(fonction: Fonction) {
         when (fonction) {
-            Fonction.CHECK_IN -> startActivity(Intent(this, JournalActivity::class.java))
+            // JournalActivity n'existe plus : le check-in est un panneau interne à MondeActivity.
+            Fonction.CHECK_IN -> startActivity(
+                Intent(this, MondeActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    .putExtra(EXTRA_OUVRIR_CHECKIN, true),
+            )
             Fonction.MOT_CODE -> envoyerLeMotCode()
             Fonction.TENSION -> ecran.value = EcranCrise.Tension
             Fonction.PHRASE -> ecran.value = EcranCrise.Phrase

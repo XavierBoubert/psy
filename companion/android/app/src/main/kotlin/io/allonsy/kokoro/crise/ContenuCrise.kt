@@ -81,7 +81,7 @@ private fun EcranMotCode(
     val direct = remember { envoiDirectDisponible(context) }
     val heure = remember(envoi) { LocalTime.now().format(FORMAT_HEURE) }
 
-    PageCrise(titre = stringResource(R.string.mot_code_titre), onFermer = onFermer) {
+    PanneauCrise(titre = stringResource(R.string.mot_code_titre), onFermer = onFermer) {
         Explication(stringResource(R.string.mot_code_destinataire, reglages.contactNom))
         EnGrand(reglages.motCode)
 
@@ -118,7 +118,7 @@ private fun EcranMotCode(
 @Composable
 private fun EcranPhrase(onFermer: () -> Unit) {
     val palette = LocalPaletteKokoro.current
-    PageCrise(titre = stringResource(R.string.phrase_titre), onFermer = onFermer) {
+    PanneauCrise(titre = stringResource(R.string.phrase_titre), onFermer = onFermer) {
         PanneauExtrude(modifier = Modifier.fillMaxWidth()) {
             Text(
                 text = stringResource(R.string.phrase_texte),

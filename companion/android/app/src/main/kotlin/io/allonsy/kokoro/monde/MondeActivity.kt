@@ -9,11 +9,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import io.allonsy.kokoro.MainActivity
 import io.allonsy.kokoro.R
+import io.allonsy.kokoro.alerte.creerCanalAlerte
 import io.allonsy.kokoro.crise.ACTION_MOT_CODE_ENVOYE
 import io.allonsy.kokoro.crise.CriseActivity
 import io.allonsy.kokoro.crise.ECRAN_MOT_CODE
@@ -27,11 +28,24 @@ import io.allonsy.kokoro.crise.tenterMotCode
 import io.allonsy.kokoro.decor.DECOR_JOUR
 import io.allonsy.kokoro.decor.DECOR_NUIT
 import io.allonsy.kokoro.decor.PaletteDecor
-import io.allonsy.kokoro.journal.JournalActivity
+import io.allonsy.kokoro.journal.Champ
+import io.allonsy.kokoro.journal.Checkin
+import io.allonsy.kokoro.journal.EtapeJournal
+import io.allonsy.kokoro.journal.QUESTIONS
+import io.allonsy.kokoro.journal.ResultatEcriture
 import io.allonsy.kokoro.journal.checkinDuJourExiste
+import io.allonsy.kokoro.journal.cheminAffichable
+import io.allonsy.kokoro.journal.ecrireCheckin
+import io.allonsy.kokoro.journal.enregistrerDossier
+import io.allonsy.kokoro.journal.intentChoisirDossier
 import io.allonsy.kokoro.journal.jourCourant
+import io.allonsy.kokoro.journal.lireDossier
+import io.allonsy.kokoro.journal.valeursReprises
+import io.allonsy.kokoro.reglages.EtatAutorisations
 import io.allonsy.kokoro.reglages.REGLAGES_INITIAUX
+import io.allonsy.kokoro.reglages.ecrireReglages
 import io.allonsy.kokoro.reglages.estNuit
+import io.allonsy.kokoro.reglages.lireAutorisations
 import io.allonsy.kokoro.reglages.lireReglages
 import io.allonsy.kokoro.reglages.minuteCourante
 import io.allonsy.kokoro.ui.ThemeMonde
@@ -39,6 +53,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalTime
+
+// Depuis CriseActivity (JournalActivity n'existe plus) : demande d'ouvrir directement le panneau check-in.
+const val EXTRA_OUVRIR_CHECKIN = "ouvrir_checkin"
 
 // Ne s'affiche jamais par-dessus le verrouillage : c'est CriseActivity qui porte cette déclaration dans le manifeste.
 class MondeActivity : ComponentActivity() {
@@ -52,6 +69,26 @@ class MondeActivity : ComponentActivity() {
     private val affichageForce = mutableStateOf<Boolean?>(null)
     private val documentationVide = mutableStateOf(true)
     private val bilanVide = mutableStateOf(true)
+
+    // Ex-MainActivity : la roue dentée ouvre désormais un panneau interne, plus une Activity.
+    private val autorisations = mutableStateOf(EtatAutorisations(false, false, false))
+    private val dossier = mutableStateOf<String?>(null)
+
+    // Ex-JournalActivity : même raison — le check-in est un panneau interne.
+    private val etapeCheckin = mutableStateOf<EtapeJournal>(EtapeJournal.Repondre(0))
+    private val checkin = mutableStateOf(Checkin.vide(""))
+    private val repris = mutableStateOf<Map<Champ, Double>>(emptyMap())
+    private val ouvrirCheckinDemande = mutableStateOf(false)
+
+    private val choixDossier = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult(),
+    ) { resultat ->
+        resultat.data?.data?.let { arbre ->
+            enregistrerDossier(this, arbre)
+            relire()
+            demarrerCheckin()
+        }
+    }
 
     private val accuseEnvoi = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -74,7 +111,10 @@ class MondeActivity : ComponentActivity() {
             ContextCompat.RECEIVER_NOT_EXPORTED,
         )
         creerCanalAcces(this)
+        creerCanalAlerte(this)
         relire()
+        demarrerCheckin()
+        lireExtras(intent)
         setContent {
             ThemeMonde(nuit = nuit.value) {
                 MondeKokoro(
@@ -92,7 +132,29 @@ class MondeActivity : ComponentActivity() {
                         ),
                     ),
                     onFonction = { ouvrir(it) },
-                    onReglages = { startActivity(Intent(this, MainActivity::class.java)) },
+                    donneesReglages = DonneesReglages(
+                        autorisations = autorisations.value,
+                        reglages = reglages.value,
+                        dossier = dossier.value,
+                        onRelire = { relire() },
+                        onEnregistrer = {
+                            ecrireReglages(this, it)
+                            relire()
+                        },
+                        onChoisirDossier = { choixDossier.launch(intentChoisirDossier()) },
+                    ),
+                    donneesCheckin = DonneesCheckin(
+                        etape = etapeCheckin.value,
+                        checkin = checkin.value,
+                        repris = repris.value,
+                        onRepondre = { champ, valeur -> repondreCheckin(champ, valeur) },
+                        onNote = { enregistrerCheckin(checkin.value.copy(notes = it)) },
+                        onChoisirDossier = { choixDossier.launch(intentChoisirDossier()) },
+                        onArreter = { enregistrerCheckin(checkin.value) },
+                        onOuverture = { demarrerCheckin() },
+                    ),
+                    ouvrirCheckin = ouvrirCheckinDemande.value,
+                    onCheckinOuvert = { ouvrirCheckinDemande.value = false },
                     parallaxe = reglages.value.parallaxe,
                     envoiEnCours = envoiEnCours.value,
                     accesPerdu = accesPerdu.value,
@@ -113,6 +175,12 @@ class MondeActivity : ComponentActivity() {
         }
     }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        lireExtras(intent)
+    }
+
     override fun onResume() {
         super.onResume()
         relire()
@@ -127,6 +195,8 @@ class MondeActivity : ComponentActivity() {
         nuit.value = nuitDuMoment(this)
         reglages.value = lireReglages(this)
         accesPerdu.value = !publierAccesCrise(this)
+        autorisations.value = lireAutorisations(this)
+        dossier.value = cheminAffichable(this, lireDossier(this))
         relireLeSejour()
     }
 
@@ -139,9 +209,43 @@ class MondeActivity : ComponentActivity() {
         }
     }
 
+    // demarrerCheckin() n'est pas rejoué ici : MondeKokoro le fait déjà via onOuverture en ouvrant le panneau.
+    private fun lireExtras(depuis: Intent) {
+        if (depuis.getBooleanExtra(EXTRA_OUVRIR_CHECKIN, false)) {
+            ouvrirCheckinDemande.value = true
+        }
+    }
+
+    // Même logique que l'ex-JournalActivity.demarrer() : rejouée à chaque ouverture, plus une seule fois au lancement.
+    private fun demarrerCheckin() {
+        val jour = jourCourant()
+        checkin.value = Checkin.vide(jour)
+        etapeCheckin.value = when {
+            lireDossier(this) == null -> EtapeJournal.DossierAbsent
+            checkinDuJourExiste(this, jour) -> EtapeJournal.DejaEcrit
+            else -> EtapeJournal.Repondre(0)
+        }
+        repris.value = if (etapeCheckin.value is EtapeJournal.Repondre) valeursReprises(this, jour) else emptyMap()
+    }
+
+    private fun repondreCheckin(champ: Champ, valeur: Double?) {
+        checkin.value = checkin.value.avec(champ, valeur)
+        val suivant = (etapeCheckin.value as? EtapeJournal.Repondre)?.index?.plus(1) ?: return
+        etapeCheckin.value = if (suivant < QUESTIONS.size) EtapeJournal.Repondre(suivant) else EtapeJournal.Note
+    }
+
+    private fun enregistrerCheckin(aEcrire: Checkin) {
+        etapeCheckin.value = when (val resultat = ecrireCheckin(this, aEcrire)) {
+            is ResultatEcriture.Ecrit -> EtapeJournal.Enregistre(resultat.nom)
+            ResultatEcriture.DossierAbsent -> EtapeJournal.DossierAbsent
+            ResultatEcriture.DejaEcritAujourdhui -> EtapeJournal.DejaEcrit
+            is ResultatEcriture.Echec -> EtapeJournal.Echoue(resultat.cause)
+        }
+    }
+
     private fun ouvrir(fonction: Fonction) {
         when (fonction) {
-            Fonction.CHECK_IN -> startActivity(Intent(this, JournalActivity::class.java))
+            Fonction.CHECK_IN -> Unit // Ouvert localement par MondeKokoro (panneau interne) ; jamais atteint depuis ici.
             Fonction.MOT_CODE -> envoyerLeMotCode()
             Fonction.TENSION -> startActivity(intentCrise(ECRAN_TENSION))
             Fonction.PHRASE -> startActivity(intentCrise(ECRAN_PHRASE))

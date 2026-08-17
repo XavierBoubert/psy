@@ -15,11 +15,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import io.allonsy.kokoro.R
-import io.allonsy.kokoro.corps.Expression
 import io.allonsy.kokoro.ui.BoutonEpais
 import io.allonsy.kokoro.ui.ChampTexte
 import io.allonsy.kokoro.ui.LocalPaletteKokoro
-import io.allonsy.kokoro.ui.PageKokoro
+import io.allonsy.kokoro.ui.PanneauDialogue
 import io.allonsy.kokoro.ui.TypoKokoro
 import java.util.Locale
 
@@ -30,12 +29,6 @@ sealed interface EtapeJournal {
     data object Note : EtapeJournal
     data class Enregistre(val nom: String) : EtapeJournal
     data class Echoue(val cause: String) : EtapeJournal
-}
-
-fun expressionDuJournal(etape: EtapeJournal): Expression = when (etape) {
-    EtapeJournal.DejaEcrit, is EtapeJournal.Enregistre -> Expression.CHALEUREUX
-    EtapeJournal.DossierAbsent, EtapeJournal.Note -> Expression.SEREIN
-    is EtapeJournal.Repondre, is EtapeJournal.Echoue -> Expression.SEREIN
 }
 
 @Composable
@@ -49,11 +42,9 @@ fun ContenuJournal(
     onArreter: () -> Unit,
     onFermer: () -> Unit,
 ) {
-    PageKokoro(
+    PanneauDialogue(
         titre = stringResource(R.string.journal_titre),
-        couleur = LocalPaletteKokoro.current.peche,
         ecart = 16.dp,
-        locuteur = expressionDuJournal(etape),
         onFermer = onFermer,
     ) {
         when (etape) {

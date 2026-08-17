@@ -48,10 +48,19 @@ fun EcranDeBord(
     defilant: Boolean,
     modifier: Modifier = Modifier,
     onReglages: (() -> Unit)? = null,
+    // Non-null seulement pour Thérapie : pose un plafond fixe (hors scroll) où Kokoro se cale en défilant la liste.
+    perchoirs: Perchoirs? = null,
+    // Un panneau recouvre l'écran : le scrim bloque l'appui, pas le glissement — le défilement se coupe donc ici.
+    fige: Boolean = false,
     contenu: @Composable ColumnScope.() -> Unit,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
-        BandeTitre(titre = titre, couleur = couleur, onReglages = onReglages)
+        BandeTitre(
+            titre = titre,
+            couleur = couleur,
+            onReglages = onReglages,
+            modifier = if (perchoirs == null) Modifier else Modifier.perchoir(perchoirs, Perchoir.PLAFOND),
+        )
 
         val bas = Modifier
             .weight(1f)
@@ -60,7 +69,7 @@ fun EcranDeBord(
         if (defilant) {
             Column(
                 modifier = bas
-                    .verticalScroll(rememberScrollState())
+                    .verticalScroll(rememberScrollState(), enabled = !fige)
                     .padding(horizontal = 20.dp)
                     .padding(top = 6.dp, bottom = 52.dp),
                 content = contenu,
@@ -81,6 +90,7 @@ fun ContenuTherapie(
     accesPerdu: Boolean,
     onReglages: () -> Unit,
     onOuvrir: (Etape) -> Unit,
+    fige: Boolean = false,
     onBasculerAffichage: (aujourdhui: Boolean) -> Unit = {},
 ) {
     EcranDeBord(
@@ -88,6 +98,8 @@ fun ContenuTherapie(
         couleur = LocalPaletteKokoro.current.menthe,
         defilant = true,
         onReglages = onReglages,
+        perchoirs = perchoirs,
+        fige = fige,
     ) {
         if (accesPerdu) {
             AvisAcces(onReglages = onReglages, modifier = Modifier.padding(top = 18.dp))

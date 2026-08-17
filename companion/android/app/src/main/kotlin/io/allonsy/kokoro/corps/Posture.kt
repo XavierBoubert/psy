@@ -17,6 +17,9 @@ sealed interface Posture {
 
     data object Notes : Posture
 
+    // Écran du bilan : ciseaux de bras alternés, intermittents — jamais un geste continu (§4.3).
+    data object Floss : Posture
+
     // Écran de crise : panneau toujours allumé — visage visible, jamais présence muette.
     data object Accoude : Posture
 
@@ -69,6 +72,7 @@ data class ReglagePosture(
     val inclinaisonTete: Float,
     val echelle: Float,
     val sommeil: Boolean = false,
+    val danse: Boolean = false,
 )
 
 fun Posture.reglage(): ReglagePosture = when (this) {
@@ -106,6 +110,13 @@ fun Posture.reglage(): ReglagePosture = when (this) {
         regard = -REGARD_DESIGNATION / 2f,
         abaissement = REGARD_BAISSE,
         ecriture = Cote.GAUCHE,
+    )
+
+    // Position de repos du ciseau ; l'amplitude et le rythme de la danse viennent de danseAnimee (AnimationCorps.kt).
+    Posture.Floss -> reglageDeBase(Expression.CHALEUREUX).copy(
+        ouvertureBrasGauche = DANSE_CENTRE,
+        ouvertureBrasDroit = DANSE_CENTRE,
+        danse = true,
     )
 
     // Regarde droit devant lui : rien ici ne connaît la position de Xavier.

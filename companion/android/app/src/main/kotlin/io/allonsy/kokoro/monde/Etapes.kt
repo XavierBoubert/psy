@@ -1,34 +1,11 @@
 package io.allonsy.kokoro.monde
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import io.allonsy.kokoro.R
-import io.allonsy.kokoro.corps.Expression
-import io.allonsy.kokoro.corps.Locuteur
-import io.allonsy.kokoro.ui.Croix
 import io.allonsy.kokoro.ui.LocalPaletteKokoro
+import io.allonsy.kokoro.ui.PanneauDialogue
 import io.allonsy.kokoro.ui.Teinte
 import io.allonsy.kokoro.ui.TypoKokoro
 
@@ -55,6 +32,13 @@ data class Section(
 )
 
 val ECRANS_VIDES = setOf(Ecran.DOCUMENTATION, Ecran.BILAN)
+
+// Tout ce qu'un bouton de Thérapie peut ouvrir dans le panneau de dialogue — une seule forme, trois contenus.
+sealed interface Contexte {
+    data class Demarche(val etape: Etape) : Contexte
+    data object Reglages : Contexte
+    data object Checkin : Contexte
+}
 
 @Composable
 fun sectionsTherapie(): List<Section> {
@@ -93,64 +77,10 @@ fun sectionsTherapie(): List<Section> {
 private fun demarche(titre: Int, detail: Int): Etape =
     Etape(titre = stringResource(titre), ouverture = Ouverture.Detail(stringResource(detail)))
 
-private val BULLE_RAYON = 22.dp
-private val BULLE_QUEUE = 20.dp
-
-private const val OPACITE_SCRIM = 0.28f
-
+// Simple appelant du panneau de dialogue partagé (ui/Pieces.kt) : une démarche n'est qu'un texte à lire.
 @Composable
-fun PanneauEtape(titre: String, detail: String, locuteur: Boolean, onFermer: () -> Unit) {
-    val palette = LocalPaletteKokoro.current
-    val brushBulle = Brush.verticalGradient(listOf(palette.panneauHaut, palette.panneauBas))
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(palette.encre.copy(alpha = OPACITE_SCRIM))
-            .windowInsetsPadding(
-                WindowInsets.safeDrawing.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
-            ),
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-                .padding(top = 14.dp),
-        ) {
-            Croix(onFermer = onFermer, modifier = Modifier.align(Alignment.CenterEnd))
-        }
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-                .padding(bottom = 4.dp)
-                .drawBehind { dessinerBulle(brushBulle) }
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 20.dp)
-                .padding(top = 20.dp, bottom = 24.dp),
-        ) {
-            Text(
-                text = titre,
-                style = TypoKokoro.titre,
-                color = palette.encre,
-                modifier = Modifier.padding(bottom = 20.dp),
-            )
-            Text(text = detail, style = TypoKokoro.lecture, color = palette.encre)
-        }
-        Locuteur(expression = Expression.PARLE, present = locuteur)
+fun PanneauEtape(titre: String, detail: String, onFermer: () -> Unit) {
+    PanneauDialogue(titre = titre, onFermer = onFermer) {
+        Text(text = detail, style = TypoKokoro.lecture, color = LocalPaletteKokoro.current.encre)
     }
-}
-
-private fun DrawScope.dessinerBulle(brush: Brush) {
-    drawRoundRect(brush = brush, cornerRadius = CornerRadius(BULLE_RAYON.toPx()))
-
-    val queue = BULLE_QUEUE.toPx()
-    val chemin = Path().apply {
-        moveTo(queue * 0.6f, size.height - queue * 0.3f)
-        lineTo(queue * 0.1f, size.height + queue)
-        lineTo(queue * 1.8f, size.height - queue * 0.1f)
-        close()
-    }
-    drawPath(chemin, brush = brush)
 }

@@ -38,6 +38,13 @@ private const val CLIGNEMENT_MORPHING_MILLIS = 80
 const val CLIGNEMENT_ATTENTE_MIN_MILLIS = 2_800L
 const val CLIGNEMENT_ATTENTE_MAX_MILLIS = 6_500L
 
+// Rythme d'une syllabe environ ; irrégulier pour la même raison que le clignement (§3).
+const val PARLE_ATTENTE_MIN_MILLIS = 90L
+const val PARLE_ATTENTE_MAX_MILLIS = 220L
+
+// Plus court que la syllabe la plus brève : la bouche atteint sa forme avant qu'on ne lui en demande une autre.
+const val PARLE_MORPHING_MILLIS = 70
+
 const val REGARD_LECTURE = 4f
 
 const val BALAYAGE_LIGNE_MILLIS = 3_000
@@ -55,6 +62,21 @@ const val ECRITURE_ARRET_MIN_MILLIS = 10_000L
 const val ECRITURE_ARRET_MAX_MILLIS = 20_000L
 
 const val ECRITURE_AMPLITUDE = 6f
+
+const val DANSE_ALLER_RETOUR_MILLIS = 260
+const val DANSE_GESTE_MILLIS = 2_600
+const val DANSE_ALLERS_RETOURS = DANSE_GESTE_MILLIS / DANSE_ALLER_RETOUR_MILLIS
+
+// Arrêt bien plus long que le geste, même logique que l'écriture (§4.3).
+const val DANSE_ARRET_MIN_MILLIS = 9_000L
+const val DANSE_ARRET_MAX_MILLIS = 18_000L
+
+// Centre et amplitude tiennent large dans la course des bras (§6) : [0°, 40°] ⊂ [-19,463°, 70,537°].
+const val DANSE_CENTRE = 20f
+const val DANSE_AMPLITUDE = 20f
+
+// Le buste roule à contretemps des bras : sans lui le ciseau se lit comme un écart, pas comme un floss.
+const val DANSE_ROULIS = 5f
 
 // null veut dire « celui de la posture », jamais « aucun » (PRESENCE.md §1.2).
 @Composable
@@ -80,6 +102,7 @@ fun rigAnime(
         inclinaisonTete = inclinaisonTete,
         echelle = echelle,
         sommeil = sommeil,
+        danse = danse,
         vol = vol,
     )
 }
@@ -99,6 +122,7 @@ fun rigAnime(
     inclinaisonTete: Float = 0f,
     echelle: Float = 1f,
     sommeil: Boolean = false,
+    danse: Boolean = false,
     vol: Vol = Vol.AUCUN,
     // L'amplitude tombe à zéro, jamais l'horloge : la couper figerait le ventre au hasard, avec un saut visible.
     respire: Boolean = true,
@@ -111,6 +135,7 @@ fun rigAnime(
     val battement = battementAnime()
     val mouvement = deplacementAnime(vol, battement)
     val geste = ecritureAnimee(actif = ecriture != null)
+    val ciseau = danseAnimee(actif = danse)
     val brasGauche by animateFloatAsState(ouvertureBrasGauche, transition(), label = "bras-gauche")
     val brasDroit by animateFloatAsState(ouvertureBrasDroit, transition(), label = "bras-droit")
     val piedGauche by animateFloatAsState(orbitePiedGauche, transition(), label = "pied-gauche")
@@ -127,8 +152,8 @@ fun rigAnime(
         visage = visage,
         panneauAllume = panneauAllume,
         respiration = souffle(respirationAnime()) * ampleur,
-        ouvertureBrasGauche = brasGauche * posture + geste.sur(ecriture, Cote.GAUCHE),
-        ouvertureBrasDroit = brasDroit * posture + geste.sur(ecriture, Cote.DROITE),
+        ouvertureBrasGauche = brasGauche * posture + geste.sur(ecriture, Cote.GAUCHE) + ciseau,
+        ouvertureBrasDroit = brasDroit * posture + geste.sur(ecriture, Cote.DROITE) - ciseau,
         orbitePiedGauche = piedGauche * posture,
         orbitePiedDroit = piedDroit * posture,
         poseBrasGauche = POSE_SOMMEIL_BRAS_GAUCHE.echelle(poseSommeil * posture).transformation,
@@ -139,7 +164,7 @@ fun rigAnime(
         abaissement = yeuxBaisses * posture,
         inclinaisonTete = teteInclinee,
         decalage = mouvement.decalage,
-        inclinaison = mouvement.inclinaison,
+        inclinaison = mouvement.inclinaison - ciseau * (DANSE_ROULIS / DANSE_AMPLITUDE),
         echelle = taille,
         ombre = vol.ombre(),
     )
@@ -184,8 +209,40 @@ private fun clignementAnime(expression: Expression, actif: Boolean): Boolean {
 @Composable
 private fun visageAnime(expression: Expression, yeuxFermes: Boolean): Visage = Visage(
     oeil = morphingAnime(if (yeuxFermes) OEIL_TRAIT else expression.oeil, ::dureeOeil),
-    bouche = morphingAnime(expression.bouche),
+    bouche = morphingAnime(
+        cible = boucheDeLaParole(expression, parleAnime(actif = expression == Expression.PARLE)),
+        duree = ::dureeBouche,
+    ),
 )
+
+// Sans ça la syllabe (90-220 ms) relançait un morphing de 800 ms jamais terminé : la bouche restait figée ouverte.
+private fun dureeBouche(depuis: Trace, vers: Trace): Int = when {
+    depuis == BOUCHE_OUVERTE || vers == BOUCHE_OUVERTE -> PARLE_MORPHING_MILLIS
+    else -> TRANSITION_MILLIS
+}
+
+// PARLE portait une bouche ouverte figée (air étonné) : elle alterne ouverte/fermée tant qu'il parle.
+private fun boucheDeLaParole(expression: Expression, bouchee: Boolean): Trace =
+    if (expression == Expression.PARLE && bouchee) BOUCHE_COURTE else expression.bouche
+
+@Composable
+private fun parleAnime(actif: Boolean): Boolean {
+    var bouchee by remember { mutableStateOf(false) }
+    LaunchedEffect(actif) {
+        bouchee = false
+        if (!actif) return@LaunchedEffect
+        var attente = 0L
+        while (true) {
+            attente = attenteParle(attente)
+            delay(attente)
+            bouchee = !bouchee
+        }
+    }
+    return bouchee
+}
+
+fun attenteParle(precedente: Long, alea: Random = Random): Long =
+    attenteIrreguliere(precedente, PARLE_ATTENTE_MIN_MILLIS, PARLE_ATTENTE_MAX_MILLIS, alea)
 
 @Composable
 private fun morphingAnime(
@@ -244,6 +301,36 @@ private fun allerRetour() =
     tween<Float>(ECRITURE_ALLER_RETOUR_MILLIS / 2, easing = FastOutSlowInEasing)
 
 private fun Float.sur(ecriture: Cote?, bras: Cote): Float = if (ecriture == bras) this else 0f
+
+fun attenteDanse(precedente: Long, alea: Random = Random): Long =
+    attenteIrreguliere(precedente, DANSE_ARRET_MIN_MILLIS, DANSE_ARRET_MAX_MILLIS, alea)
+
+// Une seule horloge pour les deux bras : ciseau positif ouvre le gauche et ferme le droit, jamais l'inverse.
+// Le geste passe avant l'arrêt : commencer par attendre 9 à 18 s revenait à ne jamais montrer la danse en arrivant.
+@Composable
+private fun danseAnimee(actif: Boolean): Float {
+    val ciseau = remember { Animatable(0f) }
+    LaunchedEffect(actif) {
+        if (!actif) {
+            ciseau.animateTo(0f, transition())
+            return@LaunchedEffect
+        }
+        var arret = 0L
+        while (true) {
+            repeat(DANSE_ALLERS_RETOURS) {
+                ciseau.animateTo(DANSE_AMPLITUDE, danseAllerRetour())
+                ciseau.animateTo(-DANSE_AMPLITUDE, danseAllerRetour())
+            }
+            ciseau.animateTo(0f, danseAllerRetour())
+            arret = attenteDanse(arret)
+            delay(arret)
+        }
+    }
+    return ciseau.value
+}
+
+private fun danseAllerRetour() =
+    tween<Float>(DANSE_ALLER_RETOUR_MILLIS / 2, easing = FastOutSlowInEasing)
 
 @Composable
 private fun balayageAnime(balayage: Balayage?): Float {

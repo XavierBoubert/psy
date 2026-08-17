@@ -285,7 +285,8 @@ val BOUCHE_SEMI = Trace(
 
 val BOUCHE_COURTE = Trace("bouche-courte", Forme.Segment(-6.4f, 0f, 6.4f, 0f))
 
-val BOUCHE_OUVERTE = Trace("bouche-ouverte", Forme.Ellipse(4.2f, 2.8f), epaisseur = 0f)
+// Plus haute que large : l'alternance avec BOUCHE_COURTE se lit à l'ouverture verticale, pas au rétrécissement.
+val BOUCHE_OUVERTE = Trace("bouche-ouverte", Forme.Ellipse(4.2f, 4.8f), epaisseur = 0f)
 
 val TRACES = listOf(
     OEIL_OVALE, OEIL_TRAIT, OEIL_ARC_HAUT, OEIL_ARC_BAS,
@@ -301,9 +302,6 @@ val EPAULE_DROITE = Ancre(159.283740f, 111.095252f)
 val BOUT_DU_BRAS = Ancre(64.254500f, 158.603500f)
 
 const val BAS_DE_LA_TETE = 90.845f
-
-// 🔴 les bras débordent de 11,5 unités sous le bouton à l'horizontale — coupe le calque des bras pour accoude
-const val DESCENTE_DU_BRAS_HORIZONTAL = 11.544f
 
 // point fixe de la rotation portée par la matrice de foot-right dans le SVG, pas une valeur choisie
 val CENTRE_VENTRE = Ancre(119.783517f, 137.708595f)

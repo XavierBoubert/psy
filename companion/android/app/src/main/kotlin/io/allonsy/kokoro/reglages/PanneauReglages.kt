@@ -1,4 +1,4 @@
-package io.allonsy.kokoro
+package io.allonsy.kokoro.reglages
 
 import android.Manifest
 import android.app.NotificationManager
@@ -7,12 +7,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
-import android.os.Bundle
 import android.provider.Settings
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -36,37 +32,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
-import io.allonsy.kokoro.alerte.creerCanalAlerte
+import io.allonsy.kokoro.R
 import io.allonsy.kokoro.alerte.programmerAlerteTest
-import io.allonsy.kokoro.corps.Expression
-import io.allonsy.kokoro.crise.creerCanalAcces
 import io.allonsy.kokoro.crise.publierAccesCrise
 import io.allonsy.kokoro.decor.capteurInclinaisonPresent
-import io.allonsy.kokoro.journal.cheminAffichable
-import io.allonsy.kokoro.journal.enregistrerDossier
-import io.allonsy.kokoro.journal.intentChoisirDossier
-import io.allonsy.kokoro.journal.lireDossier
-import io.allonsy.kokoro.reglages.Parallaxe
-import io.allonsy.kokoro.reglages.PlageNuit
-import io.allonsy.kokoro.reglages.REGLAGES_INITIAUX
-import io.allonsy.kokoro.reglages.Reglages
-import io.allonsy.kokoro.reglages.ecrireHeure
-import io.allonsy.kokoro.reglages.ecrireHeures
-import io.allonsy.kokoro.reglages.ecrireMinutes
-import io.allonsy.kokoro.reglages.ecrireReglages
-import io.allonsy.kokoro.reglages.estNuit
-import io.allonsy.kokoro.reglages.lireBorne
-import io.allonsy.kokoro.reglages.lireReglages
-import io.allonsy.kokoro.reglages.minuteCourante
 import io.allonsy.kokoro.ui.BoutonEpais
 import io.allonsy.kokoro.ui.ChampTexte
 import io.allonsy.kokoro.ui.Interrupteur
 import io.allonsy.kokoro.ui.LocalPaletteKokoro
-import io.allonsy.kokoro.ui.PageKokoro
 import io.allonsy.kokoro.ui.Pancarte
+import io.allonsy.kokoro.ui.PanneauDialogue
 import io.allonsy.kokoro.ui.PanneauExtrude
 import io.allonsy.kokoro.ui.Separateur
-import io.allonsy.kokoro.ui.ThemeMonde
 import io.allonsy.kokoro.ui.TypoKokoro
 
 private const val DELAI_TEST_MILLIS = 20_000L
@@ -78,61 +55,7 @@ data class EtatAutorisations(
     val smsAutorise: Boolean,
 )
 
-class MainActivity : ComponentActivity() {
-    private val autorisations = mutableStateOf(EtatAutorisations(false, false, false))
-    private val reglages = mutableStateOf(REGLAGES_INITIAUX)
-    private val dossier = mutableStateOf<String?>(null)
-    private val nuit = mutableStateOf(false)
-
-    private val choixDossier = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult(),
-    ) { resultat ->
-        resultat.data?.data?.let { arbre ->
-            enregistrerDossier(this, arbre)
-            relire()
-        }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        creerCanalAlerte(this)
-        creerCanalAcces(this)
-        relire()
-        publierAccesCrise(this)
-        setContent {
-            ThemeMonde(nuit = nuit.value) {
-                EcranReglages(
-                    autorisations = autorisations.value,
-                    reglages = reglages.value,
-                    dossier = dossier.value,
-                    onRelire = { relire() },
-                    onEnregistrer = {
-                        ecrireReglages(this, it)
-                        relire()
-                    },
-                    onChoisirDossier = { choixDossier.launch(intentChoisirDossier()) },
-                    onFermer = { finish() },
-                )
-            }
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        relire()
-        publierAccesCrise(this)
-    }
-
-    private fun relire() {
-        autorisations.value = lireAutorisations(this)
-        reglages.value = lireReglages(this)
-        dossier.value = cheminAffichable(this, lireDossier(this))
-        nuit.value = estNuit(reglages.value.nuit, minuteCourante())
-    }
-}
-
-private fun lireAutorisations(context: Context): EtatAutorisations {
+fun lireAutorisations(context: Context): EtatAutorisations {
     val gestionnaire = context.getSystemService(NotificationManager::class.java)
     val pleinEcran = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
         gestionnaire.canUseFullScreenIntent()
@@ -167,8 +90,9 @@ private fun ouvrirReglageNotifications(context: Context) {
     )
 }
 
+// Ouvert depuis la roue dentée de Thérapie, panneau interne à MondeActivity — plus une Activity séparée.
 @Composable
-private fun EcranReglages(
+fun PanneauReglages(
     autorisations: EtatAutorisations,
     reglages: Reglages,
     dossier: String?,
@@ -187,11 +111,9 @@ private fun EcranReglages(
         onResult = { onRelire() },
     )
 
-    PageKokoro(
+    PanneauDialogue(
         titre = stringResource(R.string.controle_titre),
-        couleur = LocalPaletteKokoro.current.beurre,
         ecart = 14.dp,
-        locuteur = Expression.SEREIN,
         onFermer = onFermer,
     ) {
         Section(stringResource(R.string.controle_section_contact))

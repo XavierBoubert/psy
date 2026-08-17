@@ -28,6 +28,7 @@ private val POSTURES = listOf(
     Posture.Pensif,
     Posture.Lecture,
     Posture.Notes,
+    Posture.Floss,
     Posture.Accoude,
     Posture.Sommeil,
 )
@@ -211,20 +212,53 @@ class CorpsInvariantsTest {
         POSTURES.forEach { posture ->
             val reglage = posture.reglage()
             val geste = if (reglage.ecriture == null) 0f else ECRITURE_AMPLITUDE
+            // Le ciseau de la danse écarte symétriquement les deux bras : il faut border les deux sens.
+            val danse = if (reglage.danse) DANSE_AMPLITUDE else 0f
             val membres = mapOf("gauche" to reglage.ouvertureBrasGauche, "droit" to reglage.ouvertureBrasDroit)
             membres.forEach membre@{ (cote, ouverture) ->
                 if (posture == Posture.Lecture && cote == "gauche") return@membre
                 assertTrue(
-                    "$posture ($cote) — le bras passe au-dessus de l'épaule : ${ouverture + geste}",
-                    ouverture + geste <= OUVERTURE_HORIZONTALE,
+                    "$posture ($cote) — le bras passe au-dessus de l'épaule : ${ouverture + geste + danse}",
+                    ouverture + geste + danse <= OUVERTURE_HORIZONTALE,
                 )
                 assertTrue(
-                    "$posture ($cote) — le bras croise le corps : $ouverture",
-                    ouverture >= OUVERTURE_MINIMALE,
+                    "$posture ($cote) — le bras croise le corps : ${ouverture - danse}",
+                    ouverture - danse >= OUVERTURE_MINIMALE,
                 )
             }
         }
         assertEquals(-INCLINAISON_REPOS, OUVERTURE_MINIMALE, 0f)
+    }
+
+    @Test
+    fun `le ciseau de la danse est intermittent et borne symetriquement`() {
+        val floss = Posture.Floss.reglage()
+        assertTrue("La danse est marquée", floss.danse)
+        assertEquals(DANSE_CENTRE, floss.ouvertureBrasGauche, 0f)
+        assertEquals(DANSE_CENTRE, floss.ouvertureBrasDroit, 0f)
+        assertNull("Elle n'écrit pas", floss.ecriture)
+        assertEquals(
+            "Seule la posture floss danse",
+            listOf<Posture>(Posture.Floss),
+            POSTURES.filter { it.reglage().danse },
+        )
+
+        assertTrue(
+            "L'arrêt doit durer plus longtemps que le geste",
+            DANSE_ARRET_MIN_MILLIS > DANSE_GESTE_MILLIS,
+        )
+
+        val alea = Random(20260817)
+        var precedent = 0L
+        repeat(500) {
+            val arret = attenteDanse(precedent, alea)
+            assertTrue(
+                "Arrêt hors bornes : $arret",
+                arret >= DANSE_ARRET_MIN_MILLIS && arret < DANSE_ARRET_MAX_MILLIS,
+            )
+            assertTrue("Deux arrêts égaux de suite font un rythme", arret != precedent)
+            precedent = arret
+        }
     }
 
     // Exception nommée du garde-fou bras : lecture porte la main au menton, geste vers soi, pas un salut (Xavier, 16/08/2026).

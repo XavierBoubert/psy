@@ -124,7 +124,7 @@ private fun VueAccueil(
     onArret: () -> Unit,
     onFermer: () -> Unit,
 ) {
-    PageCrise(titre = stringResource(R.string.tension_titre), onFermer = onFermer) {
+    PanneauCrise(titre = stringResource(R.string.tension_titre), onFermer = onFermer) {
         Explication(stringResource(R.string.tension_geste))
         GrandBouton(
             libelle = stringResource(R.string.tension_action_demarrer),
@@ -147,7 +147,7 @@ private fun VueSequence(
     onArret: () -> Unit,
     onFermer: () -> Unit,
 ) {
-    PageCrise(titre = stringResource(R.string.sequence_titre), onFermer = onFermer) {
+    PanneauCrise(titre = stringResource(R.string.sequence_titre), onFermer = onFermer) {
         Explication(stringResource(R.string.sequence_consigne))
         Enonce(stringResource(R.string.sequence_attendu, stringResource(libelleDe(attendue))))
         SEQUENCE_SOINS.forEach { etape ->
@@ -191,7 +191,7 @@ private fun VueBloc(
         label = "phase",
     )
 
-    PageCrise(
+    PanneauCrise(
         titre = bloc.etape?.let { stringResource(libelleDe(it)) }
             ?: stringResource(R.string.tension_titre),
         onFermer = onFermer,
@@ -261,7 +261,7 @@ private fun VueAssis(debut: Long, onQuitter: () -> Unit, onFermer: () -> Unit) {
     }
 
     val restantes = (SECONDES_ASSIS_APRES - secondes).coerceAtLeast(0L)
-    PageCrise(titre = stringResource(R.string.assis_titre), onFermer = onFermer) {
+    PanneauCrise(titre = stringResource(R.string.assis_titre), onFermer = onFermer) {
         if (restantes > 0L) {
             Explication(stringResource(R.string.assis_consigne))
             Compte(stringResource(R.string.assis_restant, restantes / 60L, restantes % 60L))
@@ -276,7 +276,7 @@ private fun VueAssis(debut: Long, onQuitter: () -> Unit, onFermer: () -> Unit) {
 
 @Composable
 private fun VueArret(onRetour: () -> Unit, onFermer: () -> Unit) {
-    PageCrise(titre = stringResource(R.string.arret_titre), onFermer = onFermer) {
+    PanneauCrise(titre = stringResource(R.string.arret_titre), onFermer = onFermer) {
         Explication(stringResource(R.string.arret_douleur))
         Explication(stringResource(R.string.arret_syncope))
         Explication(stringResource(R.string.arret_discriminant))

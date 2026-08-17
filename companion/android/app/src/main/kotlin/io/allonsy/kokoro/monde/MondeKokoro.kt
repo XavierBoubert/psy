@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -36,8 +37,15 @@ import io.allonsy.kokoro.corps.locuteurEnScene
 import io.allonsy.kokoro.decor.Decor
 import io.allonsy.kokoro.decor.PaletteDecor
 import io.allonsy.kokoro.decor.rememberInclinaison
+import io.allonsy.kokoro.journal.Champ
+import io.allonsy.kokoro.journal.Checkin
+import io.allonsy.kokoro.journal.ContenuJournal
+import io.allonsy.kokoro.journal.EtapeJournal
+import io.allonsy.kokoro.reglages.EtatAutorisations
 import io.allonsy.kokoro.reglages.PARALLAXE_PAR_DEFAUT
+import io.allonsy.kokoro.reglages.PanneauReglages
 import io.allonsy.kokoro.reglages.Parallaxe
+import io.allonsy.kokoro.reglages.Reglages
 import io.allonsy.kokoro.ui.Accuse
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -56,20 +64,24 @@ fun MondeKokoro(
     contactNom: String,
     sejour: Sejour,
     onFonction: (Fonction) -> Unit,
-    onReglages: () -> Unit,
+    donneesReglages: DonneesReglages,
+    donneesCheckin: DonneesCheckin,
     modifier: Modifier = Modifier,
     parallaxe: Parallaxe = PARALLAXE_PAR_DEFAUT,
     envoiEnCours: Boolean = false,
     accesPerdu: Boolean = false,
     accuse: String? = null,
     onAccuseFini: () -> Unit = {},
+    // Demande externe (crise → check-in) : JournalActivity n'existant plus, MondeActivity la porte jusqu'ici.
+    ouvrirCheckin: Boolean = false,
+    onCheckinOuvert: () -> Unit = {},
     debug: DebugMonde = DebugMonde(),
 ) {
     var position by remember { mutableIntStateOf(0) }
     val perchoirs = rememberPerchoirs()
     var taille by remember { mutableStateOf(IntSize.Zero) }
-    var ouverte by remember { mutableStateOf<Etape?>(null) }
-    var affichee by remember { mutableStateOf<Etape?>(null) }
+    var ouverte by remember { mutableStateOf<Contexte?>(null) }
+    var affichee by remember { mutableStateOf<Contexte?>(null) }
     val vue = remember { mutableFloatStateOf(0f) }
     val pose = remember { mutableStateOf<Job?>(null) }
     val portee = rememberCoroutineScope()
@@ -85,6 +97,14 @@ fun MondeKokoro(
     val entier = rememberEntierAnime()
 
     BackHandler(enabled = ouverte != null) { ouverte = null }
+
+    LaunchedEffect(ouvrirCheckin) {
+        if (!ouvrirCheckin) return@LaunchedEffect
+        donneesCheckin.onOuverture()
+        affichee = Contexte.Checkin
+        ouverte = Contexte.Checkin
+        onCheckinOuvert()
+    }
 
     Box(
         modifier = modifier
@@ -150,12 +170,14 @@ fun MondeKokoro(
                         contactNom = contactNom,
                         envoiEnCours = envoiEnCours,
                         accesPerdu = accesPerdu,
-                        onOuvrir = { etape ->
-                            affichee = etape
-                            ouverte = etape
+                        onOuvrir = { contexte ->
+                            if (contexte == Contexte.Checkin) donneesCheckin.onOuverture()
+                            affichee = contexte
+                            ouverte = contexte
                         },
                         onFonction = onFonction,
-                        onReglages = onReglages,
+                        onReglages = { affichee = Contexte.Reglages; ouverte = Contexte.Reglages },
+                        fige = ouverte != null,
                         debug = debug,
                     )
                 }
@@ -166,10 +188,12 @@ fun MondeKokoro(
 
         BrasDeLHabitant(bras = bras)
 
-        EtapeOuverte(
-            etape = affichee,
+        PanneauOuvert(
+            contexte = affichee,
             visible = ouverte != null,
             locuteur = locuteur,
+            donneesReglages = donneesReglages,
+            donneesCheckin = donneesCheckin,
             onFermer = { ouverte = null },
         )
 
@@ -195,20 +219,26 @@ private fun ContenuEcran(
     contactNom: String,
     envoiEnCours: Boolean,
     accesPerdu: Boolean,
-    onOuvrir: (Etape) -> Unit,
+    onOuvrir: (Contexte) -> Unit,
     onFonction: (Fonction) -> Unit,
     onReglages: () -> Unit,
+    fige: Boolean,
     debug: DebugMonde,
 ) {
     when (ecran) {
         Ecran.THERAPIE -> ContenuTherapie(
             perchoirs = perchoirs,
             accesPerdu = accesPerdu,
+            fige = fige,
             onReglages = onReglages,
             onOuvrir = { etape ->
                 when (val ouverture = etape.ouverture) {
-                    is Ouverture.Ecran -> onFonction(ouverture.fonction)
-                    is Ouverture.Detail -> onOuvrir(etape)
+                    // Le check-in ouvre son propre panneau ; les autres Ouverture.Ecran restent des Fonction (tension, phrase…).
+                    is Ouverture.Ecran -> when (ouverture.fonction) {
+                        Fonction.CHECK_IN -> onOuvrir(Contexte.Checkin)
+                        else -> onFonction(ouverture.fonction)
+                    }
+                    is Ouverture.Detail -> onOuvrir(Contexte.Demarche(etape))
                 }
             },
             onBasculerAffichage = debug.onBasculerAffichageTherapie,
@@ -244,28 +274,73 @@ data class DebugMonde(
     val onBasculerBilanVide: () -> Unit = {},
 )
 
+// État et actions du panneau réglages — porté par MondeActivity, plus par une Activity à part.
+data class DonneesReglages(
+    val autorisations: EtatAutorisations,
+    val reglages: Reglages,
+    val dossier: String?,
+    val onRelire: () -> Unit,
+    val onEnregistrer: (Reglages) -> Unit,
+    val onChoisirDossier: () -> Unit,
+)
+
+// État et actions du panneau check-in — porté par MondeActivity, plus par JournalActivity.
+data class DonneesCheckin(
+    val etape: EtapeJournal,
+    val checkin: Checkin,
+    val repris: Map<Champ, Double>,
+    val onRepondre: (Champ, Double?) -> Unit,
+    val onNote: (String?) -> Unit,
+    val onChoisirDossier: () -> Unit,
+    val onArreter: () -> Unit,
+    // Rejoue demarrerCheckin() côté Activity à chaque ouverture — sans ça, une carte déjà écrite hier resterait affichée.
+    val onOuverture: () -> Unit = {},
+)
+
 @Composable
-private fun EtapeOuverte(
-    etape: Etape?,
+private fun PanneauOuvert(
+    contexte: Contexte?,
     visible: Boolean,
     locuteur: Boolean,
+    donneesReglages: DonneesReglages,
+    donneesCheckin: DonneesCheckin,
     onFermer: () -> Unit,
 ) {
-    val detail = (etape?.ouverture as? Ouverture.Detail)?.texte
-
+    // Attend locuteur, pas seulement visible : sinon le panneau glisse avant que Kokoro n'ait fini son vol (700 ms).
     AnimatedVisibility(
-        visible = visible && detail != null,
+        visible = visible && locuteur && contexte != null,
         enter = slideInVertically(animationSpec = tween(MONTEE_ETAPE_MS)) { hauteur -> hauteur },
         exit = slideOutVertically(animationSpec = tween(MONTEE_ETAPE_MS)) { hauteur -> hauteur },
     ) {
-        // etape vient de affichee, pas de ouverte : ça garde le contenu affiché pendant la descente du panneau.
-        if (etape != null && detail != null) {
-            PanneauEtape(
-                titre = etape.titre,
-                detail = detail,
-                locuteur = locuteur,
+        // contexte vient de affichee, pas de ouverte : ça garde le contenu affiché pendant la descente du panneau.
+        when (contexte) {
+            is Contexte.Demarche -> {
+                val detail = (contexte.etape.ouverture as? Ouverture.Detail)?.texte ?: return@AnimatedVisibility
+                PanneauEtape(titre = contexte.etape.titre, detail = detail, onFermer = onFermer)
+            }
+
+            Contexte.Reglages -> PanneauReglages(
+                autorisations = donneesReglages.autorisations,
+                reglages = donneesReglages.reglages,
+                dossier = donneesReglages.dossier,
+                onRelire = donneesReglages.onRelire,
+                onEnregistrer = donneesReglages.onEnregistrer,
+                onChoisirDossier = donneesReglages.onChoisirDossier,
                 onFermer = onFermer,
             )
+
+            Contexte.Checkin -> ContenuJournal(
+                etape = donneesCheckin.etape,
+                checkin = donneesCheckin.checkin,
+                repris = donneesCheckin.repris,
+                onRepondre = donneesCheckin.onRepondre,
+                onNote = donneesCheckin.onNote,
+                onChoisirDossier = donneesCheckin.onChoisirDossier,
+                onArreter = donneesCheckin.onArreter,
+                onFermer = onFermer,
+            )
+
+            null -> Unit
         }
     }
 }

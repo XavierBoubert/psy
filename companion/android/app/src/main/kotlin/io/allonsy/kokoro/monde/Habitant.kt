@@ -44,7 +44,6 @@ import androidx.compose.ui.unit.toSize
 import io.allonsy.kokoro.corps.Balayage
 import io.allonsy.kokoro.corps.CorpsKokoro
 import io.allonsy.kokoro.corps.Cote
-import io.allonsy.kokoro.corps.DESCENTE_DU_BRAS_HORIZONTAL
 import io.allonsy.kokoro.corps.EPAULE_GAUCHE
 import io.allonsy.kokoro.corps.Expression
 import io.allonsy.kokoro.corps.HAUTEUR_LOCUTEUR
@@ -90,6 +89,9 @@ private val ARC_TRANSIT = 26.dp
 
 private const val INCLINAISON_RAGDOLL = 10f
 
+// Le padding bas du bandeau (Pieces.kt) : le sommet de la tête arrive ainsi sous la roue dentée, plus sous la bande.
+private val MONTEE_DU_PERCHOIR = 18.dp
+
 // Distance crâne→épaules ÷ hauteur de la vue, lue dans le dessin : fait émerger Kokoro exactement de derrière le bouton Mot code.
 private val EMERGENCE_CRISE_FRACTION: Float = (EPAULE_GAUCHE.y - SOMMET_TETE) / HAUTEUR_VUE
 
@@ -99,7 +101,7 @@ fun ecartDeSortie(largeur: Float, sortie: Float): Float = largeur * sortie
 
 const val HEURE_DU_CHECKIN = 18
 
-enum class Perchoir { AUJOURDHUI, SANS_DATE, DOCUMENTATION, BILAN, CRISE }
+enum class Perchoir { AUJOURDHUI, SANS_DATE, DOCUMENTATION, BILAN, CRISE, PLAFOND }
 
 enum class Cadrage {
     A_DROITE,
@@ -132,6 +134,9 @@ data class Place(
         balayage = null,
         vol = Vol.SOMMEIL,
     )
+
+    // Sa bande a défilé sous le bandeau : il repose les bras plutôt que de désigner une place sortie du cadre.
+    fun auRepos(): Place = copy(posture = Posture.Repos, balayage = null)
 }
 
 data class Sejour(
@@ -161,7 +166,7 @@ private fun placeOrdinaire(ecran: Ecran, sejour: Sejour): Place? = when (ecran) 
     Ecran.BILAN -> Place(
         perchoir = Perchoir.BILAN,
         cadrage = Cadrage.AU_CENTRE,
-        posture = Posture.Notes,
+        posture = Posture.Floss,
     )
 
     Ecran.CRISE -> veilleSurLaCrise()
@@ -190,6 +195,13 @@ private fun montreLeCheckin(checkinFait: Boolean) = Place(
     posture = Posture.Montre(Cote.GAUCHE),
     expression = if (checkinFait) Expression.CHALEUREUX else null,
 )
+
+// Vrai quand la bande visée a défilé au-dessus du bandeau : en vol la pose d'arrivée n'est pas encore la sienne.
+fun horsCadre(perchoirs: Perchoirs, plafond: Rect?, arrivee: Place?, avancement: Float): Boolean {
+    if (plafond == null || arrivee == null || avancement < 1f) return false
+    val cadre = perchoirs.cadre(arrivee.perchoir) ?: return false
+    return cadre.bottom <= plafond.bottom
+}
 
 // Non clippées, exprès : positionInRoot continue de compter quand la bande sort de la dalle.
 @Stable
@@ -242,7 +254,10 @@ fun Habitant(
     val arrivee = place(transit.vers, sejour)
     val depart = place(transit.depuis, sejour)
 
-    val tenue = arrivee ?: depart ?: return
+    // Plafond posé uniquement par Thérapie (Bords.kt) : ailleurs perchoirs.cadre(PLAFOND) est null, sans effet.
+    val plafond = perchoirs.cadre(Perchoir.PLAFOND)
+    val posee = arrivee ?: depart ?: return
+    val tenue = if (horsCadre(perchoirs, plafond, arrivee, transit.avancement)) posee.auRepos() else posee
 
     val cadre = cadrePour(tenue.hauteur)
     val taille = with(LocalDensity.current) { Size(cadre.width.toPx(), cadre.height.toPx()) }
@@ -253,13 +268,23 @@ fun Habitant(
     val depuis = depart?.let { pointDeLaPlace(perchoirs.cadre(it.perchoir), it.cadrage, taille) }
     val vers = arrivee?.let { pointDeLaPlace(perchoirs.cadre(it.perchoir), it.cadrage, taille) }
     val glisse = Offset(ecartDeSortie(largeur.toFloat(), avancementSortie), 0f)
-    val point = when {
+    val pointBrut = when {
         depuis == null || vers == null -> (vers ?: depuis ?: return) + glisse
         entreeParDerriereLeBouton ->
             vers + Offset(0f, taille.height * EMERGENCE_CRISE_FRACTION * (1f - transit.avancement)) + glisse
 
         else -> lerp(depuis, vers, transit.avancement) -
             Offset(0f, arc(fleche, transit.avancement)) + glisse
+    }
+    val montee = with(LocalDensity.current) { MONTEE_DU_PERCHOIR.toPx() }
+    val point = if (plafond == null) {
+        pointBrut
+    } else {
+        pointBrut.copy(
+            y = pointBrut.y.coerceAtLeast(
+                plafond.bottom - montee - taille.height * (SOMMET_TETE / HAUTEUR_VUE),
+            ),
+        )
     }
 
     val enVol = transit.avancement < 1f && !tenue.deuxPasses
@@ -287,10 +312,9 @@ fun Habitant(
     val balancement = if (tenue.vol != Vol.AUCUN) inclinaisonDuVol(depuis, vers, transit.avancement) else 0f
 
     val bouton = perchoirs.cadre(Perchoir.CRISE)
-    // Ligne fixe à la position d'arrivée des bras — au-dessus du bouton pendant que le corps passe dessous.
-    val coupeDesBras = bouton?.let {
-        it.top + taille.height / HAUTEUR_VUE * DESCENTE_DU_BRAS_HORIZONTAL
-    }
+    // Coupe exactement à l'arête du bouton, jamais suspendue à l'épaule courante : rien du bras ne se dessine par-dessus,
+    // sa moitié basse passe derrière. Descendre la coupe sous l'arête remontait visuellement la ligne des épaules.
+    val coupeDesBras = bouton?.top
 
     // N'appartient à aucune posture : Posture.Accoude rend toujours l'horizontale.
     val affaissement = if (entreeParDerriereLeBouton) secondeMoitie(transit.avancement) else 1f
@@ -459,7 +483,7 @@ data class PasseDesBras(
     val rig: RigKokoro,
     val point: Offset,
     val cadre: DpSize,
-    // Arête du bouton tant qu'il émerge, puis bas des bras une fois posé ; null quand le bouton n'est pas encore mesuré.
+    // Arête haute du bouton ; null quand le bouton n'est pas encore mesuré.
     val coupe: Float? = null,
 )
 

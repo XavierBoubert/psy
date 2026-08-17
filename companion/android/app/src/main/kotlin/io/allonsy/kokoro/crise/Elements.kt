@@ -16,6 +16,7 @@ import io.allonsy.kokoro.monde.Fonction
 import io.allonsy.kokoro.ui.BoutonEpais
 import io.allonsy.kokoro.ui.LocalPaletteKokoro
 import io.allonsy.kokoro.ui.PageKokoro
+import io.allonsy.kokoro.ui.PanneauDialogue
 import io.allonsy.kokoro.ui.PanneauExtrude
 import io.allonsy.kokoro.ui.PileDeBoutons
 import io.allonsy.kokoro.ui.TypoKokoro
@@ -41,6 +42,17 @@ internal fun PageCrise(
         onFermer = onFermer,
         contenu = contenu,
     )
+}
+
+// Même panneau que Thérapie, pour toute ouverture de contexte — tension, phrase, mot-code. Seul l'accueil de crise
+// reste une page dédiée (PageCrise) : il n'est ouvert par rien, c'est l'écran lui-même.
+@Composable
+internal fun PanneauCrise(
+    titre: String,
+    onFermer: () -> Unit,
+    contenu: @Composable ColumnScope.() -> Unit,
+) {
+    PanneauDialogue(titre = titre, ecart = 20.dp, onFermer = onFermer, contenu = contenu)
 }
 
 @Composable
