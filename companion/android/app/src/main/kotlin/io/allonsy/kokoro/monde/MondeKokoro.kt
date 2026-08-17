@@ -33,7 +33,10 @@ import androidx.compose.ui.input.pointer.util.addPointerInputChange
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
+import io.allonsy.kokoro.corps.Passe
 import io.allonsy.kokoro.corps.locuteurEnScene
+import io.allonsy.kokoro.crise.ContenuPhrase
+import io.allonsy.kokoro.crise.ContenuTension
 import io.allonsy.kokoro.decor.Decor
 import io.allonsy.kokoro.decor.PaletteDecor
 import io.allonsy.kokoro.decor.rememberInclinaison
@@ -97,11 +100,25 @@ fun MondeKokoro(
 
     BackHandler(enabled = ouverte != null) { ouverte = null }
 
+    val ouvrirPanneau: (Contexte) -> Unit = { contexte ->
+        if (contexte == Contexte.Checkin) donneesCheckin.onOuverture()
+        affichee = contexte
+        ouverte = contexte
+    }
+
+    // Tension et phrase ne quittent plus le monde : elles s'ouvrent dans le panneau, comme les réglages et le check-in.
+    val agir: (Fonction) -> Unit = { fonction ->
+        when (fonction) {
+            Fonction.TENSION -> ouvrirPanneau(Contexte.Tension)
+            Fonction.PHRASE -> ouvrirPanneau(Contexte.Phrase)
+            Fonction.CHECK_IN -> ouvrirPanneau(Contexte.Checkin)
+            Fonction.MOT_CODE -> onFonction(fonction)
+        }
+    }
+
     LaunchedEffect(ouvrirCheckin) {
         if (!ouvrirCheckin) return@LaunchedEffect
-        donneesCheckin.onOuverture()
-        affichee = Contexte.Checkin
-        ouverte = Contexte.Checkin
+        ouvrirPanneau(Contexte.Checkin)
         onCheckinOuvert()
     }
 
@@ -169,13 +186,9 @@ fun MondeKokoro(
                         contactNom = contactNom,
                         envoiEnCours = envoiEnCours,
                         accesPerdu = accesPerdu,
-                        onOuvrir = { contexte ->
-                            if (contexte == Contexte.Checkin) donneesCheckin.onOuverture()
-                            affichee = contexte
-                            ouverte = contexte
-                        },
-                        onFonction = onFonction,
-                        onReglages = { affichee = Contexte.Reglages; ouverte = Contexte.Reglages },
+                        onOuvrir = ouvrirPanneau,
+                        onFonction = agir,
+                        onReglages = { ouvrirPanneau(Contexte.Reglages) },
                         fige = ouverte != null,
                     )
                 }
@@ -200,6 +213,37 @@ fun MondeKokoro(
             onFini = onAccuseFini,
             modifier = Modifier.align(Alignment.BottomCenter),
         )
+    }
+}
+
+// L'écran de crise du monde, immobile : même décor sans parallaxe, même Kokoro sans animation, mêmes trois boutons.
+// C'est ce que la notification ouvre — il n'y a là ni monde à traverser, ni transit à jouer.
+@Composable
+fun SceneDeCrise(
+    palette: PaletteDecor,
+    contactNom: String,
+    envoiEnCours: Boolean,
+    onFonction: (Fonction) -> Unit,
+    onFermer: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val perchoirs = rememberPerchoirs()
+    val pose = poseFigeeDeCrise(perchoirs)
+
+    Box(modifier = modifier.fillMaxSize()) {
+        Decor(camera = { 0f }, palette = palette)
+
+        if (pose != null) CoucheFigee(pose = pose, passe = Passe.CORPS)
+
+        ContenuCriseDuMonde(
+            perchoirs = perchoirs,
+            contactNom = contactNom,
+            envoiEnCours = envoiEnCours,
+            onFonction = onFonction,
+            onFermer = onFermer,
+        )
+
+        if (pose != null) CoucheFigee(pose = pose, passe = Passe.BRAS)
     }
 }
 
@@ -230,11 +274,7 @@ private fun ContenuEcran(
             onReglages = onReglages,
             onOuvrir = { etape ->
                 when (val ouverture = etape.ouverture) {
-                    // Le check-in ouvre son propre panneau ; les autres Ouverture.Ecran restent des Fonction (tension, phrase…).
-                    is Ouverture.Ecran -> when (ouverture.fonction) {
-                        Fonction.CHECK_IN -> onOuvrir(Contexte.Checkin)
-                        else -> onFonction(ouverture.fonction)
-                    }
+                    is Ouverture.Ecran -> onFonction(ouverture.fonction)
                     is Ouverture.Detail -> onOuvrir(Contexte.Demarche(etape))
                 }
             },
@@ -307,6 +347,10 @@ private fun PanneauOuvert(
                 onChoisirDossier = donneesReglages.onChoisirDossier,
                 onFermer = onFermer,
             )
+
+            Contexte.Tension -> ContenuTension(onFermer = onFermer)
+
+            Contexte.Phrase -> ContenuPhrase(onFermer = onFermer)
 
             Contexte.Checkin -> ContenuJournal(
                 etape = donneesCheckin.etape,

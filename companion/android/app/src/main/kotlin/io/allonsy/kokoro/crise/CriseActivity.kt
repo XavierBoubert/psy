@@ -8,30 +8,35 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import io.allonsy.kokoro.R
+import io.allonsy.kokoro.decor.DECOR_JOUR
+import io.allonsy.kokoro.decor.DECOR_NUIT
 import io.allonsy.kokoro.monde.EXTRA_OUVRIR_CHECKIN
 import io.allonsy.kokoro.monde.Fonction
 import io.allonsy.kokoro.monde.MondeActivity
+import io.allonsy.kokoro.monde.SceneDeCrise
 import io.allonsy.kokoro.reglages.REGLAGES_INITIAUX
 import io.allonsy.kokoro.reglages.estNuit
 import io.allonsy.kokoro.reglages.lireReglages
 import io.allonsy.kokoro.reglages.minuteCourante
 import io.allonsy.kokoro.ui.Accuse
+import io.allonsy.kokoro.ui.LocalPanneauPorte
 import io.allonsy.kokoro.ui.ThemeMonde
 
+// Seul le mot-code s'ouvre depuis l'extérieur : la notification ouvre la scène de crise, et tout le reste s'y touche.
 const val EXTRA_ECRAN = "ecran"
 const val ECRAN_MOT_CODE = "mot_code"
-const val ECRAN_TENSION = "tension"
 const val EXTRA_ECHEC = "echec"
-const val ECRAN_PHRASE = "phrase"
 
 sealed interface EcranCrise {
     data object Accueil : EcranCrise
@@ -81,29 +86,45 @@ class CriseActivity : ComponentActivity() {
 
         setContent {
             ThemeMonde(nuit = nuit.value) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    ContenuCrise(
-                        ecran = ecran.value,
-                        reglages = reglages.value,
-                        envoi = envoi.value,
-                        onFonction = { ouvrir(it) },
-                        onEnvoyer = { envoyer() },
-                        onSecours = { startActivity(intentSecours()) },
-                        onFermer = { finish() },
-                    )
-                    Accuse(
-                        texte = accuse.value,
-                        onFini = {
-                            accuse.value = null
-                            if (envoi.value == ResultatEnvoi.EN_COURS) {
-                                envoi.value = ResultatEnvoi.INACTIF
-                            }
-                        },
-                        modifier = Modifier.align(Alignment.BottomCenter),
-                    )
+                // Aucune scène ne porte les panneaux ici : ni queue de bulle, ni Kokoro dessous.
+                CompositionLocalProvider(LocalPanneauPorte provides false) {
+                    BackHandler(enabled = ecran.value != EcranCrise.Accueil) { retour() }
+
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        SceneDeCrise(
+                            palette = if (nuit.value) DECOR_NUIT else DECOR_JOUR,
+                            contactNom = reglages.value.contactNom,
+                            envoiEnCours = envoi.value == ResultatEnvoi.EN_COURS,
+                            onFonction = { ouvrir(it) },
+                            onFermer = { finish() },
+                        )
+                        ContenuCrise(
+                            ecran = ecran.value,
+                            reglages = reglages.value,
+                            envoi = envoi.value,
+                            onEnvoyer = { envoyer() },
+                            onSecours = { startActivity(intentSecours()) },
+                            onFermer = { retour() },
+                        )
+                        Accuse(
+                            texte = accuse.value,
+                            onFini = {
+                                accuse.value = null
+                                if (envoi.value == ResultatEnvoi.EN_COURS) {
+                                    envoi.value = ResultatEnvoi.INACTIF
+                                }
+                            },
+                            modifier = Modifier.align(Alignment.BottomCenter),
+                        )
+                    }
                 }
             }
         }
+    }
+
+    // Fermer un panneau revient à la scène de crise, jamais à l'écran verrouillé : elle est derrière, comme au monde.
+    private fun retour() {
+        ecran.value = EcranCrise.Accueil
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -162,7 +183,5 @@ class CriseActivity : ComponentActivity() {
 
 private fun ecranDemande(intent: Intent): EcranCrise = when (intent.getStringExtra(EXTRA_ECRAN)) {
     ECRAN_MOT_CODE -> EcranCrise.MotCode
-    ECRAN_TENSION -> EcranCrise.Tension
-    ECRAN_PHRASE -> EcranCrise.Phrase
     else -> EcranCrise.Accueil
 }

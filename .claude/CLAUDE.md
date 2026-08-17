@@ -76,7 +76,7 @@ Elles vivent dans `.claude/skills/psy-*` — Claude Code ne les découvre que l�
 
 | Skill | Rôle |
 |---|---|
-| `psy-seance` | **Séance de fond hebdomadaire** — ouverture / une seule cible / clôture obligatoire → `psy/outputs/dossier/seances/`. ⭐ **Battement du dispositif** : `psy:sync` en ouverture, supervision puis `psy:publish` en clôture. **Seule fenêtre d'écriture du programme** |
+| `psy-seance` | **Séance de fond hebdomadaire** — ouverture / une seule cible / clôture obligatoire → `psy/outputs/dossier/seances/`. ⭐ **Battement du dispositif** : `psy:sync` en ouverture, supervision puis `psy:publish` en clôture. **Seule fenêtre d'écriture des étapes qui font agir** — la documentation se publie à tout moment |
 | `psy-journal` | Check-in quotidien — 7 questions fermées, < 2 min → `companion/outputs/journal/` |
 | `psy-crise` | **Triage de crise** — sécurité avant mécanisme, panique / vasovagal / shutdown, escalade 3114, voies sans parole |
 | `psy-bilan` | Passation et cotation d'une échelle → `psy/outputs/dossier/mesures/`. Items lus dans `psy/docs/corpus/echelles/`, **jamais restitués de mémoire** |
@@ -102,7 +102,7 @@ Depuis la racine, **scopés par rôle** ; les chemins sont résolus par rapport 
 
 | Commande | Objet |
 |---|---|
-| `npm run psy:publish` | 🔴 Publie la thérapie et la bibliothèque vers Kokoro. **Ne se lance qu'à la clôture d'une séance** |
+| `npm run psy:publish` | 🔴 Publie la thérapie et la bibliothèque vers Kokoro. **La documentation part à tout moment ; les étapes qui font agir, à la clôture d'une séance** |
 | `npm run psy:sync` | Verse au dépôt ce que Kokoro a écrit. **N'écrase jamais un fichier existant** |
 | `npm run psy:pdf2md` · `psy:docx2md` · `psy:md2pdf` | Conversion de documents |
 | `npm run companion:kokoro` | Compile, teste, installe et ouvre Kokoro. **Jamais `gradlew` ni `adb` à la main** |

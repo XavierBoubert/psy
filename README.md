@@ -51,7 +51,7 @@ Claude Psy ──── programme + bibliothèque ────► Kokoro ──�
 
 🔴 **`psy:publish` refuse la publication entière** si un invariant est enfreint ou si la supervision de la version qui sort manque *(voir [`superviseur/README.md`](superviseur/README.md))*. **Un refus se corrige, il ne se contourne pas** — aucune option de forçage n'existe, et il ne doit jamais en exister une.
 
-⭐ **`psy:publish` ne se lance qu'à la clôture d'une séance.** Entre deux séances, **l'écran de Xavier ne change pas** : c'est la prévisibilité, pas une limitation technique.
+⭐ **La documentation se publie à tout moment ; le reste du programme se publie à la clôture d'une séance.** Une fiche est à portée dès qu'elle est écrite et supervisée — **Xavier n'attend pas la séance suivante pour comprendre ce qui lui arrive**. Les étapes qui font agir — `ecran`, `exercice`, `questionnaire`, `demarche`, `seance-duo` — se décident avec lui, en séance. **La supervision est bloquante dans les deux cas, et toute publication s'annonce à Xavier au moment où elle se fait.**
 
 ### 🔴 Les quatre points où une erreur sort du dispositif
 

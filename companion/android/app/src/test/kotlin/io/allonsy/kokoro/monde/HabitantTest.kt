@@ -230,6 +230,22 @@ class HabitantTest {
     }
 
     // Deux tentatives avaient échoué (16/08/2026 : le vol n'apparaissait pas) faute d'enveloppe pleine assez longtemps.
+    // Xavier, 18/08/2026 : accoudé, il ne glisse pas sur le côté en ouvrant un panneau — il repart derrière le bouton.
+    @Test
+    fun `il quitte la crise en rejouant son entree a l'envers`() {
+        assertEquals("Posé, il ne s'enfonce pas", 0f, enfouissementDeLaCrise(entree = 1f, sortie = 0f), PRECISION)
+        assertEquals("Caché avant d'entrer", 1f, enfouissementDeLaCrise(entree = 0f, sortie = 0f), PRECISION)
+        assertEquals("Caché une fois sorti", 1f, enfouissementDeLaCrise(entree = 1f, sortie = 1f), PRECISION)
+
+        val entrant = (0..100).map { enfouissementDeLaCrise(entree = it / 100f, sortie = 0f) }
+        val sortant = (0..100).map { enfouissementDeLaCrise(entree = 1f, sortie = it / 100f) }
+        entrant.zip(sortant.reversed()).forEach { (entre, sort) ->
+            assertEquals("La sortie est l'entrée à l'envers", entre, sort, PRECISION)
+            assertEquals("Les bras aussi", secondeMoitie(1f - entre), secondeMoitie(1f - sort), PRECISION)
+        }
+        assertTrue("Les bras sont dressés au moment où il disparaît", secondeMoitie(1f - sortant.last()) < PRECISION)
+    }
+
     @Test
     fun `l'enveloppe du vol tient pendant la traversee`() {
         assertEquals("Rien au départ", 0f, enveloppeDuVol(0f), PRECISION)

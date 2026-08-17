@@ -142,7 +142,7 @@ npm run companion:kokoro   # depuis la racine
 | [`INTERFACE.md`](INTERFACE.md) | Le rendu des étapes du programme et de la bibliothèque à l'écran |
 | [`android/`](android/README.md) | **Le code** — Kotlin + Compose, Galaxy S22 / One UI, sideloadée |
 | [`ressources/`](ressources/) | **Ce dont le compagnon a besoin pour exister** : `prompts/` *(recherche graphique)*, `retenus/` *(les planches qui font foi)*, `sorties/` *(non versionné)* |
-| [`inputs/`](inputs/) | 🔴 **Ce que Claude Psy lui donne** : `programme.json` + [`bibliotheque/`](inputs/bibliotheque/README.md). **Écrit par le psy seul, publié uniquement à la clôture d'une séance et uniquement après supervision** |
+| [`inputs/`](inputs/) | 🔴 **Ce que Claude Psy lui donne** : `programme.json` + [`bibliotheque/`](inputs/bibliotheque/README.md). **Écrit par le psy seul, jamais sans supervision.** La documentation se publie à tout moment ; les étapes qui font agir, à la clôture d'une séance |
 | [`outputs/`](outputs/) | 🔴 **Ce que Kokoro produit** : `journal/` *(check-ins)* + `reponses/` *(ce qui a été fait)*. **Écrit par Kokoro seul** |
 | [`scripts/`](scripts/) | `companion-image.ts` *(planches via Gemini)* · `companion-decoupe.ts` *(détourage du fond magenta)* |
 

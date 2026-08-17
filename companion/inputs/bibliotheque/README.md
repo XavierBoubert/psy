@@ -29,8 +29,9 @@ C'est le contrôle **C9** du Superviseur — [`superviseur/README.md` §3](../..
 
 ## Comment une fiche entre ici
 
-1. Elle s'écrit **en séance**, par Claude Psy, et **s'annonce à Xavier pendant la séance**.
+1. Elle s'écrit par Claude Psy, **à tout moment** — une fiche attachée à la cible thérapeutique en cours se décide en séance, les autres non.
 2. Elle passe la **supervision bloquante** ([`superviseur/README.md` §4](../../../superviseur/README.md)).
-3. `npm run psy:publish` la copie vers le dossier de transit Drive.
+3. `npm run psy:publish` la copie vers le dossier de transit Drive, **hors séance si besoin**.
+4. **Elle s'annonce à Xavier au moment où elle est publiée**, dans la conversation en cours.
 
-⚠️ **Rien n'entre ici entre deux séances** — un document nouveau sur l'écran de Xavier est un changement d'interface non annoncé.
+⭐ **La documentation ne se met pas en file d'attente.** Une fiche qui répond à une question posée aujourd'hui sert aujourd'hui — ce qui doit attendre la séance, ce sont les étapes qui font agir.

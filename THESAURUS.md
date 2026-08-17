@@ -69,7 +69,7 @@
 | Terme | Rythme | Support | Ce qui s'y passe |
 |---|---|---|---|
 | **Check-in** | Quotidien, < 2 min | **Kokoro** | Compteurs et choix fermés. **Aucune saisie de texte.** → `companion/outputs/journal/` |
-| **Séance** *(de fond)* | Hebdomadaire, week-end | Claude Code | ⭐ **Le battement du dispositif.** Ouverture / **une seule cible** / clôture obligatoire / compte rendu. **Seule fenêtre d'écriture du programme** |
+| **Séance** *(de fond)* | Hebdomadaire, week-end | Claude Code | ⭐ **Le battement du dispositif.** Ouverture / **une seule cible** / clôture obligatoire / compte rendu. **Seule fenêtre d'écriture des étapes qui font agir** — la documentation se publie à tout moment |
 | **Séance à deux** | Ponctuelle | **Kokoro**, tenu par l'**aidant** | Un déroulé **chronométré**, lu et exécuté par l'aidant. §6 ci-dessous |
 | **Entraînement** | Avant toute séance à deux | **Kokoro** | La **même séquence, à blanc**, sans le matériel réel. Sert à ce que l'aidant connaisse le déroulé **avant** que ça compte |
 | **Passation** | Ponctuelle | **Kokoro** *(sauf PHQ-9)* | Une **échelle** administrée item par item → `psy/outputs/dossier/mesures/` |

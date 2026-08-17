@@ -264,17 +264,22 @@ fun Habitant(
     val fleche = with(LocalDensity.current) { ARC_TRANSIT.toPx() }
 
     val entreeParDerriereLeBouton = transit.vers == Ecran.CRISE && transit.depuis != Ecran.CRISE
+    val entree = if (entreeParDerriereLeBouton) transit.avancement else 1f
+    val enfoui = if (tenue.deuxPasses) enfouissementDeLaCrise(entree, avancementSortie) else 0f
 
     val depuis = depart?.let { pointDeLaPlace(perchoirs.cadre(it.perchoir), it.cadrage, taille) }
     val vers = arrivee?.let { pointDeLaPlace(perchoirs.cadre(it.perchoir), it.cadrage, taille) }
-    val glisse = Offset(ecartDeSortie(largeur.toFloat(), avancementSortie), 0f)
-    val pointBrut = when {
-        depuis == null || vers == null -> (vers ?: depuis ?: return) + glisse
-        entreeParDerriereLeBouton ->
-            vers + Offset(0f, taille.height * EMERGENCE_CRISE_FRACTION * (1f - transit.avancement)) + glisse
 
+    // Accoudé, il ne quitte pas le champ par le côté : il redescend là d'où il est venu, derrière le bouton.
+    val retrait = when {
+        tenue.deuxPasses -> Offset(0f, taille.height * EMERGENCE_CRISE_FRACTION * enfoui)
+        else -> Offset(ecartDeSortie(largeur.toFloat(), avancementSortie), 0f)
+    }
+    val pointBrut = when {
+        depuis == null || vers == null -> (vers ?: depuis ?: return) + retrait
+        tenue.deuxPasses -> vers + retrait
         else -> lerp(depuis, vers, transit.avancement) -
-            Offset(0f, arc(fleche, transit.avancement)) + glisse
+            Offset(0f, arc(fleche, transit.avancement)) + retrait
     }
     val montee = with(LocalDensity.current) { MONTEE_DU_PERCHOIR.toPx() }
     val point = if (plafond == null) {
@@ -317,7 +322,7 @@ fun Habitant(
     val coupeDesBras = bouton?.top
 
     // N'appartient à aucune posture : Posture.Accoude rend toujours l'horizontale.
-    val affaissement = if (entreeParDerriereLeBouton) secondeMoitie(transit.avancement) else 1f
+    val affaissement = if (tenue.deuxPasses) secondeMoitie(1f - enfoui) else 1f
     val brasDeLaCrise = OUVERTURE_BRAS_LEVES + (OUVERTURE_HORIZONTALE - OUVERTURE_BRAS_LEVES) * affaissement
 
     val rig = rigDeBase.copy(
@@ -363,12 +368,31 @@ private fun CorpsDerriereLeBouton(
     basDuBouton: Float?,
     modifier: Modifier = Modifier,
 ) {
-    val coupe = basDuBouton?.let { with(LocalDensity.current) { it.toDp() } }
+    CoucheDuCorps(
+        rig = rig,
+        point = point,
+        cadre = cadre,
+        coupe = basDuBouton,
+        passe = Passe.CORPS,
+        modifier = modifier,
+    )
+}
+
+@Composable
+private fun CoucheDuCorps(
+    rig: RigKokoro,
+    point: Offset,
+    cadre: DpSize,
+    coupe: Float?,
+    passe: Passe,
+    modifier: Modifier = Modifier,
+) {
+    val hauteur = coupe?.let { with(LocalDensity.current) { it.toDp() } }
     Box(modifier = modifier.fillMaxSize()) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .then(if (coupe == null) Modifier else Modifier.height(coupe))
+                .then(if (hauteur == null) Modifier else Modifier.height(hauteur))
                 .clipToBounds(),
         ) {
             Box(
@@ -381,11 +405,43 @@ private fun CorpsDerriereLeBouton(
                     rig = rig,
                     modifier = Modifier.fillMaxSize(),
                     palette = PALETTE_CLAIRE,
-                    passe = Passe.CORPS,
+                    passe = passe,
                 )
             }
         }
     }
+}
+
+// Même place et même pose qu'à l'écran de crise du monde, sans transit, sans souffle et sans clignement.
+data class PoseFigee(
+    val rig: RigKokoro,
+    val point: Offset,
+    val cadre: DpSize,
+    val hautDuBouton: Float,
+    val basDuBouton: Float,
+)
+
+@Composable
+fun poseFigeeDeCrise(perchoirs: Perchoirs): PoseFigee? {
+    val place = veilleSurLaCrise()
+    val cadre = cadrePour(place.hauteur)
+    val taille = with(LocalDensity.current) { Size(cadre.width.toPx(), cadre.height.toPx()) }
+    val bouton = perchoirs.cadre(place.perchoir) ?: return null
+    val point = pointDeLaPlace(bouton, place.cadrage, taille) ?: return null
+    return PoseFigee(RigKokoro.pose(place.posture), point, cadre, bouton.top, bouton.bottom)
+}
+
+// Deux passes, comme au monde : le corps sous les boutons, les bras dessus.
+@Composable
+fun CoucheFigee(pose: PoseFigee, passe: Passe, modifier: Modifier = Modifier) {
+    CoucheDuCorps(
+        rig = pose.rig,
+        point = pose.point,
+        cadre = pose.cadre,
+        coupe = if (passe == Passe.BRAS) pose.hautDuBouton else pose.basDuBouton,
+        passe = passe,
+        modifier = modifier,
+    )
 }
 
 // Peinte par-dessus l'interface, partout sauf à la crise, où le corps reste sous le contenu.
@@ -421,6 +477,11 @@ fun HabitantSurInterface(entier: State<EtatEntier?>, modifier: Modifier = Modifi
 }
 
 fun secondeMoitie(avancement: Float): Float = adouci(((avancement - 0.5f) * 2f).coerceIn(0f, 1f))
+
+// 1 = entièrement caché derrière le bouton, 0 = posé dessus. Ouvrir un panneau rejoue l'entrée à l'envers : il
+// redescend d'où il est venu et relève les bras, au lieu de glisser hors du champ comme partout ailleurs.
+fun enfouissementDeLaCrise(entree: Float, sortie: Float): Float =
+    maxOf(1f - entree.coerceIn(0f, 1f), sortie.coerceIn(0f, 1f))
 
 fun enveloppeDuVol(avancement: Float): Float = when {
     avancement <= 0f || avancement >= 1f -> 0f
@@ -499,28 +560,14 @@ private fun EffacerLesBras(bras: MutableState<PasseDesBras?>) {
 @Composable
 fun BrasDeLHabitant(bras: State<PasseDesBras?>, modifier: Modifier = Modifier) {
     val passe = bras.value ?: return
-    val coupe = passe.coupe?.let { with(LocalDensity.current) { it.toDp() } }
-    Box(modifier = modifier.fillMaxSize()) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .then(if (coupe == null) Modifier else Modifier.height(coupe))
-                .clipToBounds(),
-        ) {
-            Box(
-                modifier = Modifier
-                    .offset { IntOffset(passe.point.x.roundToInt(), passe.point.y.roundToInt()) }
-                    .requiredSize(passe.cadre),
-            ) {
-                CorpsKokoro(
-                    rig = passe.rig,
-                    modifier = Modifier.fillMaxSize(),
-                    palette = PALETTE_CLAIRE,
-                    passe = Passe.BRAS,
-                )
-            }
-        }
-    }
+    CoucheDuCorps(
+        rig = passe.rig,
+        point = passe.point,
+        cadre = passe.cadre,
+        coupe = passe.coupe,
+        passe = Passe.BRAS,
+        modifier = modifier,
+    )
 }
 
 // cadre est la bande entière, pas la pancarte : permet de poser au bord droit sans connaître la largeur de la dalle.

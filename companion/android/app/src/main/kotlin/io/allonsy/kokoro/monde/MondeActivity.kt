@@ -18,8 +18,6 @@ import io.allonsy.kokoro.alerte.creerCanalAlerte
 import io.allonsy.kokoro.crise.ACTION_MOT_CODE_ENVOYE
 import io.allonsy.kokoro.crise.CriseActivity
 import io.allonsy.kokoro.crise.ECRAN_MOT_CODE
-import io.allonsy.kokoro.crise.ECRAN_PHRASE
-import io.allonsy.kokoro.crise.ECRAN_TENSION
 import io.allonsy.kokoro.crise.EXTRA_ECHEC
 import io.allonsy.kokoro.crise.EXTRA_ECRAN
 import io.allonsy.kokoro.crise.creerCanalAcces
@@ -222,13 +220,9 @@ class MondeActivity : ComponentActivity() {
         }
     }
 
+    // Seul le mot-code remonte ici : check-in, tension et phrase sont des panneaux internes à MondeKokoro.
     private fun ouvrir(fonction: Fonction) {
-        when (fonction) {
-            Fonction.CHECK_IN -> Unit // Ouvert localement par MondeKokoro (panneau interne) ; jamais atteint depuis ici.
-            Fonction.MOT_CODE -> envoyerLeMotCode()
-            Fonction.TENSION -> startActivity(intentCrise(ECRAN_TENSION))
-            Fonction.PHRASE -> startActivity(intentCrise(ECRAN_PHRASE))
-        }
+        if (fonction == Fonction.MOT_CODE) envoyerLeMotCode()
     }
 
     // Accusé et grisage posés avant la réponse du réseau : sans ça, un second tap enverrait le message deux fois.

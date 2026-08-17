@@ -19,7 +19,7 @@
 | Ce qu'il porte | Une **posture** | Une **expression** |
 | Ce qui le déclenche | L'écran courant et l'état de sa liste | L'ouverture d'un panneau plein écran |
 
-- **Un panneau plein écran est une bulle de discussion** — l'étape ouverte, une fiche, le check-in, les réglages, la crise. 🔴 **Une carte de liste n'en est pas une** ; rien ne lui attache de personnage.
+- **Un panneau ouvert dans le monde est une bulle de discussion** — l'étape ouverte, une fiche, le check-in, les réglages, la tension appliquée, la phrase pour le soignant. 🔴 **Une carte de liste n'en est pas une** ; rien ne lui attache de personnage. 🔴 **Hors du monde non plus** : sous la notification, `LocalPanneauPorte` vaut `false` — le même panneau perd sa queue et son locuteur, et descend jusqu'en bas.
 - **À l'ouverture d'un panneau, l'habitant quitte le champ en vol** ; il revient à la fermeture.
 - 🔴 **Une seule instance à l'écran** (`CORPS.md` §8.8) — c'est ce qui impose l'alternance.
 
@@ -62,7 +62,7 @@ ciel · nuages loin · nuages près · prairie · feuillage │ OMBRE · KOKORO 
 | **Thérapie**, à partir de 18 h | À côté du check-in | `montre` | Bras tendu vers le check-in — **il n'a pas de doigt**. Le geste est identique que le check-in soit fait ou non ; **l'expression passe à `chaleureux` s'il est fait** |
 | **Documentation** | Au-dessus de la liste | `lecture` | Balayage des yeux, gauche → droite, retour bref, un peu plus bas. Bras avancés vers le bas |
 | **Bilan** | Au-dessus de la liste | `notes` | Un bras en bas, petits allers-retours horizontaux, yeux baissés vers ce bras |
-| **Crise** *(du monde)* | ⭐ **Accoudé au bouton *Mot code*** | `accoude` | Bras posés sur l'arête, corps derrière, tête un peu penchée, **panneau allumé** — *« Kokoro veille sur toi »*. 🔄 **Immobile, souffle compris** *(demande de Xavier, 16/08/2026)* : une fois posé il ne reste que le clignement. **Jamais sur les autres surfaces de crise** *(§6 E13)* |
+| **Crise** *(du monde)* | ⭐ **Accoudé au bouton *Mot code*** | `accoude` | Bras posés sur l'arête, corps derrière, tête un peu penchée, **panneau allumé** — *« Kokoro veille sur toi »*. 🔄 **Immobile, souffle compris** *(demande de Xavier, 16/08/2026)* : une fois posé il ne reste que le clignement. 🔄 **La notification ouvre la même scène, figée** *(18/08/2026)* — sans parallaxe, sans transit et **sans clignement**. **Jamais sur un panneau de crise** |
 | **Liste vide**, tout écran | Inchangée | `sommeil` | Yeux fermés au repos, lévitation ralentie, Zzz en fondu. **Le cadre vide textuel reste affiché** |
 | **Panneau ouvert** | Bas à gauche de la bulle | *(régime locuteur)* | Expression liée au contenu affiché |
 

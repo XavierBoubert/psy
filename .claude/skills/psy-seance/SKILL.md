@@ -12,7 +12,7 @@ Créneau : week-end en journée, fixe, annoncé, jamais déplacé sans préavis.
 
 ## 0. Charger le contexte — avant la première phrase
 
-> ⭐ **La séance est le battement hebdomadaire du dispositif.** C'est le seul moment où les données de Kokoro remontent (`npm run psy:sync`) et où le programme qu'il affiche est réécrit (`npm run psy:publish`). **Entre deux séances, l'écran de Xavier ne change pas** — la prévisibilité n'est pas obtenue par une intention, elle l'est parce qu'il n'y a qu'une seule fenêtre d'écriture.
+> ⭐ **La séance est le battement hebdomadaire du dispositif.** C'est le seul moment où les données de Kokoro remontent (`npm run psy:sync`) et où **les étapes qui font agir** sont réécrites (`npm run psy:publish`). **Entre deux séances, seule la documentation peut changer sur l'écran de Xavier** — elle se publie à tout moment, annoncée dans la conversation. La prévisibilité tient à l'annonce, pas au calendrier.
 
 **Obligatoire, dans cet ordre :**
 
@@ -136,7 +136,7 @@ Copier `psy/docs/gabarits/seance.md` → `psy/outputs/dossier/seances/AAAA-MM-JJ
 6. **`npm run psy:publish`** — il **refuse la publication entière** si la supervision manque, ne correspond pas à la version, ou si une étape ou une fiche enfreint un invariant. **Un refus se corrige, il ne se contourne pas.**
 
 > ⚠️ **Quatre règles, et elles ne se négocient pas.**
-> **(a)** Le programme ne se publie **qu'en séance**. Une modification entre deux séances est un changement d'interface non annoncé — c'est-à-dire exactement ce que la rigidité interdit. *(Seule exception : retirer une étape devenue dangereuse ou fausse. Ça s'annonce à Xavier dans la conversation, avant de publier — et ça passe quand même par une supervision.)*
+> **(a)** Les étapes qui font agir — `ecran`, `exercice`, `questionnaire`, `demarche`, `seance-duo` — ne se publient **qu'en séance**. **La documentation, elle, se publie à tout moment** : Xavier n'attend pas la séance suivante pour comprendre ce qui lui arrive, et une fiche annoncée quand elle arrive n'est pas un changement d'interface non annoncé. *(Autre publication hors séance autorisée : retirer une étape devenue dangereuse ou fausse — annoncée avant, et supervisée comme le reste.)*
 > **(b)** Le programme **ne porte jamais de palier atteint, d'historique ni de progression**. Il porte ce qu'il y a à faire, au présent. Les paliers se cotent ici, en séance, dans le compte-rendu — jamais sur l'écran. ⭐ **Un bilan publié est un texte daté écrit ici, jamais un graphique que l'app calcule.**
 > **(c)** Ce qui est publié est **annoncé pendant la séance**, étape par étape. Xavier ne découvre jamais son écran modifié.
 > **(d)** 🔴 **Rien ne se publie sans supervision.** Ni le programme, ni la bibliothèque. **Il n'existe aucune option de forçage, et il ne doit jamais en exister une.**

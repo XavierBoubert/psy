@@ -40,6 +40,8 @@ fun EcranDeBord(
     defilant: Boolean,
     modifier: Modifier = Modifier,
     onReglages: (() -> Unit)? = null,
+    // Non-null seulement hors du monde : là, l'écran est une Activity, et rien ne l'emporte en glissant.
+    onFermer: (() -> Unit)? = null,
     // Non-null seulement pour Thérapie : pose un plafond fixe (hors scroll) où Kokoro se cale en défilant la liste.
     perchoirs: Perchoirs? = null,
     // Un panneau recouvre l'écran : le scrim bloque l'appui, pas le glissement — le défilement se coupe donc ici.
@@ -50,6 +52,7 @@ fun EcranDeBord(
         BandeTitre(
             titre = titre,
             couleur = couleur,
+            onFermer = onFermer,
             onReglages = onReglages,
             modifier = if (perchoirs == null) Modifier else Modifier.perchoir(perchoirs, Perchoir.PLAFOND),
         )
@@ -172,11 +175,13 @@ fun ContenuCriseDuMonde(
     contactNom: String,
     envoiEnCours: Boolean,
     onFonction: (Fonction) -> Unit,
+    onFermer: (() -> Unit)? = null,
 ) {
     EcranDeBord(
         titre = stringResource(R.string.monde_crise_titre),
         couleur = LocalPaletteKokoro.current.azur,
         defilant = false,
+        onFermer = onFermer,
     ) {
         PortesDeCrise(
             contactNom = contactNom,

@@ -2,7 +2,7 @@
 
 **Le psychiatre et le psychologue.** Une **séance de fond par semaine**. **Il construit tout le contenu** — protocoles, désensibilisations, bilans, questionnaires, briefs, programme — et le donne à Kokoro. Il connaît le dossier mieux que Xavier ne s'en souvient.
 
-**Ce qu'il ne fait jamais :** prescrire · conseiller une modification de traitement, même sous forme interrogative · **publier sans supervision** · publier hors séance · venir vers Xavier de lui-même.
+**Ce qu'il ne fait jamais :** prescrire · conseiller une modification de traitement, même sous forme interrogative · **publier sans supervision** · publier une étape qui fait agir hors séance · venir vers Xavier de lui-même.
 
 > 📖 Vue d'ensemble : [`../README.md`](../README.md). Vocabulaire : [`../THESAURUS.md`](../THESAURUS.md) — `corpus` ≠ `protocole` ≠ `fiche de bibliothèque` ; `chantier` ≠ `cible` ≠ `palier`.
 
@@ -45,9 +45,9 @@ Six leviers structurels, qui se cumulent :
 | Quand | Commande | Ce qu'elle fait |
 |---|---|---|
 | **À l'ouverture de séance** | `npm run psy:sync` | Verse au dépôt ce que Kokoro a écrit. **N'écrase jamais un fichier existant** |
-| **À la clôture de séance** | `npm run psy:publish` | Publie la thérapie et la bibliothèque. 🔴 **Refuse tout si un invariant est enfreint ou si la supervision manque** |
+| **À la clôture de séance** *(thérapie)* · **à tout moment** *(documentation)* | `npm run psy:publish` | Publie la thérapie et la bibliothèque. 🔴 **Refuse tout si un invariant est enfreint ou si la supervision manque** |
 
-**Entre deux séances, l'écran de Xavier ne change pas** — publier hors séance serait un changement d'interface non annoncé.
+**Entre deux séances, seule la documentation peut changer sur l'écran de Xavier** — et elle s'annonce dans la conversation au moment où elle est publiée. Les étapes qui font agir attendent la séance.
 
 ---
 

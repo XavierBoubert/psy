@@ -28,7 +28,9 @@ Claude Psy ──écrit── companion/inputs/programme.json + companion/inputs
 
 **Le dépôt reste la source de vérité. Drive n'est qu'un tuyau.**
 
-⭐ **Le programme ne se publie qu'à la clôture d'une séance.** Publier hors séance serait un changement d'interface non annoncé.
+⭐ **La documentation se publie à tout moment** — une fiche est à portée dès qu'elle est écrite et supervisée. **Xavier n'attend pas la séance suivante pour comprendre ce qui lui arrive.**
+🔴 **Le reste du programme se publie à la clôture d'une séance** — `ecran`, `exercice`, `questionnaire`, `demarche`, `seance-duo` : ce qui fait agir se décide avec lui.
+**Dans les deux cas : supervision bloquante, et annonce à Xavier au moment de la publication.** La prévisibilité tient à l'annonce, pas au calendrier.
 
 ---
 
@@ -236,4 +238,4 @@ Un fichier par étape faite, dans `reponses/` : `AAAA-MM-JJ-HHMM-<id>.json`
 1. **Notifier.** *(Seule exception : l'accès crise sur l'écran verrouillé — une porte, pas un rappel.)*
 2. **Compter d'un jour à l'autre.** Aucun palier atteint, aucun historique, aucune progression à l'écran. **Les paliers se cotent en séance, à partir du journal.**
 3. **Reprocher.** Une étape non faite disparaît de l'écran le lendemain **sans laisser de trace**.
-4. **Se publier hors séance.** Ce serait un changement d'interface non annoncé.
+4. **Publier une étape qui fait agir hors séance.** Seule la documentation le peut, et elle s'annonce au moment où elle est publiée.

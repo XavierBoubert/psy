@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -15,7 +14,6 @@ import io.allonsy.kokoro.R
 import io.allonsy.kokoro.monde.Fonction
 import io.allonsy.kokoro.ui.BoutonEpais
 import io.allonsy.kokoro.ui.LocalPaletteKokoro
-import io.allonsy.kokoro.ui.PageKokoro
 import io.allonsy.kokoro.ui.PanneauDialogue
 import io.allonsy.kokoro.ui.PanneauExtrude
 import io.allonsy.kokoro.ui.PileDeBoutons
@@ -25,27 +23,7 @@ import io.allonsy.kokoro.ui.grave
 private val HAUTEUR_CRISE = 88.dp
 private val ECART_PORTES = 26.dp
 
-@Composable
-internal fun PageCrise(
-    titre: String,
-    onFermer: () -> Unit,
-    defilant: Boolean = true,
-    alignement: Alignment.Vertical = Alignment.Top,
-    contenu: @Composable ColumnScope.() -> Unit,
-) {
-    PageKokoro(
-        titre = titre,
-        couleur = LocalPaletteKokoro.current.azur,
-        ecart = 20.dp,
-        defilant = defilant,
-        alignement = alignement,
-        onFermer = onFermer,
-        contenu = contenu,
-    )
-}
-
-// Même panneau que Thérapie, pour toute ouverture de contexte — tension, phrase, mot-code. Seul l'accueil de crise
-// reste une page dédiée (PageCrise) : il n'est ouvert par rien, c'est l'écran lui-même.
+// Même panneau que Thérapie, pour toute ouverture de contexte — tension, phrase, mot-code.
 @Composable
 internal fun PanneauCrise(
     titre: String,

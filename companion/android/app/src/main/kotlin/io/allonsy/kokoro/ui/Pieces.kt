@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.only
@@ -43,6 +42,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -418,52 +418,6 @@ fun PileDeBoutons(
     Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(ecart), content = contenu)
 }
 
-@Composable
-fun FondKokoro(modifier: Modifier = Modifier, contenu: @Composable ColumnScope.() -> Unit) {
-    val palette = LocalPaletteKokoro.current
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .drawBehind {
-                drawRect(Brush.verticalGradient(listOf(palette.panneauHaut, palette.panneauBas)))
-            },
-        content = contenu,
-    )
-}
-
-@Composable
-fun PageKokoro(
-    titre: String,
-    couleur: Teinte,
-    modifier: Modifier = Modifier,
-    ecart: Dp = 18.dp,
-    defilant: Boolean = true,
-    alignement: Alignment.Vertical = Alignment.Top,
-    locuteur: Expression? = null,
-    onFermer: (() -> Unit)? = null,
-    contenu: @Composable ColumnScope.() -> Unit,
-) {
-    FondKokoro(modifier = modifier) {
-        BandeTitre(titre = titre, couleur = couleur, onFermer = onFermer)
-
-        val bas = Modifier
-            .weight(1f)
-            .fillMaxWidth()
-            .then(if (locuteur == null) Modifier.windowInsetsPadding(WindowInsets.navigationBars) else Modifier)
-            .imePadding()
-
-        Column(
-            modifier = (if (defilant) bas.verticalScroll(rememberScrollState()) else bas)
-                .padding(horizontal = 20.dp)
-                .padding(top = 22.dp, bottom = 30.dp),
-            verticalArrangement = Arrangement.spacedBy(ecart, alignement),
-            content = contenu,
-        )
-
-        if (locuteur != null) Locuteur(expression = locuteur)
-    }
-}
-
 private val MARGE_PANNEAU = 20.dp
 private val BULLE_RAYON = 24.dp
 private val BULLE_QUEUE_LARGEUR = 34.dp
@@ -489,6 +443,9 @@ private val DEDANS_BULLE = object : Shape {
     }
 }
 
+// Faux hors du monde : aucune scène ne porte le panneau — ni queue de bulle, ni Kokoro dessous, et il descend jusqu'en bas.
+val LocalPanneauPorte = staticCompositionLocalOf { true }
+
 // Le panneau de toute ouverture de contexte (démarche, réglages, check-in, tension, phrase) : une seule forme,
 // une seule expression, jamais une page plein écran à bandeau — Xavier, 17/08/2026.
 @Composable
@@ -500,6 +457,7 @@ fun PanneauDialogue(
     contenu: @Composable ColumnScope.() -> Unit,
 ) {
     val palette = LocalPaletteKokoro.current
+    val porte = LocalPanneauPorte.current
     val blocageScrim = remember { MutableInteractionSource() }
 
     Column(
@@ -526,7 +484,16 @@ fun PanneauDialogue(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
-                .padding(horizontal = MARGE_PANNEAU),
+                .padding(horizontal = MARGE_PANNEAU)
+                .then(
+                    if (porte) {
+                        Modifier
+                    } else {
+                        Modifier
+                            .windowInsetsPadding(WindowInsets.navigationBars)
+                            .padding(bottom = MARGE_PANNEAU)
+                    },
+                ),
         ) {
             Column(
                 modifier = Modifier
@@ -548,15 +515,17 @@ fun PanneauDialogue(
             }
 
             // Remontée dans la bulle du relief plus la morsure : la couture disparaît sous le recouvrement.
-            QueueBulle(
-                modifier = Modifier.offset(
-                    x = BULLE_QUEUE_DECALAGE,
-                    y = -(EPAISSEUR + BULLE_QUEUE_MORSURE),
-                ),
-            )
+            if (porte) {
+                QueueBulle(
+                    modifier = Modifier.offset(
+                        x = BULLE_QUEUE_DECALAGE,
+                        y = -(EPAISSEUR + BULLE_QUEUE_MORSURE),
+                    ),
+                )
+            }
         }
 
-        Locuteur(expression = Expression.PARLE, modifier = Modifier.align(Alignment.Start))
+        if (porte) Locuteur(expression = Expression.PARLE, modifier = Modifier.align(Alignment.Start))
     }
 }
 

@@ -4,12 +4,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import io.allonsy.kokoro.R
-import io.allonsy.kokoro.monde.Fonction
 import io.allonsy.kokoro.reglages.Reglages
 import io.allonsy.kokoro.ui.LocalPaletteKokoro
 import io.allonsy.kokoro.ui.PanneauExtrude
@@ -24,18 +22,13 @@ fun ContenuCrise(
     ecran: EcranCrise,
     reglages: Reglages,
     envoi: ResultatEnvoi,
-    onFonction: (Fonction) -> Unit,
     onEnvoyer: () -> Unit,
     onSecours: () -> Unit,
     onFermer: () -> Unit,
 ) {
     when (ecran) {
-        EcranCrise.Accueil -> EcranAccueil(
-            reglages = reglages,
-            envoi = envoi,
-            onFonction = onFonction,
-            onFermer = onFermer,
-        )
+        // L'accueil n'est pas un contenu : c'est la scène de crise elle-même, que rien ne recouvre.
+        EcranCrise.Accueil -> Unit
         EcranCrise.MotCode -> EcranMotCode(
             reglages = reglages,
             envoi = envoi,
@@ -44,28 +37,7 @@ fun ContenuCrise(
             onFermer = onFermer,
         )
         EcranCrise.Tension -> ContenuTension(onFermer = onFermer)
-        EcranCrise.Phrase -> EcranPhrase(onFermer = onFermer)
-    }
-}
-
-@Composable
-private fun EcranAccueil(
-    reglages: Reglages,
-    envoi: ResultatEnvoi,
-    onFonction: (Fonction) -> Unit,
-    onFermer: () -> Unit,
-) {
-    PageCrise(
-        titre = stringResource(R.string.monde_crise_titre),
-        onFermer = onFermer,
-        defilant = false,
-        alignement = Alignment.CenterVertically,
-    ) {
-        PortesDeCrise(
-            contactNom = reglages.contactNom,
-            envoiEnCours = envoi == ResultatEnvoi.EN_COURS,
-            onFonction = onFonction,
-        )
+        EcranCrise.Phrase -> ContenuPhrase(onFermer = onFermer)
     }
 }
 
@@ -116,7 +88,7 @@ private fun EcranMotCode(
 }
 
 @Composable
-private fun EcranPhrase(onFermer: () -> Unit) {
+fun ContenuPhrase(onFermer: () -> Unit) {
     val palette = LocalPaletteKokoro.current
     PanneauCrise(titre = stringResource(R.string.phrase_titre), onFermer = onFermer) {
         PanneauExtrude(modifier = Modifier.fillMaxWidth()) {

@@ -170,7 +170,7 @@ controles: [C1, C2, C3, C4, C5, C6, C7, C8, C9, C10]
 - **Contredire pour contredire** — une objection fabriquée coûte autant qu'un acquiescement.
 - **Rouvrir un arbitrage de Xavier** sans fait nouveau, et sans dire lequel.
 - **Écrire dans `psy/outputs/dossier/`.**
-- **Modifier ou publier le programme.** Le superviseur constate un écart, il ne le répare pas et ne lance jamais `npm run psy:publish` : **une seule main écrit ce que Xavier voit**, et c'est celle de la séance.
+- **Modifier ou publier le programme.** Le superviseur constate un écart, il ne le répare pas et ne lance jamais `npm run psy:publish` : **une seule main écrit ce que Xavier voit**, et c'est celle de Claude Psy.
 - **Produire un constat sans emplacement vérifiable.**
 - **Corriger soi-même en silence.** Le superviseur **constate** ; la correction est un acte séparé, décidé après. Un audit qui répare ce qu'il trouve ne laisse aucune trace de ce qui n'allait pas.
 - **Noter Xavier**, son assiduité, ses chiffres ou sa « motivation ».

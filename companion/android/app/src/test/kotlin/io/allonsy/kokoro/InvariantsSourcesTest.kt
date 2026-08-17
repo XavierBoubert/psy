@@ -32,9 +32,10 @@ class InvariantsSourcesTest {
         interdire(RESEAU, "aucun service tiers, aucune télémétrie, pas de permission INTERNET")
     }
 
-    // Xavier, 16/08/2026 : aucun personnage sur les écrans de crise hors de l'écran du monde (CORPS.md §10).
+    // Xavier, 18/08/2026 : la scène de crise du monde est la seule à porter le personnage, et la notification l'affiche
+    // telle quelle (CORPS.md §10.2). Aucune surface de crise n'en dessine un elle-même.
     @Test
-    fun `aucun personnage dans les surfaces de crise hors du monde`() {
+    fun `aucun personnage dessine par une surface de crise`() {
         val personnages = listOf("CorpsKokoro(", "Locuteur(", "Habitant(", "BrasDeLHabitant(")
         val trouves = sources
             .filter { it.parentFile?.name == "crise" }
@@ -43,8 +44,19 @@ class InvariantsSourcesTest {
                 personnages.filter { contenu.contains(it) }.map { "${fichier.name} → $it" }
             }
         assertTrue(
-            "Un personnage est entré dans une surface de crise hors du monde : $trouves",
+            "Un personnage est dessiné par une surface de crise au lieu de venir de la scène du monde : $trouves",
             trouves.isEmpty(),
+        )
+    }
+
+    // Tension appliquée, phrase pour le soignant, mot-code : aucun panneau de crise ne porte Kokoro sous lui.
+    @Test
+    fun `aucun kokoro sous un panneau de crise`() {
+        val activite = File(SOURCES, "io/allonsy/kokoro/crise/CriseActivity.kt")
+        assertTrue("CriseActivity introuvable : ${activite.absolutePath}", activite.isFile)
+        assertTrue(
+            "CriseActivity doit poser LocalPanneauPorte à false : un panneau de crise ne porte ni queue ni personnage",
+            activite.readText().contains("LocalPanneauPorte provides false"),
         )
     }
 

@@ -33,11 +33,13 @@ data class Section(
 
 val ECRANS_VIDES = setOf(Ecran.DOCUMENTATION, Ecran.BILAN)
 
-// Tout ce qu'un bouton de Thérapie peut ouvrir dans le panneau de dialogue — une seule forme, trois contenus.
+// Tout ce qu'un bouton du monde peut ouvrir dans le panneau de dialogue — une seule forme, cinq contenus.
 sealed interface Contexte {
     data class Demarche(val etape: Etape) : Contexte
     data object Reglages : Contexte
     data object Checkin : Contexte
+    data object Tension : Contexte
+    data object Phrase : Contexte
 }
 
 @Composable
