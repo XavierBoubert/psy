@@ -20,14 +20,6 @@ fun envoiDirectDisponible(context: Context): Boolean =
     ContextCompat.checkSelfPermission(context, Manifest.permission.SEND_SMS) ==
         PackageManager.PERMISSION_GRANTED
 
-/**
- * ⭐ **Un appui, le message part** — le geste commun aux deux entrées de la crise *(15/08/2026)*.
- *
- * 🔴 **Il renvoie `false` quand l'envoi direct est impossible** — pas de numéro enregistré, ou
- * autorisation SMS refusée. L'appelant ouvre alors l'écran du mot-code, qui explique et propose
- * l'application Messages : **un bouton qui n'envoie rien en silence serait pire que l'écran de
- * trop.**
- */
 fun tenterMotCode(context: Context, reglages: Reglages): Boolean {
     if (!reglages.contactRenseigne || !envoiDirectDisponible(context)) return false
     envoyerMotCode(context, reglages.contactNumero, reglages.motCode)

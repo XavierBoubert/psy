@@ -21,21 +21,7 @@ import io.allonsy.kokoro.ui.PileDeBoutons
 import io.allonsy.kokoro.ui.TypoKokoro
 import io.allonsy.kokoro.ui.grave
 
-/**
- * Les pièces des écrans de crise — **la matière du monde, appliquée ici aussi**
- * *(`companion/INTERFACE.md` §4.5, écrit le 15/08/2026)*.
- *
- * 🔴 **C'est l'écran le moins décoré du dispositif.** Aucun ornement, aucune étincelle, aucun cœur,
- * une seule couleur de bouton, texte plus grand et boutons plus hauts qu'ailleurs. **En crise, la
- * mignonnerie est du bruit** — il se distingue en étant plus grand et plus vide, **pas plus vif**.
- *
- * 🔴 **Aucun rouge, ici moins qu'ailleurs.** La palette n'en contient pas.
- */
-
-/** La hauteur d'un bouton de crise. Plus haut que partout ailleurs, et c'est le sujet. */
 private val HAUTEUR_CRISE = 88.dp
-
-/** L'écart entre deux portes de crise — le même que dans le monde, puisque c'est le même écran. */
 private val ECART_PORTES = 26.dp
 
 @Composable
@@ -57,20 +43,6 @@ internal fun PageCrise(
     )
 }
 
-/**
- * 🔴 **Les trois portes de la crise — un seul contenu, deux entrées** (`companion/INTERFACE.md`
- * §6.2). L'écran **BAS** du monde et l'écran ouvert hors du monde affichent **ce composable-ci**, et
- * non chacun sa version : *(15/08/2026, demande de Xavier)* deux écrans qui font la même chose et ne
- * se ressemblent pas obligent à vérifier lequel on a sous les yeux, **au moment précis où on n'a rien
- * à vérifier**.
- *
- * @param envoiEnCours grise le mot-code le temps que le SMS parte. **Un bouton qu'on peut retoucher
- *   pendant l'envoi envoie deux fois**, et rien à l'écran ne dit qu'il travaille.
- * @param motCode ce que l'écran accroche au **premier bouton**. ⭐ **L'écran de crise du monde y
- *   déclare le perchoir de Kokoro** — c'est l'arête sur laquelle il s'accoude *(`PRESENCE.md` E13)*.
- *   🔴 **Vide partout ailleurs, et notamment dans `CriseActivity`** : la présence se pose là où on
- *   arrive en traversant, jamais sur l'écran qui s'impose par-dessus le verrouillage.
- */
 @Composable
 fun PortesDeCrise(
     contactNom: String,
@@ -107,13 +79,7 @@ fun PortesDeCrise(
     }
 }
 
-/**
- * Le grand bouton d'un écran de crise : **le libellé, et le repère qui dit quand s'en servir**.
- *
- * ⭐ **Le repère est un fait extérieur** — *par SMS, aucun réseau de données requis*. 🔴 **Jamais une
- * sensation** : le déficit intéroceptif rend inutilisable tout déclenchement posé sur ce que Xavier
- * est censé percevoir.
- */
+// Le repère est toujours un fait extérieur, jamais une sensation : déficit intéroceptif de Xavier.
 @Composable
 internal fun GrandBouton(
     libelle: String,
@@ -149,7 +115,6 @@ internal fun GrandBouton(
     }
 }
 
-/** Ce qu'il y a à lire — jamais une consigne à interpréter, jamais un encouragement. */
 @Composable
 internal fun Explication(texte: String) {
     Text(
@@ -159,30 +124,21 @@ internal fun Explication(texte: String) {
     )
 }
 
-/** Un fait posé à l'encre pleine — ce qui est attendu maintenant, et rien de plus. */
 @Composable
 internal fun Enonce(texte: String) {
     Text(text = texte, style = TypoKokoro.corps, color = LocalPaletteKokoro.current.encre)
 }
 
-/** Ce qui se lit d'un coup d'œil : le mot-code, la phase, l'heure d'envoi. */
 @Composable
 internal fun EnGrand(texte: String) {
     Text(text = texte, style = TypoKokoro.fort, color = LocalPaletteKokoro.current.encre)
 }
 
-/**
- * Un chemin de côté — la phrase pour le soignant, les critères d'arrêt, le retour.
- *
- * ⭐ **Un panneau neutre : il mène ailleurs, il n'agit pas.** Le plein est réservé à ce qui fait
- * quelque chose.
- */
 @Composable
 internal fun Lien(libelle: String, onClick: () -> Unit) {
     BoutonEpais(libelle = libelle, onClic = onClick, hauteurMinimale = 62.dp)
 }
 
-/** L'action de l'écran, dans la couleur de la crise. */
 @Composable
 internal fun Action(libelle: String, onClick: () -> Unit) {
     BoutonEpais(

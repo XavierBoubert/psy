@@ -32,19 +32,7 @@ class InvariantsSourcesTest {
         interdire(RESEAU, "aucun service tiers, aucune télémétrie, pas de permission INTERNET")
     }
 
-    /**
-     * 🔴 **La dérogation de `CORPS.md` §10 s'arrête à l'écran de crise du monde, et ce test est ce
-     * qui l'y tient.**
-     *
-     * ⭐ **Xavier a tranché le 16/08/2026 : le personnage veille sur l'écran qu'on atteint en
-     * traversant — pas sur celui qui s'impose par-dessus le verrouillage quand ça va déjà mal**,
-     * ni sur la tension appliquée, ni sur la phrase pour le soignant. Ces surfaces-là vivent dans
-     * `crise/`, et **aucune ligne de ce répertoire n'a le droit de dessiner un personnage.**
-     *
-     * ⚠️ **Le risque est réel, pas théorique** : ces écrans partagent leurs pièces avec le reste de
-     * l'application, donc un personnage peut y arriver **par un défaut de la valeur d'un paramètre**,
-     * sans que personne ne l'ait décidé. Une relecture ne l'attraperait qu'une fois sur deux.
-     */
+    // Xavier, 16/08/2026 : aucun personnage sur les écrans de crise hors de l'écran du monde (CORPS.md §10).
     @Test
     fun `aucun personnage dans les surfaces de crise hors du monde`() {
         val personnages = listOf("CorpsKokoro(", "Locuteur(", "Habitant(", "BrasDeLHabitant(")

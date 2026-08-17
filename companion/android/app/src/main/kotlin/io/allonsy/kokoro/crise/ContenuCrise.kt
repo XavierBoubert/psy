@@ -48,11 +48,6 @@ fun ContenuCrise(
     }
 }
 
-/**
- * 🔴 **Le même écran que le bord **BAS** du monde, aux mêmes boutons et aux mêmes gestes**
- * *(15/08/2026, demande de Xavier)* — voir [PortesDeCrise]. Il ne défile pas et se pose au milieu,
- * comme l'écran du monde : **c'est la même page vue par l'autre porte**, et pas une deuxième page.
- */
 @Composable
 private fun EcranAccueil(
     reglages: Reglages,
@@ -74,11 +69,6 @@ private fun EcranAccueil(
     }
 }
 
-/**
- * ⭐ **Cet écran n'est plus le chemin ordinaire du mot-code** *(15/08/2026)*. Des deux entrées, le
- * message part d'un seul appui. **On n'arrive plus ici que parce que l'envoi direct n'a pas pu se
- * faire** — pas de numéro, autorisation refusée, échec du réseau.
- */
 @Composable
 private fun EcranMotCode(
     reglages: Reglages,
@@ -125,15 +115,6 @@ private fun EcranMotCode(
     }
 }
 
-/**
- * ⭐ **La phrase est écrite pour être tendue à quelqu'un d'autre** — c'est le seul écran du
- * dispositif dont un tiers est le lecteur. Elle est donc posée seule sur son panneau, en gros, sans
- * rien autour qui demanderait de faire le tri.
- *
- * ⭐ **C'est une porte à part entière, plus un recoin de la tension appliquée** *(15/08/2026, demande
- * de Xavier)*. Elle n'a donc **aucun bouton de retour** : on n'y est pas entré depuis un autre
- * écran, il n'y a nulle part où revenir. La croix ferme, comme partout.
- */
 @Composable
 private fun EcranPhrase(onFermer: () -> Unit) {
     val palette = LocalPaletteKokoro.current

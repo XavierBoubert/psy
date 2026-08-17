@@ -4,13 +4,7 @@ import java.util.Locale
 
 private const val INDENT = "  "
 
-/**
- * Écrit le JSON du check-in exactement comme `psy/docs/gabarits/journal.json` :
- * mêmes clés, même ordre, deux espaces d'indentation, `notes` en dernier.
- *
- * Sérialiseur écrit à la main plutôt qu'une bibliothèque : le format du dossier est
- * normatif et se vérifie caractère par caractère en test JVM, sans appareil.
- */
+// Écrit à la main : le format doit matcher exactement psy/docs/gabarits/journal.json (vérifié en test).
 fun serialiser(checkin: Checkin): String {
     val lignes = buildList {
         add("{")
@@ -53,11 +47,6 @@ private fun chaine(texte: String): String {
     return "\"$echappe\""
 }
 
-/**
- * Relit une valeur dans un check-in déjà écrit. Sert uniquement à poser le point de
- * départ d'un compteur (missions en cours, poids) — jamais à afficher un historique,
- * une comparaison ou une évolution.
- */
 fun relireValeur(json: String, champ: Champ): Double? {
     val motif = Regex("\"${champ.cle}\"\\s*:\\s*(-?\\d+(?:\\.\\d+)?)")
     return motif.find(json)?.groupValues?.get(1)?.toDoubleOrNull()

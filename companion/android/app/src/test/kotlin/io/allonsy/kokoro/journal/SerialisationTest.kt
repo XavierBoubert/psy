@@ -7,11 +7,6 @@ import java.io.File
 
 private val GABARIT = File("../../../psy/docs/gabarits/journal.json")
 
-/**
- * Le format du dossier est normatif (`psy/DOSSIER.md`) : aucune surface n'a le droit de
- * l'inventer. Ces tests comparent ce que Kokoro écrit au gabarit du dossier lui-même —
- * si le schéma change sans que l'app suive, la compilation échoue.
- */
 class SerialisationTest {
 
     private val gabarit: String by lazy {

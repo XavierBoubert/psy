@@ -17,19 +17,10 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-/** Une taille d'habitant quelconque : la géométrie ne dépend pas de la sienne en particulier. */
 private val TAILLE = Size(72f, 60f)
 
 private const val PRECISION = 1e-4f
 
-/**
- * L'habitant — `PRESENCE.md` §2 et étapes **E9 → E11**.
- *
- * ⭐ **Tout ce qui décide ici est une fonction pure** : la place, le point où il se pose, l'arc du
- * transit. C'est ce qui rend le comportement vérifiable **sans écran** — et donc ce qui permet
- * d'affirmer qu'aucun écart n'existe entre un check-in fait et un check-in non fait, au lieu de
- * l'espérer.
- */
 class HabitantTest {
 
     private fun sejour(
@@ -38,17 +29,7 @@ class HabitantTest {
         vides: Set<Ecran> = emptySet(),
     ) = Sejour(heure = heure, checkinFait = checkinFait, vides = vides)
 
-    /**
-     * 🔴 **La dérogation de l'écran de crise, et ses quatre bornes** — `CORPS.md` §10, **E13
-     * arbitrée par Xavier le 16/08/2026** après le refus de la supervision du 15/08.
-     *
-     * ⭐ **Ce test a changé de nature, il n'a pas disparu.** Il verrouillait l'**absence** de
-     * personnage tant que la supervision n'avait pas eu lieu ; il verrouille maintenant **ce que la
-     * dérogation admet, et rien de plus**. Ce qui la borne se vérifie ici : le panneau est allumé
-     * *(c'est un visage qu'on veut, pas une présence muette)*, il ne vole pas *(il est accoudé, et
-     * une ombre tomberait sur l'interface)*, et **rien de tout ça ne dépend de l'heure ni du
-     * check-in** — l'écran de crise ne réagit à aucun état du dossier.
-     */
+    // E13, Xavier 16/08/2026 (après refus superviseur du 15/08) : écran de crise = veille fixe, indépendante de tout état.
     @Test
     fun `l'ecran de crise porte une veille, et rien de plus`() {
         val places = listOf(0, 12, 17, 18, 23).flatMap { heure ->
@@ -74,11 +55,7 @@ class HabitantTest {
         assertNull("Il ne lit rien : il regarde", veille?.balayage)
     }
 
-    /**
-     * 🔴 **Il ne s'endort jamais sur l'écran de crise.** Il n'y a pas de liste à cet écran, et
-     * **veiller est précisément ce qu'il y fait** : des Zzz par-dessus le bouton *Mot code* seraient
-     * le contresens le plus coûteux du dispositif.
-     */
+    // Un Zzz sur le bouton Mot-code serait le contresens le plus coûteux du dispositif.
     @Test
     fun `la crise ne l'endort jamais`() {
         val toutVide = place(Ecran.CRISE, sejour(vides = Ecran.entries.toSet()))
@@ -87,10 +64,6 @@ class HabitantTest {
         assertTrue("La crise n'est jamais comptée vide", Ecran.CRISE !in ECRANS_VIDES)
     }
 
-    /**
-     * ⭐ La bascule de 18 h (§2) — **avant, il est pensif devant la liste ; après, il montre le
-     * check-in.** Le seuil est net : rien ne se déclenche à 17 h 59.
-     */
     @Test
     fun `il bascule vers le check in a dix huit heures`() {
         (0 until HEURE_DU_CHECKIN).forEach { heure ->
@@ -105,13 +78,7 @@ class HabitantTest {
         }
     }
 
-    /**
-     * 🔴 **Le garde-fou du §4.4, en toutes lettres.** `chaleureux` réagit à un fait accompli et n'a
-     * pas de contraire : quand le check-in n'est pas fait, **la posture, la place, le geste et le
-     * balayage sont identiques au caractère près**, et seule l'expression reste celle de tous les
-     * jours. Comparer les deux places champ à champ est la seule façon d'affirmer qu'aucun autre
-     * écart n'est observable — un reproche se glisse dans un détail, pas dans une déclaration.
-     */
+    // §4.4 : chaleureux n'a pas de contraire — rien ne doit signaler qu'une étape n'est pas faite.
     @Test
     fun `le check in non fait ne se voit nulle part`() {
         val fait = place(Ecran.THERAPIE, sejour(heure = 20, checkinFait = true))
@@ -124,10 +91,6 @@ class HabitantTest {
         assertNull("Rien ne dit qu'une étape n'est pas faite", pasFait?.expression)
     }
 
-    /**
-     * ⭐ Les deux écrans qui n'ont rien (§2) : **il dort, et sa place ne bouge pas.** Un personnage
-     * qui se déplacerait parce qu'une liste est vide dirait quelque chose de la liste.
-     */
     @Test
     fun `une liste vide l'endort sans le deplacer`() {
         listOf(Ecran.DOCUMENTATION, Ecran.BILAN).forEach { ecran ->
@@ -143,10 +106,6 @@ class HabitantTest {
         }
     }
 
-    /**
-     * ⭐ **C'est l'état d'aujourd'hui** : la bibliothèque et le bilan sont vides tant que **K5** n'a
-     * pas branché la lecture du dossier, donc les deux montrent le sommeil — et leur texte reste.
-     */
     @Test
     fun `la documentation et le bilan dorment aujourd'hui`() {
         assertEquals(setOf(Ecran.DOCUMENTATION, Ecran.BILAN), ECRANS_VIDES)
@@ -163,15 +122,7 @@ class HabitantTest {
         )
     }
 
-    /**
-     * ⭐ **Ce qui n'est pas endormi lévite** — et donc porte une ombre. Rien dans le monde ne se pose
-     * au sol (§1.3).
-     *
-     * 🔴 **Une seule exception, et elle est nommée : l'écran de crise.** Il n'y est pas *posé*, il y
-     * est **accoudé** — ses bras reposent sur le bouton. Le faire léviter ferait glisser ses bras le
-     * long de l'arête, et son ombre tomberait sur l'interface. **L'exception est écrite ici pour
-     * qu'une seconde ne puisse pas se glisser à côté sans se voir.**
-     */
+    // Seule exception au vol perpétuel : accoudé à la crise, sinon les bras glisseraient et l'ombre tomberait sur l'UI.
     @Test
     fun `il ne pose jamais les pieds, sauf accoude a la crise`() {
         Ecran.entries.forEach { ecran ->
@@ -191,11 +142,6 @@ class HabitantTest {
         )
     }
 
-    /**
-     * ⭐ **Le cadre est la bande, pas la pancarte** : posé à droite, il touche le bord droit du
-     * contenu ; posé au centre, il est centré dessus. Dans les deux cas il est **centré en
-     * hauteur**, donc la bande n'a besoin que d'être assez haute pour lui.
-     */
     @Test
     fun `il se pose dans la bande qu'on lui reserve`() {
         val bande = Rect(left = 40f, top = 200f, right = 1000f, bottom = 300f)
@@ -209,11 +155,6 @@ class HabitantTest {
         assertEquals(bande.center.y, centre.y + TAILLE.height / 2f, PRECISION)
     }
 
-    /**
-     * ⭐ **Une bande sortie du champ garde des coordonnées qui comptent.** C'est ce qui laisse
-     * l'habitant sortir avec sa liste au lieu de se coincer contre le bord de la dalle : la place
-     * suit le cadre, aussi loin qu'il aille.
-     */
     @Test
     fun `il sort du champ avec la bande au lieu de se replacer`() {
         val taille = Size(72f, 60f)
@@ -229,11 +170,6 @@ class HabitantTest {
         assertNull("Sans bande posée, aucun point", pointDeLaPlace(null, Cadrage.AU_CENTRE, taille))
     }
 
-    /**
-     * 🔴 **L'arc du transit est nul aux deux bouts et n'a qu'un sommet** : il monte, il redescend,
-     * et il ne change jamais de direction net (§3). Un arc qui ne retomberait pas exactement à zéro
-     * poserait l'habitant plus haut à chaque traversée.
-     */
     @Test
     fun `l'arc du transit monte et retombe exactement`() {
         val fleche = 26f
@@ -253,11 +189,6 @@ class HabitantTest {
         )
     }
 
-    /**
-     * 🔴 **E12 — il quitte le champ, il ne s'efface pas** (§1.1 et §4.2). La sortie est latérale et
-     * vaut une largeur de dalle : **d'où qu'il parte, il est dehors à l'arrivée**, et il n'a pas
-     * bougé d'un pixel au départ.
-     */
     @Test
     fun `il quitte le champ par le cote au lieu de s'effacer`() {
         val largeur = 1_080f
@@ -279,12 +210,6 @@ class HabitantTest {
         )
     }
 
-    /**
-     * ⭐ **Accoudé : la ligne des épaules tombe sur l'arête du bouton, au pixel.** C'est ce qui pose
-     * les bras — tenus à l'horizontale par la posture — **sur** le bord, et met tout le reste du
-     * corps **derrière**. 🔴 **Rien n'est réglé à l'œil** : la hauteur des épaules est une ancre du
-     * dessin, et le cadre est le bouton lui-même.
-     */
     @Test
     fun `accoude, les epaules tombent sur l'arete du bouton`() {
         val bouton = Rect(left = 20f, top = 400f, right = 1060f, bottom = 700f)
@@ -304,14 +229,7 @@ class HabitantTest {
         )
     }
 
-    /**
-     * 🔴 **L'enveloppe du vol tient, elle ne fait pas que passer** — c'est ce qui a fait échouer les
-     * deux premières tentatives *(16/08/2026 : « les animations de vol n'apparaissent pas du tout »)*.
-     *
-     * ⭐ **Le pic d'un demi-sinus ne dure rien**, et pendant ce rien Kokoro traverse l'écran à plus de
-     * 2 000 px/s — quand il n'est pas encore rentré dans le champ. **Ce test dit la seule chose qui
-     * compte : la pose est pleine pendant au moins la moitié du transit**, donc elle est vue.
-     */
+    // Deux tentatives avaient échoué (16/08/2026 : le vol n'apparaissait pas) faute d'enveloppe pleine assez longtemps.
     @Test
     fun `l'enveloppe du vol tient pendant la traversee`() {
         assertEquals("Rien au départ", 0f, enveloppeDuVol(0f), PRECISION)
@@ -324,10 +242,6 @@ class HabitantTest {
         assertTrue("Et elle s'est relâchée en se posant", enveloppeDuVol(0.95f) < 0.15f)
     }
 
-    /**
-     * 🔴 **Elle ne saute nulle part, et elle ne fait pas de marche** — ni au démarrage, ni à la
-     * bascule du plateau, ni à l'atterrissage (`CORPS.md` §5 : aucune animation brusque).
-     */
     @Test
     fun `l'enveloppe du vol est continue`() {
         val pas = (0..1000).map { enveloppeDuVol(it / 1000f) }
@@ -337,11 +251,7 @@ class HabitantTest {
         assertTrue("Elle ne sort jamais de ses bornes", pas.all { it in 0f..1f })
     }
 
-    /**
-     * ⭐ **Les bras de la crise descendent sur la seconde moitié de la montée, et finissent avec
-     * elle** *(demande de Xavier, 16/08/2026)*. 🔴 Le geste ne remonte jamais et ne démarre pas d'un
-     * coup — sa dérivée s'annule aux deux bouts.
-     */
+    // Xavier, 16/08/2026 : les bras de la crise descendent sur la seconde moitié de la montée, jamais d'un coup.
     @Test
     fun `les bras de la crise descendent sur la seconde moitie de la montee`() {
         assertEquals("Levés à mi-montée encore", 0f, secondeMoitie(0.5f), PRECISION)
@@ -356,11 +266,6 @@ class HabitantTest {
         }
     }
 
-    /**
-     * 🔴 **Les bras levés sont à la verticale, et c'est de la géométrie, pas un goût** : le bouton
-     * cache tout ce qui passe sous son arête et les bras pivotent aux épaules, qui n'y arrivent qu'à
-     * la fin de la montée. Plus bas que la verticale, l'affaissement se joue **derrière le bouton**.
-     */
     @Test
     fun `les bras leves de la crise sont a la verticale`() {
         assertEquals(
@@ -377,7 +282,6 @@ class HabitantTest {
         )
     }
 
-    /** La géométrie est une translation pure : aucun décalage caché ne se glisse dedans. */
     @Test
     fun `le point ne depend que du cadre`() {
         val cadre = Rect(Offset(10f, 20f), Size(400f, 80f))

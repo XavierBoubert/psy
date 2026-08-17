@@ -11,14 +11,6 @@ import io.allonsy.kokoro.reglages.lireReglages
 import io.allonsy.kokoro.reglages.minuteCourante
 import io.allonsy.kokoro.ui.ThemeMonde
 
-/**
- * Le check-in quotidien — sept questions du noyau puis les champs de campagne déclarés
- * dans `etat.md` §4, dans l'ordre du skill `psy-journal`. Aucune question n'attend de
- * texte ; « passer » écrit `null`, qui n'est pas `0` ; « arrêter » enregistre ce qui a
- * été rempli et s'arrête sans relance.
- *
- * Rien n'est commenté, rien n'est comparé, rien n'est compté d'un jour à l'autre.
- */
 class JournalActivity : ComponentActivity() {
     private val etape = mutableStateOf<EtapeJournal>(EtapeJournal.Repondre(0))
     private val checkin = mutableStateOf(Checkin.vide(""))

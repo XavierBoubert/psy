@@ -70,8 +70,6 @@ import io.allonsy.kokoro.ui.ThemeMonde
 import io.allonsy.kokoro.ui.TypoKokoro
 
 private const val DELAI_TEST_MILLIS = 20_000L
-
-/** Deux chiffres, pas plus — c'est tout ce qu'une moitié d'heure peut valoir. */
 private const val CHIFFRES_BORNE = 2
 
 data class EtatAutorisations(
@@ -80,17 +78,6 @@ data class EtatAutorisations(
     val smsAutorise: Boolean,
 )
 
-/**
- * L'écran de réglages — **la matière du monde, et la forme d'un écran de paramètres**
- * *(15/08/2026)*.
- *
- * ⭐ **Rien ici ne se règle en situation : tout se prépare à froid.** C'est ce qui autorise cet
- * écran à être long et à porter des explications, là où un écran de crise ne porte que des boutons.
- *
- * 🔴 **Le monde et le check-in n'y ont plus de bouton** *(demande de Xavier)* : l'icône du lanceur
- * ouvre le monde (D10), et le check-in est une étape de la thérapie. **Une porte par chose, pas
- * deux.**
- */
 class MainActivity : ComponentActivity() {
     private val autorisations = mutableStateOf(EtatAutorisations(false, false, false))
     private val reglages = mutableStateOf(REGLAGES_INITIAUX)
@@ -288,13 +275,6 @@ private fun EcranReglages(
     }
 }
 
-/**
- * Le destinataire du mot-code, et **le message lui-même** *(15/08/2026, demande de Xavier)*.
- *
- * 🔴 **Le changer ici ne prévient personne.** Un mot-code n'a de valeur que parce que la personne qui
- * le reçoit sait ce qu'il veut dire : le réglage sert à suivre un accord qui a bougé, **il ne le
- * remplace pas**.
- */
 @Composable
 private fun ChampsContact(reglages: Reglages, onEnregistrer: (Reglages) -> Unit) {
     var nom by remember(reglages) { mutableStateOf(reglages.contactNom) }
@@ -325,14 +305,6 @@ private fun ChampsContact(reglages: Reglages, onEnregistrer: (Reglages) -> Unit)
     }
 }
 
-/**
- * Le réglage de la nuit — un interrupteur et deux heures, **chacune en deux champs de deux
- * chiffres** *(15/08/2026)*.
- *
- * ⭐ **Le bouton d'enregistrement reste inerte tant qu'une des deux heures ne se lit pas.** Rien
- * n'est corrigé en silence : un réglage qu'on croit posé et qui ne l'est pas serait pire qu'un
- * réglage qui refuse de partir.
- */
 @Composable
 private fun ChampsNuit(nuit: PlageNuit, onEnregistrer: (PlageNuit) -> Unit) {
     var debutHeures by remember(nuit) { mutableStateOf(ecrireHeures(nuit.debut)) }
@@ -384,18 +356,6 @@ private fun ChampsNuit(nuit: PlageNuit, onEnregistrer: (PlageNuit) -> Unit) {
     }
 }
 
-/**
- * Le mouvement du décor — **deux interrupteurs, et ils prennent effet tout de suite**
- * *(15/08/2026, demande de Xavier)*.
- *
- * ⭐ **Pas de bouton *Enregistrer* ici, contrairement à la nuit.** Un interrupteur n'a rien à
- * valider : il n'y a pas de saisie qui pourrait ne pas se lire, donc rien qui puisse partir de
- * travers en silence. C'est déjà la règle de l'interrupteur de la nuit, juste au-dessus.
- *
- * 🔴 **La ligne de l'inclinaison disparaît quand la parallaxe est coupée** — elle ne ferait alors
- * rien du tout — **et quand le téléphone n'a pas le capteur**, où une phrase dit pourquoi. Un
- * interrupteur inerte est un réglage qu'on croit posé.
- */
 @Composable
 private fun ChampsParallaxe(
     parallaxe: Parallaxe,
@@ -422,10 +382,6 @@ private fun ChampsParallaxe(
     if (!capteurPresent) Explication(stringResource(R.string.controle_parallaxe_sans_capteur))
 }
 
-/**
- * Une heure : deux champs de deux chiffres, séparés par un deux-points **écrit à l'écran et non à
- * saisir** — le clavier numérique d'Android ne le porte pas.
- */
 @Composable
 private fun Borne(
     heures: String,
@@ -460,19 +416,16 @@ private fun ChampChiffres(valeur: String, onValeur: (String) -> Unit, repere: St
     )
 }
 
-/** Le titre d'une section — une pancarte, la même que celles des écrans du monde. */
 @Composable
 private fun Section(libelle: String) {
     Pancarte(texte = libelle, couleur = LocalPaletteKokoro.current.peche, modifier = Modifier.padding(top = 16.dp))
 }
 
-/** Ce qui range les lignes d'une section : **un seul panneau, des traits dedans.** */
 @Composable
 private fun Groupe(contenu: @Composable () -> Unit) {
     PanneauExtrude(modifier = Modifier.fillMaxWidth()) { contenu() }
 }
 
-/** Une ligne de réglage : ce qu'elle règle à gauche, de quoi le régler à droite. */
 @Composable
 private fun Ligne(libelle: String, valeur: @Composable () -> Unit) {
     Row(
@@ -490,7 +443,6 @@ private fun Ligne(libelle: String, valeur: @Composable () -> Unit) {
     }
 }
 
-/** Un champ nommé : le nom au-dessus, la saisie en dessous, jamais l'un dans l'autre. */
 @Composable
 private fun Champ(
     libelle: String,
@@ -512,7 +464,6 @@ private fun Champ(
     )
 }
 
-/** Ce qui est enregistré aujourd'hui — un constat, jamais un commentaire. */
 @Composable
 private fun Valeur(texte: String) {
     Text(text = texte, style = TypoKokoro.corps, color = LocalPaletteKokoro.current.encre)

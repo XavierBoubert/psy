@@ -107,17 +107,7 @@ const resoudreSource = async (chemin: string): Promise<string> => {
   throw new Error(`source introuvable : ${chemin}`);
 };
 
-/**
- * Le fondu, exécuté dans la page — c'est le seul endroit où un canvas existe.
- *
- * `destination-in` garde le pixel déjà dessiné et lui impose l'alpha du masque qu'on peint
- * par-dessus. Les deux passes se **multiplient** : l'horizontale porte l'opacité générale et les
- * bords latéraux, la verticale ne fait qu'adoucir le haut et le bas. C'est ce produit qui arrondit
- * les quatre coins sans qu'on ait à décrire un dégradé radial.
- *
- * ⭐ L'ordre compte : si la verticale portait aussi l'opacité, les deux se multiplieraient et le
- * centre tomberait à 0,36 au lieu de 0,6.
- */
+// La verticale ne doit pas porter l'opacité : les deux passes se multiplient, sinon le centre tombe à 0,36 au lieu de 0,6.
 const FONDRE = `(source, largeur, ratio, ancrage, opacite, gauche, droite, vertical, type, qualite) =>
   new Promise((resolve, reject) => {
     const image = new Image();

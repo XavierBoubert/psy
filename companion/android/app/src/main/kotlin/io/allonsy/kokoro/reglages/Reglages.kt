@@ -2,14 +2,7 @@ package io.allonsy.kokoro.reglages
 
 import android.content.Context
 
-/**
- * Le message convenu, tel qu'il part **si personne n'en a convenu d'un autre**.
- *
- * ⭐ **Il se règle désormais dans l'application** *(15/08/2026, demande de Xavier)*. Ça ne le rend pas
- * moins convenu : **un mot-code se décide à froid avec la personne qui le reçoit**, et le changer
- * dans Kokoro ne prévient personne. Le réglage sert à ce que le dispositif suive un accord qui a
- * bougé, pas à improviser un message en situation.
- */
+// Changer le mot-code ici ne prévient pas le destinataire : l'accord se prend à froid avec lui.
 const val MOT_CODE_PAR_DEFAUT = "shutdown"
 
 const val NOM_PAR_DEFAUT = "Chourouk"
@@ -34,13 +27,6 @@ data class Reglages(
     val contactRenseigne: Boolean get() = contactNumero.isNotBlank()
 }
 
-/**
- * Ce que valent les réglages avant la première lecture du disque.
- *
- * ⭐ **Le destinataire y porte déjà son prénom** : un écran de crise qui s'ouvre en affichant
- * *Mot-code à* suivi d'un blanc, le temps d'une lecture de fichier, est un écran qui hésite au pire
- * moment.
- */
 val REGLAGES_INITIAUX = Reglages(
     contactNom = NOM_PAR_DEFAUT,
     contactNumero = "",

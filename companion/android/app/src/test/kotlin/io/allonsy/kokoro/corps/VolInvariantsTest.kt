@@ -7,21 +7,8 @@ import java.io.File
 
 private val FICHIER_VOL_DROITE = File("../../ressources/retenus/kokoro-corps-v2-right.svg")
 
-/**
- * ⚠️ Plus lâche que celle du dessin de repos : là-bas on compare des chiffres transcrits, ici le
- * résultat d'une décomposition en `Float`. Sur des translations de l'ordre de 250, sept chiffres
- * significatifs laissent une dizaine de millièmes de reste — soit un cinq-millième de pixel.
- */
 private const val PRECISION = 1e-4f
 
-/**
- * Le dessin de vol fait foi, comme le dessin de repos.
- *
- * `retenus/kokoro-corps-v2-right.svg` est Kokoro en vol vers la droite. [POSE_VOL_DROITE_TRONC] et
- * les quatre [PoseMembre] n'en sont qu'une décomposition. Ce test recompose la pose par-dessus le
- * dessin de repos et vérifie qu'on retombe **exactement** sur la matrice de la variante, pièce par
- * pièce — 🔴 y compris la tête et le visage, dont l'oubli avait rendu le vol méconnaissable.
- */
 class VolInvariantsTest {
 
     private val svg: String by lazy {
@@ -29,7 +16,6 @@ class VolInvariantsTest {
         FICHIER_VOL_DROITE.readText()
     }
 
-    /** La racine du dessin de variante — celle qui transporte tout le reste dans la vue. */
     private val racine: Transformation by lazy { transformation("kokoro") }
 
     @Test
@@ -40,7 +26,6 @@ class VolInvariantsTest {
         comparer("pied droit", place("foot-left"), pose(POSE_VOL_DROITE_PIED_DROIT, PIED_DROIT))
     }
 
-    /** Le corps s'affine et s'allonge ; le 心, posé dessus, a en plus son glissement propre. */
     @Test
     fun `le corps du vol est celui du dessin`() {
         val vol = POSE_VOL_DROITE_TRONC
@@ -49,11 +34,7 @@ class VolInvariantsTest {
         comparer("心", place("kanji-1"), KANJI.first().placement.sous(vol.kanji))
     }
 
-    /**
-     * 🔴 **La tête tournée** — c'est elle qui manquait : coque et panneau se resserrent vers la
-     * droite, les yeux se rapprochent en glissant du même côté, la bouche suit. **Sans ça, Kokoro
-     * volait de face**, et le vol ne se lisait pas.
-     */
+    // La tête tournée manquait initialement : sans elle, Kokoro semblait voler de face.
     @Test
     fun `la tete et le visage du vol sont ceux du dessin`() {
         val vol = POSE_VOL_DROITE_TRONC
@@ -70,7 +51,6 @@ class VolInvariantsTest {
         assertTrue("Et rien ne tourne dans le tronc", listOf(vol.torse, vol.coque, vol.panneau).all { it.b == 0f })
     }
 
-    /** 🔴 Au repos, la pose ne fait rien : c'est ce qui autorise à la composer partout sans garde. */
     @Test
     fun `la pose est l'identite au repos`() {
         listOf(
@@ -87,10 +67,6 @@ class VolInvariantsTest {
         comparer("œil à t = 0", Transformation(), repos.oeilGauche)
     }
 
-    /**
-     * ⭐ **Une échelle interpolée reste une échelle autour du même point** — c'est ce qui autorise
-     * [Transformation.versIdentite] à lerper les termes au lieu de décomposer.
-     */
     @Test
     fun `l'interpolation garde le pivot de l'echelle`() {
         val pleine = POSE_VOL_DROITE_TRONC.panneau
@@ -101,10 +77,6 @@ class VolInvariantsTest {
         }
     }
 
-    /**
-     * 🔴 Le vol vers la gauche est le miroir de celui vers la droite, et rien d'autre — il n'a pas de
-     * troisième dessin. Les côtés s'échangent, les angles changent de sens, les pivots passent l'axe.
-     */
     @Test
     fun `le vol vers la gauche est le miroir de celui vers la droite`() {
         listOf(
@@ -138,11 +110,6 @@ class VolInvariantsTest {
         )
     }
 
-    /**
-     * ⭐ Le pivot du corps et ceux des pieds sortent du même geste de la main de Xavier, et tombent
-     * au même endroit à un demi-unité près. Ils ont été décomposés séparément : les voir se recouper
-     * vaut vérification, comme les deux épaules autour de [AXE].
-     */
     @Test
     fun `les pivots du vol se recoupent`() {
         val corps = POSE_VOL_DROITE_TRONC.torse
@@ -154,11 +121,6 @@ class VolInvariantsTest {
         }
     }
 
-    // ————————————————————————————————————————————————————————————————————————————————————————
-    // Lecture du SVG de variante
-    // ————————————————————————————————————————————————————————————————————————————————————————
-
-    /** Le chemin de groupes qui mène à chaque pièce, racine exclue — elle est ajoutée par [place]. */
     private val groupes = mapOf(
         "body-form" to listOf("body"),
         "body-line" to listOf("body"),
@@ -167,11 +129,9 @@ class VolInvariantsTest {
         "head-in" to listOf("head"),
     )
 
-    /** La pièce du dessin de repos, portée par sa pose de vol — ce que l'application dessine. */
     private fun pose(pose: PoseMembre, piece: Piece): Transformation =
         piece.placement.sous(pose.transformation)
 
-    /** La pièce de la variante, posée dans la vue. */
     private fun place(nom: String): Transformation =
         groupes.getOrDefault(nom, emptyList())
             .fold(transformation(nom)) { piece, groupe -> piece.sous(transformation(groupe)) }

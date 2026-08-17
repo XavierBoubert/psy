@@ -19,22 +19,6 @@ import androidx.compose.ui.unit.IntSize
 import kotlin.math.floor
 import kotlin.math.roundToInt
 
-/**
- * Le décor en parallaxe, dessiné sous les écrans.
- *
- * [camera] est en écrans, **et sur le seul axe horizontal** : `0` sur l'écran d'entrée, `1` sur son
- * voisin de droite, `-1` sur celui de gauche. **Elle n'est bornée d'aucun côté** — la tuile se
- * répète en miroir, donc il n'y a pas de fin du dessin à atteindre.
- *
- * ⭐ **Le décor ne décide de rien** — il ne connaît ni les écrans, ni les gestes, ni ce qu'il y a
- * dedans. Il ne fait que suivre la caméra qu'on lui donne, et c'est ce qui rend l'anneau gratuit :
- * pour lui, revenir sur le premier écran n'est qu'un écran de plus dans le même sens.
- *
- * 🔴 **Plus de débattement vertical** *(15/08/2026)*. Il disait la profondeur quand la traversée
- * était une croix ; **la caméra n'a plus de composante verticale**, et le glissement vertical est
- * rendu au contenu des écrans. Un décor qui bougerait avec une liste qui défile lui donnerait une
- * profondeur qu'il n'a pas.
- */
 @Composable
 fun Decor(camera: () -> Float, palette: PaletteDecor, modifier: Modifier = Modifier) {
     val images = COUCHES.map { ImageBitmap.imageResource(it.image) }
@@ -48,24 +32,6 @@ fun Decor(camera: () -> Float, palette: PaletteDecor, modifier: Modifier = Modif
     }
 }
 
-/**
- * Une couche, répétée latéralement — **de deux façons, et c'est la couche qui décide**
- * *(15/08/2026)*.
- *
- * ⭐ **Une tuile à marges se répète simplement**, en avançant de sa seule partie peinte
- * *(`Couche.pas`)* : les deux marges vides se recouvrent, le dessin reprend exactement là où il
- * s'arrête, et **il n'y a aucun axe de symétrie**. C'est la façon propre, et elle demande un dessin
- * qui laisse ses bords vides.
- *
- * ⭐ **Une tuile bord à bord se répète en miroir** : deux tuiles voisines se touchent par le même
- * bord, donc il n'y a pas de raccord à faire coïncider — il n'y a pas de raccord du tout. 🔴 **Mais
- * elle paie sa continuité en symétrie** : ce qui est coupé par le bord retrouve son reflet et forme
- * un papillon. C'est le seul recours quand le dessin ne peut pas s'arrêter avant le bord — une
- * couche de sol, qui découvrirait le ciel sous elle.
- *
- * Dans les deux cas on peut glisser indéfiniment sans jamais tomber sur la fin du dessin, **et
- * tourner indéfiniment autour de l'anneau**.
- */
 private fun DrawScope.dessinerCouche(
     couche: Couche,
     image: ImageBitmap,

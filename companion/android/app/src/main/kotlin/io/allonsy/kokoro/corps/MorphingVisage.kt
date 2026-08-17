@@ -6,44 +6,11 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
-/**
- * Le morphing du visage — `design/CORPS.md` §9.
- *
- * ⭐ **Une expression ne s'échange plus en fondu : sa forme se déforme vers la suivante.** L'ovale
- * de l'œil s'écrase en trait quand Kokoro cligne, le trait de la bouche se creuse en sourire — il
- * n'y a jamais deux visages superposés à l'écran, il n'y en a qu'un, en train de changer de forme.
- *
- * Le morphing tient à une seule idée : **chaque tracé est réduit à sa silhouette pleine,
- * échantillonnée toujours de la même manière** — bord haut de gauche à droite, bout droit, bord bas
- * de droite à gauche, bout gauche, [POINTS_PAR_QUART] points chacun. Deux tracés quelconques ont
- * donc le même nombre de points, dans le même ordre, et le point d'indice `i` de l'un a le même rôle
- * que celui de l'autre. **La correspondance est construite, pas cherchée** : aucun appariement à
- * l'exécution, aucun réglage, et le même couple de formes donne toujours exactement la même image.
- *
- * Deux conséquences qui comptent :
- * - **Une forme intermédiaire est une combinaison convexe des deux silhouettes.** Tout ce qui
- *   s'écrit comme une inégalité linéaire sur les points se transporte donc aux images du milieu —
- *   en particulier 🔴 **les commissures ne tombent pas davantage pendant la déformation qu'aux deux
- *   bouts** (§3), et `CorpsInvariantsTest` le vérifie couple par couple.
- * - **Rien n'est calculé par image** : les huit silhouettes sont calculées une fois, seule
- *   l'interpolation tourne pendant les 800 ms de la transition.
- *
- * ⚠️ Une silhouette **approche** le tracé — c'est un polygone. Le rendu ne s'en sert donc que
- * pendant une déformation ; à l'arrêt, [CorpsKokoro] trace la forme elle-même, telle que le dessin
- * la donne.
- */
-
-/** Points par quart de silhouette. Le contour complet en porte quatre fois plus. */
 const val POINTS_PAR_QUART = 24
 
 const val POINTS_CONTOUR = 4 * POINTS_PAR_QUART
 
-/**
- * La silhouette pleine d'un tracé de visage, dans le repère du tracé.
- *
- * L'ordre des points est la seule chose qui rend le morphing possible : il est décrit ci-dessus et
- * il ne change pas d'une forme à l'autre.
- */
+// Points échantillonnés dans un ordre fixe et identique pour tous les tracés : condition du morphing point à point.
 data class Contour(val points: List<Offset>) {
     init {
         require(points.size == POINTS_CONTOUR) {
@@ -51,31 +18,22 @@ data class Contour(val points: List<Offset>) {
         }
     }
 
-    /** Le bord supérieur, de gauche à droite. */
     val bordHaut: List<Offset> get() = points.subList(0, POINTS_PAR_QUART)
 
-    /** Le bord inférieur, remis de gauche à droite pour se comparer à [bordHaut]. */
     val bordBas: List<Offset>
         get() = points.subList(2 * POINTS_PAR_QUART, 3 * POINTS_PAR_QUART).reversed()
 
-    /** La forme intermédiaire entre celle-ci et [cible] : point par point, sans appariement. */
     fun vers(cible: Contour, avancement: Float): Contour = Contour(
         points.mapIndexed { indice, point -> lerp(point, cible.points[indice], avancement) },
     )
 }
 
-/** Calculée une fois : un tracé est une constante, sa silhouette aussi. */
 val Trace.contour: Contour get() = CONTOURS.getValue(nom)
 
 private val CONTOURS: Map<String, Contour> by lazy {
     TRACES.associate { trace -> trace.nom to trace.silhouette() }
 }
 
-/**
- * La ligne centrale d'un tracé et sa tangente, échantillonnées — de quoi épaissir la forme des deux
- * côtés. L'ellipse pleine n'a pas de ligne centrale : c'est un point, et sa silhouette est faite de
- * ses deux bouts arrondis, mis bout à bout.
- */
 private data class Squelette(val points: List<Offset>, val tangentes: List<Offset>)
 
 private fun Trace.silhouette(): Contour = when (val forme = forme) {
@@ -85,6 +43,7 @@ private fun Trace.silhouette(): Contour = when (val forme = forme) {
     is Forme.Chemin -> error("Le visage ne porte pas de tracé SVG libre : $nom")
 }
 
+// Ellipse : pas de ligne centrale, juste un point — sa silhouette vient de deux bouts arrondis mis bout à bout.
 private fun squelettePonctuel() = Squelette(
     points = echantillons { Offset.Zero },
     tangentes = echantillons { VERS_LA_DROITE },
@@ -115,10 +74,6 @@ private fun squelette(arc: Forme.Arc): Squelette {
     )
 }
 
-/**
- * La silhouette d'un tracé épaissi de [rayon] de chaque côté, bouts arrondis compris — c'est ce que
- * dessine un trait à terminaison ronde (§4), et le visage est le seul endroit qui en porte.
- */
 private fun contourAutour(squelette: Squelette, rayon: Float): Contour {
     val normales = squelette.tangentes.map { it.normale() }
     val haut = squelette.points.mapIndexed { indice, point -> point + normales[indice] * rayon }
@@ -131,12 +86,7 @@ private fun contourAutour(squelette: Squelette, rayon: Float): Contour {
     )
 }
 
-/**
- * Le demi-cercle qui ferme un bout : il part de [depuis], passe par [dehors] et arrive à l'opposé
- * de [depuis]. Les deux extrémités appartiennent déjà aux bords, donc seuls les points intérieurs
- * sont produits — la silhouette ne porte aucun point en double, sauf pour l'ellipse, dont les deux
- * bords sont réduits à un point.
- */
+// Demi-cercle de depuis à son opposé en passant par dehors ; aucun point dupliqué avec les bords adjacents.
 private fun bout(centre: Offset, depuis: Offset, dehors: Offset, rayon: Float): List<Offset> =
     List(POINTS_PAR_QUART) { indice ->
         val angle = PI.toFloat() * (indice + 1f) / (POINTS_PAR_QUART + 1f)
@@ -146,13 +96,12 @@ private fun bout(centre: Offset, depuis: Offset, dehors: Offset, rayon: Float): 
 private fun Contour.etire(facteurVertical: Float) =
     Contour(points.map { point -> Offset(point.x, point.y * facteurVertical) })
 
-/** [POINTS_PAR_QUART] valeurs réparties de 0 à 1, les deux extrémités comprises. */
 private fun <T> echantillons(valeur: (Float) -> T): List<T> =
     List(POINTS_PAR_QUART) { indice -> valeur(indice.toFloat() / (POINTS_PAR_QUART - 1)) }
 
 private val VERS_LA_DROITE = Offset(1f, 0f)
 
-/** La perpendiculaire qui monte quand la tangente va vers la droite *(y croît vers le bas)*. */
+// y croît vers le bas (repère écran) : Offset(y, -x) est donc la perpendiculaire qui monte.
 private fun Offset.normale() = Offset(y, -x)
 
 private fun Offset.unitaire(): Offset = when (val longueur = getDistance()) {

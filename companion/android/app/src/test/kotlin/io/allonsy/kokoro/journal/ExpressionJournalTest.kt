@@ -5,7 +5,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-/** Tous les états du check-in — un test qui en oublierait un ne dirait rien de l'invariant. */
 private val ETAPES = listOf(
     EtapeJournal.DossierAbsent,
     EtapeJournal.DejaEcrit,
@@ -16,13 +15,6 @@ private val ETAPES = listOf(
     EtapeJournal.Echoue("dossier introuvable"),
 )
 
-/**
- * L'expression du locuteur pendant le check-in — `PRESENCE.md` §1.1 et §4.4, étape **E12**.
- *
- * 🔴 **`chaleureux` réagit à un fait accompli et n'a pas de contraire.** Le vérifier état par état
- * est la seule façon d'affirmer qu'aucun visage ne dit *tu ne l'as pas fait* — un reproche se glisse
- * dans un détail, pas dans une déclaration.
- */
 class ExpressionJournalTest {
 
     @Test
@@ -37,10 +29,7 @@ class ExpressionJournalTest {
         }
     }
 
-    /**
-     * ⭐ **Un échec d'écriture n'est pas un échec de Xavier** : c'est un dossier introuvable, et la
-     * page le dit déjà en toutes lettres. Le visage reste celui de tous les jours.
-     */
+    // Un échec d'écriture n'est pas un échec de Xavier : le visage reste celui de tous les jours.
     @Test
     fun `un echec technique ne change pas le visage`() {
         assertEquals(
@@ -53,7 +42,6 @@ class ExpressionJournalTest {
         )
     }
 
-    /** Le jeu reste fermé : aucune expression du check-in n'invente une septième forme de visage. */
     @Test
     fun `le check in n'utilise que deux expressions du jeu`() {
         val utilisees = ETAPES.map { expressionDuJournal(it) }.toSet()

@@ -5,10 +5,8 @@ import io.allonsy.kokoro.R
 enum class Unite { BRUTE, HEURES, MINUTES, KILOS }
 
 sealed interface Saisie {
-    /** Choix fermé : toucher une option répond et passe à la suivante. */
     data class Choix(val options: List<Option>) : Saisie
 
-    /** Compteur : deux pas, un point de départ, jamais de saisie au clavier. */
     data class Compteur(
         val depart: Double,
         val pas: Double,
@@ -27,14 +25,6 @@ data class Question(
     val precision: Int? = null,
 )
 
-/**
- * Les sept questions du noyau, dans l'ordre du SCHEMA §3.1 et avec les énoncés du
- * skill `psy-journal` §2 — mot pour mot. Puis les champs `campagne` déclarés dans
- * `etat.md` §4, et rien d'autre : on ne pose jamais de question sur un champ non déclaré.
- *
- * R5 : aucun champ obligatoire ne demande d'écrire. Tout est compteur ou choix fermé.
- * R6 : chaque question porte une ancre comportementale, aucune ne cote un ressenti.
- */
 val QUESTIONS: List<Question> = listOf(
     Question(
         champ = Champ.SHUTDOWNS,
@@ -117,12 +107,6 @@ val QUESTIONS: List<Question> = listOf(
     ),
 )
 
-/**
- * Point de départ d'un compteur. Deux champs seulement se reprennent du dernier
- * check-in écrit — le nombre de missions et le poids — parce qu'ils bougent rarement
- * et que les retrouver au compteur chaque jour est une charge inutile. Ce n'est pas
- * un historique : rien n'est affiché, rien n'est comparé, et la valeur reste à confirmer.
- */
 val CHAMPS_REPRIS: List<Champ> = listOf(Champ.MISSIONS_ACTIVES, Champ.POIDS_KG)
 
 fun departDe(question: Question, repris: Map<Champ, Double>): Double = when (val saisie = question.saisie) {

@@ -91,18 +91,7 @@ const resoudreSource = async (chemin: string): Promise<string> => {
   throw new Error(`source introuvable : ${chemin}`);
 };
 
-/**
- * Le détourage, exécuté dans la page — c'est le seul endroit où un canvas existe.
- *
- * `magenta` mesure à quel point un pixel appartient au fond : le fond #FF00FF n'a aucun vert alors
- * que ses deux autres canaux saturent, et rien de la charte du décor ne fait ça. Un bord fondu à
- * moitié donne donc une mesure à moitié, et c'est elle qui devient l'alpha.
- *
- * La frange est ce que la démultiplication ne rattrape pas : un contour reste légèrement lilas.
- * ⭐ Elle se distingue d'un vrai rose par sa **symétrie** — le magenta a exactement autant de rouge
- * que de bleu, un pétale rose n'en a jamais autant. C'est ce test qui permet de neutraliser l'un
- * sans décolorer l'autre.
- */
+// La frange résiduelle se distingue d'un vrai rose par sa symétrie r≈b (le magenta en a toujours autant).
 const DETOURER = `(source, largeur, seuil, plein, marge, type, qualite) => new Promise((resolve, reject) => {
   const image = new Image();
   image.onerror = () => reject(new Error('image illisible'));

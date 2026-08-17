@@ -7,21 +7,9 @@ enum class Section { NOYAU, CAMPAGNE }
 
 private val FORMAT_JOUR: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
-/**
- * Le jour courant, au format qui nomme les fichiers du journal.
- *
- * 🔴 **Une seule écriture de la date pour tout le dispositif.** Le check-in la pose sur le fichier
- * qu'il écrit, l'habitant s'en sert pour savoir si ce fichier existe : deux formats divergents
- * feraient croire qu'aucun check-in n'a jamais été fait.
- */
 fun jourCourant(): String = LocalDate.now().format(FORMAT_JOUR)
 
-/**
- * Les champs du check-in, dans l'ordre imposé par `psy/DOSSIER.md` §3.
- * Le noyau est stable dans le temps ; la campagne suit `etat.md` §4 et sortira du
- * journal à la clôture du chantier. Aucune surface n'a le droit d'inventer un format :
- * cet ordre et ces clés sont ceux du schéma, et `ChampsTest` échoue s'ils divergent.
- */
+// Ordre et clés imposés par SCHEMA §3 — ChampsTest échoue s'ils divergent.
 enum class Champ(val cle: String, val section: Section, val decimal: Boolean) {
     SHUTDOWNS("shutdowns", Section.NOYAU, false),
     EXPOSITION_SOCIALE("exposition_sociale", Section.NOYAU, false),
@@ -38,10 +26,7 @@ enum class Champ(val cle: String, val section: Section, val decimal: Boolean) {
 
 const val SOURCE_ANDROID = "android"
 
-/**
- * Un check-in. `null` n'est pas `0` : un champ auquel Xavier n'a pas répondu reste `null`
- * (SCHEMA §3.3). `notes` est toujours facultatif et toujours en dernier.
- */
+// null ≠ 0 : un champ auquel Xavier n'a pas répondu reste null (SCHEMA §3.3).
 data class Checkin(
     val date: String,
     val valeurs: Map<Champ, Double?>,

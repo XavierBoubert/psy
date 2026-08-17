@@ -8,10 +8,10 @@ const RES = 'companion/android/app/src/main/res';
 
 const QUALITE_WEBP = 0.92;
 
-/** 108 dp de toile, 72 dp garantis visibles — la géométrie imposée par l'icône adaptative. */
+// 108 dp de toile, 72 dp garantis visibles — la géométrie imposée par l'icône adaptative.
 const TOILE_LANCEUR = 108;
 
-/** 24 dp de statut, 22 dp de dessin — la marge d'une icône de notification, et elle est mince. */
+// 24 dp de statut, 22 dp de dessin — la marge d'une icône de notification, et elle est mince.
 const TOILE_NOTIF = 24;
 const MARGE_NOTIF = 1;
 
@@ -120,18 +120,6 @@ const resoudreSource = async (chemin: string): Promise<string> => {
   throw new Error(`source introuvable : ${chemin}`);
 };
 
-/**
- * La fabrique, exécutée dans la page — c'est le seul endroit où un canvas existe.
- *
- * `poser` étire les pixels de bord dans la marge : quatre bandes d'un pixel et quatre coins d'un
- * pixel, agrandis. Le dégradé du logo étant vertical, une ligne étirée horizontalement le prolonge
- * exactement ; le corps du personnage, lui, se continue vers le bas et la droite, là où il sortait
- * déjà du cadre.
- *
- * `percer` sépare le personnage du fond par sa **froideur** (bleu − rouge) : le fond cyan la pousse
- * au-delà de 45, la crème du personnage la rend négative, et le gris de ses traits reste sous 20.
- * La luminance fait le reste du travail — les aplats restent, les traits deviennent des trous.
- */
 const FABRIQUER = `(source, options, plans) => new Promise((resolve, reject) => {
   const image = new Image();
   image.onerror = () => reject(new Error('image illisible'));

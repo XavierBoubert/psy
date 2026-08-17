@@ -11,16 +11,6 @@ private const val CLE_DERNIER_JOUR = "dernier_jour_ecrit"
 private const val SOUS_DOSSIER = "journal"
 private const val MIME_JSON = "application/json"
 
-/**
- * Accès au dossier synchronisé — arbitrage tranché le 11/08/2026 (`companion/README.md` §7), retenu ici en
- * faveur du **Storage Access Framework** plutôt que de `MANAGE_EXTERNAL_STORAGE` :
- * Xavier désigne une fois le dossier `companion/outputs` partagé par Syncthing, et Kokoro
- * n'obtient de droit que sur celui-là. Aucune permission n'entre au manifeste, et
- * l'app ne peut pas lire le reste du téléphone.
- *
- * Kokoro écrit des fichiers, pas une base : la source de vérité reste le dossier
- * (`companion/README.md` §3 — aucune base de données). Rien n'est mis en cache ici.
- */
 fun intentChoisirDossier(): Intent =
     Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
         .addFlags(
@@ -50,11 +40,7 @@ fun lireDossier(context: Context): Uri? {
     return if (accorde) arbre else null
 }
 
-/**
- * Le nom lisible du dossier désigné. ⚠️ Le dernier segment de l'URI ne convient pas :
- * sur Google Drive c'est un identifiant opaque (`acc=2;doc=encoded=L9caT1…`), illisible
- * à l'écran. On demande donc son nom au fournisseur.
- */
+// Le dernier segment de l'URI est un identifiant opaque sur Google Drive : on demande le nom au fournisseur.
 fun cheminAffichable(context: Context, arbre: Uri?): String? {
     if (arbre == null) return null
     val racine = DocumentsContract.buildDocumentUriUsingTree(
@@ -94,15 +80,7 @@ fun ecrireCheckin(context: Context, checkin: Checkin): ResultatEcriture {
     }.getOrElse { ResultatEcriture.Echec(it.message ?: it::class.java.simpleName) }
 }
 
-/**
- * ⚠️ **Deux gardes, et il en faut deux.** Le fournisseur Google Drive **accepte deux
- * fichiers du même nom** dans un même dossier, et sa liste d'enfants n'est pas immédiate :
- * constaté le 11/08/2026, deux écritures à 25 s d'intervalle ont produit deux
- * `2000-01-01.json`. Interroger le dossier ne suffit donc pas.
- *
- * Le jeton local tient le verrou d'écriture — ce n'est pas un cache de données cliniques :
- * il ne contient qu'une date, aucune réponse, et sa perte ne perd rien.
- */
+// Deux gardes nécessaires : Google Drive accepte les doublons de nom et sa liste d'enfants n'est pas immédiate.
 fun checkinDuJourExiste(context: Context, date: String): Boolean {
     val jeton = context.getSharedPreferences(FICHIER, Context.MODE_PRIVATE)
         .getString(CLE_DERNIER_JOUR, null)
@@ -119,7 +97,7 @@ private fun marquerJourEcrit(context: Context, date: String) {
         .apply()
 }
 
-/** Suppression d'un fichier du dossier — réservée au nettoyage des témoins de vérification. */
+// Réservée au nettoyage des témoins de vérification — jamais un fichier clinique réel.
 fun supprimerDuJournal(context: Context, nom: String): Int {
     val journal = dossierJournal(context) ?: return 0
     return generateSequence { enfant(context, journal, nom) }
@@ -127,11 +105,6 @@ fun supprimerDuJournal(context: Context, nom: String): Int {
         .count()
 }
 
-/**
- * Reprend, dans le dernier check-in écrit, les seules valeurs qui servent de point de
- * départ aux compteurs (`CHAMPS_REPRIS`). Aucun historique n'est constitué, aucune
- * évolution n'est calculée, rien n'est affiché à Xavier.
- */
 fun valeursReprises(context: Context, avant: String): Map<Champ, Double> {
     val journal = dossierJournal(context) ?: return emptyMap()
     val dernier = dernierFichierAvant(context, journal, avant) ?: return emptyMap()
@@ -143,7 +116,6 @@ fun valeursReprises(context: Context, avant: String): Map<Champ, Double> {
     }.toMap()
 }
 
-/** Diagnostic : le contenu d'un fichier du journal, tel que le fournisseur le rend. */
 fun lireDuJournal(context: Context, nom: String): String? {
     val journal = dossierJournal(context) ?: return null
     val fichier = enfant(context, journal, nom) ?: return null
@@ -152,7 +124,6 @@ fun lireDuJournal(context: Context, nom: String): String? {
     }.getOrNull()
 }
 
-/** Diagnostic : ce que le fournisseur de documents dit contenir, à l'instant t. */
 fun listerJournal(context: Context): List<String> {
     val journal = dossierJournal(context) ?: return emptyList()
     return parcourir(context, journal) { _, affiche -> affiche }

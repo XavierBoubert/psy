@@ -2,13 +2,7 @@ package io.allonsy.kokoro.corps
 
 import androidx.compose.ui.graphics.Color
 
-/**
- * Les couleurs du personnage — `design/CORPS.md` §4.
- *
- * ⭐ **La v2 n'a plus d'accent.** La plaque de poitrine céladon a disparu avec la v1 : le 心 est
- * tracé à l'encre, sur le corps, et le dessin est entièrement monochrome. Il n'y a donc plus que
- * trois valeurs à peindre, et aucune n'est un signal.
- */
+// ⭐ v2 sans accent : plus de plaque de poitrine, tout est monochrome (CORPS.md §4)
 data class PaletteCorps(
     val fond: Color,
     val trait: Color,
@@ -23,7 +17,6 @@ fun PaletteCorps.couleur(remplissage: Remplissage): Color? = when (remplissage) 
     Remplissage.ENCRE -> trait
 }
 
-/** Les trois valeurs du SVG de Xavier, telles quelles. */
 val PALETTE_CLAIRE = PaletteCorps(
     fond = Color(0xFFF4F1EA),
     trait = Color(0xFF383838),

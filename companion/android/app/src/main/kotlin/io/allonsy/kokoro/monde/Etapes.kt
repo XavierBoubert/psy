@@ -32,28 +32,12 @@ import io.allonsy.kokoro.ui.LocalPaletteKokoro
 import io.allonsy.kokoro.ui.Teinte
 import io.allonsy.kokoro.ui.TypoKokoro
 
-/**
- * Ce que les écrans de bord affichent aujourd'hui.
- *
- * ⚠️ **Le contenu est écrit en dur, et c'est provisoire.** Il reprend fidèlement
- * `companion/inputs/programme.json` v1 — 11 étapes — pour que la matière et le rangement soient
- * regardables sur le téléphone avant que Kokoro sache lire. **K5 remplacera ce fichier par une
- * lecture du dossier synchronisé**, avec le filtrage des sept interdits de
- * `companion/PROGRAMME.md` §7.
- *
- * ⭐ **Les textes vivent dans `strings.xml`, pas ici** : c'est ce fichier que lisent les tests
- * d'invariants. Une phrase écrite en dur dans du Kotlin échapperait au contrôle.
- */
-
-/** Une fonction déjà construite dans Kokoro — les seules valeurs que `type: ecran` peut prendre. */
+// Contenu écrit en dur, reprend companion/inputs/programme.json v1 ; K5 le remplacera par une lecture du dossier.
 enum class Fonction { CHECK_IN, MOT_CODE, TENSION, PHRASE }
 
-/** Ce qu'une carte fait quand on la touche. */
 sealed interface Ouverture {
-    /** Elle ouvre une fonction existante. 🔴 **Un nom d'écran inconnu se refuse**, il ne s'affiche pas. */
     data class Ecran(val fonction: Fonction) : Ouverture
 
-    /** Elle ouvre un détail à lire, en plein écran (`type: demarche`, `type: fiche`). */
     data class Detail(val texte: String) : Ouverture
 }
 
@@ -63,13 +47,6 @@ data class Etape(
     val duree: String? = null,
 )
 
-/**
- * Un `quand` et ce qu'il contient. La pancarte porte le `quand`, jamais autre chose.
- *
- * [perchoir] est la bande où l'habitant peut se tenir (`PRESENCE.md` §2) — 🔴 **c'est une place,
- * pas une marque** : rien ne distingue une section qui porte Kokoro d'une section qui ne le porte
- * pas, et il n'y en a jamais qu'une à la fois de toute façon.
- */
 data class Section(
     val quand: String,
     val couleur: Teinte,
@@ -77,11 +54,6 @@ data class Section(
     val etapes: List<Etape>,
 )
 
-/**
- * ⏳ **Les deux écrans qui n'ont rien** — la bibliothèque et le bilan restent vides tant que **K5**
- * n'a pas branché la lecture du dossier. C'est ce que l'habitant lit pour s'endormir (§2), et c'est
- * la même vérité que celle qu'affiche leur `CadreVide` : **une seule source, pas deux.**
- */
 val ECRANS_VIDES = setOf(Ecran.DOCUMENTATION, Ecran.BILAN)
 
 @Composable
@@ -121,40 +93,11 @@ fun sectionsTherapie(): List<Section> {
 private fun demarche(titre: Int, detail: Int): Etape =
     Etape(titre = stringResource(titre), ouverture = Ouverture.Detail(stringResource(detail)))
 
-/** Le rayon des coins de la bulle, et la taille de la queue qui pointe vers Kokoro. */
 private val BULLE_RAYON = 22.dp
 private val BULLE_QUEUE = 20.dp
 
-/** L'assombrissement du monde derrière la bulle — de quoi la détacher, jamais l'effacer. */
 private const val OPACITE_SCRIM = 0.28f
 
-/**
- * Une étape ouverte — **une bulle de dialogue, comme dans un RPG** *(16/08/2026, demande de
- * Xavier)*, et elle se ferme d'une croix, jamais d'un geste (`companion/INTERFACE.md` §3.1).
- *
- * ⭐ **La croix est en haut à droite, comme sur tous les panneaux** *(15/08/2026, demande de
- * Xavier)*. Le bouton *Fermer* qui était en pied de page obligeait à descendre une fiche longue pour
- * en sortir ; **la sortie ne dépend plus d'où l'on en est dans la lecture.**
- *
- * ⭐ **Aucune poignée de glissement** : elle promettrait un geste qui n'existe pas, et qui entrerait
- * en concurrence avec la traversée du monde.
- *
- * ⏳ **Le bouton *Fait* n'est pas là**, et c'est délibéré : il écrirait dans `reponses/`, ce que
- * Kokoro ne sait pas encore faire (K5). **Un bouton qui n'écrit rien mentirait** — mieux vaut qu'il
- * manque et que ça se voie.
- *
- * ⭐ **C'est une bulle de discussion** (`PRESENCE.md` §1.1), donc elle porte le locuteur en bas à
- * gauche, avec l'expression `parle` — *Kokoro vient de se poser, la bouche entrouverte.*
- *
- * 🔴 **La bulle s'arrête au-dessus de Kokoro, elle ne l'occupe jamais** *(16/08/2026)* : elle n'est
- * qu'un enfant de plus dans la colonne, posé avant la bande du locuteur — **sa hauteur s'arrête donc
- * mécaniquement là où la bande commence**, sans le moindre calcul de position. Une queue pointe vers
- * lui, en bas à gauche de la bulle, et le monde traversé reste visible, assombri, autour d'elle.
- *
- * 🔴 **Le bas de la page n'est plus dans les marges système**, et c'est ce qui coupe le personnage
- * **au bord de la dalle** plutôt qu'en plein panneau : ce qui manque de lui est hors de l'écran,
- * pas effacé. Le haut et les côtés gardent leurs marges.
- */
 @Composable
 fun PanneauEtape(titre: String, detail: String, locuteur: Boolean, onFermer: () -> Unit) {
     val palette = LocalPaletteKokoro.current
@@ -199,7 +142,6 @@ fun PanneauEtape(titre: String, detail: String, locuteur: Boolean, onFermer: () 
     }
 }
 
-/** La bulle : un rectangle arrondi, et une queue qui pointe vers Kokoro, en bas à gauche. */
 private fun DrawScope.dessinerBulle(brush: Brush) {
     drawRoundRect(brush = brush, cornerRadius = CornerRadius(BULLE_RAYON.toPx()))
 

@@ -14,12 +14,10 @@ private val FICHIER_SVG = File("../../ressources/retenus/kokoro-corps-v2.svg")
 
 private const val PRECISION = 1e-6f
 
-/** Un tour d'horloge découpé en degrés — de quoi parcourir un cycle entier sans en rater le haut. */
 private const val TOUR = 360
 
 private fun phase(degres: Int): Float = degres * 2f * PI.toFloat() / TOUR
 
-/** Le jeu complet des postures — un test qui en oublierait une ne dirait rien de l'invariant. */
 private val POSTURES = listOf(
     Posture.Repos,
     Posture.Present,
@@ -34,14 +32,6 @@ private val POSTURES = listOf(
     Posture.Sommeil,
 )
 
-/**
- * Le dessin fait foi.
- *
- * `design/retenus/kokoro-corps-v2.svg` est le corps de Kokoro tel que Xavier l'a dessiné, et
- * [Geometrie] n'en est qu'une transcription. Ces tests relisent le SVG et refusent la moindre
- * dérive : une forme, une transformation, une épaisseur ou une couleur qui ne correspond plus, et
- * l'application ne montre plus le personnage qui a été validé.
- */
 class CorpsInvariantsTest {
 
     private val svg: String by lazy {
@@ -49,7 +39,6 @@ class CorpsInvariantsTest {
         FICHIER_SVG.readText()
     }
 
-    /** Le chemin de groupes qui mène à chaque pièce — la seconde déclaration que le test compare. */
     private val groupes = mapOf(
         "body-form" to listOf("kokoro", "body"),
         "body-line" to listOf("kokoro", "body"),
@@ -111,10 +100,7 @@ class CorpsInvariantsTest {
         }
     }
 
-    /**
-     * `head-out` est la seule pièce étirée de façon non uniforme : son contour déclare 2 mais sort
-     * à 2,61. C'est la règle SVG, et c'est ce qui donne à la tête son cerne plus épais.
-     */
+    // head-out est étiré de façon non uniforme : son contour déclaré à 2 rend à 2,61 (règle SVG).
     @Test
     fun `le contour de la tete est epaissi par son etirement`() {
         assertEquals(1.304847f, TETE.placement.facteurTrait, 1e-5f)
@@ -139,7 +125,6 @@ class CorpsInvariantsTest {
         comparer("bouche", transformation(attribut(bouche, "transform")).sous(groupeDe("mouth")).origine, BOUCHE)
     }
 
-    /** Les yeux sont symétriques dans le dessin, donc ils le restent dans le rig. */
     @Test
     fun `le visage reste symetrique`() {
         assertEquals(OEIL_GAUCHE.y, OEIL_DROIT.y, PRECISION)
@@ -147,11 +132,7 @@ class CorpsInvariantsTest {
         assertTrue("La bouche est sous les yeux", BOUCHE.y > OEIL_GAUCHE.y)
     }
 
-    /**
-     * 🔴 §3 : les commissures de la bouche ne tombent jamais, et ce n'est pas une règle de
-     * discipline — la forme n'existe pas. Le seul arc de bouche du jeu est donc un sourire : son
-     * milieu est **plus bas** que ses extrémités. L'œil souriant, lui, fait l'inverse.
-     */
+    // Aucune forme de bouche tombante n'existe dans le jeu (§3) : ce n'est pas une règle appliquée, elle est absente.
     @Test
     fun `la bouche ne tombe jamais aux commissures`() {
         assertTrue("La bouche arc doit sourire", milieuPlusBas(BOUCHE_ARC))
@@ -164,11 +145,6 @@ class CorpsInvariantsTest {
         )
     }
 
-    /**
-     * 🔴 Le semi-sourire est **le sourire divisé par deux, et la division est dans le code** : sa
-     * flèche vaut 1,75 contre 3,5. Recopier deux jeux de chiffres indépendants les ferait diverger
-     * à la première retouche du sourire — ce test le refuse.
-     */
     @Test
     fun `le semi sourire est exactement la moitie du sourire`() {
         assertEquals(3.5f, fleche(BOUCHE_ARC), 1e-5f)
@@ -180,10 +156,6 @@ class CorpsInvariantsTest {
         assertTrue("Il reste moins large que la bouche neutre", demiSemi < DEMI_BOUCHE)
     }
 
-    /**
-     * Le morphing n'est possible que parce que toutes les silhouettes se découpent pareil : même
-     * nombre de points, même ordre, même rôle à chaque indice.
-     */
     @Test
     fun `chaque trace du visage a une silhouette morphable`() {
         TRACES.forEach { trace ->
@@ -191,10 +163,6 @@ class CorpsInvariantsTest {
         }
     }
 
-    /**
-     * La silhouette est une approche polygonale du tracé — mais elle approche **ce** tracé-là :
-     * celle de l'œil neutre tient dans l'ellipse du SVG, à la corde près.
-     */
     @Test
     fun `la silhouette de l'oeil neutre est l'ellipse du dessin`() {
         val points = OEIL_OVALE.contour.points
@@ -204,7 +172,6 @@ class CorpsInvariantsTest {
         assertEquals(-RAYON_OEIL_Y, points.minOf { it.y }, PRECISION)
     }
 
-    /** Aucune apparition instantanée, aucun *cut* (§5) : la déformation part et arrive sur pièce. */
     @Test
     fun `le morphing part d'une forme et arrive exactement sur l'autre`() {
         TRACES.forEach { depuis ->
@@ -216,12 +183,6 @@ class CorpsInvariantsTest {
         }
     }
 
-    /**
-     * 🔴 §3, **pendant la déformation aussi.** Une bouche qui se déforme vers une autre passe par
-     * des formes que personne n'a dessinées : chacune doit encore sourire ou être droite. Une forme
-     * intermédiaire étant une combinaison convexe des deux silhouettes, la propriété se transporte —
-     * le test le vérifie quand même, sur les seize couples et sur toute la durée.
-     */
     @Test
     fun `aucune deformation de bouche ne fait tomber les commissures`() {
         val bouches = listOf(BOUCHE_TRAIT, BOUCHE_BARRE, BOUCHE_ARC, BOUCHE_SEMI, BOUCHE_COURTE)
@@ -240,24 +201,11 @@ class CorpsInvariantsTest {
         }
     }
 
-    /**
-     * 🔴 §6, garde-fou 1 : le bras ne dépasse jamais la ligne des épaules. Le dessin pose déjà le
-     * bras à 19,5° de la verticale — la borne se calcule depuis là, elle ne se choisit pas.
-     */
     @Test
     fun `la designation ne leve jamais le bras au dessus de l'epaule`() {
         assertEquals(90f, INCLINAISON_REPOS + OUVERTURE_HORIZONTALE, 1e-3f)
     }
 
-    /**
-     * 🔴 Le garde-fou vaut pour **toutes** les postures, geste d'écriture compris : le bras ne monte
-     * jamais au-dessus de la ligne des épaules (+70,5°) et ne croise jamais le corps (-19,5°, la
-     * verticale). Une posture ajoutée sans y penser tombe ici.
-     *
-     * 🔴 **Une seule exception, nommée** : le bras gauche (le droit de Kokoro) de `lecture`, main
-     * contre la bouche — voir le test dédié juste après, qui pin ce chiffre-là précisément parce que
-     * ce sweep-ci ne le vérifie plus.
-     */
     @Test
     fun `aucune posture ne sort de la course des bras`() {
         POSTURES.forEach { posture ->
@@ -279,16 +227,7 @@ class CorpsInvariantsTest {
         assertEquals(-INCLINAISON_REPOS, OUVERTURE_MINIMALE, 0f)
     }
 
-    /**
-     * ⭐ **L'exception nommée du test précédent** : `lecture` porte la main droite de Kokoro contre
-     * son menton (demande de Xavier, 16/08/2026), donc au-dessus de la ligne des épaules — la seule
-     * posture du jeu qui le fasse. Un geste tourné vers lui-même, jamais vers le lecteur : ce n'est
-     * pas le salut que le garde-fou du §6 exclut, donc la borne ne s'y applique pas. Le bras gauche
-     * de Kokoro, lui, reste dans la course normale de `lecture`.
-     *
-     * 🔴 **La main reste sous le visage, pas dessus** : le test refait le calcul du dessin — le
-     * bouchon du bras doit arriver **sous la bouche** et **au-dessus du bas de la coque**.
-     */
+    // Exception nommée du garde-fou bras : lecture porte la main au menton, geste vers soi, pas un salut (Xavier, 16/08/2026).
     @Test
     fun `la lecture porte la main droite de Kokoro contre son menton`() {
         val lecture = Posture.Lecture.reglage()
@@ -301,11 +240,6 @@ class CorpsInvariantsTest {
         assertTrue("La main s'écarte du visage : ${main.x}", abs(main.x - AXE) < 10f)
     }
 
-    /**
-     * ⭐ Les quatre postures immobiles de `PRESENCE.md` §2. **Aucune ne porte d'information** : ce
-     * qu'on vérifie ici, c'est qu'elles disent bien ce que le document leur fait dire, et rien de
-     * plus — panneau éteint là où il n'y a rien à lire, yeux fermés au sommeil.
-     */
     @Test
     fun `les postures immobiles disent ce que le document leur fait dire`() {
         assertEquals(Expression.SEREIN, Posture.Pensif.reglage().expression)
@@ -329,11 +263,6 @@ class CorpsInvariantsTest {
         assertTrue("Le sommeil demande sa pose empruntée", sommeil.sommeil)
     }
 
-    /**
-     * 🔴 Le geste d'écriture est **intermittent et borné** : il s'arrête plus longtemps qu'il ne
-     * dure, jamais deux fois pour la même durée, et son amplitude reste très en deçà de l'ouverture
-     * horizontale. **Une seule posture l'appelle** — c'est la seule qui bouge d'elle-même.
-     */
     @Test
     fun `le geste d'ecriture est intermittent et borne`() {
         val notes = Posture.Notes.reglage()
@@ -365,16 +294,7 @@ class CorpsInvariantsTest {
         }
     }
 
-    /**
-     * ⭐ **La tête ne penche que sur l'écran de crise, et de six degrés** — `CORPS.md` §2 et §9, et
-     * la dérogation arbitrée par Xavier le 16/08/2026.
-     *
-     * 🔴 **Trois choses se vérifient ensemble, parce qu'elles se tiennent** : **une seule** posture
-     * incline la tête *(une inclinaison qui se répand redevient une pose à interpréter)* · l'angle
-     * reste **sous la borne** *(au-delà, pencher la tête cesse d'être une nuance)* · et **le pivot
-     * est un point du dessin**, le milieu de la ligne des épaules, pas une valeur choisie. **La
-     * tête tourne autour de ce point ou elle se décolle du corps.**
-     */
+    // Dérogation Xavier 16/08/2026 (CORPS.md §2/§9) : seule accoude incline la tête, à 6° max, pivot = ligne des épaules.
     @Test
     fun `seule la posture accoude penche la tete, et elle reste bornee`() {
         assertEquals(
@@ -407,18 +327,7 @@ class CorpsInvariantsTest {
         )
     }
 
-    /**
-     * ⭐ **Accoudé, les deux bras sont exactement à l'horizontale — et ce n'est pas une valeur
-     * choisie** : c'est la ligne des épaules, celle où le bord du bouton vient passer. 🔴 **Le
-     * garde-fou 1 du §6 tient à la lettre** : la borne n'est pas dépassée, elle est **atteinte**, et
-     * elle l'est symétriquement — un seul bras à cette hauteur serait un salut.
-     */
-    /**
-     * ⭐ **Les bras levés de l'arrivée à la crise** *(demande de Xavier, 16/08/2026)* : ils sortent
-     * pointés vers le haut, puis s'affaissent sur le bouton. 🔴 **C'est un état de passage, et le
-     * test tient les deux bouts** — la pose levée est bien au-dessus de l'horizontale, et **la
-     * posture, elle, rend toujours l'horizontale** : rien ne reste levé à l'arrêt.
-     */
+    // Bras levés = état de passage uniquement (Xavier, 16/08/2026) ; au repos, toujours l'horizontale (garde-fou §6).
     @Test
     fun `les bras leves de la crise ne sont qu'un passage`() {
         assertTrue(
@@ -454,10 +363,6 @@ class CorpsInvariantsTest {
         assertTrue("Le regard suit le bras droit", droite.regard > 0f)
     }
 
-    /**
-     * ⭐ Le semi-sourire est l'expression de tous les jours (`PRESENCE.md` §1.2) : **plus aucune
-     * posture ne retombe sur `neutre`**, qui reste dans le jeu sans être appelée.
-     */
     @Test
     fun `le repos porte le semi sourire`() {
         assertEquals(Expression.SEREIN, Posture.Repos.reglage().expression)
@@ -468,12 +373,6 @@ class CorpsInvariantsTest {
         )
     }
 
-    /**
-     * 🔴 Le regard est un axe, et il ne vient plus que de la posture — aucune expression n'en porte,
-     * la propriété n'existe plus dans le type. **Il ne se décale que vers ce que les bras font** :
-     * ce qui est montré, ou le bras qui écrit. Partout ailleurs il reste au centre, et le
-     * personnage ne fixe jamais Xavier (§3).
-     */
     @Test
     fun `le regard ne se decale que vers ce que les bras font`() {
         POSTURES.forEach { posture ->
@@ -487,11 +386,7 @@ class CorpsInvariantsTest {
         assertEquals(REGARD_DESIGNATION, Posture.Montre(Cote.DROITE).reglage().regard, 0f)
     }
 
-    /**
-     * 🔴 La cadence du clignement tient dans les bornes de `PRESENCE.md` §3 — la basse évite le
-     * papillonnement, la haute évite qu'un clignement devienne un événement — et **deux intervalles
-     * consécutifs ne sont jamais égaux** : deux fois le même, c'est le début d'un rythme à décoder.
-     */
+    // Bornes anti-papillonnement/anti-événement ; deux intervalles égaux créeraient un rythme perceptible.
     @Test
     fun `deux attentes de clignement ne sont jamais egales`() {
         assertEquals(2_800L, CLIGNEMENT_ATTENTE_MIN_MILLIS)
@@ -510,10 +405,6 @@ class CorpsInvariantsTest {
         }
     }
 
-    /**
-     * 🔴 Le clignement n'agit que sur les yeux : **la bouche ne tressaille pas.** Les deux axes du
-     * visage se déforment séparément, c'est ce que le type impose.
-     */
     @Test
     fun `le clignement ne touche pas la bouche`() {
         val clignant = Visage.de(Expression.SEREIN)
@@ -523,7 +414,6 @@ class CorpsInvariantsTest {
         assertEquals(BOUCHE_SEMI, clignant.bouche.vers)
     }
 
-    /** Le balayage de lecture : parcours lent, retour bref, et un arrêt à chaque bout (§3, §4.3). */
     @Test
     fun `le balayage lit lentement et revient vite`() {
         val balayage = Balayage()
@@ -537,7 +427,6 @@ class CorpsInvariantsTest {
         )
     }
 
-    /** Le repos, c'est le dessin : un rig par défaut ne déplace pas une seule pièce. */
     @Test
     fun `le rig au repos ne bouge rien`() {
         val repos = RigKokoro.pose(Posture.Repos)
@@ -551,7 +440,6 @@ class CorpsInvariantsTest {
         assertEquals(1f, repos.etirementCorps, 0f)
     }
 
-    /** Les deux épaules se répondent autour de l'axe : le calcul d'un pivot vaut pour l'autre. */
     @Test
     fun `les epaules sont symetriques autour de l'axe`() {
         assertEquals(AXE, (EPAULE_GAUCHE.x + EPAULE_DROITE.x) / 2f, 1e-3f)
@@ -559,10 +447,6 @@ class CorpsInvariantsTest {
         assertTrue("L'épaule est au-dessus du ventre", EPAULE_GAUCHE.y < CENTRE_VENTRE.y)
     }
 
-    /**
-     * Le centre du ventre n'est pas choisi : c'est le point fixe de la rotation que `foot-right`
-     * porte dans le SVG. Xavier a fait pivoter le pied autour du ventre, la matrice l'a gardé.
-     */
     @Test
     fun `le centre du ventre est le pivot ecrit dans le dessin`() {
         val ventre = Ancre(CENTRE_VENTRE.x - RACINE.e, CENTRE_VENTRE.y - RACINE.f)
@@ -572,11 +456,7 @@ class CorpsInvariantsTest {
         assertEquals("Le ventre est sur l'axe", AXE, CENTRE_VENTRE.x, 0.2f)
     }
 
-    /**
-     * ⭐ **Vers le haut uniquement** (demande de Xavier, 16/08/2026) : plus de rétraction en
-     * largeur, et la tête comme les bras suivent le sommet du ventre pour rester à la même hauteur
-     * de lui qu'au repos ([RigKokoro.decalageRespirationHaut]).
-     */
+    // Xavier 16/08/2026 : la respiration ne rétracte plus en largeur, uniquement vers le haut.
     @Test
     fun `la respiration reste dans l'amplitude annoncee`() {
         val expiration = RigKokoro(visage = Visage.de(Expression.NEUTRE), respiration = 0f)
@@ -590,13 +470,7 @@ class CorpsInvariantsTest {
         )
     }
 
-    /**
-     * 🔴 `PRESENCE.md` §3 : **la lévitation bat sur l'horloge de la respiration**, à un quart de
-     * période. Deux périodes distinctes feraient battre le vol contre le souffle — un rythme lent,
-     * donc quelque chose à décoder. Le test tient la phase pour unique, comme le code, et vérifie
-     * ce qu'on en tire : le cycle se referme, il ne descend jamais sous la pose dessinée, il monte
-     * de 9 % de la hauteur, et les deux mouvements ne culminent jamais ensemble.
-     */
+    // Vol et respiration doivent rester en quadrature : deux rythmes désynchronisés créeraient un battement perceptible.
     @Test
     fun `la levitation bat sur l'horloge de la respiration`() {
         assertEquals(0.09f * HAUTEUR_PERSONNAGE, LEVITATION_AMPLITUDE, PRECISION)
@@ -617,13 +491,7 @@ class CorpsInvariantsTest {
         )
     }
 
-    /**
-     * 🔴 §3 — **le sommeil ralentit le vol de moitié sans ouvrir une seconde horloge.** La phase est
-     * divisée par deux, donc la période double exactement ; et parce qu'un tour d'horloge vaut deux
-     * respirations, le demi-régime **se referme sur lui-même** au bouclage. Le vérifier importe : un
-     * vol qui sauterait à chaque tour serait une saccade toutes les neuf secondes, et une saccade
-     * est exactement ce que les hypersensibilités interdisent.
-     */
+    // Ralentir par division de phase (pas une 2e horloge) : sinon saccade toutes les 9 s, interdite par les hypersensibilités.
     @Test
     fun `le sommeil ralentit le vol de moitie sans seconde horloge`() {
         assertEquals("Un tour d'horloge vaut deux respirations", 2 * RESPIRATION_MILLIS, HORLOGE_MILLIS)
@@ -660,11 +528,7 @@ class CorpsInvariantsTest {
         assertEquals("Le sommeil porte son ombre", Ombre(), Vol.SOMMEIL.ombre())
     }
 
-    /**
-     * 🔴 §4.2 — il ne se déplace jamais vers le lecteur — et §3 — rien ne bat sur une seconde
-     * horloge. La lévitation est donc **purement verticale** : ni dérive latérale, ni bascule. Le
-     * flottement de la v1 en avait trois, sur trois périodes, et les trois battaient entre elles.
-     */
+    // La v1 avait une dérive latérale sur 3 périodes qui battaient entre elles ; la lévitation doit rester purement verticale.
     @Test
     fun `la levitation ne fait que monter et descendre`() {
         (0..TOUR).forEach {
@@ -677,14 +541,7 @@ class CorpsInvariantsTest {
         assertEquals(0f, Vol.AUCUN.deplacement(1f, 1f).inclinaison, 0f)
     }
 
-    /**
-     * 🔴 §1.3 : l'ombre dit la hauteur de vol, **et rien d'autre**. Elle est posée **un peu sous**
-     * le sol du dessin *(demande de Xavier, 16/08/2026 : il la touchait avec ses pieds)*, très
-     * aplatie, large comme le corps, et elle tient dans la vue.
-     *
-     * ⭐ **Son opacité varie avec la hauteur, et rien d'autre** *(16/08/2026)* — une fonction pure de
-     * [RigKokoro.decalage], donc toujours la même à hauteur égale : rien n'y pulse tout seul.
-     */
+    // Xavier 16/08/2026 : l'ombre ne touche plus les pieds ; son opacité ne dépend que de la hauteur de vol.
     @Test
     fun `l'ombre est posee un peu sous le sol et ne dit rien d'autre que la hauteur`() {
         val ombre = Ombre()
@@ -714,10 +571,6 @@ class CorpsInvariantsTest {
         assertEquals("Le vol porte son ombre", Ombre(), Vol.LEVITATION.ombre())
         assertEquals("La traversée aussi", Ombre(), Vol.TRAVERSEE.ombre())
     }
-
-    // ————————————————————————————————————————————————————————————————————————————————————————
-    // Lecture du SVG
-    // ————————————————————————————————————————————————————————————————————————————————————————
 
     private fun balise(id: String): String {
         val debut = svg.indexOf("id=\"$id\"")
@@ -776,10 +629,8 @@ class CorpsInvariantsTest {
     private fun chemin(forme: Forme): String =
         checkNotNull(forme as? Forme.Chemin) { "Forme sans tracé : $forme" }.donnees
 
-    /** Le milieu d'un arc quadratique est-il plus bas que ses extrémités ? *(y croît vers le bas.)* */
     private fun milieuPlusBas(trace: Trace): Boolean = fleche(trace) > 0f
 
-    /** La flèche d'un arc symétrique : ce dont son milieu descend sous la corde des extrémités. */
     private fun fleche(trace: Trace): Float {
         val arc = arc(trace)
         return 0.25f * arc.y1 + 0.5f * arc.cy + 0.25f * arc.y2 - arc.y1

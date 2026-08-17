@@ -14,37 +14,7 @@ import androidx.core.content.ContextCompat
 import io.allonsy.kokoro.R
 import io.allonsy.kokoro.ui.avecIllustration
 
-/**
- * 🔴 **La notification d'accès est muette** — `companion/INTERFACE.md` §6.2, acté le 14/08/2026,
- * câblé le 15/08/2026.
- *
- * **Le motif est clinique, et il est de Xavier :** *« avec les boutons sur la notification, je lis
- * toute la journée mot code et tension appliquée. Ça n'aide pas mes angoisses. »* ⭐ **C'est le motif
- * du 10/08 appliqué une quatrième fois** — celui qui a fait retirer les numéros d'urgence : **un
- * secours affiché en permanence cesse d'être une porte et devient un rappel permanent du danger.**
- *
- * 🔴 **Il ne reste que l'icône et le mot *Kokoro*.** Plus de boutons d'action, **et plus une ligne de
- * corps** : enlever les boutons en laissant `mot-code · tension appliquée` écrit dessous n'aurait
- * réglé que la moitié du problème. **Rien à lire, rien à relire.**
- *
- * ⭐ **Elle porte une illustration de fond depuis le 16/08/2026** — demande de Xavier,
- * `INTERFACE.md` §7.5. **Elle ne reprend pas une ligne de texte au passage :** [avecIllustration]
- * est appelée **sans `texte`**, et le motif du 15/08 tient toujours — *ce qui pesait, c'était une
- * ligne relue toute la journée, pas une image.* 🔴 **Le jour où une ligne y revient, c'est cette
- * décision-là qu'on défait**, pas un détail de gabarit.
- *
- * 🔴 **Elle ouvre [CriseActivity], et pas le monde** — c'est **le repli écrit d'avance au §6.2**,
- * emprunté le 15/08/2026 après essai sur l'appareil. **Le monde demandait de déverrouiller le
- * téléphone** : il vit dans la tâche du lanceur, et `showWhenLocked` posé à l'exécution arrive après
- * la décision du keyguard. `CriseActivity` le déclare **dans le manifeste**, avec sa propre tâche —
- * c'est ce qui a été éprouvé le 10/08. ⭐ **Rien n'est perdu au passage** : depuis §7.2 les deux
- * portes affichent le même écran ([PortesDeCrise]). **Deux portes, un seul contenu.**
- *
- * ⚠️ **`kokoro_acces_v1` ne change pas d'identifiant** : le nom et la description d'un canal se
- * mettent à jour, son importance et son silence sont figés à la création. En changer l'identifiant
- * rendrait à Android le droit de resonner.
- */
-
+// Ne jamais changer cet identifiant : Android fige l'importance/le silence du canal à sa création.
 const val ID_CANAL_ACCES = "kokoro_acces_v1"
 
 private const val ID_NOTIFICATION_ACCES = 2
@@ -67,6 +37,7 @@ fun creerCanalAcces(context: Context) {
     context.getSystemService(NotificationManager::class.java).createNotificationChannel(canal)
 }
 
+// Notification muette, sans bouton ni texte : les relire toute la journée aggravait l'anxiété de Xavier.
 @SuppressLint("MissingPermission")
 fun publierAccesCrise(context: Context): Boolean {
     if (!notificationsAutorisees(context)) return false
@@ -93,10 +64,6 @@ fun publierAccesCrise(context: Context): Boolean {
     return true
 }
 
-/**
- * 🔴 **Aucun `EXTRA_ECRAN` : elle ouvre l'accueil de la crise, ses trois boutons**, le même écran que
- * le bord **BAS** du monde. C'est là que le mot-code part d'un appui.
- */
 private fun intentCrise(context: Context): PendingIntent {
     val destination = Intent(context, CriseActivity::class.java)
         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)

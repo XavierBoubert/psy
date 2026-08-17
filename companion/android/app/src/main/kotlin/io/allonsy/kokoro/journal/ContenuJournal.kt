@@ -23,18 +23,6 @@ import io.allonsy.kokoro.ui.PageKokoro
 import io.allonsy.kokoro.ui.TypoKokoro
 import java.util.Locale
 
-/**
- * Le check-in, **dans la matière du monde** *(15/08/2026)* — `companion/INTERFACE.md` §4.
- *
- * ⭐ **Une question par écran, et rien d'autre à l'écran.** Le rang est écrit en petit, il ne compte
- * rien d'un jour à l'autre. 🔴 **Aucune réponse n'est commentée** : Kokoro enregistre, il
- * n'interprète pas — l'interprétation appartient à la séance.
- *
- * 🔴 **Le vert est réservé à ce qui avance d'un pas** : une réponse, un enregistrement. **Passer et
- * arrêter sont neutres, jamais gris-triste ni barrés** — il n'y a pas de retard dans ce dispositif,
- * donc pas de couleur pour en parler.
- */
-
 sealed interface EtapeJournal {
     data object DossierAbsent : EtapeJournal
     data object DejaEcrit : EtapeJournal
@@ -44,18 +32,6 @@ sealed interface EtapeJournal {
     data class Echoue(val cause: String) : EtapeJournal
 }
 
-/**
- * L'expression du locuteur, **choisie par le contenu** (`PRESENCE.md` §1.1, **E12**).
- *
- * 🔴 **`chaleureux` réagit à un fait accompli et n'a pas de contraire** (§4.4) : il ne paraît que
- * lorsque le check-in du jour **est écrit**, et il n'existe aucune expression pour dire qu'il ne
- * l'est pas. Une question à laquelle on n'a pas répondu, un dossier qu'on n'a pas choisi, une
- * écriture qui a échoué : **l'expression est celle de tous les jours**, exactement comme si de rien
- * n'était.
- *
- * ⭐ **Un échec d'écriture n'est pas un échec de Xavier** — c'est un dossier introuvable, et le
- * texte de la page le dit déjà. Le visage n'a rien à ajouter.
- */
 fun expressionDuJournal(etape: EtapeJournal): Expression = when (etape) {
     EtapeJournal.DejaEcrit, is EtapeJournal.Enregistre -> Expression.CHALEUREUX
     EtapeJournal.DossierAbsent, EtapeJournal.Note -> Expression.SEREIN

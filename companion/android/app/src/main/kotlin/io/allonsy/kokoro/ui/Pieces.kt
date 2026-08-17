@@ -67,53 +67,16 @@ import kotlinx.coroutines.delay
 import kotlin.math.cos
 import kotlin.math.sin
 
-/**
- * Les pièces du thème — **le jeu de composables maison** annoncé par `companion/INTERFACE.md` §4.4.
- *
- * 🔴 **Ce style ne se pose pas sur les composants Material** : contours épais, épaisseur portée,
- * rubans crantés et creux internes ne s'obtiennent pas en réglant un `Card`. Tout est dessiné ici,
- * une fois, sur la recette unique de [matiere].
- *
- * ⭐ **Le retour au toucher est l'enfoncement du panneau** : il descend de ses 7 dp d'épaisseur en
- * 90 ms et **s'arrête net**. 🔴 **Aucun rebond, aucun dépassement, aucune onde** — un ressort qui
- * repart au-delà de sa position est exactement l'animation brusque que les hypersensibilités
- * interdisent. C'est aussi pourquoi il n'y a **aucune ondulation Material** : l'indication d'appui
- * est le volume, pas une tache qui s'étale.
- */
-
+// Tween linéaire uniquement, jamais spring : aucun rebond ni dépassement (hypersensibilités).
 private const val ENFONCEMENT_MS = 90
 
-/**
- * Le temps minimum pendant lequel un appui **reste enfoncé**, même si le doigt est déjà reparti.
- *
- * 🔴 **Sans lui, l'enfoncement était invisible partout sauf sur l'écran de crise** *(15/08/2026,
- * relevé par Xavier)*. La cause n'est pas dans le dessin : **`clickable` retarde l'appui de 100 ms
- * quand il est posé dans une surface qui défile**, le temps de savoir si le doigt appuie ou fait
- * défiler. Une frappe brève part avant ce délai — Compose émet alors *appuyé* et *relâché* **d'un
- * seul coup**, dans la même image, et rien ne bouge à l'écran. ⭐ **L'écran de crise ne défile pas,
- * par exigence propre** : il n'a jamais eu le délai, et c'est pourquoi lui seul répondait.
- *
- * ⭐ **Tenir l'appui le temps de la descente le rend visible sans rien accélérer** : la pièce
- * descend à son tempo, puis remonte au même. Le retour au toucher ne dépend plus de la vitesse de
- * la frappe.
- */
+// Sans ce plancher, clickable dans une surface qui défile retarde l'appui de 100 ms et masque une frappe brève.
 private const val APPUI_MINIMUM_MS = ENFONCEMENT_MS.toLong()
 
-/** Le cran taillé dans chaque bout du ruban. */
 private val CRAN = 18.dp
-
-/** L'épaisseur portée sous un ruban — plus mince que celle d'un panneau, il est plus petit. */
 private val EPAISSEUR_RUBAN = 6.dp
-
 private val PADDING_PANNEAU = PaddingValues(horizontal = 22.dp, vertical = 20.dp)
 
-/**
- * La pièce de base : un panneau opaque à gros contour, posé sur le paysage.
- *
- * @param couleur `null` pour la matière neutre — c'est le cas de **toutes les cartes de liste**.
- *   ⭐ **Toutes les cartes sont identiques** : aucune n'est plus grande, plus vive ni marquée.
- * @param onClic `null` pour une surface qui ne répond pas au doigt — elle ne s'enfonce alors jamais.
- */
 @Composable
 fun PanneauExtrude(
     modifier: Modifier = Modifier,
@@ -161,14 +124,6 @@ fun PanneauExtrude(
     )
 }
 
-/**
- * L'appui, **tenu au moins le temps de le voir** — voir [APPUI_MINIMUM_MS].
- *
- * ⭐ **Le plancher ne vaut que pour un appui qui aboutit.** Un appui *annulé* — le doigt part faire
- * défiler la liste — retombe **immédiatement** : 🔴 sans cette distinction, chaque geste de
- * défilement enfoncerait au passage la carte sous le doigt, et la liste clignoterait à chaque
- * glissement. **Ce qui se voit doit être ce qui s'est produit.**
- */
 @Composable
 private fun appuiTenu(interactions: InteractionSource): State<Boolean> {
     val appuye = remember { mutableStateOf(false) }
@@ -196,13 +151,6 @@ private fun appuiTenu(interactions: InteractionSource): State<Boolean> {
     return appuye
 }
 
-/**
- * Une carte de liste : **le titre, la durée si elle est connue, rien d'autre**
- * (`companion/INTERFACE.md` §3.1).
- *
- * 🔴 **Pas de chevron, pas d'aperçu, pas de compteur, pas d'ornement.** Une carte ne dit jamais où
- * elle en est : il n'y a **ni progression, ni historique, ni palier atteint** dans cette app.
- */
 @Composable
 fun Carte(
     titre: String,
@@ -224,20 +172,6 @@ fun Carte(
     }
 }
 
-/**
- * Un bouton — **pleine largeur, un par ligne, libellé en toutes lettres** (§4.3).
- *
- * `couleur` **plein** quand il agit, `null` quand il ferme. Aucune icône seule : la seule du
- * dispositif est la roue dentée de la bande d'entrée (D4), et elle est justifiée à part.
- *
- * ⭐ **Le libellé est centré dans la hauteur du panneau.** Il l'est par [Arrangement.Center] et par
- * l'interligne centré de [TypoKokoro] : sans les deux, un texte court reste collé en haut d'un
- * bouton haut, et **les boutons de crise sont les plus hauts du dispositif**.
- *
- * @param actif à `false`, le bouton ne s'enfonce plus et son libellé passe à l'encre douce. **Il
- *   reste lisible et à sa place** : un bouton qui disparaît quand il ne marche pas fait croire que
- *   la fonction n'existe pas.
- */
 @Composable
 fun BoutonEpais(
     libelle: String,
@@ -273,14 +207,6 @@ fun BoutonEpais(
     }
 }
 
-/**
- * Le sous-titre d'un `quand` — *Aujourd'hui* · *Quand j'en ai besoin* · *Sans date*.
- *
- * ⭐ **La couleur distingue les sections, elle ne les classe jamais** — §6.5 tranché par Xavier le
- * 14/08/2026, option B. 🔴 **Il reste interdit d'aligner la palette sur une échelle d'urgence** :
- * aucune teinte ne doit pouvoir se lire comme *urgent*, *en retard* ou *important*, et il n'existe
- * ni pastille ni badge nulle part.
- */
 @Composable
 fun Pancarte(texte: String, couleur: Teinte, modifier: Modifier = Modifier) {
     val palette = LocalPaletteKokoro.current
@@ -302,12 +228,6 @@ fun Pancarte(texte: String, couleur: Teinte, modifier: Modifier = Modifier) {
     }
 }
 
-/**
- * Le titre d'un écran, sur sa bannière crantée.
- *
- * 🔴 **Il ne défile pas** (D11) : savoir où l'on est ne doit pas dépendre d'où l'on en est dans la
- * liste.
- */
 @Composable
 fun Ruban(texte: String, couleur: Teinte, modifier: Modifier = Modifier) {
     val palette = LocalPaletteKokoro.current
@@ -342,31 +262,6 @@ fun Ruban(texte: String, couleur: Teinte, modifier: Modifier = Modifier) {
     }
 }
 
-/**
- * La bande de titre d'un écran — **le ruban seul, posé sur ce qu'il y a derrière** *(15/08/2026,
- * demande de Xavier)*.
- *
- * 🔄 **C'était un panneau pleine largeur qui sortait de l'écran par le haut**, avec le ruban au
- * milieu et deux rivets. **Il se lisait comme un gros bouton** : même matière, même contour, même
- * épaisseur portée que ce sur quoi on appuie — sauf qu'on n'appuie jamais dessus. ⭐ **Un titre
- * n'est pas une commande, et il ne doit pas en avoir l'air.**
- *
- * ⭐ **Le drapeau reste, et il suffit** : il porte le titre en toutes lettres, il ne défile pas
- * (**D11**), et **le décor passe maintenant derrière lui** au lieu de s'arrêter à son bord. Ce qui
- * est perdu au passage n'est que de la matière : la bande ne disait rien que le ruban ne dise.
- *
- * 🔴 **Les rivets s'en vont avec le panneau, la croix et la roue dentée restent.** Un rivet est ce
- * qui visse une plaque ; sans plaque, il n'est plus qu'un point posé sur le ciel. **Les deux
- * boutons, eux, sont des sorties** — ils ne sont pas là pour décorer, et ils gardent leur place :
- * une bande porte **soit** la croix, **soit** la roue dentée, jamais les deux.
- *
- * ⭐ **La réserve reste des deux côtés** quand un bouton est là : le ruban demeure **centré**, et un
- * titre long se replie au lieu de passer dessous.
- *
- * @param onFermer la croix — c'est la seule place de la fermeture, et elle est la même sur tous les
- *   panneaux *(15/08/2026)*.
- * @param onReglages la roue dentée — **elle ne paraît que sur l'écran d'entrée du monde** (**D4**).
- */
 @Composable
 fun BandeTitre(
     titre: String,
@@ -397,19 +292,6 @@ fun BandeTitre(
     }
 }
 
-/**
- * La croix qui ferme un panneau — **en haut à droite, à la même place sur tous les panneaux**
- * *(15/08/2026, demande de Xavier)*.
- *
- * ⭐ **C'est une place, pas un bouton de plus.** Avant, un bouton *Fermer* traînait au bas de
- * certaines pages et manquait sur d'autres : il fallait donc lire la page jusqu'en bas pour savoir
- * comment en sortir, et parfois ne pas l'y trouver. **Une sortie qui se cherche n'est pas une
- * sortie.**
- *
- * ⚠️ **Deuxième exception assumée à « aucune icône seule »**, après la roue dentée (**D4**). Comme
- * elle, la croix est un pictogramme que personne n'a à apprendre, et elle occupe une place où aucun
- * mot ne tenait.
- */
 @Composable
 fun Croix(onFermer: () -> Unit, modifier: Modifier = Modifier) {
     val palette = LocalPaletteKokoro.current
@@ -434,7 +316,6 @@ fun Croix(onFermer: () -> Unit, modifier: Modifier = Modifier) {
     }
 }
 
-/** Deux traits, bouts arrondis — jamais un trait fin qui aurait l'air d'un autre registre. */
 private fun DrawScope.croix(couleur: Color, trait: Float) {
     val marge = trait / 2f
     val bas = size.height - marge
@@ -444,21 +325,8 @@ private fun DrawScope.croix(couleur: Color, trait: Float) {
 }
 
 private val TAILLE_CROIX = 44.dp
-
-/** Ce que le ruban laisse **des deux côtés** pour que la croix ne le morde pas. */
 private val RESERVE_CROIX = TAILLE_CROIX + 4.dp
 
-/**
- * La roue dentée — **l'écran de contrôle** (**D4**), à la place de la croix et sur la seule bande de
- * l'écran d'entrée.
- *
- * ⚠️ **Première exception assumée à « aucune icône seule »**, avant la croix : c'est le seul
- * pictogramme universel du lot, et la bande de titre n'a pas la place d'un mot de plus.
- *
- * 🔴 **Jamais de pastille dessus** — rien n'y compte, rien n'y attend. Quand la notification d'accès
- * tombe, **c'est l'écran d'entrée qui le dit en toutes lettres** (`AvisAcces`) : un point coloré
- * dirait *va voir* sans dire quoi, et le dispositif ne fait aucun sous-entendu.
- */
 @Composable
 fun RoueDentee(onClic: () -> Unit, modifier: Modifier = Modifier) {
     val palette = LocalPaletteKokoro.current
@@ -483,7 +351,6 @@ fun RoueDentee(onClic: () -> Unit, modifier: Modifier = Modifier) {
     }
 }
 
-/** Un moyeu et huit rayons — le dessin de la maquette, tracé au trait. */
 private fun DrawScope.rouage(couleur: Color, trait: Float) {
     val centre = Offset(size.width / 2f, size.height / 2f)
     val moyen = size.minDimension / 2f
@@ -501,13 +368,6 @@ private fun DrawScope.rouage(couleur: Color, trait: Float) {
     }
 }
 
-/**
- * L'état vide d'un écran — **une plaque creuse**, la recette retournée : le dégradé remonte, le
- * creux passe en haut, l'épaisseur disparaît. Elle a l'air enfoncée dans le monde, pas posée dessus.
- *
- * ⭐ **Un écran vide dit qu'il n'y a rien, et ne s'en excuse pas.** Il ne propose rien d'autre, ne
- * relance sur rien, et ne compte pas les jours depuis la dernière fois.
- */
 @Composable
 fun CadreVide(texte: String, modifier: Modifier = Modifier, ornements: Boolean = true) {
     val palette = LocalPaletteKokoro.current
@@ -535,7 +395,6 @@ fun CadreVide(texte: String, modifier: Modifier = Modifier, ornements: Boolean =
     }
 }
 
-/** Une pile de boutons pleine largeur, un par ligne, à écart constant. */
 @Composable
 fun PileDeBoutons(
     modifier: Modifier = Modifier,
@@ -545,13 +404,6 @@ fun PileDeBoutons(
     Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(ecart), content = contenu)
 }
 
-/**
- * Le fond d'un écran qui n'est pas dans le monde — crise, check-in, réglages.
- *
- * ⭐ **Il n'y a pas de décor derrière ces écrans-là**, et il n'y en aura pas : ils s'ouvrent
- * par-dessus le verrouillage, ou hors du monde. Le fond reprend donc **le dégradé du panneau
- * lui-même**, pour que la matière soit la même partout sans faire croire à un paysage.
- */
 @Composable
 fun FondKokoro(modifier: Modifier = Modifier, contenu: @Composable ColumnScope.() -> Unit) {
     val palette = LocalPaletteKokoro.current
@@ -565,22 +417,6 @@ fun FondKokoro(modifier: Modifier = Modifier, contenu: @Composable ColumnScope.(
     )
 }
 
-/**
- * Une page hors du monde : le fond, la bande de titre qui ne défile pas (**D11**), et le contenu
- * dessous.
- *
- * ⭐ **Le défilement vertical y est libre, comme partout depuis que le monde est un anneau**
- * *(15/08/2026)* : la traversée est horizontale, donc plus aucune surface n'a à renoncer à sa liste.
- *
- * @param defilant à `false`, la page tient dans l'écran et **le contenu se place au lieu de
- *   défiler** — c'est ce qui permet à une page ouverte de reprendre exactement la mise en place de
- *   l'écran de crise, **qui ne défile jamais, et par exigence propre**.
- * @param locuteur l'expression du personnage posé en bas à gauche (`PRESENCE.md` §1.1), ou `null`
- *   pour une page qui n'en porte pas. 🔴 **`null` par défaut, et les écrans de crise le gardent** :
- *   l'entrée d'un personnage dans une surface de crise est la dérogation bornée de **E13**, elle ne
- *   se déduit pas de « la page est un panneau plein écran ».
- * @param onFermer la croix de la bande de titre. `null` pour une page dont on ne sort pas par là.
- */
 @Composable
 fun PageKokoro(
     titre: String,
@@ -596,11 +432,6 @@ fun PageKokoro(
     FondKokoro(modifier = modifier) {
         BandeTitre(titre = titre, couleur = couleur, onFermer = onFermer)
 
-        /**
-         * ⭐ **La bande du locuteur prend le bas de la page**, marges système comprises : c'est le
-         * bord de la dalle qui coupe le personnage au thorax, et non un cadre posé au-dessus. Sans
-         * lui, la page garde sa marge basse comme avant.
-         */
         val bas = Modifier
             .weight(1f)
             .fillMaxWidth()
@@ -619,14 +450,6 @@ fun PageKokoro(
     }
 }
 
-/**
- * Un champ de saisie — **la recette retournée**, comme l'état vide : il a l'air creusé dans la
- * matière au lieu d'être posé dessus. C'est ce qui le distingue d'un bouton sans écrire nulle part
- * qu'il est un champ.
- *
- * ⭐ **Le repère de ce qu'on attend est dans le champ, pas à côté** : une étiquette flottante en
- * disparaît dès qu'on écrit, et il faut alors se souvenir de ce qui était demandé.
- */
 @Composable
 fun ChampTexte(
     valeur: String,
@@ -663,16 +486,11 @@ fun ChampTexte(
     }
 }
 
-/**
- * Un interrupteur — **le même volume que le reste**, une piste creusée et un bouton posé dedans.
- *
- * ⭐ **Il glisse en 120 ms et s'arrête net**, comme l'enfoncement d'un panneau : aucun rebond, aucun
- * dépassement.
- */
 @Composable
 fun Interrupteur(actif: Boolean, onChange: (Boolean) -> Unit, modifier: Modifier = Modifier) {
     val palette = LocalPaletteKokoro.current
     val interactions = remember { MutableInteractionSource() }
+    // Tween linéaire uniquement, jamais spring : aucun rebond ni dépassement (hypersensibilités).
     val glisse by animateDpAsState(
         targetValue = if (actif) COURSE_INTERRUPTEUR else 0.dp,
         animationSpec = tween(durationMillis = 120, easing = LinearOutSlowInEasing),
@@ -715,13 +533,7 @@ private val BOUTON_INTERRUPTEUR = 30.dp
 private val PISTE_INTERRUPTEUR = 68.dp
 private val COURSE_INTERRUPTEUR = PISTE_INTERRUPTEUR - BOUTON_INTERRUPTEUR - 10.dp
 
-/**
- * L'accusé de réception d'une action — **il constate, il ne félicite pas.**
- *
- * 🔴 **Aucun son, aucune vibration, aucun clignotement** : il paraît en 220 ms, se tient en bas de
- * l'écran, et s'en va tout seul. **Rien à toucher pour le faire partir**, parce qu'en crise ce
- * serait un geste de plus.
- */
+// Aucun son, vibration ni clignotement (hypersensibilités) ; rien à toucher pour le faire partir, un geste de moins en crise.
 @Composable
 fun Accuse(texte: String?, onFini: () -> Unit, modifier: Modifier = Modifier) {
     val palette = LocalPaletteKokoro.current
@@ -766,7 +578,6 @@ fun Accuse(texte: String?, onFini: () -> Unit, modifier: Modifier = Modifier) {
 private const val PARUTION_ACCUSE_MS = 220
 private const val TENUE_ACCUSE_MS = 4_000L
 
-/** Le trait qui sépare deux lignes dans un même panneau. Il ne classe rien, il range. */
 @Composable
 fun Separateur(modifier: Modifier = Modifier) {
     val palette = LocalPaletteKokoro.current

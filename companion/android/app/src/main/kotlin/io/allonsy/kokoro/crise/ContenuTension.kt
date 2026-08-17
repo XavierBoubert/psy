@@ -51,16 +51,6 @@ private data class BlocEnCours(
     val etape: EtapeSoins?,
 )
 
-/**
- * ⭐ **Chaque vue porte son propre titre sur le ruban** *(15/08/2026)*. Le titre n'est pas répété
- * dans le corps de la page : **savoir où l'on est se lit à un seul endroit**, toujours le même,
- * toujours en haut, et il ne défile pas (**D11**).
- *
- * 🔴 **La phrase pour le soignant n'est plus ici** *(15/08/2026, demande de Xavier)*. Elle est une
- * porte à part entière de l'écran de crise : **la ranger sous la tension appliquée obligeait à
- * traverser une parade pour atteindre un texte à montrer**, alors que les deux ne servent pas au
- * même moment.
- */
 @Composable
 fun ContenuTension(onFermer: () -> Unit) {
     var vue by remember { mutableStateOf(VueTension.ACCUEIL) }
@@ -294,7 +284,6 @@ private fun VueArret(onRetour: () -> Unit, onFermer: () -> Unit) {
     }
 }
 
-/** Les secondes qui restent. **Un compte à l'écran, puisqu'il n'y a rien à percevoir.** */
 @Composable
 private fun Compte(texte: String) {
     Text(
@@ -306,13 +295,7 @@ private fun Compte(texte: String) {
     )
 }
 
-/**
- * L'avancée de la phase en cours.
- *
- * ⭐ **Ce n'est pas une barre de progression au sens interdit par §4.3** : elle ne mesure ni un
- * effort, ni une assiduité, ni un niveau atteint. **Elle montre le temps qui passe** pendant un bloc
- * chronométré, et elle disparaît avec lui.
- */
+// Pas une barre de progrès interdite ailleurs : montre le temps qui passe, jamais un effort ou une assiduité.
 @Composable
 private fun Barre(fraction: Float, couleur: Color) {
     val palette = LocalPaletteKokoro.current

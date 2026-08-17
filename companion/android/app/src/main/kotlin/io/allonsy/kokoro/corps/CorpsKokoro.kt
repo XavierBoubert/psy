@@ -17,26 +17,7 @@ import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.vector.PathParser
 import kotlin.math.min
 
-/**
- * Kokoro, dessiné en vectoriel à partir des formes de [Geometrie.kt] — donc du SVG de Xavier.
- *
- * Aucun bitmap, aucune ressource distante, aucune police externe (CORPS.md §9).
- * Le rendu ne décide de rien : il applique le [RigKokoro] qu'on lui donne, pièce par pièce.
- *
- * Le placement d'une pièce est cuit dans sa géométrie une fois pour toutes, puis stroké à épaisseur
- * fixe — c'est la sémantique SVG, et c'est ce qui garde le contour de la tête régulier alors que
- * `head-out` est étiré de façon non uniforme.
- */
-/**
- * Ce qu'une passe de peinture dessine — **une seule instance du personnage, peinte en deux fois.**
- *
- * 🔴 **Ce n'est pas un dédoublement** (`CORPS.md` §8 point 8) : les deux passes reçoivent **le même
- * rig, calculé une seule fois**, et se peignent au même endroit. Deux rigs animés séparément
- * dériveraient l'un de l'autre au premier clignement.
- *
- * ⭐ **Elles n'existent que pour l'écran de crise** : le corps passe **sous** le bouton *Mot code*,
- * les bras **dessus**. C'est ce qui fait qu'il est accoudé au bouton au lieu d'être posé devant.
- */
+// Les deux passes peignent le même rig, jamais deux rigs distincts (dériveraient au clignement).
 enum class Passe { ENTIER, CORPS, BRAS }
 
 @Composable
@@ -83,7 +64,6 @@ private fun Forme.chemin(): Path = when (this) {
     }
 }
 
-/** Chaque pièce est posée dans la vue une fois pour toutes : le placement ne dépend pas du rig. */
 private val PIECES_POSEES: Map<String, Path> by lazy {
     PIECES.associate { piece ->
         piece.nom to piece.forme.chemin().apply { transform(piece.placement.matrice()) }
@@ -106,14 +86,11 @@ private fun DrawScope.dessinerKokoro(rig: RigKokoro, palette: PaletteCorps, pass
         if (passe != Passe.BRAS) {
             dessinerTorse(rig, palette)
             dessinerTete(rig, palette)
-            // 🔴 Les pieds ne suivent jamais le souffle (§5, RigKokoro.decalageRespirationHaut) :
-            // seule leur pose empruntée (sommeil, vol) s'ajoute à leur orbite normale.
+            // Les pieds ne suivent jamais le souffle, contrairement aux bras (decalageRespirationHaut).
             dessinerMembre(PIED_GAUCHE, CENTRE_VENTRE, rig.rotationPiedGauche, rig.posePiedGauche, palette)
             dessinerMembre(PIED_DROIT, CENTRE_VENTRE, rig.rotationPiedDroit, rig.posePiedDroit, palette)
         }
         if (passe != Passe.CORPS) {
-            // ⭐ Les bras suivent le sommet du ventre qui respire (§1.2 de la demande du 16/08/2026) :
-            // à la même hauteur du corps qu'au repos, ni plus enfoncés, ni plus sortis.
             withTransform({ translate(0f, rig.decalageRespirationHaut) }) {
                 dessinerMembre(BRAS_GAUCHE, EPAULE_GAUCHE, rig.rotationBrasGauche, rig.poseBrasGauche, palette)
                 dessinerMembre(BRAS_DROIT, EPAULE_DROITE, rig.rotationBrasDroit, rig.poseBrasDroit, palette)
@@ -122,15 +99,7 @@ private fun DrawScope.dessinerKokoro(rig: RigKokoro, palette: PaletteCorps, pass
     }
 }
 
-/**
- * L'ombre est peinte **dans la couche du personnage, juste sous lui** (`PRESENCE.md` §1.3) : un
- * panneau posé par-dessus la recouvre mécaniquement. 🔴 **« Pas d'ombre sur l'interface » est une
- * conséquence de l'ordre de peinture — aucune découpe, aucun test.**
- *
- * Elle suit le personnage en `x` **et pas en `y`** : c'est l'écart entre ses pieds et elle qui dit
- * la hauteur de vol. Le flou est un dégradé radial plutôt qu'un `BlurMaskFilter` — même rendu, et
- * rien à déléguer au pilote graphique.
- */
+// L'absence d'ombre sur l'interface vient de l'ordre de peinture (sous le personnage), pas d'un clip.
 private fun DrawScope.dessinerOmbre(ombre: Ombre, rig: RigKokoro, encre: Color) {
     val centre = Offset(AXE, ombre.sol)
     val teinte = encre.copy(alpha = ombre.opaciteA(rig.decalage.y))
@@ -153,14 +122,7 @@ private fun DrawScope.dessinerOmbre(ombre: Ombre, rig: RigKokoro, encre: Color) 
     }
 }
 
-/**
- * Le torse respire autour de sa base ; la ligne du ventre et le 心 sont dessus, donc ils suivent.
- * ⭐ **Vers le haut uniquement** (demande de Xavier, 16/08/2026) : plus de rétraction en largeur.
- */
 private fun DrawScope.dessinerTorse(rig: RigKokoro, palette: PaletteCorps) {
-    // Le corps du vol enveloppe le souffle : le torse respire dans son repère, et c'est l'ensemble
-    // qui se resserre — l'ordre du dessin de variante, où le groupe porte tout. Le 心 y a un
-    // glissement propre, comme dans le dessin.
     withTransform({ transform(rig.vol.torse.matrice()) }) {
         withTransform({ scale(1f, rig.etirementCorps, PIVOT_RESPIRATION.offset) }) {
             dessinerPiece(TORSE, palette)
@@ -174,21 +136,10 @@ private fun DrawScope.dessinerTorse(rig: RigKokoro, palette: PaletteCorps) {
     }
 }
 
-/**
- * ⭐ **La tête peut pencher, et elle seule** — autour de [PIVOT_TETE], le milieu de la ligne des
- * épaules. La coque, le panneau et le visage tournent **ensemble** : le visage est peint dans le
- * panneau, il ne glisse pas dessus.
- *
- * 🔴 **Une seule posture s'en sert** (`accoude`), et l'angle y est borné. Partout ailleurs
- * l'inclinaison vaut zéro et cette rotation ne fait rien.
- */
+// L'inclinaison de tête n'est utilisée que par la posture accoude ; ailleurs elle vaut toujours zéro.
 private fun DrawScope.dessinerTete(rig: RigKokoro, palette: PaletteCorps) {
-    // ⭐ Suit le sommet du ventre qui respire, comme les bras (§1.2 de la demande du 16/08/2026) —
-    // avant l'inclinaison d'`accoude`, qui continue de tourner autour de sa propre ancre.
     withTransform({ translate(0f, rig.decalageRespirationHaut) }) {
         withTransform({ rotate(rig.inclinaisonTete, PIVOT_TETE.offset) }) {
-            // Coque, panneau et visage portent chacun leur part du vol : c'est leur resserrement
-            // séparé qui donne la tête tournée, et le dessin les traite bien comme trois pièces.
             withTransform({ transform(rig.vol.coque.matrice()) }) { dessinerPiece(TETE, palette) }
             withTransform({ transform(rig.vol.panneau.matrice()) }) { dessinerPiece(PANNEAU, palette) }
             if (rig.panneauAllume) {
@@ -209,11 +160,6 @@ private fun DrawScope.dessinerAutour(
     }
 }
 
-/**
- * Un membre (bras ou pied), sa rotation normale **puis, par-dessus, une pose empruntée à un autre
- * dessin** — sommeil, vol (`Geometrie.kt`, [PoseMembre]). Identité par défaut : au repos la
- * transformation ne change rien, et le membre est exactement celui du SVG.
- */
 private fun DrawScope.dessinerMembre(
     piece: Piece,
     pivot: Ancre,
@@ -234,27 +180,13 @@ private fun DrawScope.dessinerPiece(piece: Piece, palette: PaletteCorps) {
     }
 }
 
-/**
- * Le visage change de forme, il ne se superpose jamais à lui-même : à aucun instant deux visages ne
- * sont dessinés l'un sur l'autre. Voir [MorphingVisage.kt][Contour].
- */
 private fun DrawScope.dessinerVisage(rig: RigKokoro, couleur: Color) {
     val yeux = Offset(rig.regard, rig.abaissement)
-    // Les trois tracés ne glissent pas ensemble en vol : les yeux se rapprochent en même temps
-    // qu'ils partent du côté du vol, ce qui est tout le trois-quarts du dessin.
     dessinerTrace(rig.visage.oeil, OEIL_GAUCHE, yeux + rig.vol.oeilGauche.decalage, couleur)
     dessinerTrace(rig.visage.oeil, OEIL_DROIT, yeux + rig.vol.oeilDroit.decalage, couleur)
     dessinerTrace(rig.visage.bouche, BOUCHE, rig.vol.bouche.decalage, couleur)
 }
 
-/**
- * Une pièce du visage en cours de déformation. 🔴 **Les yeux et la bouche ont chacun la leur** : un
- * clignement déforme les premiers sans toucher à la seconde.
- *
- * Les deux bouts et les formes qui ne changent pas — l'œil reste ovale de `serein` à `attentif` —
- * sont tracés depuis le dessin lui-même : la silhouette échantillonnée n'est qu'une approche, et
- * elle ne sert que pendant le mouvement.
- */
 private fun DrawScope.dessinerTrace(
     morphing: Morphing,
     ancre: Ancre,

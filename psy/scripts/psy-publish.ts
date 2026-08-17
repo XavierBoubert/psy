@@ -85,8 +85,7 @@ const problemesInterdits = (etape: Record<string, unknown>): ReadonlyArray<strin
 
 const estTexteNonVide = (value: unknown): boolean => typeof value === 'string' && value.trim().length > 0;
 
-// C10 — l'aidant lit des consignes, pas un dossier, et elle n'est pas therapeute.
-// Une consigne qui lui demande de juger la met en faute quoi qu'elle fasse.
+// C10 — l'aidant execute un deroule, elle ne juge jamais (elle n'est pas therapeute).
 const JUGEMENTS: ReadonlyArray<Interdit> = [
   {
     motif: /\b(estime|evalue|juge|apprecie|decide)\b[^.]{0,40}\b(si|s'il|comment|quand)\b|\ba toi de voir\b|\bsi tu penses que\b/,
@@ -120,8 +119,7 @@ const problemeConsigne = (consigne: unknown, rang: number): string | null => {
     : `consigne ${rang + 1} : « secondes » absent ou nul — une seance a deux est chronometree`;
 };
 
-// Une seance a deux met une tierce personne dans la boucle : les trois gardes
-// ci-dessous ne sont pas des validations de forme, ce sont les garde-fous eux-memes.
+// Une seance a deux implique une tierce personne : ces gardes sont les garde-fous eux-memes, pas de simples validations de forme.
 const problemesDuo = (etape: Record<string, unknown>): ReadonlyArray<string> => {
   const sequence = etape['sequence'];
   const arret = etape['arret'];
@@ -246,8 +244,6 @@ const relireProgramme = (parsed: unknown): ReadonlyArray<string> => {
   ];
 };
 
-// --- La supervision, bloquante (superviseur/README.md §4) ---------------------------------
-
 const champFrontmatter = (contenu: string, champ: string): string | null => {
   const trouve = new RegExp(`^${champ}\\s*:\\s*(.+?)\\s*$`, 'm').exec(contenu);
 
@@ -275,8 +271,6 @@ const relireSupervision = async (parsed: unknown): Promise<ReadonlyArray<string>
       : `${nom} : verdict « ${String(champFrontmatter(contenu, 'verdict'))} » — seul « publiable » autorise la publication`,
   ].filter((probleme): probleme is string => probleme !== null);
 };
-
-// --- La bibliotheque ---------------------------------------------------------
 
 type Fiche = {
   readonly id: string;
@@ -320,8 +314,6 @@ const relireBibliotheque = (parsed: unknown, fiches: ReadonlyArray<Fiche>): Read
 
   return [...manquants, ...fautives];
 };
-
-// --- Publication -------------------------------------------------------------
 
 const publier = async (cible: string, brut: string, fiches: ReadonlyArray<Fiche>): Promise<void> => {
   await mkdir(cible, { recursive: true });

@@ -39,29 +39,6 @@ import io.allonsy.kokoro.ui.PanneauExtrude
 import io.allonsy.kokoro.ui.Teinte
 import io.allonsy.kokoro.ui.TypoKokoro
 
-/**
- * Les quatre écrans du monde (`companion/INTERFACE.md` §3) — **une rubrique par écran**.
- *
- * ```
- *  ← … ┌──────────┐ ┌───────────────┐ ┌────────┐ ┌───────┐ ┌──────────┐ … →
- *      │ Thérapie │ │ Documentation │ │ Bilan  │ │ Crise │ │ Thérapie │
- *      └──────────┘ └───────────────┘ └────────┘ └───────┘ └──────────┘
- * ```
- *
- * ⭐ **Un contenu ne change jamais de place** : la rubrique est écrite dans le programme et ne
- * bouge pas, alors que `quand` bouge tous les jours. **L'interface n'arbitre rien.**
- *
- * ⭐ **L'ordre est celui des choses, pas celui des besoins** *(15/08/2026)* — la thérapie d'abord
- * parce que c'est là qu'on arrive, puis ce qu'on lit, puis ce qu'on passe, puis la crise. **La crise
- * est la dernière, donc elle est aussi la voisine de gauche de l'entrée** : un seul geste, dans le
- * sens qu'on veut, et jamais une traversée à faire quand le temps manque.
- *
- * ✅ **Le point dur P1 est levé.** Le glissement vertical n'appartient plus au monde : **n'importe
- * quel écran peut porter une liste qui défile**, et aucun contenu n'est plus logé ailleurs que là où
- * il a du sens.
- */
-
-/** L'écart qui laisse passer le monde entre les cartes. Ce n'est pas de la respiration graphique. */
 private val ECART_CARTES = 20.dp
 
 @Composable
@@ -98,22 +75,6 @@ fun EcranDeBord(
     }
 }
 
-/**
- * **THÉRAPIE — l'écran d'entrée.** Les prochaines actions de la thérapie en cours, groupées par
- * `quand`, et **Kokoro en tête de liste**.
- *
- * ⭐ **C'est ici qu'on arrive** *(15/08/2026)*, donc c'est ici que vivent les trois choses qui
- * n'appartiennent à aucune rubrique : Kokoro, la roue dentée de l'écran de contrôle (**D4**), et
- * l'avis de porte fermée quand il y a lieu.
- *
- * ⭐ **Kokoro n'est plus une carte en tête de liste** *(`PRESENCE.md` **E9**)*. Il est peint dans sa
- * couche, entre le décor et le contenu ; **la liste ne fait plus que lui garder sa bande**, à côté
- * de la pancarte de chaque section. 🔴 **La bande est vide de tout ornement et de tout texte** :
- * elle ne dit pas qu'il est là, elle laisse la place.
- *
- * ⭐ **L'écran est long avant d'être riche** : sept démarches administratives sans date. C'est
- * l'état réel du chantier n° 1, et l'interface ne le maquille pas.
- */
 @Composable
 fun ContenuTherapie(
     perchoirs: Perchoirs,
@@ -162,15 +123,6 @@ fun ContenuTherapie(
     }
 }
 
-/**
- * La bande d'une section : **la pancarte à gauche, la place de l'habitant à droite.**
- *
- * 🔴 **Elle ne réserve plus la hauteur de la vue de l'habitant** *(demande de Xavier, 16/08/2026)*
- * : Kokoro est peint **par-dessus** l'interface ([HabitantSurInterface]), jamais glissé dedans, donc
- * rien n'a plus à lui faire de place — l'ajouter ici ne ferait plus qu'écarter le titre de la
- * section qui suit. Il peut déborder de la bande, à droite, sans recouvrir un texte : l'ordre de
- * peinture s'en charge, pas la mise en page.
- */
 @Composable
 private fun BandeDeSection(
     perchoirs: Perchoirs,
@@ -187,11 +139,7 @@ private fun BandeDeSection(
     )
 }
 
-/**
- * 🧪 Un bouton de test — **jamais montré hors build debug** ([BuildConfig.DEBUG]). Il ne pilote rien
- * du dossier : il force un affichage pour le comparer à l'écran, le temps de vérifier Kokoro sans
- * attendre l'heure ou une vraie liste.
- */
+// Jamais montré hors build debug : la fonction ne vérifie rien elle-même, l'appelant garde BuildConfig.DEBUG.
 @Composable
 private fun BoutonDebug(libelle: String, onClic: () -> Unit, modifier: Modifier = Modifier) {
     val palette = LocalPaletteKokoro.current
@@ -207,12 +155,6 @@ private fun BoutonDebug(libelle: String, onClic: () -> Unit, modifier: Modifier 
     }
 }
 
-/**
- * La bande qu'une liste réserve à l'habitant **au-dessus d'elle** (`PRESENCE.md` §2).
- *
- * ⭐ **Vide de tout** : ni texte, ni cadre, ni ornement. Elle n'annonce pas Kokoro — elle lui laisse
- * la hauteur, et c'est tout ce qu'elle fait.
- */
 @Composable
 private fun BandeDeTete(perchoirs: Perchoirs, perchoir: Perchoir) {
     Box(
@@ -224,21 +166,6 @@ private fun BandeDeTete(perchoirs: Perchoirs, perchoir: Perchoir) {
     )
 }
 
-/**
- * **DOCUMENTATION.** La bibliothèque, une fiche par ligne.
- *
- * Elle est vide : `companion/inputs/bibliotheque/` ne contient aujourd'hui que son README.
- * 🔴 **Les protocoles de `psy/docs/protocoles/` ne s'y copient pas** — ils se réécrivent pour
- * Xavier (contrôle **C9**), et ça se décide en séance.
- *
- * ⭐ **Sans liste, Kokoro se tient au milieu de l'écran** *(demande de Xavier, 16/08/2026)* : la
- * bande qui le porte et le cadre vide se centrent comme un seul bloc, au lieu de rester collés en
- * haut de la page.
- *
- * 🧪 [videDebug] et [onBasculerVideDebug] posent un bouton de test, **jamais montré hors build
- * debug** : de quoi comparer à l'écran le sommeil de Kokoro sur une liste vide et sa posture de
- * lecture sur une liste pleine, avant que K5 ne branche la vraie bibliothèque.
- */
 @Composable
 fun ContenuDocumentation(
     perchoirs: Perchoirs,
@@ -267,27 +194,6 @@ fun ContenuDocumentation(
     }
 }
 
-/**
- * **BILAN.** Les questionnaires à passer et les comptes rendus écrits en séance.
- *
- * 🔴 **Aucun chiffre, aucune courbe, aucun score** : la cotation n'est pas dans Kokoro
- * (`companion/PROGRAMME.md` §3), et un score mal lu est pire qu'un score absent.
- *
- * ⭐ **Il défile comme la documentation** *(15/08/2026)* — il ne le pouvait pas tant qu'il était en
- * haut du monde. **Les deux écrans qui n'ont rien se ressemblent maintenant à la lettre** : un état
- * vide posé en haut se lit comme une liste sans rien dedans, ce qu'il est, et non comme un message
- * adressé.
- *
- * ⭐ **Ils se ressemblent jusque dans l'habitant** : les deux listes étant vides, Kokoro y dort
- * (`PRESENCE.md` §2), **et leur texte reste affiché sous lui**. 🔴 **Les Zzz ne remplacent pas le
- * cadre vide** — ils n'informent de rien qu'il ne dise déjà en toutes lettres.
- *
- * ⭐ **Sans liste, Kokoro se tient au milieu de l'écran** *(demande de Xavier, 16/08/2026)*, comme
- * la documentation.
- *
- * 🧪 [videDebug] et [onBasculerVideDebug] posent un bouton de test, **jamais montré hors build
- * debug** — voir [ContenuDocumentation].
- */
 @Composable
 fun ContenuBilan(
     perchoirs: Perchoirs,
@@ -316,27 +222,6 @@ fun ContenuBilan(
     }
 }
 
-/**
- * **CRISE.** Trois grands boutons, **jamais de défilement** — 🔴 **c'est une exigence en soi**, et
- * elle survit à la levée de **P1** : en crise, une liste qui bouge sous le doigt est une chose de
- * plus à maîtriser.
- *
- * 🔴 **L'écart assumé : c'est l'écran le moins décoré du monde** (§4.5). Aucun ornement, aucune
- * étincelle, aucun cœur, une seule couleur, texte à 21 sp et boutons à 88 dp. **En crise, la
- * mignonnerie est du bruit** — il se distingue en étant plus grand et plus vide, **pas plus vif**.
- *
- * ⭐ **Cet écran est la première porte, pas la seule.** La notification y mène aussi, et depuis le
- * 15/08/2026 **elle mène ici même** : les boutons sont ceux de [PortesDeCrise], partagés à la
- * lettre avec l'écran de crise ouvert hors du monde (§6.2).
- *
- * ⭐ **Il est le voisin de gauche de l'entrée** : un seul geste depuis l'ouverture de l'app, dans le
- * sens qu'on veut.
- *
- * ⭐ **Kokoro veille ici, accoudé au bouton *Mot code*** *(arbitrage de Xavier, 16/08/2026 —
- * `PRESENCE.md` E13)*. 🔴 **Le bouton ne change en rien** : ni place, ni taille, ni libellé, ni
- * couleur. Il lui sert seulement d'arête — le perchoir est déclaré **sur** lui, et l'ordre de
- * peinture met le corps derrière et les bras devant. **Aucun texte n'est ajouté à cet écran.**
- */
 @Composable
 fun ContenuCriseDuMonde(
     perchoirs: Perchoirs,
@@ -358,18 +243,6 @@ fun ContenuCriseDuMonde(
     }
 }
 
-/**
- * **L'avis de porte fermée**, en tête de l'écran d'entrée. Il ne paraît que quand la notification
- * d'accès n'a pas pu être affichée : l'autorisation a été refusée, ou **Android l'a révoquée tout
- * seul** — il le fait pour les applications peu utilisées, et Kokoro en est une par construction.
- *
- * 🔴 **Une phrase, pas une pastille** *(tranché par Xavier le 15/08/2026)*. Un point coloré sur la
- * roue dentée aurait dit *va voir* sans dire quoi : **c'est un sous-entendu, et le dispositif n'en
- * fait aucun.** D4 tient donc — *jamais de pastille dessus* — et le rouge reste hors de la palette.
- *
- * ⭐ **Ce n'est pas une relance** : il ne compte pas les jours, il ne revient pas, il n'insiste pas.
- * **Il constate un défaut, et il disparaît de lui-même quand le défaut est réparé.**
- */
 @Composable
 fun AvisAcces(onReglages: () -> Unit, modifier: Modifier = Modifier) {
     val palette = LocalPaletteKokoro.current

@@ -6,11 +6,6 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-/**
- * La nuit est une plage horaire, et une plage de nuit passe minuit. C'est tout ce qu'il y a à
- * vérifier — mais il faut le vérifier, parce qu'un intervalle qui s'enroule est exactement le genre
- * de calcul qui se trompe d'un jour sans que rien ne le signale.
- */
 class PlageNuitTest {
 
     private val nuit = PlageNuit(active = true, debut = 21 * 60, fin = 6 * 60)
@@ -45,7 +40,7 @@ class PlageNuitTest {
         assertFalse(estNuit(sieste, 16 * 60))
     }
 
-    /** 🔴 Coupée, la nuit n'arrive jamais — c'est la porte de sortie, elle doit être franche. */
+    // Coupée, la nuit ne doit jamais se déclencher : c'est la porte de sortie, elle doit rester franche.
     @Test
     fun `une plage coupee ne declenche rien`() {
         val coupee = nuit.copy(active = false)
@@ -54,7 +49,7 @@ class PlageNuitTest {
         assertFalse(estNuit(coupee, 3 * 60))
     }
 
-    /** ⭐ Deux bornes égales sont un réglage ambigu : on reste au jour, jamais en nuit permanente. */
+    // Deux bornes égales sont un réglage ambigu : on reste au jour, jamais en nuit permanente.
     @Test
     fun `deux bornes egales laissent le jour`() {
         val vide = PlageNuit(active = true, debut = 8 * 60, fin = 8 * 60)
@@ -78,14 +73,12 @@ class PlageNuitTest {
         assertEquals(0, lireBorne("0", "0"))
     }
 
-    /** ⭐ Taper `21` puis rien est la façon normale d'écrire 21 h : les minutes vides valent zéro. */
     @Test
     fun `des minutes laissees vides valent zero`() {
         assertEquals(21 * 60, lireBorne("21", ""))
         assertEquals(7 * 60, lireBorne("7", "   "))
     }
 
-    /** Une saisie qui ne se lit pas ne s'enregistre pas : rien n'est corrigé en silence. */
     @Test
     fun `une saisie qui n est pas une heure ne se lit pas`() {
         assertNull(lireBorne("", "00"))

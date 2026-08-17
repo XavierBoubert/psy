@@ -6,13 +6,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-/**
- * Ce que le monde doit tenir, quoi qu'on change ensuite.
- *
- * Ce ne sont pas des tests de rendu — rien ici ne regarde une image. Ce sont les règles de
- * déplacement, qui décident de ce qui arrive quand Xavier pose le doigt, et le fait qu'aucune
- * couche du décor n'en dépasse une autre en profondeur.
- */
 class EcranTest {
 
     @Test
@@ -23,14 +16,12 @@ class EcranTest {
         )
     }
 
-    /** ⭐ On arrive sur la thérapie, et la crise est sa voisine de gauche. */
     @Test
     fun `la crise est a un seul geste de l entree`() {
         assertEquals(Ecran.THERAPIE, ecranEn(0))
         assertEquals(Ecran.CRISE, ecranEn(-1))
     }
 
-    /** 🔴 Après le dernier écran vient le premier, dans le même sens. */
     @Test
     fun `l anneau boucle dans les deux sens`() {
         assertEquals(Ecran.THERAPIE, ecranEn(4))
@@ -39,7 +30,6 @@ class EcranTest {
         assertEquals(Ecran.BILAN, ecranEn(-6))
     }
 
-    /** ⭐ Quatre positions peintes, quatre écrans distincts : aucun n'est monté deux fois. */
     @Test
     fun `les positions peintes couvrent chaque ecran une fois`() {
         listOf(-9, -1, 0, 3, 7).forEach { ancre ->
@@ -49,7 +39,6 @@ class EcranTest {
         }
     }
 
-    /** ⭐ Les deux positions à l'image sont l'ancre et sa voisine de droite, marge comprise. */
     @Test
     fun `les positions peintes encadrent celles qui sont a l image`() {
         val ancre = ancreDe(2.4f)
@@ -81,7 +70,6 @@ class EcranTest {
         assertEquals(-1, aterrissage(-franc, 0f, 0))
     }
 
-    /** 🔴 La traversée ne bute nulle part : le dernier écran mène au suivant, pas au premier. */
     @Test
     fun `la position ne se replie jamais`() {
         val franc = SEUIL_BASCULE + 0.01f
@@ -90,22 +78,17 @@ class EcranTest {
         assertEquals(Ecran.THERAPIE, ecranEn(4))
     }
 
-    /**
-     * ⭐ Un geste vif part plus vite qu'il ne va loin. Sans l'élan, il échouait sur la distance et le
-     * monde revenait en arrière alors que le geste était sans ambiguïté — c'était la saccade.
-     */
+    // Sans élan, un geste vif échouait sur la distance et revenait en arrière : c'était la saccade.
     @Test
     fun `un geste lance bascule meme s il est court`() {
         assertEquals(1, aterrissage(0.04f, VITESSE_BASCULE + 0.1f, 0))
     }
 
-    /** ⭐ Le doigt s'est ravisé avant de se lever : le dernier sens voulu est celui-là. */
     @Test
     fun `un elan qui repart en arriere annule la traversee`() {
         assertEquals(0, aterrissage(0.6f, -VITESSE_BASCULE - 0.1f, 0))
     }
 
-    /** ⭐ On ne saute jamais deux écrans, si lancé soit le geste. */
     @Test
     fun `un geste tres lance n avance que d un ecran`() {
         assertEquals(1, aterrissage(0.9f, 6f, 0))
@@ -122,10 +105,6 @@ class EcranTest {
         assertTrue("vitesse = $VITESSE_BASCULE", VITESSE_BASCULE in 0.3f..2f)
     }
 
-    /**
-     * ⭐ Les couches sont déclarées du loin vers le près, et c'est cet ordre qui décide de l'ordre
-     * de peinture. Une profondeur qui ne suit pas ferait passer un nuage devant le feuillage.
-     */
     @Test
     fun `les couches du decor vont du loin vers le pres`() {
         val profondeurs = COUCHES.map { it.profondeur }
@@ -134,7 +113,6 @@ class EcranTest {
         assertTrue("aucune couche ne colle au contenu", profondeurs.all { it > 0f && it < 1f })
     }
 
-    /** Le ciel est en haut et le sol en bas : les couches ancrées en bas sont les plus proches. */
     @Test
     fun `les couches ancrees en bas sont les plus proches`() {
         val ancrages = COUCHES.map { it.ancrage }
@@ -142,7 +120,7 @@ class EcranTest {
         assertEquals(listOf(Ancrage.HAUT, Ancrage.HAUT, Ancrage.BAS, Ancrage.BAS), ancrages)
     }
 
-    /** 🔴 Un décalage négatif découvrirait le ciel sous une couche ancrée en bas. */
+    // Un décalage négatif découvrirait le ciel sous une couche ancrée en bas.
     @Test
     fun `aucune couche du bas ne decolle du bord`() {
         COUCHES.filter { it.ancrage == Ancrage.BAS }.forEach {

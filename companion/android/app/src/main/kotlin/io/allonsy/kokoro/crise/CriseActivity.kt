@@ -29,19 +29,7 @@ import io.allonsy.kokoro.ui.ThemeMonde
 const val EXTRA_ECRAN = "ecran"
 const val ECRAN_MOT_CODE = "mot_code"
 const val ECRAN_TENSION = "tension"
-
-/**
- * ⭐ **L'écran s'ouvre en sachant que l'envoi direct vient d'échouer** *(15/08/2026)*. Le mot-code
- * part d'un seul appui ; quand il ne part pas, c'est ici qu'on arrive, et **il faut le dire tout de
- * suite** plutôt que de rejouer l'écran comme si rien ne s'était passé.
- */
 const val EXTRA_ECHEC = "echec"
-
-/**
- * ⭐ **La phrase pour le soignant est une porte à part entière** *(15/08/2026)*. Elle n'était
- * atteignable que depuis la tension appliquée ; l'écran **Crise** la propose directement, comme
- * `companion/inputs/programme.json` l'annonce déjà (`ecran: phrase-soignant`).
- */
 const val ECRAN_PHRASE = "phrase"
 
 sealed interface EcranCrise {
@@ -51,15 +39,6 @@ sealed interface EcranCrise {
     data object Phrase : EcranCrise
 }
 
-/**
- * 🔴 **La deuxième porte de la crise — le même contenu que l'écran **BAS** du monde**
- * (`companion/INTERFACE.md` §6.2). Depuis le 15/08/2026 elle affiche littéralement les mêmes boutons
- * *(demande de Xavier)* : le [PortesDeCrise] du monde, aux mêmes gestes, **mot-code compris — un
- * appui, le message part**.
- *
- * ⚠️ **Elle reste le repli écrit d'avance** : c'est elle qui s'ouvre par-dessus le verrouillage
- * quand le monde n'y arriverait pas, et c'est ici qu'on atterrit quand l'envoi direct échoue.
- */
 class CriseActivity : ComponentActivity() {
     private val ecran = mutableStateOf<EcranCrise>(EcranCrise.Accueil)
     private val envoi = mutableStateOf(ResultatEnvoi.INACTIF)
@@ -143,10 +122,6 @@ class CriseActivity : ComponentActivity() {
         ecran.value = ecranDemande(depuis)
     }
 
-    /**
-     * 🔴 **Les mêmes gestes que dans le monde, à la lettre** — c'est la définition de « deux portes,
-     * un seul contenu ». Le mot-code part d'un appui, la tension et la phrase ouvrent leur écran.
-     */
     private fun ouvrir(fonction: Fonction) {
         when (fonction) {
             Fonction.CHECK_IN -> startActivity(Intent(this, JournalActivity::class.java))
@@ -156,12 +131,6 @@ class CriseActivity : ComponentActivity() {
         }
     }
 
-    /**
-     * ⭐ **L'accusé paraît à l'appui, avant même la réponse du réseau**, puis il dit que le message
-     * est parti. Le SMS met parfois deux secondes à s'acquitter : sans ce premier mot, l'écran
-     * resterait figé assez longtemps pour qu'on re-tape. **Et le bouton se grise pendant ce
-     * temps-là** — les deux vont ensemble, l'un dit ce qui se passe, l'autre empêche le doublon.
-     */
     private fun envoyerLeMotCode() {
         if (!tenterMotCode(this, reglages.value)) {
             ecran.value = EcranCrise.MotCode

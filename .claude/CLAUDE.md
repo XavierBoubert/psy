@@ -8,13 +8,19 @@
 
 ---
 
+## Travailler efficacement (discipline de tokens)
+
+- **La documentation de référence et les gros fichiers se consultent, ne se lisent pas.** `grep`/Read ciblé sur la seule table, le seul symbole ou la seule section nécessaire. Ne pas charger un fichier source de 500+ lignes en entier.
+- **Ne jamais afficher de secret.** Capturer le bearer local dans une variable shell et le réutiliser silencieusement — un JWT pèse ~3 Ko, l'afficher (ou le recoller dans la commande suivante) le facture deux fois.
+- **Traiter soi-même une cause racine dans un seul fichier.** Réserver le sous-agent aux ratissages réellement larges et multi-répertoires, et lui demander de renvoyer `fichier:ligne + verdict`, pas un rapport narré.
+
 ## Langue et conventions de travail
 
 - **Toujours communiquer avec l'utilisateur en français.**
 - **Toujours utiliser bash, jamais PowerShell.**
 - **Toujours charger la skill `ay-typescript`** avant de toucher ou d'évaluer du TypeScript / JavaScript — écriture, revue de PR, application de corrections. **Aucune exception**, pas même pour un « petit » diff.
 - **Le rôle et le nom ne se confondent pas** : les rôles sont `psy` · `superviseur` · `companion` · `patient` · `aidant` ; les noms sont **Claude Psy** · **Claude Superviseur** · **Kokoro** · **Xavier** · **Chourouk**. Un répertoire porte un rôle ; une phrase clinique nomme qui agit.
-- 🔴 **Tout fichier de code ne contient pas de commentaire fait pour Xavier mais uniquement pour Claude dans le cas où c'est vraiement necessaire.**
+- 🔴 **Tout fichier de code ne contient pas de commentaire, le code doit être suffisamment explicite. En cas de note très impotante pour éviter de perdre une information, une ligne max est autorisée.**
 - 🔴 **Tout fichier markdown écrit par le dispositif est concis, actionnable et acté** — ces fichiers sont rechargés en entier à chaque intervention, leur poids se paie en tokens à chaque session. Concrètement :
   - **Pas de version ni de changelog dans le corps du texte.**, pas d'un en-tête `v2.2` ou d'une section « historique des modifications ». Un fichier décrit ce qui est vrai *maintenant*.
   - **Pas de section « reste à trancher » qui s'accumule.** Une question ouverte se tranche avant d'écrire, ou se pose une fois à l'utilisateur — elle ne vit pas indéfiniment comme note en bas de fichier.

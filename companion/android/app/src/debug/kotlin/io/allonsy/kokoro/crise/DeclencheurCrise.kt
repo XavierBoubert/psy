@@ -17,11 +17,7 @@ private const val DUREE_REVEIL_MILLIS = 10_000L
 private const val ID_NOTIFICATION_DEBUG = 3
 private const val CODE_DEBUG = 30
 
-/**
- * Harnais de vérification, **présent uniquement en build de debug**.
- * Ouvre l'écran de crise par-dessus le verrouillage sans passer par un tap manuel,
- * pour que la chaîne « écran éteint → écran de crise » soit constatable depuis le PC.
- */
+// Harnais de vérification, build debug uniquement — ne jamais déplacer vers src/main.
 class DeclencheurCrise : BroadcastReceiver() {
     @SuppressLint("MissingPermission")
     override fun onReceive(context: Context, intent: Intent) {

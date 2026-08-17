@@ -47,7 +47,6 @@ private fun ApercuExpressions() {
     }
 }
 
-/** Le regard ne vient plus d'une expression : il se règle par-dessus, la même partout. */
 @Preview(name = "Kokoro — les trois regards", widthDp = 400, heightDp = 140)
 @Composable
 private fun ApercuRegards() {
@@ -81,7 +80,6 @@ private fun ApercuPostures() {
     )
 }
 
-/** Les quatre postures immobiles. Le geste de `notes` ne se voit qu'à l'atelier — il est animé. */
 @Preview(name = "Kokoro — les postures immobiles", widthDp = 720, heightDp = 200)
 @Composable
 private fun ApercuPosturesImmobiles() {
@@ -106,11 +104,6 @@ private fun Planche(postures: List<Posture>) {
     }
 }
 
-/**
- * Le vol ne se voit pas sur une image fixe — **l'ombre, si.** Les trois vignettes sont trois
- * instants du même cycle, du bas vers le haut : ⭐ l'ombre ne bouge pas d'un pixel, c'est le
- * personnage qui s'en éloigne. C'est tout ce qu'elle dit, et c'est tout ce qu'il y a à voir.
- */
 @Preview(name = "Kokoro — le vol et son ombre", widthDp = 440, heightDp = 160)
 @Composable
 private fun ApercuVol() {
@@ -120,6 +113,7 @@ private fun ApercuVol() {
             .padding(8.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
+        // ⭐ l'ombre reste fixe, c'est le personnage qui s'en éloigne — trois instants du même cycle
         listOf(PI.toFloat(), PI.toFloat() / 2f, 0f).forEach { phase ->
             CorpsKokoro(
                 rig = RigKokoro.pose(Posture.Repos)

@@ -7,16 +7,7 @@ import android.util.Log
 
 private const val DATE_TEMOIN = "2000-01-01"
 
-/**
- * Harnais de vérification, **présent uniquement en build de debug**.
- *
- * Écrit un check-in **témoin** daté du 01/01/2000, tous champs à `null`, pour constater
- * depuis le PC que la chaîne « Kokoro → dossier désigné → transport » fonctionne.
- *
- * ⚠️ La date est volontairement absurde : un check-in daté d'aujourd'hui écrit par le PC
- * serait une **donnée clinique fabriquée**. Le check-in réel appartient à Xavier, et à lui
- * seul — c'est la même règle qu'à K2, où l'envoi réel du mot-code lui revenait.
- */
+// Date volontairement absurde : une date réelle écrite depuis le PC serait une donnée clinique fabriquée.
 class TemoinJournal : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         Log.i("kokoro-temoin", "avant : ${listerJournal(context)}")
