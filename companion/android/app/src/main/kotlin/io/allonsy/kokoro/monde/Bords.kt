@@ -1,13 +1,9 @@
 package io.allonsy.kokoro.monde
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,17 +12,13 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import io.allonsy.kokoro.BuildConfig
 import io.allonsy.kokoro.R
 import io.allonsy.kokoro.crise.PortesDeCrise
 import io.allonsy.kokoro.ui.BandeTitre
@@ -91,7 +83,6 @@ fun ContenuTherapie(
     onReglages: () -> Unit,
     onOuvrir: (Etape) -> Unit,
     fige: Boolean = false,
-    onBasculerAffichage: (aujourdhui: Boolean) -> Unit = {},
 ) {
     EcranDeBord(
         titre = stringResource(R.string.monde_therapie_titre),
@@ -106,22 +97,11 @@ fun ContenuTherapie(
         }
         sectionsTherapie().forEach { section ->
             BandeDeSection(perchoirs = perchoirs, perchoir = section.perchoir) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
-                ) {
-                    Pancarte(
-                        texte = section.quand,
-                        couleur = section.couleur,
-                        modifier = Modifier.padding(start = 2.dp),
-                    )
-                    if (BuildConfig.DEBUG) {
-                        BoutonDebug(
-                            libelle = stringResource(R.string.debug_kokoro_ici),
-                            onClic = { onBasculerAffichage(section.perchoir == Perchoir.AUJOURDHUI) },
-                        )
-                    }
-                }
+                Pancarte(
+                    texte = section.quand,
+                    couleur = section.couleur,
+                    modifier = Modifier.padding(start = 2.dp),
+                )
             }
             section.etapes.forEach { etape ->
                 Carte(
@@ -151,22 +131,6 @@ private fun BandeDeSection(
     )
 }
 
-// Jamais montré hors build debug : la fonction ne vérifie rien elle-même, l'appelant garde BuildConfig.DEBUG.
-@Composable
-private fun BoutonDebug(libelle: String, onClic: () -> Unit, modifier: Modifier = Modifier) {
-    val palette = LocalPaletteKokoro.current
-    val interactions = remember { MutableInteractionSource() }
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(999.dp))
-            .background(palette.encre.copy(alpha = 0.10f))
-            .clickable(interactionSource = interactions, indication = null, onClick = onClic)
-            .padding(horizontal = 14.dp, vertical = 8.dp),
-    ) {
-        Text(text = libelle, style = TypoKokoro.discret, color = palette.encreDouce)
-    }
-}
-
 @Composable
 private fun BandeDeTete(perchoirs: Perchoirs, perchoir: Perchoir) {
     Box(
@@ -179,58 +143,26 @@ private fun BandeDeTete(perchoirs: Perchoirs, perchoir: Perchoir) {
 }
 
 @Composable
-fun ContenuDocumentation(
-    perchoirs: Perchoirs,
-    videDebug: Boolean = true,
-    onBasculerVideDebug: () -> Unit = {},
-) {
+fun ContenuDocumentation(perchoirs: Perchoirs) {
     EcranDeBord(
         titre = stringResource(R.string.monde_documentation_titre),
         couleur = LocalPaletteKokoro.current.lavande,
         defilant = false,
     ) {
         BandeDeTete(perchoirs = perchoirs, perchoir = Perchoir.DOCUMENTATION)
-        if (videDebug) {
-            CadreVide(texte = stringResource(R.string.monde_documentation_vide))
-        } else {
-            Carte(titre = stringResource(R.string.debug_exemple_fiche), onClic = {})
-        }
-        if (BuildConfig.DEBUG) {
-            BoutonDebug(
-                libelle = stringResource(
-                    if (videDebug) R.string.debug_afficher_exemple else R.string.debug_afficher_vide,
-                ),
-                onClic = onBasculerVideDebug,
-            )
-        }
+        CadreVide(texte = stringResource(R.string.monde_documentation_vide))
     }
 }
 
 @Composable
-fun ContenuBilan(
-    perchoirs: Perchoirs,
-    videDebug: Boolean = true,
-    onBasculerVideDebug: () -> Unit = {},
-) {
+fun ContenuBilan(perchoirs: Perchoirs) {
     EcranDeBord(
         titre = stringResource(R.string.monde_bilan_titre),
         couleur = LocalPaletteKokoro.current.beurre,
         defilant = false,
     ) {
         BandeDeTete(perchoirs = perchoirs, perchoir = Perchoir.BILAN)
-        if (videDebug) {
-            CadreVide(texte = stringResource(R.string.monde_bilan_vide))
-        } else {
-            Carte(titre = stringResource(R.string.debug_exemple_fiche), onClic = {})
-        }
-        if (BuildConfig.DEBUG) {
-            BoutonDebug(
-                libelle = stringResource(
-                    if (videDebug) R.string.debug_afficher_exemple else R.string.debug_afficher_vide,
-                ),
-                onClic = onBasculerVideDebug,
-            )
-        }
+        CadreVide(texte = stringResource(R.string.monde_bilan_vide))
     }
 }
 

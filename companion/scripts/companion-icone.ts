@@ -28,12 +28,17 @@ const MIMES: Readonly<Record<string, string>> = {
   '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg',
   '.webp': 'image/webp',
+  '.svg': 'image/svg+xml',
 };
 
-const USAGE = `Usage: companion-icone [<source>] [--res=<dossier>] [--marge=<0-0.5>]
+// Un SVG est rastérisé à sa taille intrinsèque : on la gonfle avant de le charger.
+const AGRANDIR_SVG = 8;
+
+const USAGE = `Usage: companion-icone [<source>] [--face=<fichier>] [--res=<dossier>] [--marge=<0-0.5>]
                              [--seuil=<0-255>] [--plein=<0-255>] [--sombre=<0-255>] [--clair=<0-255>]
 
   <source>   le logo — chemin projet, ou nom de fichier sous ressources/retenus/ (défaut logo.jpg)
+  --face     le visage de l'icône de notification (défaut kokoro-face.svg)
   --res      dossier res/ où écrire (défaut ${RES})
   --marge    part de la toile réservée sur chaque côté (défaut 1/6 = les 18 dp de l'icône adaptative)
   --plein    « froideur » (bleu − rouge) en deçà de laquelle le pixel est du personnage (défaut 20)
@@ -41,11 +46,11 @@ const USAGE = `Usage: companion-icone [<source>] [--res=<dossier>] [--marge=<0-0
   --sombre   luminance en deçà de laquelle un pixel du personnage est un trait (défaut 120)
   --clair    luminance au-delà de laquelle il est un aplat (défaut 185)
 
-Produit les trois tailles d'icône de Kokoro à partir du logo :
+Produit les trois tailles d'icône de Kokoro :
 
   mipmap-*/ic_lanceur_avant.webp   la couche avant de l'icône adaptative — le logo entier
   mipmap-*/ic_lanceur_mono.png     la couche monochrome (icônes thématiques d'Android 13)
-  drawable-*/ic_kokoro.png         l'icône de notification, 24 dp, le personnage en aplat
+  drawable-*/ic_kokoro.png         l'icône de notification, 24 dp, le visage en aplat
 
 🔴 Le logo déborde de son cadre — la main et le corps touchent les bords. Le réduire aux 72 dp
 garantis et **prolonger le pourtour en étirant les pixels de bord** est ce qui le fait survivre à
@@ -53,11 +58,16 @@ tous les masques : rien n'est recadré dans la zone sûre, et aucune couture car
 le masque montre plus.
 
 ⭐ Les deux icônes en aplat ne sont pas un détourage : une icône de notification est **repeinte
-d'une seule couleur** par le système. On garde donc les aplats clairs du personnage et on **perce**
-ses traits — yeux, sourire, contours — qui redeviennent des trous.`;
+d'une seule couleur** par le système. On garde donc les aplats clairs et on **perce** les traits —
+yeux, sourire, contours — qui redeviennent des trous.
+
+⭐ L'icône de notification ne vient pas du logo mais du visage dessiné à part : à 24 dp le
+personnage entier n'est plus lisible. Le visage est rogné sur ses pixels opaques puis centré, pour
+occuper toute la toile utile.`;
 
 type Options = {
   readonly source: string;
+  readonly face: string;
   readonly res: string;
   readonly marge: number;
   readonly plein: number;
@@ -97,6 +107,7 @@ const lireOptions = (args: ReadonlyArray<string>): Options => {
 
   return {
     source: source || 'logo.jpg',
+    face: lireDrapeau(args, 'face') || 'kokoro-face.svg',
     res: lireDrapeau(args, 'res') || RES,
     marge,
     plein,
@@ -106,105 +117,174 @@ const lireOptions = (args: ReadonlyArray<string>): Options => {
   };
 };
 
+const grossirSvg = (contenu: Buffer): Buffer =>
+  Buffer.from(
+    contenu
+      .toString('utf8')
+      .replace(/<svg\b[^>]*>/, (balise) =>
+        balise.replace(
+          /\b(width|height)="([\d.]+)"/g,
+          (_, attribut: string, valeur: string) => `${attribut}="${Number(valeur) * AGRANDIR_SVG}"`,
+        ),
+      ),
+    'utf8',
+  );
+
 const resoudreSource = async (chemin: string): Promise<string> => {
-  const mime = MIMES[extname(chemin).toLowerCase()];
+  const extension = extname(chemin).toLowerCase();
+  const mime = MIMES[extension];
   if (mime === undefined) throw new Error(`format de source non géré : ${chemin}`);
 
   const candidats = isAbsolute(chemin) ? [chemin] : [resolve(PROJECT_ROOT, chemin), resolve(RETENUS, chemin)];
 
   for (const candidat of candidats) {
     const contenu = await readFile(candidat).catch(() => null);
-    if (contenu !== null) return `data:${mime};base64,${contenu.toString('base64')}`;
+    if (contenu === null) continue;
+
+    const image = extension === '.svg' ? grossirSvg(contenu) : contenu;
+
+    return `data:${mime};base64,${image.toString('base64')}`;
   }
 
   throw new Error(`source introuvable : ${chemin}`);
 };
 
-const FABRIQUER = `(source, options, plans) => new Promise((resolve, reject) => {
-  const image = new Image();
-  image.onerror = () => reject(new Error('image illisible'));
-  image.onload = () => {
-    const toile = (largeur, hauteur) => {
-      const canvas = document.createElement('canvas');
-      canvas.width = largeur;
-      canvas.height = hauteur;
-      const contexte = canvas.getContext('2d', { willReadFrequently: true });
-      contexte.imageSmoothingQuality = 'high';
-      return { canvas, contexte };
-    };
+const FABRIQUER = `(sources, options, plans) => {
+  const charger = (source) => new Promise((ok, echec) => {
+    const image = new Image();
+    image.onerror = () => echec(new Error('image illisible'));
+    image.onload = () => ok(image);
+    image.src = source;
+  });
 
-    const percer = () => {
-      const { canvas, contexte } = toile(image.width, image.height);
-      contexte.drawImage(image, 0, 0);
+  const toile = (largeur, hauteur) => {
+    const canvas = document.createElement('canvas');
+    canvas.width = largeur;
+    canvas.height = hauteur;
+    const contexte = canvas.getContext('2d', { willReadFrequently: true });
+    contexte.imageSmoothingQuality = 'high';
+    return { canvas, contexte };
+  };
 
-      const pixels = contexte.getImageData(0, 0, canvas.width, canvas.height);
-      const donnees = pixels.data;
+  const borne = (valeur) => Math.max(0, Math.min(1, valeur));
 
-      for (let i = 0; i < donnees.length; i += 4) {
-        const r = donnees[i];
-        const v = donnees[i + 1];
-        const b = donnees[i + 2];
+  const aplat = (luminance) => borne((luminance - options.sombre) / (options.clair - options.sombre));
 
-        const froideur = b - r;
-        const sujet = 1 - Math.max(0, Math.min(1, (froideur - options.plein) / (options.seuil - options.plein)));
-        const luminance = (r * 299 + v * 587 + b * 114) / 1000;
-        const aplat = Math.max(0, Math.min(1, (luminance - options.sombre) / (options.clair - options.sombre)));
+  const luminance = (r, v, b) => (r * 299 + v * 587 + b * 114) / 1000;
 
-        donnees[i] = 255;
-        donnees[i + 1] = 255;
-        donnees[i + 2] = 255;
-        donnees[i + 3] = Math.round(sujet * aplat * 255);
+  const repeindre = (image, alpha) => {
+    const { canvas, contexte } = toile(image.width, image.height);
+    contexte.drawImage(image, 0, 0);
+
+    const pixels = contexte.getImageData(0, 0, canvas.width, canvas.height);
+    const donnees = pixels.data;
+
+    for (let i = 0; i < donnees.length; i += 4) {
+      const opacite = alpha(donnees[i], donnees[i + 1], donnees[i + 2], donnees[i + 3]);
+
+      donnees[i] = 255;
+      donnees[i + 1] = 255;
+      donnees[i + 2] = 255;
+      donnees[i + 3] = Math.round(opacite * 255);
+    }
+
+    contexte.putImageData(pixels, 0, 0);
+    return canvas;
+  };
+
+  const percer = (image) => repeindre(image, (r, v, b) => {
+    const froideur = b - r;
+    const sujet = 1 - borne((froideur - options.plein) / (options.seuil - options.plein));
+    return sujet * aplat(luminance(r, v, b));
+  });
+
+  const masquer = (image) => repeindre(image, (r, v, b, a) => (a / 255) * aplat(luminance(r, v, b)));
+
+  const rogner = (source) => {
+    const donnees = source.getContext('2d').getImageData(0, 0, source.width, source.height).data;
+
+    let cadre = { gauche: source.width, haut: source.height, droite: -1, bas: -1 };
+    for (let y = 0; y < source.height; y += 1) {
+      for (let x = 0; x < source.width; x += 1) {
+        cadre = donnees[(y * source.width + x) * 4 + 3]
+          ? {
+              gauche: Math.min(cadre.gauche, x),
+              haut: Math.min(cadre.haut, y),
+              droite: Math.max(cadre.droite, x),
+              bas: Math.max(cadre.bas, y),
+            }
+          : cadre;
       }
+    }
 
-      contexte.putImageData(pixels, 0, 0);
-      return canvas;
+    if (cadre.droite < 0) return source;
+
+    const l = cadre.droite - cadre.gauche + 1;
+    const h = cadre.bas - cadre.haut + 1;
+    const { canvas, contexte } = toile(l, h);
+    contexte.drawImage(source, cadre.gauche, cadre.haut, l, h, 0, 0, l, h);
+
+    return canvas;
+  };
+
+  const poser = (contexte, dessin, taille, marge) => {
+    const dedans = taille - 2 * marge;
+    const l = dessin.width;
+    const h = dessin.height;
+
+    contexte.drawImage(dessin, 0, 0, l, h, marge, marge, dedans, dedans);
+    if (!marge) return;
+
+    contexte.drawImage(dessin, 0, 0, 1, h, 0, marge, marge, dedans);
+    contexte.drawImage(dessin, l - 1, 0, 1, h, taille - marge, marge, marge, dedans);
+    contexte.drawImage(dessin, 0, 0, l, 1, marge, 0, dedans, marge);
+    contexte.drawImage(dessin, 0, h - 1, l, 1, marge, taille - marge, dedans, marge);
+
+    contexte.drawImage(dessin, 0, 0, 1, 1, 0, 0, marge, marge);
+    contexte.drawImage(dessin, l - 1, 0, 1, 1, taille - marge, 0, marge, marge);
+    contexte.drawImage(dessin, 0, h - 1, 1, 1, 0, taille - marge, marge, marge);
+    contexte.drawImage(dessin, l - 1, h - 1, 1, 1, taille - marge, taille - marge, marge, marge);
+  };
+
+  const centrer = (contexte, dessin, taille, marge) => {
+    const dedans = taille - 2 * marge;
+    const facteur = Math.min(dedans / dessin.width, dedans / dessin.height);
+    const l = Math.round(dessin.width * facteur);
+    const h = Math.round(dessin.height * facteur);
+
+    contexte.drawImage(dessin, Math.round((taille - l) / 2), Math.round((taille - h) / 2), l, h);
+  };
+
+  return Promise.all([charger(sources.logo), charger(sources.face)]).then(([logo, face]) => {
+    const aplats = percer(logo);
+    const visage = rogner(masquer(face));
+
+    const matieres = {
+      logo: (contexte, taille, marge) => poser(contexte, logo, taille, marge),
+      aplats: (contexte, taille, marge) =>
+        contexte.drawImage(aplats, marge, marge, taille - 2 * marge, taille - 2 * marge),
+      face: (contexte, taille, marge) => centrer(contexte, visage, taille, marge),
     };
-
-    const poser = (contexte, dessin, taille, marge) => {
-      const dedans = taille - 2 * marge;
-      const l = dessin.width;
-      const h = dessin.height;
-
-      contexte.drawImage(dessin, 0, 0, l, h, marge, marge, dedans, dedans);
-      if (!marge) return;
-
-      contexte.drawImage(dessin, 0, 0, 1, h, 0, marge, marge, dedans);
-      contexte.drawImage(dessin, l - 1, 0, 1, h, taille - marge, marge, marge, dedans);
-      contexte.drawImage(dessin, 0, 0, l, 1, marge, 0, dedans, marge);
-      contexte.drawImage(dessin, 0, h - 1, l, 1, marge, taille - marge, dedans, marge);
-
-      contexte.drawImage(dessin, 0, 0, 1, 1, 0, 0, marge, marge);
-      contexte.drawImage(dessin, l - 1, 0, 1, 1, taille - marge, 0, marge, marge);
-      contexte.drawImage(dessin, 0, h - 1, 1, 1, 0, taille - marge, marge, marge);
-      contexte.drawImage(dessin, l - 1, h - 1, 1, 1, taille - marge, taille - marge, marge, marge);
-    };
-
-    const aplats = percer();
 
     const rendus = {};
     for (const plan of plans) {
       const marge = Math.round(plan.taille * plan.marge);
       const { canvas, contexte } = toile(plan.taille, plan.taille);
 
-      if (plan.matiere === 'logo') {
-        poser(contexte, image, plan.taille, marge);
-      } else {
-        contexte.drawImage(aplats, marge, marge, plan.taille - 2 * marge, plan.taille - 2 * marge);
-      }
+      matieres[plan.matiere](contexte, plan.taille, marge);
 
       rendus[plan.chemin] = canvas.toDataURL(plan.type, plan.qualite).split(',')[1];
     }
 
-    resolve(rendus);
-  };
-  image.src = source;
-})`;
+    return rendus;
+  });
+}`;
 
 type Plan = {
   readonly chemin: string;
   readonly taille: number;
   readonly marge: number;
-  readonly matiere: 'logo' | 'aplats';
+  readonly matiere: 'logo' | 'aplats' | 'face';
   readonly type: string;
   readonly qualite: number;
 };
@@ -231,13 +311,18 @@ const plans = (options: Options): ReadonlyArray<Plan> =>
       chemin: `drawable-${nom}/ic_kokoro.png`,
       taille: Math.round(TOILE_NOTIF * facteur),
       marge: MARGE_NOTIF / TOILE_NOTIF,
-      matiere: 'aplats' as const,
+      matiere: 'face' as const,
       type: 'image/png',
       qualite: 1,
     },
   ]);
 
-const fabriquer = async (options: Options, source: string): Promise<ReadonlyMap<string, Buffer>> => {
+type Sources = {
+  readonly logo: string;
+  readonly face: string;
+};
+
+const fabriquer = async (options: Options, sources: Sources): Promise<ReadonlyMap<string, Buffer>> => {
   const { default: puppeteer } = await import('puppeteer');
 
   const navigateur = await puppeteer.launch({ headless: true });
@@ -246,7 +331,7 @@ const fabriquer = async (options: Options, source: string): Promise<ReadonlyMap<
     const page = await navigateur.newPage();
     await page.setContent('<!doctype html><meta charset="utf-8">', { waitUntil: 'load' });
 
-    const arguments_ = [source, options, plans(options)].map((valeur) => JSON.stringify(valeur)).join(', ');
+    const arguments_ = [sources, options, plans(options)].map((valeur) => JSON.stringify(valeur)).join(', ');
     const rendus: unknown = await page.evaluate(`(${FABRIQUER})(${arguments_})`);
 
     if (typeof rendus !== 'object' || rendus === null) throw new Error('la fabrique n\'a rien renvoyé');
@@ -265,8 +350,9 @@ const fabriquer = async (options: Options, source: string): Promise<ReadonlyMap<
 
 const main = async (): Promise<void> => {
   const options = lireOptions(process.argv.slice(2));
-  const source = await resoudreSource(options.source);
-  const rendus = await fabriquer(options, source);
+
+  const [logo, face] = await Promise.all([resoudreSource(options.source), resoudreSource(options.face)]);
+  const rendus = await fabriquer(options, { logo, face });
 
   const racine = isAbsolute(options.res) ? options.res : resolve(PROJECT_ROOT, options.res);
 

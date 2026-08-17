@@ -75,7 +75,6 @@ fun MondeKokoro(
     // Demande externe (crise → check-in) : JournalActivity n'existant plus, MondeActivity la porte jusqu'ici.
     ouvrirCheckin: Boolean = false,
     onCheckinOuvert: () -> Unit = {},
-    debug: DebugMonde = DebugMonde(),
 ) {
     var position by remember { mutableIntStateOf(0) }
     val perchoirs = rememberPerchoirs()
@@ -178,7 +177,6 @@ fun MondeKokoro(
                         onFonction = onFonction,
                         onReglages = { affichee = Contexte.Reglages; ouverte = Contexte.Reglages },
                         fige = ouverte != null,
-                        debug = debug,
                     )
                 }
             }
@@ -223,7 +221,6 @@ private fun ContenuEcran(
     onFonction: (Fonction) -> Unit,
     onReglages: () -> Unit,
     fige: Boolean,
-    debug: DebugMonde,
 ) {
     when (ecran) {
         Ecran.THERAPIE -> ContenuTherapie(
@@ -241,20 +238,11 @@ private fun ContenuEcran(
                     is Ouverture.Detail -> onOuvrir(Contexte.Demarche(etape))
                 }
             },
-            onBasculerAffichage = debug.onBasculerAffichageTherapie,
         )
 
-        Ecran.DOCUMENTATION -> ContenuDocumentation(
-            perchoirs = perchoirs,
-            videDebug = debug.documentationVide,
-            onBasculerVideDebug = debug.onBasculerDocumentationVide,
-        )
+        Ecran.DOCUMENTATION -> ContenuDocumentation(perchoirs = perchoirs)
 
-        Ecran.BILAN -> ContenuBilan(
-            perchoirs = perchoirs,
-            videDebug = debug.bilanVide,
-            onBasculerVideDebug = debug.onBasculerBilanVide,
-        )
+        Ecran.BILAN -> ContenuBilan(perchoirs = perchoirs)
 
         Ecran.CRISE -> ContenuCriseDuMonde(
             perchoirs = perchoirs,
@@ -264,15 +252,6 @@ private fun ContenuEcran(
         )
     }
 }
-
-// Jamais montrées hors build debug : ces bascules ne pilotent rien du dossier.
-data class DebugMonde(
-    val documentationVide: Boolean = true,
-    val bilanVide: Boolean = true,
-    val onBasculerAffichageTherapie: (aujourdhui: Boolean) -> Unit = {},
-    val onBasculerDocumentationVide: () -> Unit = {},
-    val onBasculerBilanVide: () -> Unit = {},
-)
 
 // État et actions du panneau réglages — porté par MondeActivity, plus par une Activity à part.
 data class DonneesReglages(

@@ -66,10 +66,6 @@ class MondeActivity : ComponentActivity() {
     private val accesPerdu = mutableStateOf(false)
     private val sejour = mutableStateOf(Sejour(heure = 0, checkinFait = false))
 
-    private val affichageForce = mutableStateOf<Boolean?>(null)
-    private val documentationVide = mutableStateOf(true)
-    private val bilanVide = mutableStateOf(true)
-
     // Ex-MainActivity : la roue dentée ouvre désormais un panneau interne, plus une Activity.
     private val autorisations = mutableStateOf(EtatAutorisations(false, false, false))
     private val dossier = mutableStateOf<String?>(null)
@@ -120,17 +116,7 @@ class MondeActivity : ComponentActivity() {
                 MondeKokoro(
                     palette = paletteDuMoment(nuit.value),
                     contactNom = reglages.value.contactNom,
-                    sejour = sejour.value.copy(
-                        heure = when (affichageForce.value) {
-                            null -> sejour.value.heure
-                            true -> HEURE_DU_CHECKIN
-                            false -> 0
-                        },
-                        vides = setOfNotNull(
-                            Ecran.DOCUMENTATION.takeIf { documentationVide.value },
-                            Ecran.BILAN.takeIf { bilanVide.value },
-                        ),
-                    ),
+                    sejour = sejour.value,
                     onFonction = { ouvrir(it) },
                     donneesReglages = DonneesReglages(
                         autorisations = autorisations.value,
@@ -163,13 +149,6 @@ class MondeActivity : ComponentActivity() {
                         accuse.value = null
                         envoiEnCours.value = false
                     },
-                    debug = DebugMonde(
-                        documentationVide = documentationVide.value,
-                        bilanVide = bilanVide.value,
-                        onBasculerAffichageTherapie = { affichageForce.value = it },
-                        onBasculerDocumentationVide = { documentationVide.value = !documentationVide.value },
-                        onBasculerBilanVide = { bilanVide.value = !bilanVide.value },
-                    ),
                 )
             }
         }

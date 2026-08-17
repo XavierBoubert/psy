@@ -2,13 +2,7 @@ package io.allonsy.kokoro.crise
 
 import android.os.SystemClock
 import androidx.annotation.StringRes
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,13 +12,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.shape.RoundedCornerShape
 import io.allonsy.kokoro.R
 import io.allonsy.kokoro.tension.EtapeSoins
 import io.allonsy.kokoro.tension.NOMBRE_CYCLES
@@ -34,14 +23,12 @@ import io.allonsy.kokoro.tension.SEQUENCE_SOINS
 import io.allonsy.kokoro.tension.cyclesDe
 import io.allonsy.kokoro.tension.etapeAttendue
 import io.allonsy.kokoro.tension.etatTension
-import io.allonsy.kokoro.tension.fractionPhase
 import io.allonsy.kokoro.tension.secondesDuBloc
 import io.allonsy.kokoro.ui.LocalPaletteKokoro
 import io.allonsy.kokoro.ui.TypoKokoro
 import kotlinx.coroutines.delay
 
 private const val PERIODE_TICK_MILLIS = 200L
-private const val DUREE_TRANSITION_MILLIS = 800
 
 private enum class VueTension { ACCUEIL, SEQUENCE, BLOC, ASSIS, ARRET }
 
@@ -148,7 +135,6 @@ private fun VueSequence(
     onFermer: () -> Unit,
 ) {
     PanneauCrise(titre = stringResource(R.string.sequence_titre), onFermer = onFermer) {
-        Explication(stringResource(R.string.sequence_consigne))
         Enonce(stringResource(R.string.sequence_attendu, stringResource(libelleDe(attendue))))
         SEQUENCE_SOINS.forEach { etape ->
             GrandBouton(
@@ -168,7 +154,6 @@ private fun VueBloc(
     onAssis: () -> Unit,
     onFermer: () -> Unit,
 ) {
-    val palette = LocalPaletteKokoro.current
     val finMillis = secondesDuBloc(bloc.cycles)?.times(1000L)
     var millis by remember(bloc) { mutableLongStateOf(SystemClock.elapsedRealtime() - bloc.debut) }
 
@@ -182,14 +167,6 @@ private fun VueBloc(
 
     val etat = etatTension((millis / 1000L).toInt(), bloc.cycles)
     val termine = etat.phase == PhaseTension.TERMINE
-    val couleur by animateColorAsState(
-        targetValue = when (etat.phase) {
-            PhaseTension.CONTRACTE -> palette.azur.bas
-            else -> palette.encreDouce
-        },
-        animationSpec = tween(DUREE_TRANSITION_MILLIS),
-        label = "phase",
-    )
 
     PanneauCrise(
         titre = bloc.etape?.let { stringResource(libelleDe(it)) }
@@ -215,7 +192,6 @@ private fun VueBloc(
 
         if (!termine) {
             Compte(etat.secondesRestantes.toString())
-            Barre(fraction = fractionPhase(millis, bloc.cycles), couleur = couleur)
             Explication(
                 when (bloc.cycles) {
                     null -> stringResource(R.string.tension_cycle_enchaine, etat.cycle)
@@ -247,7 +223,6 @@ private fun VueBloc(
 
 @Composable
 private fun VueAssis(debut: Long, onQuitter: () -> Unit, onFermer: () -> Unit) {
-    val palette = LocalPaletteKokoro.current
     var secondes by remember(debut) {
         mutableLongStateOf((SystemClock.elapsedRealtime() - debut) / 1000L)
     }
@@ -265,7 +240,6 @@ private fun VueAssis(debut: Long, onQuitter: () -> Unit, onFermer: () -> Unit) {
         if (restantes > 0L) {
             Explication(stringResource(R.string.assis_consigne))
             Compte(stringResource(R.string.assis_restant, restantes / 60L, restantes % 60L))
-            Barre(fraction = secondes.toFloat() / SECONDES_ASSIS_APRES, couleur = palette.azur.bas)
         } else {
             Explication(stringResource(R.string.assis_termine))
         }
@@ -293,27 +267,6 @@ private fun Compte(texte: String) {
         textAlign = TextAlign.Center,
         modifier = Modifier.fillMaxWidth(),
     )
-}
-
-// Pas une barre de progrès interdite ailleurs : montre le temps qui passe, jamais un effort ou une assiduité.
-@Composable
-private fun Barre(fraction: Float, couleur: Color) {
-    val palette = LocalPaletteKokoro.current
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp)
-            .height(14.dp)
-            .clip(RoundedCornerShape(999.dp))
-            .drawBehind { drawRect(palette.creux) },
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth(fraction.coerceIn(0f, 1f))
-                .fillMaxHeight()
-                .drawBehind { drawRect(couleur) },
-        )
-    }
 }
 
 @StringRes

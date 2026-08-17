@@ -62,7 +62,7 @@ fun Zzz(modifier: Modifier = Modifier, taille: Dp = 26.dp) {
         ),
         label = "zzz-phase",
     )
-    Canvas(modifier.size(taille)) { zzz(palette.contour, TRAIT_ORNEMENT.toPx(), phase) }
+    Canvas(modifier.size(taille)) { zzz(palette.encre, TRAIT_ORNEMENT.toPx(), phase) }
 }
 
 private fun DrawScope.zzz(couleur: Color, trait: Float, phase: Float) {

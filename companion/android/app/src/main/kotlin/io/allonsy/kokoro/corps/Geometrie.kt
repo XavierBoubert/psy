@@ -288,9 +288,12 @@ val BOUCHE_COURTE = Trace("bouche-courte", Forme.Segment(-6.4f, 0f, 6.4f, 0f))
 // Plus haute que large : l'alternance avec BOUCHE_COURTE se lit à l'ouverture verticale, pas au rétrécissement.
 val BOUCHE_OUVERTE = Trace("bouche-ouverte", Forme.Ellipse(4.2f, 4.8f), epaisseur = 0f)
 
+// Aussi haute que la ronde, presque aussi large que la plate : troisième bouche de la parole.
+val BOUCHE_LARGE = Trace("bouche-large", Forme.Ellipse(5.9f, 4.8f), epaisseur = 0f)
+
 val TRACES = listOf(
     OEIL_OVALE, OEIL_TRAIT, OEIL_ARC_HAUT, OEIL_ARC_BAS,
-    BOUCHE_TRAIT, BOUCHE_BARRE, BOUCHE_ARC, BOUCHE_SEMI, BOUCHE_COURTE, BOUCHE_OUVERTE,
+    BOUCHE_TRAIT, BOUCHE_BARRE, BOUCHE_ARC, BOUCHE_SEMI, BOUCHE_COURTE, BOUCHE_OUVERTE, BOUCHE_LARGE,
 )
 
 const val AXE = 119.959189f

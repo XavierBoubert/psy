@@ -61,7 +61,6 @@
     <string name="tension_lien_arret">Quand arrêter</string>
 
     <string name="sequence_titre">Séquence de soins</string>
-    <string name="sequence_consigne">Toucher le repère au moment où il arrive. Chaque repère est un fait extérieur : il n\'y a rien à décider, et rien à percevoir.</string>
     <string name="sequence_attendu">Repère suivant : %1$s</string>
     <string name="sequence_porte">Franchir la porte</string>
     <string name="sequence_porte_bloc">Du cabinet, du laboratoire, du service. 5 cycles, assis.</string>
@@ -196,15 +195,6 @@
 
     <string name="monde_bilan_vide">Rien à passer pour l\'instant.</string>
     <string name="monde_documentation_vide">Rien à lire pour l\'instant.</string>
-
-    <!--
-      🧪 Les bascules de test du monde — jamais montrées hors build debug (BuildConfig.DEBUG).
-      Elles comparent les affichages de Kokoro à l'écran ; elles ne pilotent rien du dossier.
-    -->
-    <string name="debug_kokoro_ici">Test : Kokoro ici</string>
-    <string name="debug_exemple_fiche">Exemple de fiche</string>
-    <string name="debug_afficher_exemple">Test : afficher un exemple</string>
-    <string name="debug_afficher_vide">Test : afficher vide</string>
 
     <!--
       ⭐ L'accusé de l'envoi direct — companion/INTERFACE.md §7. Il constate que le message est

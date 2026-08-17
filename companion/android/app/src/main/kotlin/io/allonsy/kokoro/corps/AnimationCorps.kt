@@ -215,31 +215,39 @@ private fun visageAnime(expression: Expression, yeuxFermes: Boolean): Visage = V
     ),
 )
 
+// Plate, ronde, ronde et large : trois formes, jamais deux fois la même de suite — une alternance à deux se lit comme un tic.
+val BOUCHES_PAROLE = listOf(BOUCHE_COURTE, BOUCHE_OUVERTE, BOUCHE_LARGE)
+
+private val BOUCHES_ARRONDIES = setOf(BOUCHE_OUVERTE, BOUCHE_LARGE)
+
 // Sans ça la syllabe (90-220 ms) relançait un morphing de 800 ms jamais terminé : la bouche restait figée ouverte.
 private fun dureeBouche(depuis: Trace, vers: Trace): Int = when {
-    depuis == BOUCHE_OUVERTE || vers == BOUCHE_OUVERTE -> PARLE_MORPHING_MILLIS
+    depuis in BOUCHES_ARRONDIES || vers in BOUCHES_ARRONDIES -> PARLE_MORPHING_MILLIS
     else -> TRANSITION_MILLIS
 }
 
-// PARLE portait une bouche ouverte figée (air étonné) : elle alterne ouverte/fermée tant qu'il parle.
-private fun boucheDeLaParole(expression: Expression, bouchee: Boolean): Trace =
-    if (expression == Expression.PARLE && bouchee) BOUCHE_COURTE else expression.bouche
+// PARLE portait une bouche ouverte figée (air étonné) : elle passe d'une forme de parole à l'autre tant qu'il parle.
+private fun boucheDeLaParole(expression: Expression, syllabe: Trace?): Trace =
+    if (expression == Expression.PARLE && syllabe != null) syllabe else expression.bouche
 
 @Composable
-private fun parleAnime(actif: Boolean): Boolean {
-    var bouchee by remember { mutableStateOf(false) }
+private fun parleAnime(actif: Boolean): Trace? {
+    var syllabe by remember { mutableStateOf<Trace?>(null) }
     LaunchedEffect(actif) {
-        bouchee = false
+        syllabe = null
         if (!actif) return@LaunchedEffect
         var attente = 0L
         while (true) {
             attente = attenteParle(attente)
             delay(attente)
-            bouchee = !bouchee
+            syllabe = boucheSuivante(syllabe)
         }
     }
-    return bouchee
+    return syllabe
 }
+
+fun boucheSuivante(precedente: Trace?, alea: Random = Random): Trace =
+    generateSequence { BOUCHES_PAROLE[alea.nextInt(BOUCHES_PAROLE.size)] }.first { it != precedente }
 
 fun attenteParle(precedente: Long, alea: Random = Random): Long =
     attenteIrreguliere(precedente, PARLE_ATTENTE_MIN_MILLIS, PARLE_ATTENTE_MAX_MILLIS, alea)

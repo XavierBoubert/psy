@@ -45,11 +45,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.RoundRect
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
@@ -61,8 +68,10 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import io.allonsy.kokoro.R
 import io.allonsy.kokoro.corps.Expression
@@ -317,7 +326,7 @@ fun Croix(onFermer: () -> Unit, modifier: Modifier = Modifier) {
             .size(TAILLE_CROIX),
         contentAlignment = Alignment.Center,
     ) {
-        Canvas(Modifier.size(16.dp)) { croix(palette.contour, 3.dp.toPx()) }
+        Canvas(Modifier.size(16.dp)) { croix(palette.encre, 3.dp.toPx()) }
     }
 }
 
@@ -352,7 +361,7 @@ fun RoueDentee(onClic: () -> Unit, modifier: Modifier = Modifier) {
             .size(TAILLE_CROIX),
         contentAlignment = Alignment.Center,
     ) {
-        Canvas(Modifier.size(22.dp)) { rouage(palette.contour, 2.4.dp.toPx()) }
+        Canvas(Modifier.size(22.dp)) { rouage(palette.encre, 2.4.dp.toPx()) }
     }
 }
 
@@ -469,6 +478,17 @@ private val BULLE_QUEUE_DECALAGE =
 
 private const val OPACITE_SCRIM = 0.28f
 
+// Un élément qui défile s'arrête au trait haut de la bulle et à l'arête haute de la queue : il ne chevauche jamais le décor.
+private val DEDANS_BULLE = object : Shape {
+    override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
+        val trait = with(density) { CONTOUR.toPx() }
+        val queue = with(density) { (EPAISSEUR + BULLE_QUEUE_MORSURE).toPx() }
+        val rayon = with(density) { BULLE_RAYON.toPx() } - trait
+        val boite = Rect(trait, trait, size.width - trait, size.height - queue)
+        return Outline.Rounded(RoundRect(boite, CornerRadius(rayon.coerceAtLeast(0f))))
+    }
+}
+
 // Le panneau de toute ouverture de contexte (démarche, réglages, check-in, tension, phrase) : une seule forme,
 // une seule expression, jamais une page plein écran à bandeau — Xavier, 17/08/2026.
 @Composable
@@ -513,6 +533,7 @@ fun PanneauDialogue(
                     .weight(1f)
                     .fillMaxWidth()
                     .matiere(palette = palette, rayon = BULLE_RAYON)
+                    .clip(DEDANS_BULLE)
                     .verticalScroll(rememberScrollState())
                     .padding(horizontal = MARGE_PANNEAU)
                     .padding(top = 20.dp, bottom = 24.dp + EPAISSEUR),
