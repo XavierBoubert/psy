@@ -4,7 +4,7 @@
 
 > 📖 **Ce document ne décrit pas le dispositif — il dit ce qui n'est pas encore fait.** Ce que le dispositif *est* se lit dans [`README.md`](README.md) et dans les documents de chaque rôle ; le vocabulaire fait foi dans [`THESAURUS.md`](THESAURUS.md).
 >
-> ⚠️ **Écrit ne veut pas dire appliqué.** Un protocole rédigé, un skill livré, un format spécifié ne sont pas des actes cliniques. **C'est le contrôle C7 du superviseur**, et il reste ouvert tant que `ppc_minutes` est à 0.
+> ⚠️ **Écrit ne veut pas dire appliqué.** Un protocole rédigé, un skill livré, un format spécifié ne sont pas des actes cliniques. **C'est le contrôle C7 du superviseur** — et il s'est refermé le **18/08/2026**, à la première séance de palier réellement faite.
 
 ---
 
@@ -14,7 +14,7 @@
 
 **Le palier 0 est logistique, et il n'est pas bouclé :**
 
-- [x] **Relevé de télésuivi — vide pour le moment.** Aucun usage à relever : **le relevé ne tranchera rien tant que `ppc_minutes` est à 0.** À redemander à Link Sommeil quand du port sera enregistré
+- [x] **Relevé de télésuivi — vide pour le moment.** Aucun usage à relever. À redemander à Link Sommeil quand la machine tournera, c'est-à-dire **au palier 3**
 - [x] **Origine de la fuite — la question est court-circuitée** : masque changé pour une interface **bouche + nez**
 - [x] **Le nouveau masque bouche + nez est entré au protocole** — palier 1 démarré le **18/08/2026**, exercice publié dans Kokoro
 - [ ] **Vérifier la prise en charge du nouveau masque** — étape `ppc-prise-en-charge`, réponse écrite de Link Sommeil
@@ -23,11 +23,13 @@
 
 ✅ **La désensibilisation a repris le 18/08/2026, au palier 1** — masque tenu à la main, 5 min en journée *(séance du 18/08 ; l'objection sur le contact facial accru du bouche + nez est conservée entière au compte-rendu)*.
 
-🔴 **Le point qui commande maintenant : le premier `ppc_minutes` non nul.** Tant qu'il n'existe pas, le chantier n'a produit aucune donnée — et **le relevé de télésuivi ne peut rien trancher**, ce qui est la raison pour laquelle il a cessé d'être bloquant.
+✅ **Première séance de palier réellement faite le 18/08/2026 à 21h24** — `arrete_avant_la_fin`, remontée au dossier dans [`companion/outputs/reponses/`](companion/outputs/reponses/). ⭐ **Le masque a été tenu : c'est ça, la donnée.** Une séance arrêtée avant la fin ne se commente pas et ne se rattrape pas.
+
+🔴 **Ce qui commande maintenant : trois jours consécutifs où le minuteur va au bout** — c'est le critère de passage du palier 1, et il se compte sur les `issue: termine` de `reponses/`, une séance par fichier.
+
+🔴 **`ppc_minutes` ne mesure pas ce chantier-ci et ne peut pas le mesurer.** C'est la donnée du télésuivi, donc **de la machine allumée** — elle reste à 0 par construction aux paliers 1 et 2, où la machine est éteinte. Elle redevient l'indicateur **à partir du palier 3**. ⚠️ **Un `ppc_minutes` à 0 n'est donc plus un constat d'immobilité** : c'est ce que le protocole prévoit à ce stade.
 
 ⭐ **Ces démarches sont déjà des étapes du programme.** Kokoro les met sous la main ; **il ne les passe pas — ce sont des appels et des emails.**
-
-🔴 **`ppc_minutes` est l'indicateur qui tranche.** Tant qu'il est à 0, aucune quantité de doctrine produite ne compte comme un progrès.
 
 **Les deux autres chantiers sont écrits et démarrent après :** alimentation à structure externe, activité physique sans impact *(feu vert médical préalable requis)*. **À partir du palier 1, un seul chantier progresse à la fois.**
 
@@ -64,11 +66,15 @@
 
 | Jalon | Objet | Critère de fin |
 |---|---|---|
-| 🔴 **K5** *(en cours)* | **Le programme et la bibliothèque** — Kokoro lit `programme.json` + `bibliotheque/`, affiche par rubrique, écrit `reponses/`. ✅ Moitié PC écrite et vérifiée ; ✅ **Kokoro lit `programme.json`, filtre les fiches et confie le PDF au lecteur du téléphone** *(`programme/Bibliotheque.kt`, `monde/LecteurPdf.kt`)* ; ⏳ **reste `reponses/`** — aucune réponse d'étape n'est encore remontée | Une étape publiée depuis le PC apparaît sur le téléphone, est faite par Xavier, et sa réponse revient au dossier — **valide au format, sans intervention manuelle** |
+| 🔴 **K5** *(en cours)* | **Le programme et la bibliothèque** — Kokoro lit `programme.json` + `bibliotheque/`, affiche par rubrique, écrit `reponses/`. ✅ **Thérapie et Documentation sont entièrement lues du dossier** — `ecran`, `exercice` *(minuteur)*, `demarche` *(bouton « c'est fait »)*, `fiche` ; ✅ **le circuit complet a bouclé le 18/08/2026** ; ⏳ **mais le premier aller-retour a demandé un sauvetage à la main** *(voir ci-dessous)*, et **`questionnaire` et `seance-duo` ne sont pas portés** — l'écran Bilan est vide par construction | Une étape publiée depuis le PC apparaît sur le téléphone, est faite par Xavier, et sa réponse revient au dossier — **valide au format, sans intervention manuelle** |
 | 🔜 **K6** | **La séance à deux** — type `seance-duo`, **mode entraînement** obligatoire, **signal d'arrêt** rappelé en permanence, **critères d'arrêt à un tap**. ⭐ **Le jalon qui ouvre les thérapies impossibles en solo** | Un entraînement joué en entier par Chourouk, puis une séance réelle menée à son terme **ou arrêtée sur le signal** — l'un et l'autre valent |
 
-- [ ] **Publier les échelles** comme questionnaires, rubrique `bilan` — **jamais le PHQ-9**
-- [ ] **Publier les démarches du palier 0 PPC**
+> ⚠️ **Le critère de fin de K5 n'est pas encore atteint, et c'est une nuance qui compte.** La première réponse a bien fait le trajet, mais **Drive avait accepté deux dossiers `reponses/`** et le fichier a dû être récupéré à la main dans le second. **Les trois défauts sont corrigés** — une lecture ne crée plus de dossier, la création est doublement gardée, `psy-sync` lit et signale les dossiers en double. **K5 se ferme au premier aller-retour qui se passe de moi.**
+>
+> 🔴 **La règle qui en sort, et qui vaut au-delà de Kokoro : l'état d'une étape ne dépend jamais d'un aller-retour par Drive.** Kokoro se souvient localement de ce qu'il a écrit — sinon une étape faite réapparaît *à faire* le temps que le fichier remonte, et **Xavier la refait**. *(Constaté en usage réel le 18/08/2026 ; consigné dans [`companion/PROGRAMME.md`](companion/PROGRAMME.md) §5.)*
+
+- [ ] **Publier les échelles** comme questionnaires, rubrique `bilan` — **jamais le PHQ-9**. 🔴 **Bloqué : le type `questionnaire` n'est pas porté par Kokoro**, l'écran Bilan est vide par construction
+- [x] ✅ **Publier les démarches du palier 0 PPC** — au programme v4, affichées et validables une à une
 
 ### Étape 6 — Stabilisation à deux, puis réouverture de l'EMDR ⏸️
 

@@ -89,6 +89,8 @@ Valeurs de `ecran` : `check-in` · `mot-code` · `tension-appliquee` · `phrase-
 `sortie_libre: true` affiche « je peux arrêter avant la fin, sans avoir à le justifier ».
 ⭐ **C'est toujours `true`.** Le champ existe pour que ce soit écrit, pas pour être mis à `false`.
 
+🔴 **Le minuteur vit dans le panneau, et Kokoro le dit avant de commencer** — quitter l'app l'arrête sans rien écrire. **Aucun son, aucune vibration ne marque le terme** : à zéro, l'issue `termine` part au dossier, et l'écran ne commente pas.
+
 ### `questionnaire` — des questions fermées, une par écran
 
 ```json
@@ -119,6 +121,8 @@ Toute question est un **choix fermé** ou un **compteur**. Aucune saisie de text
 ```
 
 Renvoie `fait` ou rien. ⭐ **Pas encore fait n'est pas une donnée** : rien ne s'affiche, rien ne se compte.
+
+🔴 **Une démarche rendue reste à l'écran, en retrait, jusqu'à ce que le psy la retire du programme** *(tranché par Xavier le 18/08/2026)*. **Kokoro montre l'état, il ne décide pas de la sortie** — et il n'affiche jamais combien de démarches restent.
 
 ### `fiche` — un texte à lire ou à montrer
 
@@ -197,6 +201,8 @@ Un fichier par étape faite, dans `reponses/` : `AAAA-MM-JJ-HHMM-<id>.json`
 `issue` : `termine` · `arrete_avant_la_fin` · `fait` · `entrainement`.
 ⭐ **`arrete_avant_la_fin` n'est pas un échec et ne se commente nulle part.**
 ⭐ **`entrainement` n'est pas une donnée clinique** — il dit seulement que le déroulé a été répété à blanc.
+
+🔴 **Ce que Kokoro a écrit, il s'en souvient localement** — l'état d'une étape ne dépend jamais d'un aller-retour par Drive. Sans ça, une étape faite réapparaît *à faire* le temps que le fichier remonte, et Xavier la refait. **Drive dit ce qui est arrivé au dépôt ; il ne dit pas ce que Xavier a fait.**
 
 ---
 

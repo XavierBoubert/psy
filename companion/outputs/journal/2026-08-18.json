@@ -1,0 +1,20 @@
+{
+  "date": "2026-08-18",
+  "source": "android",
+  "noyau": {
+    "shutdowns": 3,
+    "exposition_sociale": 1,
+    "retrait_sensoriel": 0,
+    "renoncements": 3,
+    "activites_investies": 3,
+    "sommeil_heures": 6.0,
+    "missions_actives": 3
+  },
+  "campagne": {
+    "ppc_minutes": 0,
+    "repas_servis_une_fois": 1,
+    "activite_minutes": 0,
+    "poids_kg": 110.0
+  },
+  "notes": null
+}

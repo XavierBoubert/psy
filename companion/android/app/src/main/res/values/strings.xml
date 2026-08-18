@@ -193,6 +193,7 @@
     <string name="monde_duree_minutes">%1$d minutes</string>
     <string name="monde_reglages">Écran de contrôle</string>
 
+    <string name="monde_therapie_vide">Rien à faire pour l\'instant.</string>
     <string name="monde_bilan_vide">Rien à passer pour l\'instant.</string>
     <string name="monde_documentation_vide">Rien à lire pour l\'instant.</string>
     <string name="bibliotheque_document_absent">Ce document n\'est pas encore arrivé dans le dossier.</string>
@@ -214,25 +215,26 @@
     <string name="monde_acces_action">Ouvrir les réglages</string>
 
     <!--
-      Les étapes de companion/inputs/programme.json v1, recopiées mot pour mot.
-      ⚠️ Provisoire : K5 les lira dans le dossier synchronisé et appliquera le filtrage des sept
-      interdits de companion/PROGRAMME.md §7. Elles sont ici, et pas dans du Kotlin, pour rester
-      sous le contrôle des tests d'invariants.
+      ⭐ Les étapes viennent du dossier synchronisé — companion/PROGRAMME.md. Kokoro n'en écrit
+      aucune : ce qui reste ici est ce qu'il dit lui-même autour d'elles.
     -->
-    <string name="etape_ppc_releve">Demander le relevé de télésuivi</string>
-    <string name="etape_ppc_releve_detail">Link Sommeil, sur les 3 derniers mois : heures par nuit, nombre de nuits utilisées, fuites, IAH résiduel. Des chiffres, pas une impression.</string>
-    <string name="etape_ppc_origine_fuite">Faire trancher : fuite au masque, ou à la bouche ?</string>
-    <string name="etape_ppc_origine_fuite_detail">Le télésuivi distingue les deux. Cette réponse commande le choix d\'interface, elle passe avant lui. Réponse écrite du prestataire.</string>
-    <string name="etape_ppc_interfaces">Demander un essai de plusieurs interfaces</string>
-    <string name="etape_ppc_interfaces_detail">Après la réponse sur l\'origine de la fuite. Si la fuite est au masque, le narinaire est autorisé par la prescription. Au moins deux interfaces à essayer à domicile.</string>
-    <string name="etape_ppc_prise_en_charge">Demander où en est la prise en charge</string>
-    <string name="etape_ppc_prise_en_charge_detail">Trois mois après son renouvellement. Le seuil qui conditionne le remboursement se demande au prestataire, il ne se suppose pas.</string>
-    <string name="etape_ppc_roisman">Demander une consultation de reprise au Dr Roisman</string>
-    <string name="etape_ppc_roisman_detail">En annonçant que la reprise se fera par paliers écrits. Solliciter le pneumologue après trois mois d\'usage irrégulier n\'est pas un aveu d\'échec : c\'est la démarche normale.</string>
-    <string name="etape_ppc_voyage">Demander comment emporter l\'appareil en Tunisie</string>
-    <string name="etape_ppc_voyage_detail">Départ le 07/09. Bagage cabine (l\'appareil est un matériel médical, généralement hors franchise sur présentation de l\'ordonnance), adaptateur et tension, eau de l\'humidificateur. Réponse écrite avant le départ.</string>
-    <string name="etape_email_isorni">Envoyer l\'email préparé au Dr Isorni</string>
-    <string name="etape_email_isorni_detail">Le brouillon est prêt dans le dossier. Il a vocation à partir avant la consultation du 03/09, pour qu\'il arrive préparé — pas à être lu sur place.</string>
+    <string name="etape_action_fait">C\'est fait</string>
+    <string name="etape_deja_faite">Déjà fait. La ligne partira du programme à la prochaine séance.</string>
+
+    <!--
+      ⭐ L'exercice au minuteur — companion/PROGRAMME.md §3. La sortie libre est écrite avant de
+      commencer et rappelée pendant : arrêter n'a jamais à se justifier. 🔴 Rien à la fin ne
+      commente ce qui a été fait, et aucun son ni vibration ne marque le terme.
+    -->
+    <string name="exercice_action_commencer">Je commence</string>
+    <string name="exercice_action_arreter">J\'arrête ici</string>
+    <string name="exercice_action_fermer">Fermer</string>
+    <string name="exercice_sortie_libre">Je peux arrêter avant la fin, sans avoir à le justifier.</string>
+    <string name="exercice_minuteur_ouvert">Le minuteur tourne tant que cet écran reste ouvert.</string>
+    <string name="exercice_fini">C\'est enregistré dans le dossier.</string>
+
+    <string name="reponse_dossier_absent">Le dossier synchronisé n\'est pas choisi : rien n\'a été enregistré.</string>
+    <string name="reponse_echec">L\'enregistrement dans le dossier n\'a pas abouti.</string>
 
     <string name="controle_section_test">Test K1</string>
     <string name="controle_consigne_test">Test : appuie sur le bouton, puis éteins l\'écran avec le bouton latéral. Au bout de 20 secondes, l\'écran doit se rallumer sur Kokoro, sans aucun son ni vibration.</string>

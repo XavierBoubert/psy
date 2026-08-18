@@ -30,6 +30,7 @@ type Flux = {
 type Issue =
   | { readonly kind: 'verse'; readonly flux: string; readonly nom: string }
   | { readonly kind: 'deja-la'; readonly flux: string; readonly nom: string }
+  | { readonly kind: 'doublon'; readonly flux: string; readonly nom: string }
   | { readonly kind: 'a-la-main'; readonly flux: string; readonly nom: string; readonly raison: string };
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
@@ -134,23 +135,46 @@ const verserUn = async (source: string, flux: Flux, nom: string): Promise<Issue>
   return { kind: 'verse', flux: flux.nom, nom };
 };
 
+// 🔴 Google Drive accepte deux dossiers du même nom. Un « reponses (1) » n'est pas un rebut : il porte
+// des données cliniques que personne ne verrait jamais s'il restait ignoré. On le lit, et on le signale.
+const dossiersDuFlux = async (transit: string, flux: Flux): Promise<ReadonlyArray<string>> => {
+  const entrees = await readdir(transit, { withFileTypes: true }).catch(() => []);
+  const doublon = new RegExp(`^${flux.nom} \\(\\d+\\)$`);
+
+  return entrees
+    .filter((entree) => entree.isDirectory() && (entree.name === flux.nom || doublon.test(entree.name)))
+    .map((entree) => entree.name);
+};
+
+const verserUnDossier = async (transit: string, flux: Flux, dossier: string): Promise<ReadonlyArray<Issue>> => {
+  const source = join(transit, dossier);
+
+  const noms = await readdir(source).catch(() => [] as ReadonlyArray<string>);
+  const versements = await Promise.all(noms.map((nom) => verserUn(source, flux, nom)));
+
+  return dossier === flux.nom
+    ? versements
+    : [{ kind: 'doublon', flux: flux.nom, nom: dossier }, ...versements];
+};
+
 const verserUnFlux = async (transit: string, flux: Flux): Promise<ReadonlyArray<Issue>> => {
-  const source = join(transit, flux.nom);
   await mkdir(join(SORTIES, flux.nom), { recursive: true });
 
-  const noms = await readdir(source).catch(() => null);
-  if (noms === null) return [];
+  const dossiers = await dossiersDuFlux(transit, flux);
+  const lots = await Promise.all(dossiers.map((dossier) => verserUnDossier(transit, flux, dossier)));
 
-  return Promise.all(noms.map((nom) => verserUn(source, flux, nom)));
+  return lots.flat();
 };
 
 const rapporter = (issues: ReadonlyArray<Issue>): void => {
   const verses = issues.filter((issue) => issue.kind === 'verse');
   const inchanges = issues.filter((issue) => issue.kind === 'deja-la');
+  const doublons = issues.filter((issue) => issue.kind === 'doublon');
   const aLaMain = issues.filter((issue) => issue.kind === 'a-la-main');
 
   verses.forEach((issue) => console.log(`versé    ${issue.flux}/${issue.nom}`));
   inchanges.forEach((issue) => console.log(`inchangé ${issue.flux}/${issue.nom} — déjà au dossier, jamais écrasé`));
+  doublons.forEach((issue) => console.log(`doublon  ${issue.nom} — Drive a créé un second dossier ; son contenu est versé, lui reste à supprimer`));
   aLaMain.forEach((issue) => {
     if (issue.kind === 'a-la-main') console.log(`à la main ${issue.flux}/${issue.nom} — ${issue.raison}`);
   });

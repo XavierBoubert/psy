@@ -11,7 +11,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import io.allonsy.kokoro.R
-import io.allonsy.kokoro.monde.Fonction
 import io.allonsy.kokoro.ui.BoutonEpais
 import io.allonsy.kokoro.ui.LocalPaletteKokoro
 import io.allonsy.kokoro.ui.PanneauDialogue
@@ -19,6 +18,7 @@ import io.allonsy.kokoro.ui.PanneauExtrude
 import io.allonsy.kokoro.ui.PileDeBoutons
 import io.allonsy.kokoro.ui.TypoKokoro
 import io.allonsy.kokoro.ui.grave
+import io.allonsy.kokoro.programme.Fonction
 
 private val HAUTEUR_CRISE = 88.dp
 private val ECART_PORTES = 26.dp

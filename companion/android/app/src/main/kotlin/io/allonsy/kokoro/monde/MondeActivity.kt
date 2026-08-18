@@ -38,12 +38,19 @@ import io.allonsy.kokoro.journal.enregistrerDossier
 import io.allonsy.kokoro.journal.intentChoisirDossier
 import io.allonsy.kokoro.journal.jourCourant
 import io.allonsy.kokoro.journal.lireDossier
-import io.allonsy.kokoro.journal.lireProgramme
+import io.allonsy.kokoro.journal.ecrireReponse
+import io.allonsy.kokoro.journal.listerReponses
 import io.allonsy.kokoro.journal.pdfDeLaBibliotheque
+import io.allonsy.kokoro.journal.texteDuProgramme
 import io.allonsy.kokoro.journal.valeursReprises
-import io.allonsy.kokoro.programme.BIBLIOTHEQUE_ABSENTE
-import io.allonsy.kokoro.programme.Bibliotheque
-import io.allonsy.kokoro.programme.lireBibliotheque
+import io.allonsy.kokoro.programme.AUCUNE_FAITE
+import io.allonsy.kokoro.programme.Faites
+import io.allonsy.kokoro.programme.Fonction
+import io.allonsy.kokoro.programme.Issue
+import io.allonsy.kokoro.programme.PROGRAMME_ABSENT
+import io.allonsy.kokoro.programme.Programme
+import io.allonsy.kokoro.programme.lireProgramme
+import io.allonsy.kokoro.programme.reponseDe
 import io.allonsy.kokoro.reglages.EtatAutorisations
 import io.allonsy.kokoro.reglages.REGLAGES_INITIAUX
 import io.allonsy.kokoro.reglages.ecrireReglages
@@ -68,7 +75,8 @@ class MondeActivity : ComponentActivity() {
     private val envoiEnCours = mutableStateOf(false)
     private val accesPerdu = mutableStateOf(false)
     private val sejour = mutableStateOf(Sejour(heure = 0, checkinFait = false))
-    private val bibliotheque = mutableStateOf(BIBLIOTHEQUE_ABSENTE)
+    private val programme = mutableStateOf(PROGRAMME_ABSENT)
+    private val faites = mutableStateOf(AUCUNE_FAITE)
 
     // Ex-MainActivity : la roue dentée ouvre désormais un panneau interne, plus une Activity.
     private val autorisations = mutableStateOf(EtatAutorisations(false, false, false))
@@ -143,7 +151,9 @@ class MondeActivity : ComponentActivity() {
                         onArreter = { enregistrerCheckin(checkin.value) },
                         onOuverture = { demarrerCheckin() },
                     ),
-                    bibliotheque = bibliotheque.value,
+                    programme = programme.value,
+                    faites = faites.value,
+                    onIssue = { etape, issue -> enregistrerReponse(etape, issue) },
                     onPdf = { document -> ouvrirLeDocument(document) },
                     ouvrirCheckin = ouvrirCheckinDemande.value,
                     onCheckinOuvert = { ouvrirCheckinDemande.value = false },
@@ -183,20 +193,41 @@ class MondeActivity : ComponentActivity() {
         autorisations.value = lireAutorisations(this)
         dossier.value = cheminAffichable(this, lireDossier(this))
         relireLeSejour()
-        relireLaBibliotheque()
+        relireLeProgramme()
     }
 
     // Le programme est lu hors fil principal : c'est un fichier de Drive, sa lecture peut prendre le temps qu'elle veut.
-    private fun relireLaBibliotheque() {
+    private fun relireLeProgramme() {
         lifecycleScope.launch {
-            val lue = withContext(Dispatchers.IO) { bibliothequeDuDossier() }
-            bibliotheque.value = lue
-            sejour.value = sejour.value.copy(vides = videsDe(lue))
+            val lu = withContext(Dispatchers.IO) { programmeDuDossier() }
+            val rendues = withContext(Dispatchers.IO) { listerReponses(this@MondeActivity) }
+            programme.value = lu
+            faites.value = Faites(jour = jourCourant(), reponses = rendues)
+            sejour.value = sejour.value.copy(vides = videsDe(lu))
         }
     }
 
-    private fun bibliothequeDuDossier(): Bibliotheque =
-        lireProgramme(this)?.let(::lireBibliotheque) ?: BIBLIOTHEQUE_ABSENTE
+    private fun programmeDuDossier(): Programme =
+        texteDuProgramme(this)?.let(::lireProgramme) ?: PROGRAMME_ABSENT
+
+    // Le nom écrit rejoint la liste sans relire Drive : la carte se grise au tap, pas à la prochaine synchronisation.
+    private fun enregistrerReponse(etape: String, issue: Issue) {
+        lifecycleScope.launch {
+            val resultat = withContext(Dispatchers.IO) {
+                ecrireReponse(this@MondeActivity, reponseDe(etape, issue))
+            }
+            accuse.value = when (resultat) {
+                is ResultatEcriture.Ecrit -> {
+                    faites.value = faites.value.copy(reponses = faites.value.reponses + resultat.nom)
+                    null
+                }
+
+                ResultatEcriture.DossierAbsent -> getString(R.string.reponse_dossier_absent)
+                ResultatEcriture.DejaEcritAujourdhui -> null
+                is ResultatEcriture.Echec -> getString(R.string.reponse_echec)
+            }
+        }
+    }
 
     // Deux échecs distincts, deux phrases distinctes : le document n'est pas arrivé, ou le téléphone n'a pas de lecteur.
     private fun ouvrirLeDocument(document: String) {

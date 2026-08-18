@@ -11,10 +11,12 @@ import io.allonsy.kokoro.corps.Posture
 import io.allonsy.kokoro.corps.Vol
 import io.allonsy.kokoro.corps.ombre
 import io.allonsy.kokoro.corps.reglage
-import io.allonsy.kokoro.programme.BIBLIOTHEQUE_ABSENTE
-import io.allonsy.kokoro.programme.Bibliotheque
-import io.allonsy.kokoro.programme.Fiche
+import io.allonsy.kokoro.programme.Etape
+import io.allonsy.kokoro.programme.PROGRAMME_ABSENT
+import io.allonsy.kokoro.programme.Programme
 import io.allonsy.kokoro.programme.Quand
+import io.allonsy.kokoro.programme.Reperes
+import io.allonsy.kokoro.programme.Rubrique
 import io.allonsy.kokoro.programme.Support
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -25,6 +27,16 @@ import org.junit.Test
 private val TAILLE = Size(72f, 60f)
 
 private const val PRECISION = 1e-4f
+
+private val FICHE = Etape.Fiche(
+    reperes = Reperes("fiche-chourouk", "Pour Chourouk", Rubrique.CRISE, Quand.AU_BESOIN, null),
+    support = Support.Pdf("fiche-chourouk"),
+)
+
+private val DEMARCHE = Etape.Demarche(
+    reperes = Reperes("ppc-releve", "Demander le relevé", Rubrique.THERAPIE, Quand.SANS_DATE, null),
+    detail = "Des chiffres, pas une impression.",
+)
 
 class HabitantTest {
 
@@ -113,24 +125,20 @@ class HabitantTest {
 
     @Test
     fun `une fiche publiee reveille la documentation, jamais le bilan`() {
-        val fiche = Fiche(
-            id = "fiche-chourouk",
-            titre = "Pour Chourouk",
-            quand = Quand.AU_BESOIN,
-            support = Support.Pdf("fiche-chourouk"),
-        )
+        val programme = Programme(version = 2, etapes = listOf(FICHE))
 
-        assertEquals(ECRANS_VIDES, videsDe(BIBLIOTHEQUE_ABSENTE))
-        assertEquals(setOf(Ecran.BILAN), videsDe(Bibliotheque(version = 2, fiches = listOf(fiche))))
+        assertEquals(setOf(Ecran.THERAPIE, Ecran.BILAN), videsDe(programme))
 
-        val place = place(Ecran.DOCUMENTATION, sejour(vides = videsDe(Bibliotheque(2, listOf(fiche)))))
+        val place = place(Ecran.DOCUMENTATION, sejour(vides = videsDe(programme)))
         assertEquals("Il lit la liste au lieu de dormir devant", Posture.Lecture, place?.posture)
         assertEquals("Il lit sur le cote, jamais par-dessus les cartes", Cadrage.A_DROITE, place?.cadrage)
     }
 
+    // Les trois écrans à liste dorment tant que le programme n'a rien à y mettre ; la crise n'en fait jamais partie.
     @Test
-    fun `la documentation dort tant qu'aucune fiche n'est publiee`() {
-        assertEquals(setOf(Ecran.DOCUMENTATION, Ecran.BILAN), ECRANS_VIDES)
+    fun `chaque ecran a liste dort tant que le programme ne le remplit pas`() {
+        assertEquals(setOf(Ecran.THERAPIE, Ecran.DOCUMENTATION, Ecran.BILAN), ECRANS_VIDES)
+        assertEquals(ECRANS_VIDES, videsDe(PROGRAMME_ABSENT))
         ECRANS_VIDES.forEach { ecran ->
             assertEquals(
                 "$ecran devrait dormir",
@@ -139,8 +147,16 @@ class HabitantTest {
             )
         }
         assertTrue(
-            "La thérapie n'est jamais vide : elle porte le check-in et sept démarches",
-            Ecran.THERAPIE !in ECRANS_VIDES,
+            "La crise ne dort jamais : ses trois portes sont là même sans programme",
+            Ecran.CRISE !in ECRANS_VIDES,
+        )
+    }
+
+    @Test
+    fun `une etape de therapie publiee reveille la therapie`() {
+        assertEquals(
+            setOf(Ecran.DOCUMENTATION, Ecran.BILAN),
+            videsDe(Programme(version = 2, etapes = listOf(DEMARCHE))),
         )
     }
 

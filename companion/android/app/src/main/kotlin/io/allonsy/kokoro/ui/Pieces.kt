@@ -171,14 +171,20 @@ fun Carte(
     titre: String,
     modifier: Modifier = Modifier,
     duree: String? = null,
+    // Une étape faite reste lisible et ouvrable : elle s'efface, elle ne se coche pas et ne se compte nulle part.
+    faite: Boolean = false,
     picto: (@Composable () -> Unit)? = null,
     onClic: () -> Unit,
 ) {
     val palette = LocalPaletteKokoro.current
-    PanneauExtrude(modifier = modifier.fillMaxWidth(), onClic = onClic) {
+    PanneauExtrude(modifier = modifier.fillMaxWidth(), onClic = onClic, ombre = !faite) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(text = titre, style = TypoKokoro.corps, color = palette.encre)
+                Text(
+                    text = titre,
+                    style = TypoKokoro.corps,
+                    color = if (faite) palette.encreDouce else palette.encre,
+                )
                 if (duree != null) {
                     Text(
                         text = duree,

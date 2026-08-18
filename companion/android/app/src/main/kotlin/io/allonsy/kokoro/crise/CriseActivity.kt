@@ -22,7 +22,6 @@ import io.allonsy.kokoro.R
 import io.allonsy.kokoro.decor.DECOR_JOUR
 import io.allonsy.kokoro.decor.DECOR_NUIT
 import io.allonsy.kokoro.monde.EXTRA_OUVRIR_CHECKIN
-import io.allonsy.kokoro.monde.Fonction
 import io.allonsy.kokoro.monde.MondeActivity
 import io.allonsy.kokoro.monde.SceneDeCrise
 import io.allonsy.kokoro.reglages.REGLAGES_INITIAUX
@@ -32,6 +31,7 @@ import io.allonsy.kokoro.reglages.minuteCourante
 import io.allonsy.kokoro.ui.Accuse
 import io.allonsy.kokoro.ui.LocalPanneauPorte
 import io.allonsy.kokoro.ui.ThemeMonde
+import io.allonsy.kokoro.programme.Fonction
 
 // Seul le mot-code s'ouvre depuis l'extérieur : la notification ouvre la scène de crise, et tout le reste s'y touche.
 const val EXTRA_ECRAN = "ecran"

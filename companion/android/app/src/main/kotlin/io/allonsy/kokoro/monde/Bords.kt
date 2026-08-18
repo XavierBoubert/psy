@@ -21,10 +21,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.allonsy.kokoro.R
 import io.allonsy.kokoro.crise.PortesDeCrise
-import io.allonsy.kokoro.programme.Bibliotheque
-import io.allonsy.kokoro.programme.Fiche
+import io.allonsy.kokoro.programme.Etape
+import io.allonsy.kokoro.programme.Faites
+import io.allonsy.kokoro.programme.Fonction
+import io.allonsy.kokoro.programme.Programme
 import io.allonsy.kokoro.programme.Quand
+import io.allonsy.kokoro.programme.Rubrique
 import io.allonsy.kokoro.programme.Support
+import io.allonsy.kokoro.programme.etapesDe
+import io.allonsy.kokoro.programme.faite
+import io.allonsy.kokoro.programme.fiches
+import io.allonsy.kokoro.programme.quand
 import io.allonsy.kokoro.ui.BandeTitre
 import io.allonsy.kokoro.ui.BoutonEpais
 import io.allonsy.kokoro.ui.CadreVide
@@ -37,6 +44,8 @@ import io.allonsy.kokoro.ui.Teinte
 import io.allonsy.kokoro.ui.TypoKokoro
 
 private val ECART_CARTES = 20.dp
+
+private val PERCHOIRS_THERAPIE = listOf(Perchoir.AUJOURDHUI, Perchoir.SANS_DATE)
 
 @Composable
 fun EcranDeBord(
@@ -87,15 +96,19 @@ fun EcranDeBord(
 @Composable
 fun ContenuTherapie(
     perchoirs: Perchoirs,
+    programme: Programme,
+    faites: Faites,
     accesPerdu: Boolean,
     onReglages: () -> Unit,
     onOuvrir: (Etape) -> Unit,
     fige: Boolean = false,
 ) {
+    val aFaire = programme.etapesDe(Rubrique.THERAPIE)
+
     EcranDeBord(
         titre = stringResource(R.string.monde_therapie_titre),
         couleur = LocalPaletteKokoro.current.menthe,
-        defilant = true,
+        defilant = aFaire.isNotEmpty(),
         onReglages = onReglages,
         perchoirs = perchoirs,
         fige = fige,
@@ -103,20 +116,32 @@ fun ContenuTherapie(
         if (accesPerdu) {
             AvisAcces(onReglages = onReglages, modifier = Modifier.padding(top = 18.dp))
         }
-        sectionsTherapie().forEach { section ->
-            BandeDeSection(perchoirs = perchoirs, perchoir = section.perchoir) {
+
+        if (aFaire.isEmpty()) {
+            BandeDeTete(perchoirs = perchoirs, poses = PERCHOIRS_THERAPIE)
+            CadreVide(texte = stringResource(R.string.monde_therapie_vide))
+            return@EcranDeBord
+        }
+
+        val rendues = sectionsDuProgramme().filter { section -> aFaire.any { it.quand == section.quand } }
+        val orphelins = PERCHOIRS_THERAPIE - rendues.mapNotNull { it.perchoir }.toSet()
+
+        rendues.forEachIndexed { rang, section ->
+            BandeDeSection(
+                perchoirs = perchoirs,
+                poses = listOfNotNull(section.perchoir) + if (rang == 0) orphelins else emptyList(),
+            ) {
                 Pancarte(
-                    texte = section.quand,
+                    texte = stringResource(section.libelle),
                     couleur = section.couleur,
                     modifier = Modifier.padding(start = 2.dp),
                 )
             }
-            section.etapes.forEach { etape ->
-                Carte(
-                    titre = etape.titre,
-                    duree = etape.duree,
+            aFaire.filter { it.quand == section.quand }.forEach { etape ->
+                CarteDEtape(
+                    etape = etape,
+                    faite = faites.faite(etape),
                     onClic = { onOuvrir(etape) },
-                    modifier = Modifier.padding(bottom = ECART_CARTES),
                 )
             }
         }
@@ -124,41 +149,57 @@ fun ContenuTherapie(
 }
 
 @Composable
+private fun CarteDEtape(etape: Etape, faite: Boolean, onClic: () -> Unit) {
+    Carte(
+        titre = etape.reperes.titre,
+        duree = etape.reperes.dureeMinutes?.let { stringResource(R.string.monde_duree_minutes, it) },
+        faite = faite,
+        onClic = onClic,
+        modifier = Modifier.padding(bottom = ECART_CARTES),
+    )
+}
+
+@Composable
 private fun BandeDeSection(
     perchoirs: Perchoirs,
-    perchoir: Perchoir?,
+    poses: List<Perchoir>,
     contenu: @Composable () -> Unit,
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 20.dp, bottom = 16.dp)
-            .then(if (perchoir == null) Modifier else Modifier.perchoir(perchoirs, perchoir)),
+            .poser(perchoirs, poses),
         contentAlignment = Alignment.CenterStart,
         content = { contenu() },
     )
 }
 
 @Composable
-private fun BandeDeTete(perchoirs: Perchoirs, perchoir: Perchoir) {
+private fun BandeDeTete(perchoirs: Perchoirs, poses: List<Perchoir>) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 8.dp)
             .height(CADRE_HABITANT.height)
-            .perchoir(perchoirs, perchoir),
+            .poser(perchoirs, poses),
     )
 }
+
+// Sans perchoir posé, Kokoro n'a nulle part où se tenir et l'écran se dessine sans lui : une bande en porte donc
+// plusieurs quand la section correspondante est absente du programme.
+private fun Modifier.poser(perchoirs: Perchoirs, poses: List<Perchoir>): Modifier =
+    poses.fold(this) { modifier, pose -> modifier.perchoir(perchoirs, pose) }
 
 @Composable
 fun ContenuDocumentation(
     perchoirs: Perchoirs,
-    bibliotheque: Bibliotheque,
-    onFiche: (Fiche) -> Unit,
+    programme: Programme,
+    onFiche: (Etape.Fiche) -> Unit,
     fige: Boolean = false,
 ) {
     val palette = LocalPaletteKokoro.current
-    val fiches = bibliotheque.fiches
+    val fiches = programme.fiches()
 
     EcranDeBord(
         titre = stringResource(R.string.monde_documentation_titre),
@@ -166,7 +207,7 @@ fun ContenuDocumentation(
         defilant = fiches.isNotEmpty(),
         fige = fige,
     ) {
-        BandeDeTete(perchoirs = perchoirs, perchoir = Perchoir.DOCUMENTATION)
+        BandeDeTete(perchoirs = perchoirs, poses = listOf(Perchoir.DOCUMENTATION))
 
         if (fiches.isEmpty()) {
             CadreVide(texte = stringResource(R.string.monde_documentation_vide))
@@ -177,7 +218,7 @@ fun ContenuDocumentation(
             val duQuand = fiches.filter { it.quand == quand }
             if (duQuand.isEmpty()) return@forEach
 
-            BandeDeSection(perchoirs = perchoirs, perchoir = null) {
+            BandeDeSection(perchoirs = perchoirs, poses = emptyList()) {
                 Pancarte(
                     texte = stringResource(libelleDe(quand)),
                     couleur = palette.lavande,
@@ -192,11 +233,11 @@ fun ContenuDocumentation(
 }
 
 @Composable
-private fun CarteDeFiche(fiche: Fiche, onClic: () -> Unit) {
+private fun CarteDeFiche(fiche: Etape.Fiche, onClic: () -> Unit) {
     val pdf = fiche.support is Support.Pdf
 
     Carte(
-        titre = fiche.titre,
+        titre = fiche.reperes.titre,
         picto = if (pdf) ({ PictoDehors() }) else null,
         onClic = onClic,
         modifier = Modifier.padding(bottom = ECART_CARTES),
@@ -216,7 +257,7 @@ fun ContenuBilan(perchoirs: Perchoirs) {
         couleur = LocalPaletteKokoro.current.beurre,
         defilant = false,
     ) {
-        BandeDeTete(perchoirs = perchoirs, perchoir = Perchoir.BILAN)
+        BandeDeTete(perchoirs = perchoirs, poses = listOf(Perchoir.BILAN))
         CadreVide(texte = stringResource(R.string.monde_bilan_vide))
     }
 }

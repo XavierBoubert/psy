@@ -4,11 +4,17 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.DocumentsContract
+import io.allonsy.kokoro.programme.Reponse
+import io.allonsy.kokoro.programme.nomDeLaReponse
+import io.allonsy.kokoro.programme.serialiserReponse
 
 private const val FICHIER = "kokoro_dossier"
 private const val CLE_ARBRE = "arbre_dossier"
 private const val CLE_DERNIER_JOUR = "dernier_jour_ecrit"
+private const val CLE_SOUS_DOSSIER = "sous_dossier_"
+private const val CLE_REPONSES_ECRITES = "reponses_ecrites"
 private const val SOUS_DOSSIER = "journal"
+private const val SOUS_DOSSIER_REPONSES = "reponses"
 private const val SOUS_DOSSIER_BIBLIOTHEQUE = "bibliotheque"
 private const val FICHIER_PROGRAMME = "programme.json"
 private const val MIME_JSON = "application/json"
@@ -26,10 +32,11 @@ fun enregistrerDossier(context: Context, arbre: Uri) {
         arbre,
         Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION,
     )
-    context.getSharedPreferences(FICHIER, Context.MODE_PRIVATE)
-        .edit()
-        .putString(CLE_ARBRE, arbre.toString())
-        .apply()
+    val prefs = context.getSharedPreferences(FICHIER, Context.MODE_PRIVATE)
+    val edition = prefs.edit().putString(CLE_ARBRE, arbre.toString())
+    prefs.all.keys.filter { it.startsWith(CLE_SOUS_DOSSIER) }.forEach(edition::remove)
+    edition.remove(CLE_REPONSES_ECRITES)
+    edition.apply()
 }
 
 fun lireDossier(context: Context): Uri? {
@@ -88,7 +95,7 @@ fun checkinDuJourExiste(context: Context, date: String): Boolean {
         .getString(CLE_DERNIER_JOUR, null)
     if (jeton == date) return true
 
-    val journal = dossierJournal(context) ?: return false
+    val journal = journalExistant(context) ?: return false
     return enfant(context, journal, "$date.json") != null
 }
 
@@ -101,14 +108,14 @@ private fun marquerJourEcrit(context: Context, date: String) {
 
 // Réservée au nettoyage des témoins de vérification — jamais un fichier clinique réel.
 fun supprimerDuJournal(context: Context, nom: String): Int {
-    val journal = dossierJournal(context) ?: return 0
+    val journal = journalExistant(context) ?: return 0
     return generateSequence { enfant(context, journal, nom) }
         .takeWhile { runCatching { DocumentsContract.deleteDocument(context.contentResolver, it) }.getOrDefault(false) }
         .count()
 }
 
 fun valeursReprises(context: Context, avant: String): Map<Champ, Double> {
-    val journal = dossierJournal(context) ?: return emptyMap()
+    val journal = journalExistant(context) ?: return emptyMap()
     val dernier = dernierFichierAvant(context, journal, avant) ?: return emptyMap()
     val contenu = runCatching {
         context.contentResolver.openInputStream(dernier)?.use { it.readBytes().toString(Charsets.UTF_8) }
@@ -119,7 +126,7 @@ fun valeursReprises(context: Context, avant: String): Map<Champ, Double> {
 }
 
 fun lireDuJournal(context: Context, nom: String): String? {
-    val journal = dossierJournal(context) ?: return null
+    val journal = journalExistant(context) ?: return null
     val fichier = enfant(context, journal, nom) ?: return null
     return runCatching {
         context.contentResolver.openInputStream(fichier)?.use { it.readBytes().toString(Charsets.UTF_8) }
@@ -127,11 +134,11 @@ fun lireDuJournal(context: Context, nom: String): String? {
 }
 
 fun listerJournal(context: Context): List<String> {
-    val journal = dossierJournal(context) ?: return emptyList()
+    val journal = journalExistant(context) ?: return emptyList()
     return parcourir(context, journal) { _, affiche -> affiche }
 }
 
-fun lireProgramme(context: Context): String? {
+fun texteDuProgramme(context: Context): String? {
     val racine = racineDuDossier(context) ?: return null
     rafraichir(context, racine)
     val fichier = enfant(context, racine, FICHIER_PROGRAMME) ?: return null
@@ -139,6 +146,45 @@ fun lireProgramme(context: Context): String? {
         context.contentResolver.openInputStream(fichier)?.use { it.readBytes().toString(Charsets.UTF_8) }
     }.getOrNull()
 }
+
+fun ecrireReponse(context: Context, reponse: Reponse): ResultatEcriture {
+    val dossier = sousDossier(context, SOUS_DOSSIER_REPONSES) ?: return ResultatEcriture.DossierAbsent
+    val nom = nomDeLaReponse(reponse)
+
+    return runCatching {
+        val cree = DocumentsContract.createDocument(context.contentResolver, dossier, MIME_JSON, nom)
+            ?: return ResultatEcriture.Echec("création refusée")
+        context.contentResolver.openOutputStream(cree, "wt")?.use { flux ->
+            flux.write(serialiserReponse(reponse).toByteArray(Charsets.UTF_8))
+        } ?: return ResultatEcriture.Echec("écriture refusée")
+        renommerSiBesoin(context, cree, nom)
+        retenirLaReponse(context, nom)
+        ResultatEcriture.Ecrit(nom)
+    }.getOrElse { ResultatEcriture.Echec(it.message ?: it::class.java.simpleName) }
+}
+
+// 🔴 Ce que Kokoro a écrit, il s'en souvient lui-même : le fichier met le temps qu'il veut à faire l'aller-retour
+// par Drive, et une étape faite ne peut pas réapparaître à faire entre-temps.
+fun listerReponses(context: Context): List<String> {
+    val dossier = sousDossierExistant(context, SOUS_DOSSIER_REPONSES)
+    val surDrive = if (dossier == null) {
+        emptyList()
+    } else {
+        rafraichir(context, dossier)
+        parcourir(context, dossier) { _, affiche -> affiche }
+    }
+    return (surDrive + reponsesRetenues(context)).distinct()
+}
+
+private fun retenirLaReponse(context: Context, nom: String) {
+    val prefs = context.getSharedPreferences(FICHIER, Context.MODE_PRIVATE)
+    prefs.edit().putStringSet(CLE_REPONSES_ECRITES, reponsesRetenues(context) + nom).apply()
+}
+
+private fun reponsesRetenues(context: Context): Set<String> =
+    context.getSharedPreferences(FICHIER, Context.MODE_PRIVATE)
+        .getStringSet(CLE_REPONSES_ECRITES, emptySet())
+        .orEmpty()
 
 fun pdfDeLaBibliotheque(context: Context, document: String): Uri? {
     val racine = racineDuDossier(context) ?: return null
@@ -161,18 +207,39 @@ private fun racineDuDossier(context: Context): Uri? {
     )
 }
 
-private fun dossierJournal(context: Context): Uri? {
+private fun dossierJournal(context: Context): Uri? = sousDossier(context, SOUS_DOSSIER)
+
+private fun journalExistant(context: Context): Uri? = sousDossierExistant(context, SOUS_DOSSIER)
+
+// Sans rafraichir, la liste d'enfants servie en cache ne montre pas un dossier tout juste créé.
+private fun sousDossierExistant(context: Context, nom: String): Uri? {
     val racine = racineDuDossier(context) ?: return null
-    val existant = enfant(context, racine, SOUS_DOSSIER)
+    rafraichir(context, racine)
+    return enfant(context, racine, nom)
+}
+
+// 🔴 Drive accepte deux dossiers du même nom, et les fichiers écrits dans le second n'arrivent jamais
+// au dépôt. Deux gardes, comme pour le check-in : la liste rafraîchie, puis le jeton du dossier créé.
+private fun sousDossier(context: Context, nom: String): Uri? {
+    val existant = sousDossierExistant(context, nom)
     if (existant != null) return existant
-    return runCatching {
+
+    val prefs = context.getSharedPreferences(FICHIER, Context.MODE_PRIVATE)
+    val retenu = prefs.getString(CLE_SOUS_DOSSIER + nom, null)
+    if (retenu != null) return Uri.parse(retenu)
+
+    val racine = racineDuDossier(context) ?: return null
+    val cree = runCatching {
         DocumentsContract.createDocument(
             context.contentResolver,
             racine,
             DocumentsContract.Document.MIME_TYPE_DIR,
-            SOUS_DOSSIER,
+            nom,
         )
-    }.getOrNull()
+    }.getOrNull() ?: return null
+
+    prefs.edit().putString(CLE_SOUS_DOSSIER + nom, cree.toString()).apply()
+    return cree
 }
 
 private fun enfant(context: Context, parent: Uri, nom: String): Uri? =

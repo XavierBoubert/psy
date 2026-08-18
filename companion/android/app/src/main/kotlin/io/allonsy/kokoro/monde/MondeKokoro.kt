@@ -44,10 +44,15 @@ import io.allonsy.kokoro.journal.Champ
 import io.allonsy.kokoro.journal.Checkin
 import io.allonsy.kokoro.journal.ContenuJournal
 import io.allonsy.kokoro.journal.EtapeJournal
-import io.allonsy.kokoro.programme.BIBLIOTHEQUE_ABSENTE
-import io.allonsy.kokoro.programme.Bibliotheque
-import io.allonsy.kokoro.programme.Fiche
+import io.allonsy.kokoro.programme.AUCUNE_FAITE
+import io.allonsy.kokoro.programme.Etape
+import io.allonsy.kokoro.programme.Faites
+import io.allonsy.kokoro.programme.Fonction
+import io.allonsy.kokoro.programme.Issue
+import io.allonsy.kokoro.programme.PROGRAMME_ABSENT
+import io.allonsy.kokoro.programme.Programme
 import io.allonsy.kokoro.programme.Support
+import io.allonsy.kokoro.programme.faite
 import io.allonsy.kokoro.reglages.EtatAutorisations
 import io.allonsy.kokoro.reglages.PARALLAXE_PAR_DEFAUT
 import io.allonsy.kokoro.reglages.PanneauReglages
@@ -74,7 +79,9 @@ fun MondeKokoro(
     donneesReglages: DonneesReglages,
     donneesCheckin: DonneesCheckin,
     modifier: Modifier = Modifier,
-    bibliotheque: Bibliotheque = BIBLIOTHEQUE_ABSENTE,
+    programme: Programme = PROGRAMME_ABSENT,
+    faites: Faites = AUCUNE_FAITE,
+    onIssue: (String, Issue) -> Unit = { _, _ -> },
     onPdf: (String) -> Unit = {},
     parallaxe: Parallaxe = PARALLAXE_PAR_DEFAUT,
     envoiEnCours: Boolean = false,
@@ -123,10 +130,20 @@ fun MondeKokoro(
     }
 
     // Une fiche PDF quitte l'app : c'est le lecteur du téléphone qui l'affiche, jamais Kokoro.
-    val lireLaFiche: (Fiche) -> Unit = { fiche ->
+    val lireLaFiche: (Etape.Fiche) -> Unit = { fiche ->
         when (val support = fiche.support) {
-            is Support.Texte -> ouvrirPanneau(Contexte.Lecture(fiche.titre, support.contenu))
+            is Support.Texte -> ouvrirPanneau(Contexte.Lecture(fiche.reperes.titre, support.contenu))
             is Support.Pdf -> onPdf(support.document)
+        }
+    }
+
+    // Kokoro n'interprète pas une étape : il ouvre la surface de son type, et renvoie ce que Xavier en a fait.
+    val ouvrirLEtape: (Etape) -> Unit = { etape ->
+        when (etape) {
+            is Etape.Ecran -> agir(etape.fonction)
+            is Etape.Exercice -> ouvrirPanneau(Contexte.Exercice(etape))
+            is Etape.Demarche -> ouvrirPanneau(Contexte.Demarche(etape, faites.faite(etape)))
+            is Etape.Fiche -> lireLaFiche(etape)
         }
     }
 
@@ -200,9 +217,10 @@ fun MondeKokoro(
                         contactNom = contactNom,
                         envoiEnCours = envoiEnCours,
                         accesPerdu = accesPerdu,
-                        bibliotheque = bibliotheque,
+                        programme = programme,
+                        faites = faites,
                         onFiche = lireLaFiche,
-                        onOuvrir = ouvrirPanneau,
+                        onEtape = ouvrirLEtape,
                         onFonction = agir,
                         onReglages = { ouvrirPanneau(Contexte.Reglages) },
                         fige = ouverte != null,
@@ -221,6 +239,7 @@ fun MondeKokoro(
             locuteur = locuteur,
             donneesReglages = donneesReglages,
             donneesCheckin = donneesCheckin,
+            onIssue = onIssue,
             onFermer = { ouverte = null },
         )
 
@@ -277,9 +296,10 @@ private fun ContenuEcran(
     contactNom: String,
     envoiEnCours: Boolean,
     accesPerdu: Boolean,
-    bibliotheque: Bibliotheque,
-    onFiche: (Fiche) -> Unit,
-    onOuvrir: (Contexte) -> Unit,
+    programme: Programme,
+    faites: Faites,
+    onFiche: (Etape.Fiche) -> Unit,
+    onEtape: (Etape) -> Unit,
     onFonction: (Fonction) -> Unit,
     onReglages: () -> Unit,
     fige: Boolean,
@@ -287,20 +307,17 @@ private fun ContenuEcran(
     when (ecran) {
         Ecran.THERAPIE -> ContenuTherapie(
             perchoirs = perchoirs,
+            programme = programme,
+            faites = faites,
             accesPerdu = accesPerdu,
             fige = fige,
             onReglages = onReglages,
-            onOuvrir = { etape ->
-                when (val ouverture = etape.ouverture) {
-                    is Ouverture.Ecran -> onFonction(ouverture.fonction)
-                    is Ouverture.Detail -> onOuvrir(Contexte.Lecture(etape.titre, ouverture.texte))
-                }
-            },
+            onOuvrir = onEtape,
         )
 
         Ecran.DOCUMENTATION -> ContenuDocumentation(
             perchoirs = perchoirs,
-            bibliotheque = bibliotheque,
+            programme = programme,
             onFiche = onFiche,
             fige = fige,
         )
@@ -346,6 +363,7 @@ private fun PanneauOuvert(
     locuteur: Boolean,
     donneesReglages: DonneesReglages,
     donneesCheckin: DonneesCheckin,
+    onIssue: (String, Issue) -> Unit,
     onFermer: () -> Unit,
 ) {
     // Attend locuteur, pas seulement visible : sinon le panneau glisse avant que Kokoro n'ait fini son vol (700 ms).
@@ -356,9 +374,25 @@ private fun PanneauOuvert(
     ) {
         // contexte vient de affichee, pas de ouverte : ça garde le contenu affiché pendant la descente du panneau.
         when (contexte) {
-            is Contexte.Lecture -> PanneauEtape(
+            is Contexte.Lecture -> PanneauLecture(
                 titre = contexte.titre,
-                detail = contexte.texte,
+                texte = contexte.texte,
+                onFermer = onFermer,
+            )
+
+            is Contexte.Demarche -> PanneauDemarche(
+                etape = contexte.etape,
+                faite = contexte.faite,
+                onFait = {
+                    onIssue(contexte.etape.reperes.id, Issue.FAIT)
+                    onFermer()
+                },
+                onFermer = onFermer,
+            )
+
+            is Contexte.Exercice -> PanneauExercice(
+                etape = contexte.etape,
+                onIssue = { issue -> onIssue(contexte.etape.reperes.id, issue) },
                 onFermer = onFermer,
             )
 
