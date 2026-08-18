@@ -46,9 +46,9 @@
 | **Le corps et la présence** | ✅ | Six expressions, dix postures, respiration, morphing du visage, lévitation, transit, ombre |
 | **Réglages** | ✅ | Panneau interne au bout de la roue dentée — **plus une Activity** |
 | **Documentation** | ✅ | Lit `programme.json` du dossier synchronisé, filtre les fiches, **confie le PDF au lecteur du téléphone** |
-| **Thérapie** | ⏳ | Les étapes sont **écrites en dur dans `strings.xml`** — reprise de `programme.json`. K5 les remplacera par la lecture du dossier |
-| **`reponses/`** | ⏳ | Rien n'est encore renvoyé. ⭐ **Le bouton *Fait* manque exprès : un bouton qui n'écrit rien mentirait** |
-| **Bilan** | ⏳ | Liste vide — aucun bilan ni questionnaire publié à ce jour |
+| **Thérapie** | ✅ | Lit les étapes `therapie` de `programme.json`, groupées par `quand` — `ecran`, `exercice` *(minuteur dans le panneau)*, `demarche` *(bouton « c'est fait »)*. **Rien n'est écrit en dur dans l'app** |
+| **`reponses/`** | ✅ | Un fichier par étape faite, `AAAA-MM-JJ-HHMM-<id>.json`. 🔴 **Kokoro se souvient localement de ce qu'il a écrit** — l'état d'une étape ne dépend jamais d'un aller-retour par Drive |
+| **Bilan** | ✅ | Lit les étapes `bilan` de `programme.json` et porte le type `questionnaire` — une question par écran, choix fermés, « passer » et arrêt libres → écrit `reponses/` **item par item**. ⭐ **Aucun score, aucun seuil, aucune interprétation à l'écran** |
 | **Séance à deux** | 🔜 | K6. Le type `seance-duo` existe au contrat, pas encore dans l'app |
 
 ---

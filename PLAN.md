@@ -18,7 +18,6 @@
 - [x] **Origine de la fuite — la question est court-circuitée** : masque changé pour une interface **bouche + nez**
 - [x] **Le nouveau masque bouche + nez est entré au protocole** — palier 1 démarré le **18/08/2026**, exercice publié dans Kokoro
 - [ ] **Vérifier la prise en charge du nouveau masque** — étape `ppc-prise-en-charge`, réponse écrite de Link Sommeil
-- [ ] Demander une **consultation de reprise** au Dr Roisman
 - [ ] **Envoyer l'email au Dr Isorni** — rédigé, non envoyé. **Seul praticien encore dans l'ignorance des deux diagnostics somatiques**
 
 ✅ **La désensibilisation a repris le 18/08/2026, au palier 1** — masque tenu à la main, 5 min en journée *(séance du 18/08 ; l'objection sur le contact facial accru du bouche + nez est conservée entière au compte-rendu)*.
@@ -47,6 +46,7 @@
 
 - [ ] **Premier brief Dr Isorni**, à écrire à la séance du **week-end du 29-30/08**
 - [ ] Passer les échelles restantes : **TAS-20** · **CAT-Q + GAD-7/PHQ-9** · **BES** dès obtention. Plafond 20 min par séance ; **l'échelle n'est jamais la cible de la séance**
+- [ ] 🔴 **Verser les bilans finalisés dans Kokoro** — jalon **K8**, Étape 5. ⭐ **Les échelles se passent avec Claude Psy, en conversation** *(tranché le 19/08/2026)* : **Kokoro porte le bilan, jamais la passation**
 - [ ] ✈️ **Sécuriser l'ordonnance de venlafaxine pour le séjour.** **Logistique, pas posologie**
 
 ### Étape 3 — Outils de crise 🔴 *ouverte*
@@ -66,15 +66,42 @@
 
 | Jalon | Objet | Critère de fin |
 |---|---|---|
-| 🔴 **K5** *(en cours)* | **Le programme et la bibliothèque** — Kokoro lit `programme.json` + `bibliotheque/`, affiche par rubrique, écrit `reponses/`. ✅ **Thérapie et Documentation sont entièrement lues du dossier** — `ecran`, `exercice` *(minuteur)*, `demarche` *(bouton « c'est fait »)*, `fiche` ; ✅ **le circuit complet a bouclé le 18/08/2026** ; ⏳ **mais le premier aller-retour a demandé un sauvetage à la main** *(voir ci-dessous)*, et **`questionnaire` et `seance-duo` ne sont pas portés** — l'écran Bilan est vide par construction | Une étape publiée depuis le PC apparaît sur le téléphone, est faite par Xavier, et sa réponse revient au dossier — **valide au format, sans intervention manuelle** |
+| 🔴 **K5** *(en cours)* | **Le programme et la bibliothèque** — Kokoro lit `programme.json` + `bibliotheque/`, affiche par rubrique, écrit `reponses/`. ✅ **Thérapie, Documentation et Bilan sont entièrement lues du dossier** — `ecran`, `exercice` *(minuteur)*, `questionnaire` *(une question par écran, réponses item par item)*, `demarche` *(bouton « c'est fait »)*, `fiche` ; ✅ **le circuit complet a bouclé le 18/08/2026** ; ⏳ **mais le premier aller-retour a demandé un sauvetage à la main** *(voir ci-dessous)*, et **`seance-duo` n'est pas porté** — c'est K6 | Une étape publiée depuis le PC apparaît sur le téléphone, est faite par Xavier, et sa réponse revient au dossier — **valide au format, sans intervention manuelle** |
+| 🔴 **K8** *(haute priorité)* | **Les bilans** — type d'étape `bilan`, canal `companion/inputs/bilans/`, écran *Bilan* groupé **par mois**. ⭐ **Xavier passe les échelles avec Claude Psy ; Kokoro porte les bilans finalisés en PDF, consultables et partageables à tout moment** *(tranché le 19/08/2026)* | Les quatre bilans rétrospectifs sont sur le téléphone, ouvrables par le lecteur du téléphone, et partageables depuis lui |
 | 🔜 **K6** | **La séance à deux** — type `seance-duo`, **mode entraînement** obligatoire, **signal d'arrêt** rappelé en permanence, **critères d'arrêt à un tap**. ⭐ **Le jalon qui ouvre les thérapies impossibles en solo** | Un entraînement joué en entier par Chourouk, puis une séance réelle menée à son terme **ou arrêtée sur le signal** — l'un et l'autre valent |
 
 > ⚠️ **Le critère de fin de K5 n'est pas encore atteint, et c'est une nuance qui compte.** La première réponse a bien fait le trajet, mais **Drive avait accepté deux dossiers `reponses/`** et le fichier a dû être récupéré à la main dans le second. **Les trois défauts sont corrigés** — une lecture ne crée plus de dossier, la création est doublement gardée, `psy-sync` lit et signale les dossiers en double. **K5 se ferme au premier aller-retour qui se passe de moi.**
 >
 > 🔴 **La règle qui en sort, et qui vaut au-delà de Kokoro : l'état d'une étape ne dépend jamais d'un aller-retour par Drive.** Kokoro se souvient localement de ce qu'il a écrit — sinon une étape faite réapparaît *à faire* le temps que le fichier remonte, et **Xavier la refait**. *(Constaté en usage réel le 18/08/2026 ; consigné dans [`companion/PROGRAMME.md`](companion/PROGRAMME.md) §5.)*
 
-- [ ] **Publier les échelles** comme questionnaires, rubrique `bilan` — **jamais le PHQ-9**. 🔴 **Bloqué : le type `questionnaire` n'est pas porté par Kokoro**, l'écran Bilan est vide par construction
+- [x] ~~**Publier les échelles** comme questionnaires~~ → ✅ **CADUQUE le 19/08/2026.** Xavier passe les échelles **avec Claude Psy**, en conversation — un item introspectif ambigu se désambiguïse à voix haute, et le corpus en signale déjà quatre *(item XVI du BES, trois items du MAIA-2)*. ⭐ **Le type `questionnaire` reste porté et disponible** ; **aucune échelle validée ne part dans Kokoro**
 - [x] ✅ **Publier les démarches du palier 0 PPC** — au programme v4, affichées et validables une à une
+
+#### 🔴 K8 — les bilans dans Kokoro
+
+**Trois décisions prises le 19/08/2026. Elles ne se rediscutent pas à l'implémentation.**
+
+1. 🔴 **Un bilan ne passe pas par `bibliotheque/`** — canal distinct `companion/inputs/bilans/<id>.md`. **Raison mécanique :** les sept familles d'interdits de `psy:publish` refusent en bloc un rapport clinique réel *(`venlafaxine`, `posologie`, `agoraphobie`, `apnee`…)*. **Raison de fond :** C9 et C10 protègent une fiche *écrite pour Xavier* et *lisible par l'aidant* — **un bilan n'est ni l'un ni l'autre. C'est un document que Xavier possède déjà, adressé à lui seul.**
+2. 🔴 **Un bilan n'est jamais `montrable`, et Kokoro n'offre aucune fonction de partage.** Il confie le PDF au lecteur du téléphone — mécanisme `fiche`/`document` existant, picto « dehors ». ⭐ **Le partage est un acte de Xavier dans son lecteur, pas une fonction du dispositif** : c'est l'artefact le plus sensible de tout le projet.
+3. **Un bilan se publie à tout moment, hors séance** — comme la documentation. **Supervision bloquante quand même**, portant explicitement sur : *ce document ne contient rien que Xavier ne sache déjà*. **C'est le contrôle qui remplace C9 sur ce canal.**
+
+**Le travail :**
+
+- [ ] **Format** — type `bilan` dans [`companion/PROGRAMME.md`](companion/PROGRAMME.md) : `document` obligatoire *(jamais `texte`)*, `date` en `AAAA-MM-JJ` **celle du bilan, pas de la publication**, `rubrique: bilan` forcée, `quand` absent. ⚠️ **Un type distinct, et non une `fiche`** : la règle « toute fiche s'affiche sur *Documentation* » a été tranchée le 18/08 pour garder l'écran de crise à trois boutons sans défilement — **on ne la rouvre pas**
+- [ ] **Kokoro** — `ContenuBilan` groupe **par mois décroissant** au lieu de `quand`, et route vers `ouvrirLePdf`. ⭐ **La date appartient au document, pas à l'assiduité de Xavier** : ce n'est pas un historique de progression, l'invariant *zéro streak* n'est pas touché
+- [ ] **Scripts** — `psy:publish` convertit `bilans/<id>.md` en `bilans/<id>.pdf` par `md2pdf` et retire du transit ce que le programme n'appelle plus, **avec son propre jeu de contrôles** *(les interdits de fiche ne s'y appliquent pas)*. `psy:sync` n'a rien à faire : **un bilan ne renvoie rien**
+- [ ] **Verser les quatre bilans rétrospectifs** — hors séance, un par un, sous supervision
+
+| Bilan | Mois | Source | État |
+|---|---|---|---|
+| **Évaluation TSA** — Emeline Saley | **2024-04** | [`patient/ressources/Evaluation Xavier.md`](patient/ressources/Evaluation%20Xavier.md) | à mettre en forme |
+| **Conclusion de polysomnographie** — Dr Roisman | **2026-01** | [`patient/ressources/20260119 … Conclusion Polysomnographie.md`](patient/ressources/20260119%20Gabriel%20ROISMAN%20Conclusion%20Polysomnographie.md) | à mettre en forme |
+| **Rapport psychiatrique et psychologique** v2.4 | **2026-08** | [`patient/ressources/Rapport psychiatrique et psychologique.md`](patient/ressources/Rapport%20psychiatrique%20et%20psychologique.md) | à mettre en forme |
+| **VVIQ** — passation du 09/08/2026, 18/80 | **2026-08** | [`psy/outputs/dossier/mesures/2026-08-09-vviq.json`](psy/outputs/dossier/mesures/2026-08-09-vviq.json) | 🔴 **aucun compte-rendu n'existe — il est à écrire** |
+
+> ⚠️ **Le VVIQ n'a jamais produit de document.** Seule la passation item par item existe. Le bilan est **à rédiger** : les items, le score, ce que l'échelle établit — l'aphantasie comme donnée mesurée — et **ce qu'elle ne dit pas**.
+>
+> 🔴 **Les PDF de [`patient/ressources/originales/`](patient/ressources/originales/) ne sont pas la source.** C'est une archive, jamais une entrée : le bilan se compose depuis le Markdown, et `psy:publish` le convertit comme le reste.
 
 ### Étape 6 — Stabilisation à deux, puis réouverture de l'EMDR ⏸️
 

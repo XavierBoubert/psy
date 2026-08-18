@@ -51,6 +51,7 @@ import io.allonsy.kokoro.programme.Fonction
 import io.allonsy.kokoro.programme.Issue
 import io.allonsy.kokoro.programme.PROGRAMME_ABSENT
 import io.allonsy.kokoro.programme.Programme
+import io.allonsy.kokoro.programme.ReponseItem
 import io.allonsy.kokoro.programme.Support
 import io.allonsy.kokoro.programme.faite
 import io.allonsy.kokoro.reglages.EtatAutorisations
@@ -81,7 +82,7 @@ fun MondeKokoro(
     modifier: Modifier = Modifier,
     programme: Programme = PROGRAMME_ABSENT,
     faites: Faites = AUCUNE_FAITE,
-    onIssue: (String, Issue) -> Unit = { _, _ -> },
+    onRendu: (String, Issue, List<ReponseItem>) -> Unit = { _, _, _ -> },
     onPdf: (String) -> Unit = {},
     parallaxe: Parallaxe = PARALLAXE_PAR_DEFAUT,
     envoiEnCours: Boolean = false,
@@ -142,6 +143,7 @@ fun MondeKokoro(
         when (etape) {
             is Etape.Ecran -> agir(etape.fonction)
             is Etape.Exercice -> ouvrirPanneau(Contexte.Exercice(etape))
+            is Etape.Questionnaire -> ouvrirPanneau(Contexte.Questionnaire(etape))
             is Etape.Demarche -> ouvrirPanneau(Contexte.Demarche(etape, faites.faite(etape)))
             is Etape.Fiche -> lireLaFiche(etape)
         }
@@ -239,7 +241,7 @@ fun MondeKokoro(
             locuteur = locuteur,
             donneesReglages = donneesReglages,
             donneesCheckin = donneesCheckin,
-            onIssue = onIssue,
+            onRendu = onRendu,
             onFermer = { ouverte = null },
         )
 
@@ -322,7 +324,13 @@ private fun ContenuEcran(
             fige = fige,
         )
 
-        Ecran.BILAN -> ContenuBilan(perchoirs = perchoirs)
+        Ecran.BILAN -> ContenuBilan(
+            perchoirs = perchoirs,
+            programme = programme,
+            faites = faites,
+            onOuvrir = onEtape,
+            fige = fige,
+        )
 
         Ecran.CRISE -> ContenuCriseDuMonde(
             perchoirs = perchoirs,
@@ -363,7 +371,7 @@ private fun PanneauOuvert(
     locuteur: Boolean,
     donneesReglages: DonneesReglages,
     donneesCheckin: DonneesCheckin,
-    onIssue: (String, Issue) -> Unit,
+    onRendu: (String, Issue, List<ReponseItem>) -> Unit,
     onFermer: () -> Unit,
 ) {
     // Attend locuteur, pas seulement visible : sinon le panneau glisse avant que Kokoro n'ait fini son vol (700 ms).
@@ -384,7 +392,7 @@ private fun PanneauOuvert(
                 etape = contexte.etape,
                 faite = contexte.faite,
                 onFait = {
-                    onIssue(contexte.etape.reperes.id, Issue.FAIT)
+                    onRendu(contexte.etape.reperes.id, Issue.FAIT, emptyList())
                     onFermer()
                 },
                 onFermer = onFermer,
@@ -392,7 +400,13 @@ private fun PanneauOuvert(
 
             is Contexte.Exercice -> PanneauExercice(
                 etape = contexte.etape,
-                onIssue = { issue -> onIssue(contexte.etape.reperes.id, issue) },
+                onIssue = { issue -> onRendu(contexte.etape.reperes.id, issue, emptyList()) },
+                onFermer = onFermer,
+            )
+
+            is Contexte.Questionnaire -> PanneauQuestionnaire(
+                etape = contexte.etape,
+                onRendu = { issue, items -> onRendu(contexte.etape.reperes.id, issue, items) },
                 onFermer = onFermer,
             )
 

@@ -38,6 +38,31 @@ class ReponseTest {
         assertTrue(ecrit.contains(""""source": "android""""))
     }
 
+    // « Passer » écrit null, jamais 0 : la cotation doit pouvoir distinguer un item passé d'un item coté au plancher.
+    @Test
+    fun `une passation renvoie ses items dans l'ordre, un item passe valant null`() {
+        val items = listOf(ReponseItem("q1", 2), ReponseItem("q2", null), ReponseItem("q3", 0))
+        val ecrit = serialiserReponse(reponseDe("gad7", Issue.TERMINE, LE_18_AOUT, items))
+
+        assertTrue(ecrit.contains(""""etape": "gad7""""))
+        assertTrue(ecrit.contains(""""issue": "termine""""))
+        assertTrue(ecrit.contains("""{ "question": "q1", "valeur": 2 }"""))
+        assertTrue(ecrit.contains("""{ "question": "q2", "valeur": null }"""))
+        assertTrue(ecrit.contains("""{ "question": "q3", "valeur": 0 }"""))
+    }
+
+    // Une passation arrêtée au milieu part telle quelle : les items non atteints sont absents, pas null.
+    @Test
+    fun `une passation arretee au milieu ne porte que les items atteints`() {
+        val ecrit = serialiserReponse(
+            reponseDe("gad7", Issue.ARRETE, LE_18_AOUT, listOf(ReponseItem("q1", 1))),
+        )
+
+        assertTrue(ecrit.contains(""""issue": "arrete_avant_la_fin""""))
+        assertTrue(ecrit.contains("""{ "question": "q1", "valeur": 1 }"""))
+        assertFalse(ecrit.contains("q2"))
+    }
+
     @Test
     fun `les quatre issues du contrat portent leur cle`() {
         assertEquals(

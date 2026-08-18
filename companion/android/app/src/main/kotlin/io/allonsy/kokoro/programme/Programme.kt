@@ -26,6 +26,10 @@ sealed interface Support {
     data class Texte(val contenu: String) : Support
 }
 
+data class Choix(val valeur: Int, val libelle: String)
+
+data class QuestionFermee(val id: String, val enonce: String, val choix: List<Choix>)
+
 data class Reperes(
     val id: String,
     val titre: String,
@@ -43,6 +47,11 @@ sealed interface Etape {
         override val reperes: Reperes,
         val consigne: String,
         val minuteurSecondes: Int,
+    ) : Etape
+
+    data class Questionnaire(
+        override val reperes: Reperes,
+        val questions: List<QuestionFermee>,
     ) : Etape
 
     data class Demarche(override val reperes: Reperes, val detail: String) : Etape
@@ -87,6 +96,7 @@ private fun etape(valeur: Valeur): Etape? {
     return when (valeur.texte("type")) {
         "ecran" -> fonction(valeur)?.let { Etape.Ecran(reperes, it) }
         "exercice" -> exercice(reperes, valeur)
+        "questionnaire" -> questionnaire(reperes, valeur)
         "demarche" -> valeur.permis("detail")?.let { Etape.Demarche(reperes, it) }
         "fiche" -> support(valeur)?.let { Etape.Fiche(reperes, it) }
         else -> null
@@ -110,6 +120,36 @@ private fun exercice(reperes: Reperes, valeur: Valeur): Etape.Exercice? {
     val secondes = valeur.entier("minuteur_secondes")?.takeIf { it > 0 } ?: return null
 
     return Etape.Exercice(reperes = reperes, consigne = consigne, minuteurSecondes = secondes)
+}
+
+// Un questionnaire amputé d'un item produirait un score faux, donc faussement rassurant : il tombe entier ou pas du tout.
+private fun questionnaire(reperes: Reperes, valeur: Valeur): Etape.Questionnaire? {
+    val lues = valeur.elements("questions").map(::question)
+    if (lues.isEmpty() || lues.any { it == null }) return null
+
+    val questions = lues.filterNotNull()
+
+    return if (questions.distinctBy { it.id }.size == questions.size) {
+        Etape.Questionnaire(reperes = reperes, questions = questions)
+    } else {
+        null
+    }
+}
+
+private fun question(valeur: Valeur): QuestionFermee? {
+    val id = valeur.texte("id")?.takeIf { it.matches(KEBAB) } ?: return null
+    val enonce = valeur.permis("enonce") ?: return null
+    val lus = valeur.elements("choix").map(::choix)
+    if (lus.size < 2 || lus.any { it == null }) return null
+
+    return QuestionFermee(id = id, enonce = enonce, choix = lus.filterNotNull())
+}
+
+private fun choix(valeur: Valeur): Choix? {
+    val chiffre = valeur.entier("valeur") ?: return null
+    val libelle = valeur.permis("libelle") ?: return null
+
+    return Choix(valeur = chiffre, libelle = libelle)
 }
 
 private fun support(etape: Valeur): Support? {

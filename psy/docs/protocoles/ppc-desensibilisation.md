@@ -31,7 +31,6 @@ Et tant que 61 micro-éveils par heure fragmentent chaque nuit, **aucune évalua
 
 - À chaque séance de fond dont la cible est `ppc-desensibilisation`.
 - À chaque fois que Xavier reprend l'appareil après une interruption, quelle qu'en soit la durée.
-- Pour préparer la consultation de reprise avec le Dr Roisman.
 
 ## 2. Quand ne **PAS** l'utiliser
 
@@ -56,13 +55,11 @@ Et tant que 61 micro-éveils par heure fragmentent chaque nuit, **aucune évalua
 | 0.3 | Selon 0.2, demander un **essai de plusieurs interfaces**. Si fuite au masque → **narinaire** (*nasal pillows*), la prescription l'autorise. Si fuite buccale → le narinaire ne la corrigera pas : la question se pose au prestataire, **elle ne se tranche pas ici**. | Au moins deux interfaces à tester à domicile |
 | 0.4 | Vérifier que les réglages du **04/05/2026** sont toujours actifs : pression **6-12 cm H₂O**, **EPR niveau 2**, **humidificateur** | Confirmation. ⚠️ **Aucun de ces réglages ne se modifie ici** — ils appartiennent au prescripteur. |
 | 0.5 | Demander **où en est la prise en charge** trois mois après son renouvellement, l'usage étant resté irrégulier | Réponse écrite. Le seuil d'observance conditionnant le remboursement **se demande au prestataire, il ne se suppose pas.** |
-| 0.6 | Demander une **consultation de reprise au Dr Roisman**, en annonçant que la reprise se fera **par paliers écrits** — pas par un nouvel essai « en se motivant » | Rendez-vous fixé |
-| 0.7 | 🔴 **Informer le Dr Isorni** — il n'a été destinataire d'**aucun** des deux courriers du pneumologue | Point porté au brief / à l'email en attente. **Consultation le 03/09/2026 à 12h30.** |
-| 0.8 | ✈️ **Voyage du 07/09/2026** — demander au prestataire comment emporter l'appareil : bagage **cabine** (un dispositif de PPC est un matériel médical, généralement hors franchise sur présentation de l'ordonnance), tension et adaptateur, eau de l'humidificateur | Réponse écrite **avant le départ** |
+| 0.6 | 🔴 **Informer le Dr Isorni** — il n'a été destinataire d'**aucun** des deux courriers du pneumologue | Point porté au brief / à l'email en attente. **Consultation le 03/09/2026 à 12h30.** |
+| 0.7 | ✈️ **Voyage du 07/09/2026** — demander au prestataire comment emporter l'appareil : bagage **cabine** (un dispositif de PPC est un matériel médical, généralement hors franchise sur présentation de l'ordonnance), tension et adaptateur, eau de l'humidificateur | Réponse écrite **avant le départ** |
 
 > **Correction importante par rapport à la v1.0 :** il n'y a **rien à révéler au Dr Roisman**. Il sait, il l'a écrit, il a agi. Le trou de coordination n'est pas là — il est **du côté du psychiatre**, qui prescrit sans savoir qu'un SAOS sévère insuffisamment traité court en parallèle. Ne pas se tromper de destinataire.
 
-> **Point de posture sur 0.6.** Solliciter le pneumologue après trois mois d'usage irrégulier n'est pas un aveu d'échec : c'est la démarche normale. Si Xavier redoute ce contact, c'est un point de camouflage — il se travaille en séance, il ne se contourne pas.
 
 **Justification des exigences matérielles restantes** (à donner à Xavier, pas à garder pour soi) :
 

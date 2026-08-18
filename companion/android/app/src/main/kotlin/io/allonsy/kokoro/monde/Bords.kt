@@ -251,14 +251,44 @@ private fun libelleDe(quand: Quand): Int = when (quand) {
 }
 
 @Composable
-fun ContenuBilan(perchoirs: Perchoirs) {
+fun ContenuBilan(
+    perchoirs: Perchoirs,
+    programme: Programme,
+    faites: Faites,
+    onOuvrir: (Etape) -> Unit,
+    fige: Boolean = false,
+) {
+    val palette = LocalPaletteKokoro.current
+    val aPasser = programme.etapesDe(Rubrique.BILAN)
+
     EcranDeBord(
         titre = stringResource(R.string.monde_bilan_titre),
-        couleur = LocalPaletteKokoro.current.beurre,
-        defilant = false,
+        couleur = palette.beurre,
+        defilant = aPasser.isNotEmpty(),
+        fige = fige,
     ) {
         BandeDeTete(perchoirs = perchoirs, poses = listOf(Perchoir.BILAN))
-        CadreVide(texte = stringResource(R.string.monde_bilan_vide))
+
+        if (aPasser.isEmpty()) {
+            CadreVide(texte = stringResource(R.string.monde_bilan_vide))
+            return@EcranDeBord
+        }
+
+        Quand.entries.forEach { quand ->
+            val duQuand = aPasser.filter { it.quand == quand }
+            if (duQuand.isEmpty()) return@forEach
+
+            BandeDeSection(perchoirs = perchoirs, poses = emptyList()) {
+                Pancarte(
+                    texte = stringResource(libelleDe(quand)),
+                    couleur = palette.beurre,
+                    modifier = Modifier.padding(start = 2.dp),
+                )
+            }
+            duQuand.forEach { etape ->
+                CarteDEtape(etape = etape, faite = faites.faite(etape), onClic = { onOuvrir(etape) })
+            }
+        }
     }
 }
 

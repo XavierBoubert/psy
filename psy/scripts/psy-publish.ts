@@ -147,6 +147,37 @@ const problemesDuo = (etape: Record<string, unknown>): ReadonlyArray<string> => 
   );
 };
 
+// 🔴 Un item perdu produit un score faux, donc faussement rassurant : Kokoro ecarte le questionnaire entier,
+// et le PC refuse la publication plutot que de laisser partir une echelle amputee en silence.
+const problemeChoix = (choix: unknown, question: string, rang: number): string | null => {
+  if (!isRecord(choix)) return `${question}, choix ${rang + 1} : ce n'est pas un objet`;
+
+  if (!Number.isInteger(choix['valeur'])) return `${question}, choix ${rang + 1} : « valeur » absente ou non entiere`;
+
+  return estTexteNonVide(choix['libelle']) ? null : `${question}, choix ${rang + 1} : « libelle » absent`;
+};
+
+const problemeQuestion = (question: unknown, rang: number): ReadonlyArray<string> => {
+  if (!isRecord(question)) return [`question ${rang + 1} : ce n'est pas un objet`];
+
+  const nom = typeof question['id'] === 'string' ? question['id'] : `question ${rang + 1}`;
+  const choix = question['choix'];
+
+  const communs = [
+    typeof question['id'] === 'string' && /^[a-z0-9-]+$/.test(question['id'])
+      ? null
+      : `${nom} : id absent ou hors kebab-case`,
+    estTexteNonVide(question['enonce']) ? null : `${nom} : enonce absent`,
+    Array.isArray(choix) && choix.length >= 2
+      ? null
+      : `${nom} : moins de deux choix — une question est toujours un choix ferme, jamais une saisie de texte`,
+  ];
+
+  const propres = Array.isArray(choix) ? choix.map((un: unknown, place: number) => problemeChoix(un, nom, place)) : [];
+
+  return [...communs, ...propres].filter((probleme): probleme is string => probleme !== null);
+};
+
 const problemesDeForme = (etape: Record<string, unknown>): ReadonlyArray<string> => {
   const type = etape['type'];
   const quand = etape['quand'];
@@ -182,11 +213,15 @@ const problemesDeForme = (etape: Record<string, unknown>): ReadonlyArray<string>
 
       if (!Array.isArray(questions) || questions.length === 0) return ['questions absentes'];
 
-      return questions.map((question: unknown, rang: number) =>
-        isRecord(question) && typeof question['enonce'] === 'string' && Array.isArray(question['choix'])
-          ? null
-          : `question ${rang + 1} sans enonce ou sans choix ferme`,
+      const identifiants = questions.flatMap((question: unknown) =>
+        isRecord(question) && typeof question['id'] === 'string' ? [question['id']] : [],
       );
+      const doublons = identifiants.filter((id, rang) => identifiants.indexOf(id) !== rang);
+
+      return [
+        ...doublons.map((id) => `question en double : ${id} — un id relie un item a sa reponse`),
+        ...questions.flatMap(problemeQuestion),
+      ];
     }
 
     if (type === 'demarche') {

@@ -25,6 +25,17 @@ private const val EXERCICE =
         "quand": "aujourdhui", "duree_minutes": 5, "consigne": "Masque contre le visage, tenu à la main.",
         "minuteur_secondes": 300, "sortie_libre": true }"""
 
+private const val QUESTIONNAIRE =
+    """{ "id": "gad7", "titre": "Questionnaire GAD-7", "type": "questionnaire", "rubrique": "bilan",
+        "quand": "sans_date", "duree_minutes": 5, "questions": [
+          { "id": "q1", "enonce": "Combien de jours cette semaine as-tu quitté le logement ?", "choix": [
+              { "valeur": 0, "libelle": "Aucun jour" },
+              { "valeur": 3, "libelle": "Presque tous les jours" } ] },
+          { "id": "q2", "enonce": "Combien de repas as-tu servis en une seule fois ?", "choix": [
+              { "valeur": 0, "libelle": "Aucun" },
+              { "valeur": 1, "libelle": "Un" },
+              { "valeur": 2, "libelle": "Deux" } ] } ] }"""
+
 private const val DEMARCHE =
     """{ "id": "ppc-releve", "titre": "Demander le relevé", "type": "demarche", "rubrique": "therapie",
         "quand": "sans_date", "detail": "Des chiffres, pas une impression." }"""
@@ -32,14 +43,64 @@ private const val DEMARCHE =
 class ProgrammeTest {
 
     @Test
-    fun `lit les quatre types portes par Kokoro`() {
-        val lu = lireProgramme(programme("$ECRAN, $EXERCICE, $DEMARCHE, $FICHE_PDF"))
+    fun `lit les cinq types portes par Kokoro`() {
+        val lu = lireProgramme(programme("$ECRAN, $EXERCICE, $QUESTIONNAIRE, $DEMARCHE, $FICHE_PDF"))
 
         assertEquals(7, lu.version)
         assertEquals(
-            listOf(Etape.Ecran::class, Etape.Exercice::class, Etape.Demarche::class, Etape.Fiche::class),
+            listOf(
+                Etape.Ecran::class,
+                Etape.Exercice::class,
+                Etape.Questionnaire::class,
+                Etape.Demarche::class,
+                Etape.Fiche::class,
+            ),
             lu.etapes.map { it::class },
         )
+    }
+
+    @Test
+    fun `le questionnaire porte ses items et leurs choix fermes`() {
+        val questionnaire = lireProgramme(programme(QUESTIONNAIRE)).etapes.single() as Etape.Questionnaire
+
+        assertEquals(listOf("q1", "q2"), questionnaire.questions.map { it.id })
+        assertEquals(listOf(0, 3), questionnaire.questions.first().choix.map { it.valeur })
+        assertEquals(listOf("Aucun", "Un", "Deux"), questionnaire.questions.last().choix.map { it.libelle })
+    }
+
+    // Un item perdu produirait un score faux, donc faussement rassurant : le questionnaire tombe entier.
+    @Test
+    fun `un questionnaire ampute tombe entier plutot que partiellement`() {
+        val sansQuestion = """{ "id": "sans-question", "titre": "Sans question", "type": "questionnaire",
+            "rubrique": "bilan", "quand": "sans_date", "questions": [] }"""
+        val choixUnique = """{ "id": "choix-unique", "titre": "Choix unique", "type": "questionnaire",
+            "rubrique": "bilan", "quand": "sans_date", "questions": [
+              { "id": "q1", "enonce": "Une question ?", "choix": [ { "valeur": 0, "libelle": "Oui" } ] } ] }"""
+        val enonceInterdit = """{ "id": "enonce-interdit", "titre": "Énoncé interdit", "type": "questionnaire",
+            "rubrique": "bilan", "quand": "sans_date", "questions": [
+              { "id": "q1", "enonce": "Visualise un lieu sûr.", "choix": [
+                  { "valeur": 0, "libelle": "Oui" }, { "valeur": 1, "libelle": "Non" } ] },
+              { "id": "q2", "enonce": "Une question ?", "choix": [
+                  { "valeur": 0, "libelle": "Oui" }, { "valeur": 1, "libelle": "Non" } ] } ] }"""
+        val idEnDouble = """{ "id": "id-en-double", "titre": "Id en double", "type": "questionnaire",
+            "rubrique": "bilan", "quand": "sans_date", "questions": [
+              { "id": "q1", "enonce": "Une question ?", "choix": [
+                  { "valeur": 0, "libelle": "Oui" }, { "valeur": 1, "libelle": "Non" } ] },
+              { "id": "q1", "enonce": "Une autre ?", "choix": [
+                  { "valeur": 0, "libelle": "Oui" }, { "valeur": 1, "libelle": "Non" } ] } ] }"""
+
+        val lu = lireProgramme(programme("$sansQuestion, $choixUnique, $enonceInterdit, $idEnDouble"))
+
+        assertTrue(lu.etapes.isEmpty())
+    }
+
+    // PROGRAMME.md §3 : un questionnaire vit sur Bilan, et cet écran n'est plus vide par construction.
+    @Test
+    fun `le questionnaire se range sur l'ecran Bilan`() {
+        val lu = lireProgramme(programme("$QUESTIONNAIRE, $DEMARCHE"))
+
+        assertEquals(listOf("gad7"), lu.etapesDe(Rubrique.BILAN).map { it.id })
+        assertEquals(listOf("ppc-releve"), lu.etapesDe(Rubrique.THERAPIE).map { it.id })
     }
 
     @Test
@@ -116,13 +177,13 @@ class ProgrammeTest {
         assertTrue(lireProgramme(programme("$deuxSupports, $chemin")).fiches().isEmpty())
     }
 
-    // Ni questionnaire ni seance-duo ne sont portés : ils tombent dans le cas général plutôt que de casser la lecture.
+    // seance-duo n'est pas porté : il tombe dans le cas général plutôt que de casser la lecture.
     @Test
     fun `un type non encore porte n'empeche pas le reste d'apparaitre`() {
-        val questionnaire = """{ "id": "gad7", "titre": "Questionnaire GAD-7", "type": "questionnaire",
-            "rubrique": "bilan", "quand": "sans_date", "questions": [] }"""
+        val duo = """{ "id": "stab-ancrage-1", "titre": "Ancrage à deux", "type": "seance-duo",
+            "rubrique": "therapie", "quand": "sans_date", "sequence": [] }"""
 
-        assertEquals(listOf("ppc-releve"), lireProgramme(programme("$questionnaire, $DEMARCHE")).etapes.map { it.id })
+        assertEquals(listOf("ppc-releve"), lireProgramme(programme("$duo, $DEMARCHE")).etapes.map { it.id })
     }
 
     @Test

@@ -49,6 +49,7 @@ import io.allonsy.kokoro.programme.Fonction
 import io.allonsy.kokoro.programme.Issue
 import io.allonsy.kokoro.programme.PROGRAMME_ABSENT
 import io.allonsy.kokoro.programme.Programme
+import io.allonsy.kokoro.programme.ReponseItem
 import io.allonsy.kokoro.programme.lireProgramme
 import io.allonsy.kokoro.programme.reponseDe
 import io.allonsy.kokoro.reglages.EtatAutorisations
@@ -153,7 +154,7 @@ class MondeActivity : ComponentActivity() {
                     ),
                     programme = programme.value,
                     faites = faites.value,
-                    onIssue = { etape, issue -> enregistrerReponse(etape, issue) },
+                    onRendu = { etape, issue, items -> enregistrerReponse(etape, issue, items) },
                     onPdf = { document -> ouvrirLeDocument(document) },
                     ouvrirCheckin = ouvrirCheckinDemande.value,
                     onCheckinOuvert = { ouvrirCheckinDemande.value = false },
@@ -211,10 +212,10 @@ class MondeActivity : ComponentActivity() {
         texteDuProgramme(this)?.let(::lireProgramme) ?: PROGRAMME_ABSENT
 
     // Le nom écrit rejoint la liste sans relire Drive : la carte se grise au tap, pas à la prochaine synchronisation.
-    private fun enregistrerReponse(etape: String, issue: Issue) {
+    private fun enregistrerReponse(etape: String, issue: Issue, items: List<ReponseItem>) {
         lifecycleScope.launch {
             val resultat = withContext(Dispatchers.IO) {
-                ecrireReponse(this@MondeActivity, reponseDe(etape, issue))
+                ecrireReponse(this@MondeActivity, reponseDe(etape, issue, items = items))
             }
             accuse.value = when (resultat) {
                 is ResultatEcriture.Ecrit -> {

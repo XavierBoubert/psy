@@ -102,7 +102,7 @@ Le brouillon d'email existe déjà : `patient/ressources/20260808 Email au Dr Is
 | 1 | **Alprazolam et SAOS sévère** — limiter, remplacer, ou sans conséquence à la dose employée ? | 🔴 porte sur un traitement en cours |
 | 2 | **Venlafaxine et mouvements périodiques des jambes** — 31/h objectivés, indépendants des apnées ; **doser la ferritine** (jamais faite) | 🔴 |
 | 3 | **Bilan hépatique de référence** — la GGT était à 2× la normale sous venlafaxine *sans bilan préalable*. La molécule vient d'être reprise : c'est le moment d'établir la valeur de départ | 🔴 |
-| 4 | **Transmettre le diagnostic de SAOS au Dr Isorni** — il n'a été destinataire d'**aucun** des deux courriers du Dr Roisman (19/01 et 04/05/2026). ~~Prévenir le Dr Roisman~~ : **caduc, il sait depuis le 04/05/2026**. Ce qu'il faut à la place : une **consultation de reprise** avec relevé de télésuivi et réessai d'interfaces | 🔴 |
+| 4 | **Transmettre le diagnostic de SAOS au Dr Isorni** — il n'a été destinataire d'**aucun** des deux courriers du Dr Roisman (19/01 et 04/05/2026). ~~Prévenir le Dr Roisman~~ : **caduc, il sait depuis le 04/05/2026**. ~~Demander une consultation de reprise~~ : **annulée le 19/08/2026 par Xavier — la machine est à lui pour un an, il n'y a rien à rouvrir côté pneumologue** | 🔴 |
 | 5 | **Paroxétine et prise de poids** (+6 kg en 9 mois) — a-t-elle contribué à la prise de poids qui a causé la NASH ? | Haute |
 | 6 | Confirmation formelle de la **phobie sang-injection-accident** et du **TAG** (critère C) | Moyenne — à réévaluer **après** traitement du SAOS |
 | 7 | **Surveillance hépatologique** à clarifier avec la Dr Bouarioua : contrôle non invasif à distance (biologie ± élastométrie) ? | Moyenne |

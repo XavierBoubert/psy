@@ -103,8 +103,14 @@ Valeurs de `ecran` : `check-in` · `mot-code` · `tension-appliquee` · `phrase-
   ] }
 ```
 
-Toute question est un **choix fermé** ou un **compteur**. Aucune saisie de texte obligatoire, jamais.
-« Passer » écrit `null` — **qui n'est pas `0`**.
+| Champ | Règle |
+|---|---|
+| `questions` | Au moins une. `id` en `kebab-case`, **unique dans le questionnaire** — c'est lui qui relie un item à sa réponse |
+| `enonce` | Le texte de l'item, **recopié du corpus** |
+| `choix` | 🔴 **Au moins deux**, chacun avec `valeur` *(entier)* et `libelle`. **Une question est toujours un choix fermé — aucune saisie de texte, jamais** |
+
+🔴 **Un questionnaire tombe entier ou pas du tout** — `psy:publish` refuse, Kokoro écarte l'étape. **Un item perdu produit un score faux, donc faussement rassurant :** c'est le pire résultat possible ici.
+« Passer » écrit `null` — **qui n'est pas `0`**. Un item **jamais atteint** est **absent**, ce qui ne veut pas dire la même chose.
 
 **Trois règles de publication des échelles, non négociables :**
 
@@ -197,6 +203,16 @@ Un fichier par étape faite, dans `reponses/` : `AAAA-MM-JJ-HHMM-<id>.json`
 { "etape": "ppc-p1", "horodatage": "2026-08-13T18:04:00+02:00",
   "issue": "termine", "reponses": null, "source": "android" }
 ```
+
+**Seul le `questionnaire` remplit `reponses`** — une liste ordonnée, un objet par item atteint :
+
+```json
+{ "etape": "gad7", "horodatage": "2026-08-19T21:12:00+02:00", "issue": "termine",
+  "reponses": [ { "question": "q1", "valeur": 2 }, { "question": "q2", "valeur": null } ],
+  "source": "android" }
+```
+
+⭐ **La cotation n'est pas là-dedans.** Kokoro renvoie les items ; le score se calcule en séance, avec `psy-bilan`.
 
 `issue` : `termine` · `arrete_avant_la_fin` · `fait` · `entrainement`.
 ⭐ **`arrete_avant_la_fin` n'est pas un échec et ne se commente nulle part.**

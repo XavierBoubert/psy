@@ -233,6 +233,20 @@
     <string name="exercice_minuteur_ouvert">Le minuteur tourne tant que cet écran reste ouvert.</string>
     <string name="exercice_fini">C\'est enregistré dans le dossier.</string>
 
+    <!--
+      ⭐ La passation d'une échelle — companion/PROGRAMME.md §3. Une question par écran, des choix
+      fermés, « passer » écrit null. 🔴 Kokoro n'affiche jamais un score, un seuil ni une
+      interprétation : il renvoie les items, la cotation se fait en séance.
+    -->
+    <string name="questionnaire_annonce">%1$d questions, une par écran. Chaque réponse est à choisir dans une liste.</string>
+    <string name="questionnaire_sortie_libre">Je peux passer une question, ou arrêter au milieu, sans avoir à le justifier.</string>
+    <string name="questionnaire_rang">Question %1$d sur %2$d</string>
+    <string name="questionnaire_action_commencer">Je commence</string>
+    <string name="questionnaire_action_passer">Passer — aucune réponse</string>
+    <string name="questionnaire_action_arreter">J\'arrête ici</string>
+    <string name="questionnaire_action_fermer">Fermer</string>
+    <string name="questionnaire_fini">C\'est enregistré dans le dossier.</string>
+
     <string name="reponse_dossier_absent">Le dossier synchronisé n\'est pas choisi : rien n\'a été enregistré.</string>
     <string name="reponse_echec">L\'enregistrement dans le dossier n\'a pas abouti.</string>
 

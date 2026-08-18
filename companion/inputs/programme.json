@@ -1,7 +1,7 @@
 {
-  "version": 4,
-  "publie_le": "2026-08-18",
-  "supervision": "2026-08-18-programme-v4",
+  "version": 5,
+  "publie_le": "2026-08-19",
+  "supervision": "2026-08-19-programme-v5",
   "etapes": [
     {
       "id": "check-in",
@@ -80,14 +80,6 @@
       "rubrique": "therapie",
       "quand": "sans_date",
       "detail": "Link Sommeil : le masque bouche + nez est-il pris en charge, et jusqu'a quand ? Ou en est le renouvellement trois mois apres. Reponse ecrite."
-    },
-    {
-      "id": "ppc-consultation-roisman",
-      "titre": "Demander une consultation de reprise au Dr Roisman",
-      "type": "demarche",
-      "rubrique": "therapie",
-      "quand": "sans_date",
-      "detail": "En annonçant que la reprise se fera par paliers écrits. Solliciter le pneumologue après trois mois d'usage irrégulier n'est pas un aveu d'échec : c'est la démarche normale."
     },
     {
       "id": "ppc-voyage",
