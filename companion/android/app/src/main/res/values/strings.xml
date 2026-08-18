@@ -14,7 +14,7 @@
     <string name="alerte_ecran_fermer">Fermer</string>
 
     <!--
-      🔴 La notification d'accès est muette — companion/INTERFACE.md §6.2. Il ne reste que l'icône
+      🔴 La notification d'accès est muette — companion/README.md §2. Il ne reste que l'icône
       et le mot « Kokoro » : pas de corps de texte, pas de boutons d'action. Ce qu'elle écrirait,
       Xavier le relirait cent fois sur son écran verrouillé sans jamais en avoir besoin.
       Le nom et la description du canal, eux, ne se voient que dans les réglages d'Android.
@@ -178,7 +178,7 @@
     <string name="monde_titre">Le monde de Kokoro</string>
 
     <!--
-      Les cinq écrans du monde — companion/INTERFACE.md §3. Une rubrique par écran, et le titre est
+      Les quatre écrans du monde — companion/README.md §5. Une rubrique par écran, et le titre est
       écrit en toutes lettres sur son ruban : savoir où l'on est ne dépend jamais d'un pictogramme.
     -->
     <string name="monde_therapie_titre">Thérapie</string>
@@ -199,13 +199,13 @@
     <string name="bibliotheque_sans_lecteur">Aucune application de ce téléphone n\'ouvre les PDF.</string>
 
     <!--
-      ⭐ L'accusé de l'envoi direct — companion/INTERFACE.md §7. Il constate que le message est
+      ⭐ L'accusé de l'envoi direct — companion/README.md §2. Il constate que le message est
       parti, il ne félicite de rien et ne demande rien en retour.
     -->
     <string name="monde_mot_code_envoye">Mot-code envoyé à %1$s</string>
 
     <!--
-      ⭐ L'avis de l'écran central — companion/INTERFACE.md §6.1, §7.4. Un fait, ce qu'il coûte, et
+      ⭐ L'avis de l'écran central — companion/README.md §7. Un fait, ce qu'il coûte, et
       le geste. 🔴 Jamais une pastille : un point coloré dit « va voir » sans dire quoi, et le
       dispositif ne fait aucun sous-entendu. Il s'en va tout seul dès que la porte est rouverte.
     -->

@@ -34,7 +34,7 @@ const val CLIGNEMENT_MILLIS = 200
 
 private const val CLIGNEMENT_MORPHING_MILLIS = 80
 
-// Tirage aléatoire borné (PRESENCE.md §3) : un clignement régulier serait un métronome.
+// Tirage aléatoire borné (companion/README.md §6) : un clignement régulier serait un métronome.
 const val CLIGNEMENT_ATTENTE_MIN_MILLIS = 2_800L
 const val CLIGNEMENT_ATTENTE_MAX_MILLIS = 6_500L
 
@@ -78,7 +78,7 @@ const val DANSE_AMPLITUDE = 20f
 // Le buste roule à contretemps des bras : sans lui le ciseau se lit comme un écart, pas comme un floss.
 const val DANSE_ROULIS = 5f
 
-// null veut dire « celui de la posture », jamais « aucun » (PRESENCE.md §1.2).
+// null veut dire « celui de la posture », jamais « aucun » (companion/README.md §6).
 @Composable
 fun rigAnime(
     posture: Posture,

@@ -2,8 +2,6 @@
 
 ## 1. Les documentations à écrire
 
-Une fiche est **écrite pour Xavier**, jamais copiée depuis [`psy/docs/protocoles/`](psy/docs/protocoles/README.md) *(contrôle C9)*. La colonne « source » indique ce qui sert de matière, pas ce qui se recopie.
-
 | `document` | Rubrique | Source | Vigilance |
 |---|---|---|---|
 | `panique-13-symptomes` | `crise` | [panique-13-symptomes.md](psy/docs/protocoles/panique-13-symptomes.md) | Interdit n° 5 — pas de déclenchement sur prodrome |

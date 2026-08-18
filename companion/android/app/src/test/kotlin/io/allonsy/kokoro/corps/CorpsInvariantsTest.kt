@@ -328,7 +328,7 @@ class CorpsInvariantsTest {
         }
     }
 
-    // Dérogation Xavier 16/08/2026 (CORPS.md §2/§9) : seule accoude incline la tête, à 6° max, pivot = ligne des épaules.
+    // Dérogation Xavier 16/08/2026 (companion/README.md §6) : seule accoude incline la tête, à 6° max, pivot = ligne des épaules.
     @Test
     fun `seule la posture accoude penche la tete, et elle reste bornee`() {
         assertEquals(

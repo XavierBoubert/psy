@@ -6,7 +6,7 @@
 <title>Kokoro — maquette</title>
 <style>
 /*
-  MAQUETTE HTML — outil de test et d'itération pour companion/INTERFACE.md et companion/DECOR.md.
+  MAQUETTE HTML — outil de test et d'itération pour companion/README.md §5.
   Ce n'est PAS l'app : c'est une reproduction fidèle en HTML/CSS/JS des mêmes valeurs numériques
   (couleurs, dp, largeurs de couche, profondeurs de parallaxe) que celles de Decor.kt / Couches.kt,
   pour pouvoir regarder et corriger avant de recoder en Compose.
@@ -15,18 +15,18 @@
   - #ciel                  ↔ dessinerCiel() dans Decor.kt
   - .couche (×4)            ↔ dessinerCouche() / COUCHES dans Couches.kt
   - .ecran                  ↔ un écran de bord (Thérapie/Bilan/Documentation/Crise) ou le centre
-  - .verre                  ↔ le composant de verre dépoli, INTERFACE.md §4.1
-  - .carte                  ↔ « une carte par étape », INTERFACE.md §3.1
+  - .verre                  ↔ le composant de verre dépoli, README.md §5
+  - .carte                  ↔ « une carte par étape », README.md §5
   - .bande-titre             ↔ D11, titre qui ne défile pas
   - .puce                  ↔ sous-titre de section (Aujourd'hui / Sans date…)
-  - la navigation en croix   ↔ DECOR.md §6 (approximation : pas le ressort exact du code)
+  - la navigation en croix   ↔ README.md §5 (approximation : pas le ressort exact du code)
 
   ⚠️ 1dp du spec est traité ici comme 1px CSS — c'est l'approximation standard pour une maquette web,
   pas la densité réelle du Galaxy S22. Les proportions comptent plus que le pixel exact.
 
   ⚠️ Contradiction non résolue entre documents, à trancher par Xavier avant Android :
-  INTERFACE.md §4.1 fixe l'accent sur « la couleur de la plaque de poitrine de Kokoro », mais
-  CORPS.md v2 (§99) a supprimé cette plaque : « la v2 n'a plus d'accent, et donc plus de couleur
+  README.md §5 fixe l'accent sur « la couleur de la plaque de poitrine de Kokoro », mais
+  companion/README.md §6 a supprimé cette plaque : « la v2 n'a plus d'accent, et donc plus de couleur
   du tout ». Cette maquette définit --accent mais NE L'UTILISE NULLE PART sur l'écran Thérapie —
   aucune carte, aucun texte n'en a besoin. La variable existe pour ne pas bloquer plus tard.
 */
@@ -502,7 +502,7 @@ html[data-nuit="true"] .teinte-nuit { opacity: 1; }
     <div class="ecran ecran-kokoro" data-x="0" data-y="0">
       <div class="roue"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg></div>
       <div id="centre-personnage"><div class="souffle"></div></div>
-      <p class="note-centre">Kokoro respire ici — le personnage vit dans CORPS.md, pas dans cette maquette</p>
+      <p class="note-centre">Kokoro respire ici — le personnage vit dans companion/README.md §6, pas dans cette maquette</p>
     </div>
 
     <!-- DROITE — Documentation -->
@@ -641,7 +641,7 @@ window.addEventListener('resize', () => { construireTuiles(); rendre(); });
 construireTuiles();
 rendre();
 
-/* ---- Navigation en croix : geste tactile, approximation du ressort de DECOR.md §6 ---- */
+/* ---- Navigation en croix : geste tactile, approximation du ressort de README.md §5 ---- */
 let glisse = null;
 
 const clamp = (valeur, min, max) => Math.min(max, Math.max(min, valeur));

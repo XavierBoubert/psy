@@ -7,14 +7,14 @@
 <style>
 /*
   MAQUETTE KAWAII — LA MAQUETTE QUI FAIT FOI. Registre « GUI de jeu ».
-  Thème validé par Xavier le 14/08/2026 et écrit dans companion/INTERFACE.md §4 (v2).
+  Thème validé par Xavier le 14/08/2026 et écrit dans companion/README.md §5.
   L'ancienne maquette au verre dépoli est archivée dans index.html — elle ne fait plus foi,
   et le verre ne se réintroduit pas par morceaux : une surface qui floute a repris l'ancien thème.
 
   Ce fichier est un outil de mise au point, PAS l'app. Il reproduit en HTML/CSS/JS les valeurs
   numériques exactes qui partiront en Compose, pour pouvoir regarder et corriger avant de coder.
 
-  LA MATIÈRE — une seule recette, déclinée en couleur (INTERFACE.md §4.1)
+  LA MATIÈRE — une seule recette, déclinée en couleur (README.md §5)
   fond dégradé · contour 4dp brun (jamais noir) · reflet inset en haut · creux inset en bas ·
   épaisseur portée 7dp de la couleur du contour · ombre portée.
   Elle est écrite ici dans .slab, et répétée dans .carte / .bouton parce que CSS n'hérite pas.
@@ -30,7 +30,7 @@
   - .bande-titre           ↔ D11, le titre ne défile pas
   - .panneau               ↔ étape ouverte plein écran, §3.1
   - .etincelle .coeur .rivet ↔ ornements, décor pur, aucune information
-  - la navigation en croix ↔ DECOR.md §6 (approximation : pas le ressort exact du code)
+  - la navigation en croix ↔ README.md §5 (approximation : pas le ressort exact du code)
 
   🔴 CE STYLE NE SE POSE PAS SUR DES COMPOSANTS MATERIAL. Prévoir le jeu de composables
   maison ci-dessus avant d'habiller le premier écran — c'est du travail d'écriture, fait une fois.
@@ -38,7 +38,7 @@
   CE QUI TIENT, ET QUI N'EST PAS UNE QUESTION DE STYLE
   Des règles de CONTENU : le registre du jeu n'a aucun besoin de les casser pour être joli.
   - zéro série, zéro compteur, zéro barre de progression, zéro score, zéro niveau, zéro coffre.
-    Les packs de GUI en regorgent : c'est le seul rayon où l'on ne prend rien (INTERFACE.md §1.4).
+    Les packs de GUI en regorgent : c'est le seul rayon où l'on ne prend rien (README.md §5).
   - aucune couleur qui dise « en retard », « raté », « perdu ». Le vert de « Fait » confirme une
     action ; il n'a pas de contraire, parce qu'il n'y a pas de retard dans ce dispositif.
   - aucun rouge : la palette n'en contient pas, ce qui rend la règle tenable au lieu de la
@@ -55,12 +55,12 @@
 
   ⏳ DEUX POINTS OUVERTS, À TRANCHER AVANT COMPOSE
 
-  1. LES PANCARTES DE SECTION (INTERFACE.md §6.5) — .puce et .puce.azur portent deux couleurs,
+  1. LES PANCARTES DE SECTION (README.md §5) — .puce et .puce.azur portent deux couleurs,
      alors que §3.1 écrit « aucun code couleur » sur les sous-titres de `quand`. Deux couleurs
      qui séparent ne classent pas, mais « Aujourd'hui » et « Sans date » sont ordonnés dans le
      temps : la couleur peut se relire comme une urgence. Repli sûr : une seule couleur partout.
 
-  2. LA POLICE (INTERFACE.md §4.3) — le kawaii tient beaucoup à une typo arrondie, et Android
+  2. LA POLICE (README.md §5) — le kawaii tient beaucoup à une typo arrondie, et Android
      n'en garantit AUCUNE. Il faut en embarquer une dans l'APK (Varela Round, Baloo 2,
      M PLUS Rounded 1c). Ici le web se rabat sur la police système : sur Windows on voit de la
      Segoe, donc juger les volumes et les couleurs, pas les lettres.
@@ -703,7 +703,7 @@ html[data-nuit="true"] .teinte-nuit { opacity: 1; }
           <span class="etincelle a"></span><span class="coeur c"></span>
         </div>
       </div>
-      <p class="note-centre">Kokoro respire ici — le personnage vit dans CORPS.md, pas dans cette maquette</p>
+      <p class="note-centre">Kokoro respire ici — le personnage vit dans companion/README.md §6, pas dans cette maquette</p>
     </div>
 
     <!-- DROITE — Documentation -->
@@ -851,7 +851,7 @@ window.addEventListener('resize', () => { construireTuiles(); rendre(); });
 construireTuiles();
 rendre();
 
-/* ---- Navigation en croix : geste tactile, approximation du ressort de DECOR.md §6 ---- */
+/* ---- Navigation en croix : geste tactile, approximation du ressort de README.md §5 ---- */
 let glisse = null;
 
 const clamp = (valeur, min, max) => Math.min(max, Math.max(min, valeur));

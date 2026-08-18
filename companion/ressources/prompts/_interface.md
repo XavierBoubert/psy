@@ -1,7 +1,7 @@
 Art charter for the INTERFACE of "Kokoro", the companion app — the panels laid on the world.
 Written in English on purpose: image models follow English prompts more literally.
 This charter is prefixed to every screen prompt. It describes the SKIN of the interface ONLY.
-The clinical rationale for every rule below is in ../INTERFACE.md §4 — do not restate it, keep this file to what the model must draw.
+The clinical rationale for every rule below is in ../../README.md §5 — do not restate it, keep this file to what the model must draw.
 
 WHAT IS BEING PRODUCED — read this first
 - ONE phone screen, portrait, seen flat and straight on, filling the whole image EDGE TO EDGE.

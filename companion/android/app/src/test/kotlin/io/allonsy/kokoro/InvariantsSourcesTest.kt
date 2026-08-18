@@ -33,7 +33,7 @@ class InvariantsSourcesTest {
     }
 
     // Xavier, 18/08/2026 : la scène de crise du monde est la seule à porter le personnage, et la notification l'affiche
-    // telle quelle (CORPS.md §10.2). Aucune surface de crise n'en dessine un elle-même.
+    // telle quelle (companion/README.md §6). Aucune surface de crise n'en dessine un elle-même.
     @Test
     fun `aucun personnage dessine par une surface de crise`() {
         val personnages = listOf("CorpsKokoro(", "Locuteur(", "Habitant(", "BrasDeLHabitant(")

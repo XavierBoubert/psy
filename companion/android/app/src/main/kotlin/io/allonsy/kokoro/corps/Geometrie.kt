@@ -18,7 +18,7 @@ const val BAS_PIEDS = 188.938f
 
 const val HAUTEUR_PERSONNAGE = BAS_PIEDS - SOMMET_TETE
 
-// 🔴 hauteurPersonnage est celle du personnage, jamais de la vue (écart de 11 %, PRESENCE.md §1.4)
+// 🔴 hauteurPersonnage est celle du personnage, jamais de la vue (écart de 11 %, companion/README.md §6)
 fun unitePour(hauteurPersonnage: Dp): Dp = hauteurPersonnage / HAUTEUR_PERSONNAGE
 
 fun cadrePour(hauteurPersonnage: Dp): DpSize = with(unitePour(hauteurPersonnage)) {
@@ -273,7 +273,7 @@ private const val CONTROLE_SOURIRE = 4.6f
 val BOUCHE_ARC =
     Trace("bouche-arc", arcSymetrique(DEMI_SOURIRE, EXTREMITES_SOURIRE, CONTROLE_SOURIRE))
 
-// ⭐ contrairement à chaleureux, ne réagit à rien : expression neutre du quotidien (PRESENCE.md §3)
+// ⭐ contrairement à chaleureux, ne réagit à rien : expression neutre du quotidien (companion/README.md §6)
 val BOUCHE_SEMI = Trace(
     nom = "bouche-semi",
     forme = arcSymetrique(
@@ -301,7 +301,7 @@ const val AXE = 119.959189f
 val EPAULE_GAUCHE = Ancre(80.634638f, 111.095240f)
 val EPAULE_DROITE = Ancre(159.283740f, 111.095252f)
 
-// ⭐ pas une main (CORPS.md §2) — sert seulement à dériver un angle (lecture), jamais dessiné
+// ⭐ pas une main (companion/README.md §6) — sert seulement à dériver un angle (lecture), jamais dessiné
 val BOUT_DU_BRAS = Ancre(64.254500f, 158.603500f)
 
 const val BAS_DE_LA_TETE = 90.845f
@@ -311,7 +311,7 @@ val CENTRE_VENTRE = Ancre(119.783517f, 137.708595f)
 
 val PIVOT_RESPIRATION = Ancre(AXE, 169.425f)
 
-// 🔴 milieu des deux épaules ; seule la posture accoude l'utilise, la tête ne bouge pas ailleurs (CORPS.md §9)
+// 🔴 milieu des deux épaules ; seule la posture accoude l'utilise, la tête ne bouge pas ailleurs (companion/README.md §6)
 val PIVOT_TETE = Ancre(AXE, EPAULE_GAUCHE.y)
 
 val PIVOT_RACINE = Ancre(AXE, HAUTEUR_VUE / 2f)
@@ -332,7 +332,7 @@ data class PoseMembre(
         get() = translation(decalage.x, decalage.y).sous(rotationAutour(angle, pivot))
 }
 
-// 🔴 étirement/glissement, jamais une rotation, sinon la tête sortirait de la vue de face (CORPS.md §2) — VolInvariantsTest revérifie à chaque build
+// 🔴 étirement/glissement, jamais une rotation, sinon la tête sortirait de la vue de face (companion/README.md §6) — VolInvariantsTest revérifie à chaque build
 data class PoseTronc(
     val torse: Transformation = Transformation(),
     val kanji: Transformation = Transformation(),

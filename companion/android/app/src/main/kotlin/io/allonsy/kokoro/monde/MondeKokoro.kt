@@ -58,7 +58,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-// Amorti critique (jamais d'oscillation) : 120 pose la caméra en ~600 ms, au tempo de CORPS.md §5.
+// Amorti critique (jamais d'oscillation) : 120 pose la caméra en ~600 ms, au tempo de companion/README.md §6.
 private const val RAIDEUR = 120f
 
 private const val ELAN_MAX = 6f

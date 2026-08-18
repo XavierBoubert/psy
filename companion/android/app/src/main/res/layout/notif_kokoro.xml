@@ -17,7 +17,7 @@
   le texte se lit sur la carte du système.
 
   🔴 `notif_texte` est masquée par défaut : la notification d'accès à la crise n'a **aucune ligne de
-  corps**, décision du 15/08/2026 (`INTERFACE.md` §6.2). **Une ligne s'affiche parce qu'un appelant
+  corps**, décision du 15/08/2026 (`companion/README.md` §2). **Une ligne s'affiche parce qu'un appelant
   la demande, jamais parce qu'un gabarit la prévoit.**
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"

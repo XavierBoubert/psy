@@ -47,7 +47,7 @@ const val OUVERTURE_AVANCEE = OUVERTURE_MINIMALE / 2f
 // Dérivée du dessin (atan2), pas choisie — seule valeur du jeu à dépasser OUVERTURE_HORIZONTALE, volontairement.
 const val OUVERTURE_MAIN_AU_MENTON = -139.217f
 
-// Seule dérogation à l'axe non-incliné (CORPS.md §2) — bornée, sinon ce serait une pose à interpréter.
+// Seule dérogation à l'axe non-incliné (companion/README.md §6) — bornée, sinon ce serait une pose à interpréter.
 const val INCLINAISON_TETE = -6f
 
 const val INCLINAISON_TETE_MAX = 10f

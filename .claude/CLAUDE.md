@@ -119,7 +119,7 @@ Depuis la racine, **scopés par rôle** ; les chemins sont résolus par rapport 
 | Répertoire | Objet |
 |---|---|
 | [`psy/`](../psy/README.md) | **Claude Psy** — `docs/` *(protocoles, corpus, références, gabarits)* · `outputs/dossier/` *(la mémoire longitudinale)* · `scripts/` · 🔴 [`DOSSIER.md`](../psy/DOSSIER.md) |
-| [`companion/`](../companion/README.md) | **Kokoro** — `android/` *(le code)* · `inputs/` *(ce que le psy lui donne)* · `outputs/` *(ce qu'il produit)* · 🔴 [`companion/PROGRAMME.md`](../companion/PROGRAMME.md) · `CORPS.md` `DECOR.md` `INTERFACE.md` |
+| [`companion/`](../companion/README.md) | **Kokoro** — `android/` *(le code)* · `inputs/` *(ce que le psy lui donne)* · `outputs/` *(ce qu'il produit)* · 🔴 [`companion/PROGRAMME.md`](../companion/PROGRAMME.md) *(normatif)* |
 | [`superviseur/`](../superviseur/README.md) | **Claude Superviseur** — `outputs/`, **hors `dossier/`** |
 | [`patient/`](../patient/README.md) | **Xavier** — `ressources/`, ses documents source. 🔴 **`ressources/originales/` est une archive : jamais une entrée** |
 | [`aidant/`](../aidant/README.md) | **Chourouk** — `ressources/fiche-chourouk.md`, la seule chose écrite qu'elle reçoit |

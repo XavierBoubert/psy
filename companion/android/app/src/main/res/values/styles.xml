@@ -9,7 +9,7 @@
       thème de la notification — poser `#383838` en dur rendait le texte illisible dès que le
       volet passait au sombre, ce qui était le cas sur l'appareil de Xavier.
 
-      ⭐ **Varela Round est la seule chose qu'on ajoute** — la police de l'app (`INTERFACE.md` §4.3).
+      ⭐ **Varela Round est la seule chose qu'on ajoute** — la police de l'app (`companion/README.md` §5).
       La couleur, elle, ne nous appartient pas.
     -->
     <style name="TexteNotifTitre" parent="TextAppearance.Compat.Notification.Title">

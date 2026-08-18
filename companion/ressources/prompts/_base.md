@@ -1,6 +1,6 @@
 Character design charter for "Kokoro", the companion character of a calm mental-health app.
 Written in English on purpose: image models follow English prompts more literally.
-The clinical rationale for every rule below is in ../CORPS.md — do not restate it here, keep this file to what the model must draw.
+The clinical rationale for every rule below is in ../../README.md §6 — do not restate it here, keep this file to what the model must draw.
 This charter is prefixed to every variant prompt. Change it and every future plate changes.
 
 STYLE — non negotiable

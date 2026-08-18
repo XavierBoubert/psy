@@ -2,7 +2,7 @@ package io.allonsy.kokoro.corps
 
 import androidx.compose.ui.graphics.Color
 
-// ⭐ v2 sans accent : plus de plaque de poitrine, tout est monochrome (CORPS.md §4)
+// ⭐ v2 sans accent : plus de plaque de poitrine, tout est monochrome (companion/README.md §6)
 data class PaletteCorps(
     val fond: Color,
     val trait: Color,

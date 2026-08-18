@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   L'icône de Kokoro sur l'écran d'accueil, dans le tiroir d'applications, dans les récents et sur
-  l'écran de démarrage. 🔴 **Elle ouvre le monde** — `INTERFACE.md` D10.
+  l'écran de démarrage. 🔴 **Elle ouvre le monde** — `companion/README.md` §2.
 
   🔴 **Le logo est dans la couche avant, pas dans le fond, et ce n'est pas un détail.** L'écran de
   démarrage d'Android 12+ ne reprend que **l'avant** de l'icône adaptative : un logo posé au fond y

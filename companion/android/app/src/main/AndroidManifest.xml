@@ -10,7 +10,7 @@
     <!--
         🔴 `android:icon` est posé sur l'application, pas sur une activité : c'est lui qui donne
         l'icône du lanceur, celle des récents, celle de l'écran de démarrage et celle des réglages
-        d'Android. Une seule déclaration, quatre endroits — `INTERFACE.md` D10.
+        d'Android. Une seule déclaration, quatre endroits — `companion/README.md` §7.
     -->
     <application
         android:allowBackup="false"
@@ -43,7 +43,7 @@
 
         <!--
             🔴 D10 — l'icône du lanceur ouvre le monde. C'est lui l'interface principale de l'app
-            depuis companion/INTERFACE.md v2 ; réglages et check-in sont des panneaux internes, pas des Activity.
+            depuis companion/README.md §2 ; réglages et check-in sont des panneaux internes, pas des Activity.
         -->
         <activity
             android:name=".monde.MondeActivity"
