@@ -1,7 +1,7 @@
 {
-  "version": 1,
-  "publie_le": "2026-08-12",
-  "supervision": null,
+  "version": 4,
+  "publie_le": "2026-08-18",
+  "supervision": "2026-08-18-programme-v4",
   "etapes": [
     {
       "id": "check-in",
@@ -37,6 +37,35 @@
       "ecran": "phrase-soignant"
     },
     {
+      "id": "fiche-chourouk",
+      "titre": "Pour Chourouk — quand je ne peux plus parler",
+      "type": "fiche",
+      "rubrique": "crise",
+      "quand": "au_besoin",
+      "document": "fiche-chourouk",
+      "montrable": true
+    },
+    {
+      "id": "ppc-palier-1",
+      "titre": "Masque tenu a la main",
+      "type": "exercice",
+      "rubrique": "therapie",
+      "quand": "aujourdhui",
+      "duree_minutes": 5,
+      "consigne": "Masque contre le visage, tenu a la main. Sans sangles, sans machine, en journee, pendant que tu fais autre chose. Le minuteur part avant que tu le poses.",
+      "minuteur_secondes": 300,
+      "sortie_libre": true
+    },
+    {
+      "id": "ppc-les-paliers",
+      "titre": "Les paliers du masque",
+      "type": "fiche",
+      "rubrique": "therapie",
+      "quand": "au_besoin",
+      "document": "ppc-les-paliers",
+      "montrable": false
+    },
+    {
       "id": "ppc-releve",
       "titre": "Demander le relevé de télésuivi",
       "type": "demarche",
@@ -45,28 +74,12 @@
       "detail": "Link Sommeil, sur les 3 derniers mois : heures par nuit, nombre de nuits utilisées, fuites, IAH résiduel. Des chiffres, pas une impression."
     },
     {
-      "id": "ppc-origine-fuite",
-      "titre": "Faire trancher : fuite au masque, ou à la bouche ?",
-      "type": "demarche",
-      "rubrique": "therapie",
-      "quand": "sans_date",
-      "detail": "Le télésuivi distingue les deux. Cette réponse commande le choix d'interface, elle passe avant lui. Réponse écrite du prestataire."
-    },
-    {
-      "id": "ppc-interfaces",
-      "titre": "Demander un essai de plusieurs interfaces",
-      "type": "demarche",
-      "rubrique": "therapie",
-      "quand": "sans_date",
-      "detail": "Après la réponse sur l'origine de la fuite. Si la fuite est au masque, le narinaire est autorisé par la prescription. Au moins deux interfaces à essayer à domicile."
-    },
-    {
       "id": "ppc-prise-en-charge",
       "titre": "Demander où en est la prise en charge",
       "type": "demarche",
       "rubrique": "therapie",
       "quand": "sans_date",
-      "detail": "Trois mois après son renouvellement. Le seuil qui conditionne le remboursement se demande au prestataire, il ne se suppose pas."
+      "detail": "Link Sommeil : le masque bouche + nez est-il pris en charge, et jusqu'a quand ? Ou en est le renouvellement trois mois apres. Reponse ecrite."
     },
     {
       "id": "ppc-consultation-roisman",

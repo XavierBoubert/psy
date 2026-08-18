@@ -14,13 +14,18 @@
 
 **Le palier 0 est logistique, et il n'est pas bouclé :**
 
-- [ ] Récupérer le **relevé de télésuivi** auprès de Link Sommeil
-- [ ] Faire trancher l'**origine de la fuite — masque ou bouche ?** Elle commande le choix d'interface
-- [ ] Essayer plusieurs interfaces · vérifier la prise en charge
+- [x] **Relevé de télésuivi — vide pour le moment.** Aucun usage à relever : **le relevé ne tranchera rien tant que `ppc_minutes` est à 0.** À redemander à Link Sommeil quand du port sera enregistré
+- [x] **Origine de la fuite — la question est court-circuitée** : masque changé pour une interface **bouche + nez**
+- [x] **Le nouveau masque bouche + nez est entré au protocole** — palier 1 démarré le **18/08/2026**, exercice publié dans Kokoro
+- [ ] **Vérifier la prise en charge du nouveau masque** — étape `ppc-prise-en-charge`, réponse écrite de Link Sommeil
 - [ ] Demander une **consultation de reprise** au Dr Roisman
 - [ ] **Envoyer l'email au Dr Isorni** — rédigé, non envoyé. **Seul praticien encore dans l'ignorance des deux diagnostics somatiques**
 
-⭐ **Ces six démarches sont déjà des étapes du programme.** Kokoro les met sous la main ; **il ne les passe pas — ce sont des appels et des emails.**
+✅ **La désensibilisation a repris le 18/08/2026, au palier 1** — masque tenu à la main, 5 min en journée *(séance du 18/08 ; l'objection sur le contact facial accru du bouche + nez est conservée entière au compte-rendu)*.
+
+🔴 **Le point qui commande maintenant : le premier `ppc_minutes` non nul.** Tant qu'il n'existe pas, le chantier n'a produit aucune donnée — et **le relevé de télésuivi ne peut rien trancher**, ce qui est la raison pour laquelle il a cessé d'être bloquant.
+
+⭐ **Ces démarches sont déjà des étapes du programme.** Kokoro les met sous la main ; **il ne les passe pas — ce sont des appels et des emails.**
 
 🔴 **`ppc_minutes` est l'indicateur qui tranche.** Tant qu'il est à 0, aucune quantité de doctrine produite ne compte comme un progrès.
 
@@ -55,22 +60,21 @@
 
 ### Étape 5 — Kokoro 🏗️ *ouverte, priorité accélérée*
 
-**✅ K0 → K4 franchis** : poste de travail · full-screen intent levé · **noyau de crise** *(mot-code envoyé pour de vrai, téléphone verrouillé, essai fait à froid)* · **tension appliquée guidée sur repères externes** · **check-in quotidien sur le téléphone**.
+**✅ K0 → K4, K7 franchis** : poste de travail · full-screen intent levé · **noyau de crise** *(mot-code envoyé pour de vrai, téléphone verrouillé, essai fait à froid)* · **tension appliquée guidée sur repères externes** · **check-in quotidien sur le téléphone** · La présence de Kokoro et l'UI.
 
 | Jalon | Objet | Critère de fin |
 |---|---|---|
-| 🔴 **K5** *(en cours)* | **Le programme et la bibliothèque** — Kokoro lit `programme.json` + `bibliotheque/`, affiche par rubrique, écrit `reponses/`. ✅ Moitié PC écrite et vérifiée ; **Kokoro ne lit pas encore** | Une étape publiée depuis le PC apparaît sur le téléphone, est faite par Xavier, et sa réponse revient au dossier — **valide au format, sans intervention manuelle** |
+| 🔴 **K5** *(en cours)* | **Le programme et la bibliothèque** — Kokoro lit `programme.json` + `bibliotheque/`, affiche par rubrique, écrit `reponses/`. ✅ Moitié PC écrite et vérifiée ; ✅ **Kokoro lit `programme.json`, filtre les fiches et confie le PDF au lecteur du téléphone** *(`programme/Bibliotheque.kt`, `monde/LecteurPdf.kt`)* ; ⏳ **reste `reponses/`** — aucune réponse d'étape n'est encore remontée | Une étape publiée depuis le PC apparaît sur le téléphone, est faite par Xavier, et sa réponse revient au dossier — **valide au format, sans intervention manuelle** |
 | 🔜 **K6** | **La séance à deux** — type `seance-duo`, **mode entraînement** obligatoire, **signal d'arrêt** rappelé en permanence, **critères d'arrêt à un tap**. ⭐ **Le jalon qui ouvre les thérapies impossibles en solo** | Un entraînement joué en entier par Chourouk, puis une séance réelle menée à son terme **ou arrêtée sur le signal** — l'un et l'autre valent |
-| ⏸️ **K7** | **La présence** — foreground service + overlay · **le tracé vectoriel du corps** *(les planches sont des recherches ; aucune image du personnage n'entre dans l'APK)* · **écran de diagnostic One UI** | L'overlay survit 72 h sans être tué par One UI |
 
 - [ ] **Publier les échelles** comme questionnaires, rubrique `bilan` — **jamais le PHQ-9**
 - [ ] **Publier les démarches du palier 0 PPC**
-- [ ] **Tracer la pose `allonge`** de l'écran vasovagal — **la seule qui manque, et la seule qui soit une structure externe et non un décor**
-- [ ] **Faire confirmer par Xavier la dérogation « quatre WebP dans l'APK »** *([`companion/DECOR.md`](companion/DECOR.md) §2)*
 
 ### Étape 6 — Stabilisation à deux, puis réouverture de l'EMDR ⏸️
 
-- [ ] **Demander à Chourouk si elle accepte le rôle d'aidant** *(arbitrage M)* et **convenir le signal d'arrêt** *(arbitrage N)* — **à froid, avant d'écrire la moindre séquence**
+- [x] ✅ **Chourouk accepte le rôle d'aidant** et **le signal d'arrêt est convenu** — les deux préalables à froid sont levés
+- [x] ✅ **Le signal d'arrêt est le « non » de la main** — consigné dans [`companion/PROGRAMME.md`](companion/PROGRAMME.md) §3, `signal_arret` obligatoire, recopié tel quel dans chaque `seance-duo`. ⚠️ **Conséquence câblée** : aucune consigne de `sequence` ne demande de réponse gestuelle de la main
+- [ ] **Porter le geste côté Chourouk** — il n'existe aujourd'hui que dans le format ; il lui est dit oralement tant que la fiche n'est pas étendue *(voir Transverse)*
 - [ ] **Écrire la première séance à deux : la stabilisation non visuelle** *(arbitrage O)* — kit d'auto-apaisement corporel et sensoriel
 - [ ] **Écrire la stimulation bilatérale comme `seance-duo`** — ⭐ **l'aidant fait le geste, Kokoro tient la cadence.** Il n'y a **pas d'instrument à développer** : ce qui reste est du contenu clinique. ⚠️ **Point dur de format à traiter d'abord** — `sequence` ne sait pas exprimer une **répétition en séries** *([`companion/PROGRAMME.md`](companion/PROGRAMME.md) §3)*
 - [ ] Réouverture de l'EMDR **sous les critères de [`psy/README.md`](psy/README.md) §6**, après avis du Dr Isorni
@@ -80,7 +84,7 @@
 
 - [ ] Récupérer et indexer les **3 corpus prioritaires restants** : TCC alimentaire + intéroception · TCC de l'agoraphobie · recommandations HAS. ⭐ **Le deuxième sert deux fois** : la désensibilisation à la PPC *est* une exposition graduée
 - [ ] Évaluer **ACT / défusion cognitive** — ❓ **vérifier la compatibilité avec l'aphantasie**
-- [ ] Étendre [`aidant/ressources/fiche-chourouk.md`](aidant/ressources/fiche-chourouk.md) au rôle d'**aidant** — aujourd'hui elle n'explique que les shutdowns
+- [ ] Étendre [`aidant/ressources/fiche-chourouk.md`](aidant/ressources/fiche-chourouk.md) au rôle d'**aidant** — aujourd'hui elle n'explique que les shutdowns et **déclare explicitement ne lui attribuer aucun rôle**. 🔴 **Chourouk ayant accepté, ce cadre est périmé et la fiche est à réécrire, pas à compléter** — elle doit porter le **« non » de la main**, le mode entraînement et les critères d'arrêt
 - [ ] **Schémas Zod des deux formats normatifs** dans les scripts — `psy-publish` et `psy-sync` valident aujourd'hui **à la main** ce que [`psy/DOSSIER.md`](psy/DOSSIER.md) et [`companion/PROGRAMME.md`](companion/PROGRAMME.md) définissent
 
 ---
@@ -89,10 +93,9 @@
 
 | # | Question | Recommandation |
 |---|---|---|
-| **K** | **Psychologue en présentiel** — dette assumée. L'aidant couvre **la présence et l'exécution d'un déroulé** ; **elle ne couvre pas le jugement clinique en situation.** *Un clinicien reste-t-il nécessaire pour l'EMDR encadré et pour valider l'acquisition de la tension appliquée ?* | ⚠️ **Oui, pour ces deux-là.** Le reste — stabilisation, exposition accompagnée — passe par la séance à deux. **La dette se réduit, elle ne disparaît pas** |
-| **M** | 🔴 **Chourouk accepte-t-elle le rôle d'aidant ?** Tenir le téléphone d'une séance thérapeutique est **un engagement d'une autre nature** que recevoir un mot-code | ⭐ **À lui demander explicitement, à froid, avant d'écrire la moindre séquence.** Elle doit savoir ce que ça demande, et qu'elle peut refuser à tout moment **sans justification** |
-| **N** | **Le signal d'arrêt de Xavier** — le geste par lequel il arrête une séance à deux **sans parler** | ⭐ **À convenir à froid, avec Chourouk, avant la première séance.** Un geste franc, impossible à confondre avec autre chose. **Sans lui, aucune séance à deux ne démarre** — c'est un champ obligatoire du format |
 | **O** | **Quelle est la première séance à deux ?** | ⭐ **La stabilisation non visuelle** (ancrage corporel et sensoriel). Elle ne touche aucun matériel traumatique, et **c'est la brique qui manque** |
+
+⭐ **Le clinicien du dispositif est Claude Psy** : il délègue **le suivi à Kokoro** et **les séances à deux à Chourouk**. La question du psychologue en présentiel n'est plus un arbitrage ouvert.
 
 ---
 

@@ -1,13 +1,14 @@
-import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { convertirEnPdf } from './md2pdf.ts';
 
 const PROJECT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const SOURCE = resolve(PROJECT_ROOT, 'companion/inputs/programme.json');
 const BIBLIOTHEQUE = resolve(PROJECT_ROOT, 'companion/inputs/bibliotheque');
 const SUPERVISIONS = resolve(PROJECT_ROOT, 'superviseur/outputs');
 
-const USAGE = 'Usage: psy-publish <dossier-de-transit-drive>';
+const USAGE = 'Usage: psy-publish <dossier-de-transit-drive> [--seance] [--refaire]';
 
 const TYPES = ['ecran', 'exercice', 'questionnaire', 'demarche', 'fiche', 'seance-duo'] as const;
 const POUR = ['aide', 'patient'] as const;
@@ -275,6 +276,8 @@ const relireSupervision = async (parsed: unknown): Promise<ReadonlyArray<string>
 type Fiche = {
   readonly id: string;
   readonly contenu: string;
+  readonly source: string;
+  readonly modifieLe: number;
 };
 
 const lireBibliotheque = async (): Promise<ReadonlyArray<Fiche>> => {
@@ -284,10 +287,16 @@ const lireBibliotheque = async (): Promise<ReadonlyArray<Fiche>> => {
   const fichiers = noms.filter((nom) => nom.endsWith('.md') && nom !== 'README.md');
 
   return Promise.all(
-    fichiers.map(async (nom) => ({
-      id: nom.replace(/\.md$/, ''),
-      contenu: await readFile(join(BIBLIOTHEQUE, nom), 'utf8'),
-    })),
+    fichiers.map(async (nom) => {
+      const source = join(BIBLIOTHEQUE, nom);
+
+      return {
+        id: nom.replace(/\.md$/, ''),
+        contenu: await readFile(source, 'utf8'),
+        source,
+        modifieLe: (await stat(source)).mtimeMs,
+      };
+    }),
   );
 };
 
@@ -315,17 +324,124 @@ const relireBibliotheque = (parsed: unknown, fiches: ReadonlyArray<Fiche>): Read
   return [...manquants, ...fautives];
 };
 
-const publier = async (cible: string, brut: string, fiches: ReadonlyArray<Fiche>): Promise<void> => {
-  await mkdir(cible, { recursive: true });
+// La documentation part a tout moment ; les etapes qui font agir se decident avec Xavier, en seance.
+const FONT_AGIR = TYPES.filter((type) => type !== 'fiche');
+
+const canonique = (valeur: unknown): string => {
+  if (Array.isArray(valeur)) return `[${valeur.map(canonique).join(',')}]`;
+
+  if (isRecord(valeur)) {
+    return `{${Object.keys(valeur)
+      .sort()
+      .map((cle) => `${JSON.stringify(cle)}:${canonique(valeur[cle])}`)
+      .join(',')}}`;
+  }
+
+  return JSON.stringify(valeur) ?? 'null';
+};
+
+const etapesQuiFontAgir = (parsed: unknown): ReadonlyMap<string, string> => {
+  if (!isRecord(parsed) || !Array.isArray(parsed['etapes'])) return new Map();
+
+  const retenues = parsed['etapes'].filter(
+    (etape: unknown) => isRecord(etape) && FONT_AGIR.some((type) => type === etape['type']) && typeof etape['id'] === 'string',
+  );
+
+  return new Map(retenues.map((etape: Record<string, unknown>) => [String(etape['id']), canonique(etape)]));
+};
+
+const lireJson = async (chemin: string): Promise<unknown> => {
+  const brut = await readFile(chemin, 'utf8').catch(() => null);
+  if (brut === null) return null;
+
+  try {
+    return JSON.parse(brut);
+  } catch {
+    return null;
+  }
+};
+
+const relireHorsSeance = async (parsed: unknown, cible: string): Promise<ReadonlyArray<string>> => {
+  const publiees = etapesQuiFontAgir(await lireJson(join(cible, 'programme.json')));
+  const aPublier = etapesQuiFontAgir(parsed);
+
+  const touchees = [
+    ...[...aPublier].filter(([id, forme]) => publiees.get(id) !== forme).map(([id]) => id),
+    ...[...publiees.keys()].filter((id) => !aPublier.has(id)),
+  ];
+
+  return touchees.map(
+    (id) => `${id} — etape qui fait agir, nouvelle ou modifiee : elle se decide avec Xavier, a la cloture d'une seance (--seance)`,
+  );
+};
+
+type Publication = {
+  readonly converties: ReadonlyArray<string>;
+  readonly reprises: number;
+  readonly retirees: ReadonlyArray<string>;
+};
+
+const estAJour = async (fiche: Fiche, destination: string): Promise<boolean> => {
+  const pdf = await stat(destination).catch(() => null);
+
+  return pdf !== null && pdf.mtimeMs >= fiche.modifieLe;
+};
+
+// Le Markdown ne part pas : il passe la supervision au depot, et Kokoro ne recoit que le PDF.
+const publier = async (
+  cible: string,
+  brut: string,
+  fiches: ReadonlyArray<Fiche>,
+  refaireTout: boolean,
+): Promise<Publication> => {
+  const dossier = join(cible, 'bibliotheque');
+  await mkdir(dossier, { recursive: true });
+
+  const attendus = fiches.map((fiche) => `${fiche.id}.pdf`);
+  const presents = await readdir(dossier).catch(() => []);
+  const retirees = presents.filter((nom) => !attendus.some((attendu) => attendu === nom));
+  await Promise.all(retirees.map((nom) => rm(join(dossier, nom), { force: true })));
+
+  const cibles = await Promise.all(
+    fiches.map(async (fiche) => {
+      const destination = join(dossier, `${fiche.id}.pdf`);
+
+      return { fiche, destination, aJour: !refaireTout && (await estAJour(fiche, destination)) };
+    }),
+  );
+
+  const aConvertir = cibles.filter(({ aJour }) => !aJour);
+  await convertirEnPdf(aConvertir.map(({ fiche, destination }) => ({ sourcePath: fiche.source, destinationPath: destination })));
+
   await writeFile(join(cible, 'programme.json'), brut, 'utf8');
 
-  await mkdir(join(cible, 'bibliotheque'), { recursive: true });
-  await Promise.all(fiches.map((fiche) => writeFile(join(cible, 'bibliotheque', `${fiche.id}.md`), fiche.contenu, 'utf8')));
+  return {
+    converties: aConvertir.map(({ fiche }) => fiche.id),
+    reprises: cibles.length - aConvertir.length,
+    retirees,
+  };
+};
+
+type Options = {
+  readonly transit: string;
+  readonly seance: boolean;
+  readonly refaireTout: boolean;
+};
+
+const lireOptions = (argv: readonly string[]): Options => {
+  const transit = argv.find((argument) => !argument.startsWith('--'));
+  if (!transit) throw new Error(USAGE);
+
+  return {
+    transit,
+    seance: argv.some((argument) => argument === '--seance'),
+    refaireTout: argv.some((argument) => argument === '--refaire'),
+  };
 };
 
 const main = async (): Promise<void> => {
-  const [transit] = process.argv.slice(2);
-  if (!transit) throw new Error(USAGE);
+  const options = lireOptions(process.argv.slice(2));
+  const cible = resolve(PROJECT_ROOT, options.transit);
 
   const brut = await readFile(SOURCE, 'utf8');
   const parsed: unknown = JSON.parse(brut);
@@ -335,6 +451,7 @@ const main = async (): Promise<void> => {
     ...relireProgramme(parsed),
     ...(await relireSupervision(parsed)),
     ...relireBibliotheque(parsed, fiches),
+    ...(options.seance ? [] : await relireHorsSeance(parsed, cible)),
   ];
 
   if (problemes.length > 0) {
@@ -347,16 +464,20 @@ const main = async (): Promise<void> => {
     return;
   }
 
-  const cible = resolve(PROJECT_ROOT, transit);
-  await publier(cible, brut, fiches);
+  const publication = await publier(cible, brut, fiches, options.refaireTout);
 
   const etapes = isRecord(parsed) && Array.isArray(parsed['etapes']) ? parsed['etapes'].length : 0;
   const version = isRecord(parsed) ? String(parsed['version']) : '?';
   const supervision = isRecord(parsed) ? String(parsed['supervision']) : '?';
 
   console.log(`publie   programme.json — version ${version}, ${etapes} etapes`);
-  console.log(`         bibliotheque — ${fiches.length} fiche(s)`);
+  console.log(
+    `         bibliotheque — ${fiches.length} fiche(s) en PDF : ${publication.converties.length} converties, ${publication.reprises} inchangees`,
+  );
+  publication.converties.forEach((id) => console.log(`         converti ${id}.pdf`));
+  publication.retirees.forEach((nom) => console.log(`         retire   ${nom}`));
   console.log(`vise par ${supervision}`);
+  console.log(`portee   ${options.seance ? 'seance — tout le programme' : 'hors seance — documentation seule'}`);
   console.log(`vers     ${cible}`);
 };
 

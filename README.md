@@ -86,7 +86,7 @@ Une erreur interne se corrige. Une erreur qui **sort** atteint quelqu'un.
 | Sens | Ce qui transite | Auteur unique | Versé dans |
 |---|---|---|---|
 | **PC → Kokoro** | `programme.json` — la thérapie du moment | Claude Psy | *(source : `companion/inputs/`)* |
-| **PC → Kokoro** | `bibliotheque/*.md` — la documentation accessible à Xavier | Claude Psy | *(source : `companion/inputs/bibliotheque/`)* |
+| **PC → Kokoro** | `bibliotheque/*.pdf` — la documentation accessible à Xavier. ⭐ **Le Markdown ne part pas** : `psy:publish` le convertit en PDF, et Kokoro le confie au lecteur du téléphone | Claude Psy | *(source : `companion/inputs/bibliotheque/*.md`)* |
 | **Kokoro → PC** | `journal/AAAA-MM-JJ.json` — les check-ins | Kokoro | `companion/outputs/journal/` |
 | **Kokoro → PC** | `reponses/AAAA-MM-JJ-HHMM-<id>.json` — ce qui a été fait | Kokoro | `companion/outputs/reponses/` |
 
@@ -166,7 +166,7 @@ Tous s'exécutent depuis la racine, et **les arguments de chemin sont résolus p
 
 | Commande | Source | Objet |
 |---|---|---|
-| `npm run psy:publish` | `psy/scripts/psy-publish.ts` | 🔴 **Publie la thérapie et la bibliothèque vers Kokoro.** Valide le programme et chaque fiche, **vérifie la supervision**, et **refuse la publication entière** au moindre manquement |
+| `npm run psy:publish` | `psy/scripts/psy-publish.ts` | 🔴 **Publie la thérapie et la bibliothèque vers Kokoro.** Valide le programme et chaque fiche, **vérifie la supervision**, **convertit chaque fiche en PDF** *(seules celles qui ont changé)*, et **refuse la publication entière** au moindre manquement. ⭐ **Sans `--seance`, une étape qui fait agir nouvelle ou modifiée est refusée** — seule la documentation part hors séance. `--refaire` reconvertit toute la bibliothèque |
 | `npm run psy:sync` | `psy/scripts/psy-sync.ts` | ⭐ **Verse au dépôt tout ce que Kokoro a écrit** — `journal/` et `reponses/`. **N'écrase jamais un fichier existant**, valide chaque fichier, signale tout nom hors convention |
 | `npm run psy:pdf2md` | `psy/scripts/psy-pdf2md.ts` | Convertit un PDF en Markdown. `-- <source.pdf> <destination.md>` |
 | `npm run psy:docx2md` | `psy/scripts/psy-docx2md.ts` | Convertit un DOCX en Markdown. `-- <source.docx> <destination.md>` |

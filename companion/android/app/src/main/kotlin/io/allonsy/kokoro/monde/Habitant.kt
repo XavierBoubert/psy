@@ -158,7 +158,7 @@ private fun placeOrdinaire(ecran: Ecran, sejour: Sejour): Place? = when (ecran) 
 
     Ecran.DOCUMENTATION -> Place(
         perchoir = Perchoir.DOCUMENTATION,
-        cadrage = Cadrage.AU_CENTRE,
+        cadrage = Cadrage.A_DROITE,
         posture = Posture.Lecture,
         balayage = Balayage(),
     )

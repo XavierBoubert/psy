@@ -44,6 +44,10 @@ import io.allonsy.kokoro.journal.Champ
 import io.allonsy.kokoro.journal.Checkin
 import io.allonsy.kokoro.journal.ContenuJournal
 import io.allonsy.kokoro.journal.EtapeJournal
+import io.allonsy.kokoro.programme.BIBLIOTHEQUE_ABSENTE
+import io.allonsy.kokoro.programme.Bibliotheque
+import io.allonsy.kokoro.programme.Fiche
+import io.allonsy.kokoro.programme.Support
 import io.allonsy.kokoro.reglages.EtatAutorisations
 import io.allonsy.kokoro.reglages.PARALLAXE_PAR_DEFAUT
 import io.allonsy.kokoro.reglages.PanneauReglages
@@ -70,6 +74,8 @@ fun MondeKokoro(
     donneesReglages: DonneesReglages,
     donneesCheckin: DonneesCheckin,
     modifier: Modifier = Modifier,
+    bibliotheque: Bibliotheque = BIBLIOTHEQUE_ABSENTE,
+    onPdf: (String) -> Unit = {},
     parallaxe: Parallaxe = PARALLAXE_PAR_DEFAUT,
     envoiEnCours: Boolean = false,
     accesPerdu: Boolean = false,
@@ -113,6 +119,14 @@ fun MondeKokoro(
             Fonction.PHRASE -> ouvrirPanneau(Contexte.Phrase)
             Fonction.CHECK_IN -> ouvrirPanneau(Contexte.Checkin)
             Fonction.MOT_CODE -> onFonction(fonction)
+        }
+    }
+
+    // Une fiche PDF quitte l'app : c'est le lecteur du téléphone qui l'affiche, jamais Kokoro.
+    val lireLaFiche: (Fiche) -> Unit = { fiche ->
+        when (val support = fiche.support) {
+            is Support.Texte -> ouvrirPanneau(Contexte.Lecture(fiche.titre, support.contenu))
+            is Support.Pdf -> onPdf(support.document)
         }
     }
 
@@ -186,6 +200,8 @@ fun MondeKokoro(
                         contactNom = contactNom,
                         envoiEnCours = envoiEnCours,
                         accesPerdu = accesPerdu,
+                        bibliotheque = bibliotheque,
+                        onFiche = lireLaFiche,
                         onOuvrir = ouvrirPanneau,
                         onFonction = agir,
                         onReglages = { ouvrirPanneau(Contexte.Reglages) },
@@ -261,6 +277,8 @@ private fun ContenuEcran(
     contactNom: String,
     envoiEnCours: Boolean,
     accesPerdu: Boolean,
+    bibliotheque: Bibliotheque,
+    onFiche: (Fiche) -> Unit,
     onOuvrir: (Contexte) -> Unit,
     onFonction: (Fonction) -> Unit,
     onReglages: () -> Unit,
@@ -275,12 +293,17 @@ private fun ContenuEcran(
             onOuvrir = { etape ->
                 when (val ouverture = etape.ouverture) {
                     is Ouverture.Ecran -> onFonction(ouverture.fonction)
-                    is Ouverture.Detail -> onOuvrir(Contexte.Demarche(etape))
+                    is Ouverture.Detail -> onOuvrir(Contexte.Lecture(etape.titre, ouverture.texte))
                 }
             },
         )
 
-        Ecran.DOCUMENTATION -> ContenuDocumentation(perchoirs = perchoirs)
+        Ecran.DOCUMENTATION -> ContenuDocumentation(
+            perchoirs = perchoirs,
+            bibliotheque = bibliotheque,
+            onFiche = onFiche,
+            fige = fige,
+        )
 
         Ecran.BILAN -> ContenuBilan(perchoirs = perchoirs)
 
@@ -333,10 +356,11 @@ private fun PanneauOuvert(
     ) {
         // contexte vient de affichee, pas de ouverte : ça garde le contenu affiché pendant la descente du panneau.
         when (contexte) {
-            is Contexte.Demarche -> {
-                val detail = (contexte.etape.ouverture as? Ouverture.Detail)?.texte ?: return@AnimatedVisibility
-                PanneauEtape(titre = contexte.etape.titre, detail = detail, onFermer = onFermer)
-            }
+            is Contexte.Lecture -> PanneauEtape(
+                titre = contexte.titre,
+                detail = contexte.texte,
+                onFermer = onFermer,
+            )
 
             Contexte.Reglages -> PanneauReglages(
                 autorisations = donneesReglages.autorisations,

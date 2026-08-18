@@ -21,12 +21,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.allonsy.kokoro.R
 import io.allonsy.kokoro.crise.PortesDeCrise
+import io.allonsy.kokoro.programme.Bibliotheque
+import io.allonsy.kokoro.programme.Fiche
+import io.allonsy.kokoro.programme.Quand
+import io.allonsy.kokoro.programme.Support
 import io.allonsy.kokoro.ui.BandeTitre
 import io.allonsy.kokoro.ui.BoutonEpais
 import io.allonsy.kokoro.ui.CadreVide
 import io.allonsy.kokoro.ui.Carte
 import io.allonsy.kokoro.ui.LocalPaletteKokoro
 import io.allonsy.kokoro.ui.Pancarte
+import io.allonsy.kokoro.ui.PictoDehors
 import io.allonsy.kokoro.ui.PanneauExtrude
 import io.allonsy.kokoro.ui.Teinte
 import io.allonsy.kokoro.ui.TypoKokoro
@@ -121,14 +126,14 @@ fun ContenuTherapie(
 @Composable
 private fun BandeDeSection(
     perchoirs: Perchoirs,
-    perchoir: Perchoir,
+    perchoir: Perchoir?,
     contenu: @Composable () -> Unit,
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 20.dp, bottom = 16.dp)
-            .perchoir(perchoirs, perchoir),
+            .then(if (perchoir == null) Modifier else Modifier.perchoir(perchoirs, perchoir)),
         contentAlignment = Alignment.CenterStart,
         content = { contenu() },
     )
@@ -146,15 +151,62 @@ private fun BandeDeTete(perchoirs: Perchoirs, perchoir: Perchoir) {
 }
 
 @Composable
-fun ContenuDocumentation(perchoirs: Perchoirs) {
+fun ContenuDocumentation(
+    perchoirs: Perchoirs,
+    bibliotheque: Bibliotheque,
+    onFiche: (Fiche) -> Unit,
+    fige: Boolean = false,
+) {
+    val palette = LocalPaletteKokoro.current
+    val fiches = bibliotheque.fiches
+
     EcranDeBord(
         titre = stringResource(R.string.monde_documentation_titre),
-        couleur = LocalPaletteKokoro.current.lavande,
-        defilant = false,
+        couleur = palette.lavande,
+        defilant = fiches.isNotEmpty(),
+        fige = fige,
     ) {
         BandeDeTete(perchoirs = perchoirs, perchoir = Perchoir.DOCUMENTATION)
-        CadreVide(texte = stringResource(R.string.monde_documentation_vide))
+
+        if (fiches.isEmpty()) {
+            CadreVide(texte = stringResource(R.string.monde_documentation_vide))
+            return@EcranDeBord
+        }
+
+        Quand.entries.forEach { quand ->
+            val duQuand = fiches.filter { it.quand == quand }
+            if (duQuand.isEmpty()) return@forEach
+
+            BandeDeSection(perchoirs = perchoirs, perchoir = null) {
+                Pancarte(
+                    texte = stringResource(libelleDe(quand)),
+                    couleur = palette.lavande,
+                    modifier = Modifier.padding(start = 2.dp),
+                )
+            }
+            duQuand.forEach { fiche ->
+                CarteDeFiche(fiche = fiche, onClic = { onFiche(fiche) })
+            }
+        }
     }
+}
+
+@Composable
+private fun CarteDeFiche(fiche: Fiche, onClic: () -> Unit) {
+    val pdf = fiche.support is Support.Pdf
+
+    Carte(
+        titre = fiche.titre,
+        picto = if (pdf) ({ PictoDehors() }) else null,
+        onClic = onClic,
+        modifier = Modifier.padding(bottom = ECART_CARTES),
+    )
+}
+
+private fun libelleDe(quand: Quand): Int = when (quand) {
+    Quand.AUJOURDHUI -> R.string.monde_quand_aujourdhui
+    Quand.AU_BESOIN -> R.string.monde_quand_au_besoin
+    Quand.SANS_DATE -> R.string.monde_quand_sans_date
 }
 
 @Composable

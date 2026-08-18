@@ -130,9 +130,11 @@ Renvoie `fait` ou rien. ⭐ **Pas encore fait n'est pas une donnée** : rien ne 
 Deux formes, exclusives l'une de l'autre :
 
 - **`texte`** — le contenu est dans le programme. Pour ce qui tient en quelques lignes.
-- **`document`** — l'identifiant d'un fichier de la **bibliothèque** *(§6)*, soit `bibliotheque/<document>.md`. Pour les fiches longues.
+- **`document`** — l'identifiant nu d'un document de la **bibliothèque** *(§6)*. Kokoro résout `bibliotheque/<document>.pdf` et **le confie au lecteur PDF du téléphone** — le **picto « dehors »** de la carte annonce la sortie de l'app. Pour les fiches longues.
 
 `montrable: true` affiche le texte en plein écran, lisible par quelqu'un d'autre — la phrase pour le soignant, la fiche pour Chourouk.
+
+🔴 **Une fiche s'affiche sur l'écran *Documentation*, quelle que soit sa `rubrique`** *(tranché par Xavier le 18/08/2026)*. La bibliothèque entière y vit, groupée par `quand` : c'est ce qui garde à l'écran de crise ses **trois boutons sans défilement**. La `rubrique` d'une fiche ne place donc rien — elle ne range que les étapes qui font agir.
 
 ### `seance-duo` — un déroulé chronométré tenu par l'aidant
 
@@ -140,7 +142,7 @@ Deux formes, exclusives l'une de l'autre :
 { "id": "stab-ancrage-1", "titre": "Ancrage corporel — à deux", "type": "seance-duo",
   "rubrique": "therapie", "quand": "sans_date", "duree_minutes": 22,
   "entrainement_requis": true,
-  "signal_arret": "Xavier lève la main ouverte. On s'arrête, sans rien demander.",
+  "signal_arret": "Xavier fait « non » de la main. On s'arrête, sans rien demander.",
   "avant": [
     "Pièce calme, lumière baissée, porte fermée.",
     "Le téléphone reste dans tes mains du début à la fin.",
@@ -162,9 +164,9 @@ Deux formes, exclusives l'une de l'autre :
 | Champ | Règle |
 |---|---|
 | `entrainement_requis` | 🔴 **Toujours `true`.** La première exécution réelle ne peut pas être la première fois que l'aidant découvre le déroulé. Kokoro propose l'**entraînement** tant qu'il n'a pas été fait au moins une fois |
-| `signal_arret` | 🔴 **Obligatoire, non vide, et rappelé à l'écran en permanence.** ⭐ **C'est le champ le plus important du type** : Xavier doit pouvoir arrêter **sans parler**, parce que c'est exactement ce qui tombe en premier. Le geste se convient **à froid**, jamais pendant |
+| `signal_arret` | 🔴 **Obligatoire, non vide, et rappelé à l'écran en permanence.** ⭐ **C'est le champ le plus important du type** : Xavier doit pouvoir arrêter **sans parler**, parce que c'est exactement ce qui tombe en premier. Le geste se convient **à froid**, jamais pendant. 🔴 **Le geste convenu est le « non » de la main** — il se recopie tel quel dans chaque `seance-duo`, **il ne se réinvente pas d'une séance à l'autre** |
 | `avant` | Ce qui doit être vrai avant de commencer. L'aidant coche, ou n'entre pas dans la séquence |
-| `sequence` | Consignes ordonnées. `pour` vaut `aide` (elle fait) ou `patient` (elle lit à voix haute, **mot pour mot**). `secondes` est le temps tenu par l'appareil |
+| `sequence` | Consignes ordonnées. `pour` vaut `aide` (elle fait) ou `patient` (elle lit à voix haute, **mot pour mot**). `secondes` est le temps tenu par l'appareil. 🔴 **Aucune consigne ne demande une réponse gestuelle de la main** — le « non » de la main est réservé à l'arrêt, et un geste ambigu se lit comme un arrêt manqué |
 | `arret` | 🔴 **Obligatoire, au moins deux entrées, accessibles en un tap à tout moment.** ⭐ **La dernière est toujours « tu ne sais pas quoi faire → on s'arrête »** — l'aidant n'improvise jamais |
 | `sortie_libre` | `true`, comme partout |
 
@@ -200,7 +202,7 @@ Un fichier par étape faite, dans `reponses/` : `AAAA-MM-JJ-HHMM-<id>.json`
 
 ## 6. La bibliothèque
 
-**`companion/inputs/bibliotheque/<id>.md`** — un fichier Markdown par document, publié tel quel vers Drive.
+**`companion/inputs/bibliotheque/<id>.md`** — un fichier Markdown par document. ⭐ **Le Markdown est la version qui se relit et qui passe la supervision ; il ne part pas.** `npm run psy:publish` le convertit en **`bibliotheque/<id>.pdf`** et ne publie que le PDF — et **retire du transit tout document que la bibliothèque n'appelle plus**.
 
 > 🔴 **La règle qui vaut plus que toutes les autres ici : un document de la bibliothèque est *écrit pour Xavier*, il n'est pas *copié depuis* `psy/docs/protocoles/`.**
 >
@@ -208,7 +210,13 @@ Un fichier par étape faite, dans `reponses/` : `AAAA-MM-JJ-HHMM-<id>.json`
 
 **Ce qu'une fiche de bibliothèque ne contient jamais :** un diagnostic non encore dit à Xavier · un pronostic · un nom de praticien autre que ceux qu'il consulte · une hypothèse formulée comme un fait · une réserve destinée au Dr Isorni · **et tous les interdits du §7**.
 
-**Les fiches sont soumises aux mêmes vérifications que les étapes** : `npm run psy:publish` lit chaque fichier de la bibliothèque et applique les sept familles d'interdits.
+> 🔴 **Le partage entre les deux surfaces — il découle de leurs durées de vie, pas d'un goût** *(18/08/2026)*.
+>
+> **Ce qui change au rythme des séances vit dans le programme** *(le palier en cours, l'étape du jour, ce qui reste à faire)* — il est republié à chaque clôture. **Ce qui ne change pas vit dans la bibliothèque** *(une échelle entière, une règle, des critères d'arrêt, une conduite de voyage)* — elle part en **PDF figé**, et `psy:publish` ne reconvertit que ce qui a changé.
+>
+> ⚠️ **Une fiche ne dit donc jamais où Xavier en est rendu.** Elle périmerait au premier passage de palier, **sans que rien ne force sa réécriture**, et c'est la version figée qu'il ouvrirait pour comprendre. **C'est le mode de défaillance C8 appliqué à la bibliothèque** — constaté sur `ppc-les-paliers` avant publication.
+
+**Les fiches sont soumises aux mêmes vérifications que les étapes** : `npm run psy:publish` lit chaque fichier de la bibliothèque et applique les sept familles d'interdits. 🔴 **Kokoro les réapplique à la lecture, sur ce qu'il affiche lui-même** — le titre d'une fiche et le `texte` d'une étape ; **le corps d'un PDF, lui, n'est vérifié qu'au dépôt.**
 
 ---
 

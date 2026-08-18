@@ -38,7 +38,12 @@ import io.allonsy.kokoro.journal.enregistrerDossier
 import io.allonsy.kokoro.journal.intentChoisirDossier
 import io.allonsy.kokoro.journal.jourCourant
 import io.allonsy.kokoro.journal.lireDossier
+import io.allonsy.kokoro.journal.lireProgramme
+import io.allonsy.kokoro.journal.pdfDeLaBibliotheque
 import io.allonsy.kokoro.journal.valeursReprises
+import io.allonsy.kokoro.programme.BIBLIOTHEQUE_ABSENTE
+import io.allonsy.kokoro.programme.Bibliotheque
+import io.allonsy.kokoro.programme.lireBibliotheque
 import io.allonsy.kokoro.reglages.EtatAutorisations
 import io.allonsy.kokoro.reglages.REGLAGES_INITIAUX
 import io.allonsy.kokoro.reglages.ecrireReglages
@@ -63,6 +68,7 @@ class MondeActivity : ComponentActivity() {
     private val envoiEnCours = mutableStateOf(false)
     private val accesPerdu = mutableStateOf(false)
     private val sejour = mutableStateOf(Sejour(heure = 0, checkinFait = false))
+    private val bibliotheque = mutableStateOf(BIBLIOTHEQUE_ABSENTE)
 
     // Ex-MainActivity : la roue dentée ouvre désormais un panneau interne, plus une Activity.
     private val autorisations = mutableStateOf(EtatAutorisations(false, false, false))
@@ -137,6 +143,8 @@ class MondeActivity : ComponentActivity() {
                         onArreter = { enregistrerCheckin(checkin.value) },
                         onOuverture = { demarrerCheckin() },
                     ),
+                    bibliotheque = bibliotheque.value,
+                    onPdf = { document -> ouvrirLeDocument(document) },
                     ouvrirCheckin = ouvrirCheckinDemande.value,
                     onCheckinOuvert = { ouvrirCheckinDemande.value = false },
                     parallaxe = reglages.value.parallaxe,
@@ -175,6 +183,31 @@ class MondeActivity : ComponentActivity() {
         autorisations.value = lireAutorisations(this)
         dossier.value = cheminAffichable(this, lireDossier(this))
         relireLeSejour()
+        relireLaBibliotheque()
+    }
+
+    // Le programme est lu hors fil principal : c'est un fichier de Drive, sa lecture peut prendre le temps qu'elle veut.
+    private fun relireLaBibliotheque() {
+        lifecycleScope.launch {
+            val lue = withContext(Dispatchers.IO) { bibliothequeDuDossier() }
+            bibliotheque.value = lue
+            sejour.value = sejour.value.copy(vides = videsDe(lue))
+        }
+    }
+
+    private fun bibliothequeDuDossier(): Bibliotheque =
+        lireProgramme(this)?.let(::lireBibliotheque) ?: BIBLIOTHEQUE_ABSENTE
+
+    // Deux échecs distincts, deux phrases distinctes : le document n'est pas arrivé, ou le téléphone n'a pas de lecteur.
+    private fun ouvrirLeDocument(document: String) {
+        lifecycleScope.launch {
+            val pdf = withContext(Dispatchers.IO) { pdfDeLaBibliotheque(this@MondeActivity, document) }
+            accuse.value = when {
+                pdf == null -> getString(R.string.bibliotheque_document_absent)
+                ouvrirLePdf(this@MondeActivity, pdf) -> null
+                else -> getString(R.string.bibliotheque_sans_lecteur)
+            }
+        }
     }
 
     // Lu hors fil principal, sans état intermédiaire affiché : le défaut est « pas fait », et ça ne se voit pas.

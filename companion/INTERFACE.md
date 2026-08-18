@@ -96,7 +96,7 @@ Aucun score · aucune progression · aucun historique · aucun palier atteint ·
 | Écran | Contenu | Pourquoi là |
 |---|---|---|
 | **Thérapie** *(entrée)* | Les prochaines actions de la thérapie en cours, groupées par *aujourd'hui* / *quand j'en ai besoin* / *sans date* · 🔄 **Kokoro dans sa couche**, à la bande que chaque section lui réserve · la **roue dentée** sur la bande de titre (D4) · **les nouveautés**, quand il y en a (D5) | C'est là qu'on arrive, donc c'est là que vit ce qui n'appartient à aucune rubrique |
-| **Documentation** | La bibliothèque, une fiche par ligne | Deuxième liste appelée à grandir |
+| **Documentation** | La bibliothèque, une fiche par ligne, **groupée par `quand`** comme les autres écrans. Une fiche courte s'ouvre dans un panneau ; **une fiche PDF sort de l'app** vers le lecteur du téléphone — la carte porte alors le **picto « dehors »**, seul. ⚠️ **Troisième exception assumée à « aucune icône seule »**, après la roue dentée (**D4**) et la croix : *(18/08/2026, à la lecture de la première fiche publiée)* la mention écrite doublait le picto sur chaque ligne d'une liste appelée à grandir | Deuxième liste appelée à grandir |
 | **Bilan** | Les questionnaires à passer, les comptes rendus écrits en séance. Aucun chiffre, aucune courbe | ⭐ **Il défile maintenant comme la documentation** — il ne le pouvait pas quand il était en haut |
 | **Crise** | Mot-code · tension appliquée · phrase pour le soignant | Trois grands boutons, **jamais de défilement** — 🔴 **c'est une exigence en soi, et elle survit à la levée de P1** |
 

@@ -9,6 +9,8 @@ private const val FICHIER = "kokoro_dossier"
 private const val CLE_ARBRE = "arbre_dossier"
 private const val CLE_DERNIER_JOUR = "dernier_jour_ecrit"
 private const val SOUS_DOSSIER = "journal"
+private const val SOUS_DOSSIER_BIBLIOTHEQUE = "bibliotheque"
+private const val FICHIER_PROGRAMME = "programme.json"
 private const val MIME_JSON = "application/json"
 
 fun intentChoisirDossier(): Intent =
@@ -129,12 +131,38 @@ fun listerJournal(context: Context): List<String> {
     return parcourir(context, journal) { _, affiche -> affiche }
 }
 
-private fun dossierJournal(context: Context): Uri? {
+fun lireProgramme(context: Context): String? {
+    val racine = racineDuDossier(context) ?: return null
+    rafraichir(context, racine)
+    val fichier = enfant(context, racine, FICHIER_PROGRAMME) ?: return null
+    return runCatching {
+        context.contentResolver.openInputStream(fichier)?.use { it.readBytes().toString(Charsets.UTF_8) }
+    }.getOrNull()
+}
+
+fun pdfDeLaBibliotheque(context: Context, document: String): Uri? {
+    val racine = racineDuDossier(context) ?: return null
+    rafraichir(context, racine)
+    val dossier = enfant(context, racine, SOUS_DOSSIER_BIBLIOTHEQUE) ?: return null
+    rafraichir(context, dossier)
+    return enfant(context, dossier, "$document.pdf")
+}
+
+// Drive sert sa liste en cache : sans ça, une fiche publiée reste invisible tant que l'app Drive n'a pas resynchronisé.
+private fun rafraichir(context: Context, dossier: Uri) {
+    runCatching { context.contentResolver.refresh(dossier, null, null) }
+}
+
+private fun racineDuDossier(context: Context): Uri? {
     val arbre = lireDossier(context) ?: return null
-    val racine = DocumentsContract.buildDocumentUriUsingTree(
+    return DocumentsContract.buildDocumentUriUsingTree(
         arbre,
         DocumentsContract.getTreeDocumentId(arbre),
     )
+}
+
+private fun dossierJournal(context: Context): Uri? {
+    val racine = racineDuDossier(context) ?: return null
     val existant = enfant(context, racine, SOUS_DOSSIER)
     if (existant != null) return existant
     return runCatching {

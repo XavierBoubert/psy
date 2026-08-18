@@ -11,6 +11,11 @@ import io.allonsy.kokoro.corps.Posture
 import io.allonsy.kokoro.corps.Vol
 import io.allonsy.kokoro.corps.ombre
 import io.allonsy.kokoro.corps.reglage
+import io.allonsy.kokoro.programme.BIBLIOTHEQUE_ABSENTE
+import io.allonsy.kokoro.programme.Bibliotheque
+import io.allonsy.kokoro.programme.Fiche
+import io.allonsy.kokoro.programme.Quand
+import io.allonsy.kokoro.programme.Support
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
@@ -107,7 +112,24 @@ class HabitantTest {
     }
 
     @Test
-    fun `la documentation et le bilan dorment aujourd'hui`() {
+    fun `une fiche publiee reveille la documentation, jamais le bilan`() {
+        val fiche = Fiche(
+            id = "fiche-chourouk",
+            titre = "Pour Chourouk",
+            quand = Quand.AU_BESOIN,
+            support = Support.Pdf("fiche-chourouk"),
+        )
+
+        assertEquals(ECRANS_VIDES, videsDe(BIBLIOTHEQUE_ABSENTE))
+        assertEquals(setOf(Ecran.BILAN), videsDe(Bibliotheque(version = 2, fiches = listOf(fiche))))
+
+        val place = place(Ecran.DOCUMENTATION, sejour(vides = videsDe(Bibliotheque(2, listOf(fiche)))))
+        assertEquals("Il lit la liste au lieu de dormir devant", Posture.Lecture, place?.posture)
+        assertEquals("Il lit sur le cote, jamais par-dessus les cartes", Cadrage.A_DROITE, place?.cadrage)
+    }
+
+    @Test
+    fun `la documentation dort tant qu'aucune fiche n'est publiee`() {
         assertEquals(setOf(Ecran.DOCUMENTATION, Ecran.BILAN), ECRANS_VIDES)
         ECRANS_VIDES.forEach { ecran ->
             assertEquals(

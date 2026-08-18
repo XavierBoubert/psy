@@ -195,6 +195,8 @@
 
     <string name="monde_bilan_vide">Rien à passer pour l\'instant.</string>
     <string name="monde_documentation_vide">Rien à lire pour l\'instant.</string>
+    <string name="bibliotheque_document_absent">Ce document n\'est pas encore arrivé dans le dossier.</string>
+    <string name="bibliotheque_sans_lecteur">Aucune application de ce téléphone n\'ouvre les PDF.</string>
 
     <!--
       ⭐ L'accusé de l'envoi direct — companion/INTERFACE.md §7. Il constate que le message est

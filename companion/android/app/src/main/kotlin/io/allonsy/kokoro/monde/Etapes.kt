@@ -4,6 +4,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import io.allonsy.kokoro.R
+import io.allonsy.kokoro.programme.Bibliotheque
 import io.allonsy.kokoro.ui.LocalPaletteKokoro
 import io.allonsy.kokoro.ui.PanneauDialogue
 import io.allonsy.kokoro.ui.Teinte
@@ -33,9 +34,13 @@ data class Section(
 
 val ECRANS_VIDES = setOf(Ecran.DOCUMENTATION, Ecran.BILAN)
 
+// La documentation cesse d'être vide dès qu'une fiche arrive du dossier ; le bilan, lui, n'a pas encore de liste.
+fun videsDe(bibliotheque: Bibliotheque): Set<Ecran> =
+    if (bibliotheque.fiches.isEmpty()) ECRANS_VIDES else ECRANS_VIDES - Ecran.DOCUMENTATION
+
 // Tout ce qu'un bouton du monde peut ouvrir dans le panneau de dialogue — une seule forme, cinq contenus.
 sealed interface Contexte {
-    data class Demarche(val etape: Etape) : Contexte
+    data class Lecture(val titre: String, val texte: String) : Contexte
     data object Reglages : Contexte
     data object Checkin : Contexte
     data object Tension : Contexte

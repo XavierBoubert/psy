@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -170,20 +171,58 @@ fun Carte(
     titre: String,
     modifier: Modifier = Modifier,
     duree: String? = null,
+    picto: (@Composable () -> Unit)? = null,
     onClic: () -> Unit,
 ) {
     val palette = LocalPaletteKokoro.current
     PanneauExtrude(modifier = modifier.fillMaxWidth(), onClic = onClic) {
-        Text(text = titre, style = TypoKokoro.corps, color = palette.encre)
-        if (duree != null) {
-            Text(
-                text = duree,
-                style = TypoKokoro.discret,
-                color = palette.encreDouce,
-                modifier = Modifier.padding(top = 5.dp),
-            )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(text = titre, style = TypoKokoro.corps, color = palette.encre)
+                if (duree != null) {
+                    Text(
+                        text = duree,
+                        style = TypoKokoro.discret,
+                        color = palette.encreDouce,
+                        modifier = Modifier.padding(top = 5.dp),
+                    )
+                }
+            }
+            if (picto != null) {
+                Box(modifier = Modifier.padding(start = 16.dp)) { picto() }
+            }
         }
     }
+}
+
+// Le seul pictogramme du lot avec la roue dentée : il porte seul l'annonce de la sortie de l'app.
+@Composable
+fun PictoDehors(modifier: Modifier = Modifier, taille: Dp = 22.dp) {
+    val couleur = LocalPaletteKokoro.current.encreDouce
+    Canvas(modifier = modifier.size(taille)) { dehors(couleur, 2.4.dp.toPx()) }
+}
+
+private fun DrawScope.dehors(couleur: Color, trait: Float) {
+    val cote = size.minDimension
+    val trace = Stroke(width = trait, cap = StrokeCap.Round, join = StrokeJoin.Round)
+
+    val cadre = Path().apply {
+        moveTo(cote * 0.62f, cote * 0.58f)
+        lineTo(cote * 0.62f, cote * 0.94f)
+        lineTo(cote * 0.06f, cote * 0.94f)
+        lineTo(cote * 0.06f, cote * 0.38f)
+        lineTo(cote * 0.42f, cote * 0.38f)
+    }
+    drawPath(cadre, couleur, style = trace)
+
+    val fleche = Path().apply {
+        moveTo(cote * 0.40f, cote * 0.60f)
+        lineTo(cote * 0.94f, cote * 0.06f)
+        moveTo(cote * 0.58f, cote * 0.06f)
+        lineTo(cote * 0.94f, cote * 0.06f)
+        lineTo(cote * 0.94f, cote * 0.42f)
+    }
+    drawPath(fleche, couleur, style = trace)
 }
 
 @Composable

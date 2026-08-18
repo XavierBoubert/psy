@@ -102,7 +102,7 @@ Depuis la racine, **scopés par rôle** ; les chemins sont résolus par rapport 
 
 | Commande | Objet |
 |---|---|
-| `npm run psy:publish` | 🔴 Publie la thérapie et la bibliothèque vers Kokoro. **La documentation part à tout moment ; les étapes qui font agir, à la clôture d'une séance** |
+| `npm run psy:publish` | 🔴 Publie la thérapie et la bibliothèque vers Kokoro — **fiches converties en PDF au passage**. **La documentation part à tout moment ; les étapes qui font agir, à la clôture d'une séance et avec `--seance`** — sans le drapeau, elles sont refusées |
 | `npm run psy:sync` | Verse au dépôt ce que Kokoro a écrit. **N'écrase jamais un fichier existant** |
 | `npm run psy:pdf2md` · `psy:docx2md` · `psy:md2pdf` | Conversion de documents |
 | `npm run companion:kokoro` | Compile, teste, installe et ouvre Kokoro. **Jamais `gradlew` ni `adb` à la main** |
