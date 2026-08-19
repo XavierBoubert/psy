@@ -26,7 +26,6 @@ import io.allonsy.kokoro.programme.Etape
 import io.allonsy.kokoro.programme.Faites
 import io.allonsy.kokoro.programme.Fonction
 import io.allonsy.kokoro.programme.Programme
-import io.allonsy.kokoro.programme.Quand
 import io.allonsy.kokoro.programme.Rubrique
 import io.allonsy.kokoro.programme.Support
 import io.allonsy.kokoro.programme.bilans
@@ -217,18 +216,18 @@ fun ContenuDocumentation(
             return@EcranDeBord
         }
 
-        Quand.entries.forEach { quand ->
-            val duQuand = fiches.filter { it.quand == quand }
-            if (duQuand.isEmpty()) return@forEach
+        RUBRIQUES_LUES.forEach { rubrique ->
+            val deLaRubrique = fiches.filter { it.reperes.rubrique == rubrique }
+            if (deLaRubrique.isEmpty()) return@forEach
 
             BandeDeSection(perchoirs = perchoirs, poses = emptyList()) {
                 Pancarte(
-                    texte = stringResource(libelleDe(quand)),
+                    texte = stringResource(libelleDe(rubrique)),
                     couleur = palette.lavande,
                     modifier = Modifier.padding(start = 2.dp),
                 )
             }
-            duQuand.forEach { fiche ->
+            deLaRubrique.forEach { fiche ->
                 CarteDeFiche(fiche = fiche, onClic = { onFiche(fiche) })
             }
         }
@@ -247,10 +246,14 @@ private fun CarteDeFiche(fiche: Etape.Fiche, onClic: () -> Unit) {
     )
 }
 
-private fun libelleDe(quand: Quand): Int = when (quand) {
-    Quand.AUJOURDHUI -> R.string.monde_quand_aujourdhui
-    Quand.AU_BESOIN -> R.string.monde_quand_au_besoin
-    Quand.SANS_DATE -> R.string.monde_quand_sans_date
+// Documentation : groupé par rubrique, la bibliothèque entière y vit quelle que soit la sienne.
+private val RUBRIQUES_LUES = listOf(Rubrique.CRISE, Rubrique.THERAPIE, Rubrique.DOCUMENTATION)
+
+private fun libelleDe(rubrique: Rubrique): Int = when (rubrique) {
+    Rubrique.CRISE -> R.string.monde_rubrique_crise
+    Rubrique.THERAPIE -> R.string.monde_rubrique_therapie
+    Rubrique.DOCUMENTATION -> R.string.monde_rubrique_dispositif
+    Rubrique.BILAN -> R.string.monde_bilan_titre
 }
 
 // Groupé par mois du document, du plus récent au plus ancien : c'est la date du bilan, jamais une progression.

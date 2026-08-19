@@ -186,6 +186,9 @@
     <string name="monde_bilan_titre">Bilan</string>
     <string name="monde_crise_titre">Crise</string>
 
+    <string name="monde_rubrique_crise">Crise</string>
+    <string name="monde_rubrique_therapie">Thérapie</string>
+    <string name="monde_rubrique_dispositif">Le dispositif</string>
     <string name="monde_quand_aujourdhui">Aujourd\'hui</string>
     <string name="monde_quand_au_besoin">Quand j\'en ai besoin</string>
     <string name="monde_quand_sans_date">Sans date</string>

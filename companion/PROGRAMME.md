@@ -47,7 +47,7 @@ Claude Psy ──écrit── companion/inputs/programme.json + bibliotheque/ + 
 
 | Champ | Règle |
 |---|---|
-| `version` | Entier, **s'incrémente à chaque publication**. Kokoro compare avec la version qu'il a : s'il y a du nouveau, il affiche **une ligne discrète en haut** — **jamais une notification** |
+| `version` | Entier, **s'incrémente à chaque publication**. Il sert au dépôt : c'est lui que vise la supervision. 🔴 **Kokoro ne l'affiche pas et ne signale rien de nouveau** *(tranché par Xavier le 20/08/2026)* — **ce qui change s'annonce à Xavier dans la conversation, au moment de la publication**, jamais par l'application |
 | `publie_le` | `AAAA-MM-JJ` |
 | `supervision` | 🔴 **Obligatoire.** Nom du fichier de `superviseur/outputs/` (sans extension) qui vise **cette version**. Sans lui, `npm run psy:publish` refuse *(voir [`../superviseur/README.md`](../superviseur/README.md))* |
 
@@ -144,7 +144,7 @@ Deux formes, exclusives l'une de l'autre :
 
 `montrable: true` affiche le texte en plein écran, lisible par quelqu'un d'autre — la phrase pour le soignant, la fiche pour Chourouk.
 
-🔴 **Une fiche s'affiche sur l'écran *Documentation*, quelle que soit sa `rubrique`** *(tranché par Xavier le 18/08/2026)*. La bibliothèque entière y vit, groupée par `quand` : c'est ce qui garde à l'écran de crise ses **trois boutons sans défilement**. La `rubrique` d'une fiche ne place donc rien — elle ne range que les étapes qui font agir.
+🔴 **Une fiche s'affiche sur l'écran *Documentation*, quelle que soit sa `rubrique`** *(tranché par Xavier le 18/08/2026)* : c'est ce qui garde à l'écran de crise ses **trois boutons sans défilement**. **La bibliothèque entière y vit, groupée par `rubrique`** — *crise* · *thérapie* · *le dispositif* *(tranché par Xavier le 20/08/2026 ; elle était groupée par `quand` jusque-là)*. ⭐ **La `rubrique` d'une fiche ne décide donc pas de l'écran où elle vit, mais de la section où elle se range** ; `quand` n'ordonne plus rien sur cet écran.
 
 ### `bilan` — un compte rendu que Xavier possède déjà
 
@@ -211,7 +211,7 @@ Deux formes, exclusives l'une de l'autre :
 ## 4. L'écran d'accueil
 
 Groupé par **rubrique**, puis par **`quand`** : *aujourd'hui* · *quand j'en ai besoin* · *sans date*.
-**Seul l'écran *Bilan* fait exception : il groupe par mois décroissant, sur la `date` du document.**
+**Deux écrans font exception :** *Documentation* groupe par **rubrique** seule *(§3)*, et *Bilan* par **mois décroissant**, sur la `date` du document.
 **Aucun score, aucune progression, aucun historique, aucun palier atteint.**
 
 ---

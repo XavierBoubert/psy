@@ -1,22 +1,22 @@
-# Pour Chourouk — les shutdowns de Xavier, et ce que vous avez accepté de tenir
+# Pour Chourouk — fiche de rôle *(source)*
 
-**Destinataire :** Chourouk. **Xavier la relit et décide de la transmettre ou non** — comme le brief au Dr Isorni.
-**Source clinique :** rapport v2.4 §9.1, §9.16 · `profil.md` §3, §9 · `aidant/README.md`.
-
-> ⚠️ **Note interne, à retirer avant transmission.** Écrit **pour quelqu'un qui n'est ni soignant ni patient** : pas de jargon, pas de renvoi de section, pas de chiffre de dossier, aucun diagnostic, aucun score, aucune hypothèse. **Elle lit des consignes, jamais un dossier** *(contrôle C10)*. Elle n'a accès ni au journal, ni aux séances, ni aux mesures, et cette fiche reste **la seule chose écrite qu'elle reçoit**.
+> ⚠️ **Note interne, hors du document transmis.** ⭐ **Le document qui atteint Chourouk est [`companion/inputs/bibliotheque/role-chourouk.md`](../../companion/inputs/bibliotheque/role-chourouk.md)** — publié dans Kokoro, montrable en plein écran. **Ce fichier-ci en est la copie de travail : les deux disent la même chose, et toute correction se fait dans les deux.**
 >
-> 🔴 **Supervision bloquante avant transmission** — c'est un document qui atteint quelqu'un d'autre que Xavier.
+> 🔴 **Supervision bloquante avant toute republication** — c'est un document qui atteint quelqu'un d'autre que Xavier *(C10)*. Écrit **pour quelqu'un qui n'est ni soignant ni patient** : pas de jargon, pas de renvoi de section, pas de chiffre de dossier, aucun diagnostic, aucun score, aucune hypothèse. Elle n'a accès ni au journal, ni aux séances, ni aux mesures.
 >
-> 🔴 **Ne pas confondre avec la fiche de la bibliothèque** *(`companion/inputs/bibliotheque/fiche-chourouk.md`)*. Celle-là est la **carte du moment** : Xavier la montre sur son téléphone pendant un shutdown, elle ne parle que de ça, et elle ne porte aucun numéro d'appel. **Celle-ci est la fiche du rôle**, lue **à froid**, à la maison. Les deux ne fusionnent pas.
+> 🔴 **Ne pas confondre avec `bibliotheque/fiche-chourouk.md`** : celle-là est la **carte du moment**, montrée pendant un shutdown, et elle ne parle que de ça. **Celle-ci est la fiche du rôle**, lue **à froid**, à la maison. Les deux ne fusionnent pas.
 
 ---
----
 
-## À lire une fois, à garder
+# Pour Chourouk — ce que vous avez accepté de tenir
+
+## À lire une fois, à froid, à garder
 
 Xavier vous a demandé de lire ceci.
 
 Il y a deux choses dedans. **La première** explique une chose précise qui lui arrive, et ce qui aide quand elle arrive. **La seconde** décrit ce que vous avez accepté de faire avec lui, et surtout ses limites — parce qu'un rôle sans limites écrites, c'est un rôle où on se retrouve seule à décider.
+
+**Cette fiche ne se lit pas pendant.** Elle se lit avant, tranquillement, une fois.
 
 ---
 ---
@@ -81,7 +81,7 @@ Il peut aussi **l'écrire** — écrire reste souvent possible quand parler ne l
 Un shutdown se lève seul et ne demande aucun geste de secours. **Deux situations sortent de ce cadre, et là il faut agir.**
 
 - **S'il perd connaissance.** Ça ne fait pas partie du shutdown. Allongez-le, jambes surélevées, et faites venir un secours médical par le moyen le plus rapide sur place.
-- **S'il exprime des idées noires**, même en passant, même par écrit. **Ce n'est pas à vous de trancher si c'est grave** — ce n'est le rôle de personne dans l'entourage. Trois choses, sans attendre : lui dire simplement que vous l'avez entendu · rester là, même en silence · et **ne pas garder l'information pour vous**. Il est suivi médicalement, et il existe une ligne d'écoute prévue pour ça, le **3114**, gratuite, jour et nuit. S'il ne s'en sert pas, dites-le à son médecin.
+- **S'il exprime des idées noires**, même en passant, même par écrit. **Ce n'est pas à vous de trancher si c'est grave** — ce n'est le rôle de personne dans l'entourage. Trois choses, sans attendre : lui dire simplement que vous l'avez entendu · rester là, même en silence · et **ne pas garder l'information pour vous**. Il est suivi médicalement et il a une conduite écrite pour ce cas précis. S'il ne s'en sert pas, dites-le à son médecin.
 
 ---
 ---
@@ -94,10 +94,10 @@ Certains exercices ne peuvent pas se faire seul : il faut quelqu'un pour tenir l
 
 **Voilà à quoi ça ressemble concrètement :**
 
-- Vous tenez **le téléphone**. L'application affiche **une consigne à la fois**, et elle compte le temps toute seule.
-- Certaines consignes sont **pour vous** — quelque chose à faire. D'autres sont **à lire à voix haute, mot pour mot**, telles qu'elles sont écrites.
+- Vous tenez **le téléphone**, du début à la fin. L'application affiche **une consigne à la fois**, et elle compte le temps toute seule.
+- Certaines consignes sont **pour vous** — quelque chose à faire. D'autres commencent par *« Lis à voix haute, mot pour mot »* : celles-là sont à lire telles qu'elles sont écrites, sans rien changer.
 - **Vous n'avez rien à préparer, rien à retenir, rien à improviser.** Tout est à l'écran.
-- Ça dure une vingtaine de minutes, dans une pièce calme, à un moment convenu à l'avance.
+- **La durée est annoncée avant de commencer**, et elle ne bouge pas pendant. Ça se fait dans une pièce calme, à un moment convenu à l'avance.
 
 ---
 
@@ -110,12 +110,12 @@ Xavier lève la main et fait **« non »**. Ça veut dire : **on arrête**.
 **Immédiatement, sans rien demander, sans finir la consigne en cours.** Pas de « tu es sûr ? », pas de « on va jusqu'au bout du minuteur ». On s'arrête.
 
 > ⭐ **Pourquoi un geste et pas un mot :** parce que la parole est exactement ce qui tombe en premier chez lui. Un signal qui demande de parler ne servirait à rien au moment où il servirait.
->
-> **Le geste est rappelé à l'écran pendant toute la séance.** Vous n'avez pas à vous en souvenir.
 
-### 2. Les critères d'arrêt : **un bouton, à tout moment**
+**Et dans l'autre sens : arrêter est toujours à portée de votre pouce.** Chaque consigne porte un bouton *On s'arrête*, pendant toute la séance.
 
-Un bouton en bas de l'écran affiche la liste des situations où on s'arrête. Elle est accessible **en permanence**, pas seulement au début.
+### 2. Les critères d'arrêt : **lus et cochés avant d'entrer**
+
+Avant que la séance s'ouvre, l'écran affiche le signal d'arrêt et la liste des situations où on s'arrête. **Vous les lisez, vous cochez la case, et c'est seulement là que le déroulé démarre.**
 
 **Le dernier de la liste est toujours le même, et c'est le plus important :**
 
@@ -123,9 +123,13 @@ Un bouton en bas de l'écran affiche la liste des situations où on s'arrête. E
 
 Ce n'est pas une porte de secours pour les cas graves. **C'est la règle normale.** Vous n'avez jamais à deviner, à évaluer, ni à trancher.
 
-### 3. Le mode entraînement : **obligatoire avant la première vraie fois**
+> ⚠️ **À savoir, parce que c'est la raison d'être de cette fiche :** une fois la séance commencée, **ces critères ne sont plus réaffichés**. L'écran ne montre que la consigne en cours. **C'est ce papier-là qui les porte** — d'où l'intérêt de l'avoir lu une fois, à froid.
+
+### 3. Le mode entraînement : **avant la première vraie fois**
 
 Avant qu'une séance compte, elle se joue **une fois à blanc** — la même chose, en entier, sans que ça compte pour personne.
+
+**L'entraînement n'a pas de minuteur :** vous passez d'une consigne à la suivante quand vous êtes prête, et le temps affiché est celui que la consigne durera en séance. C'est fait pour ça — **voir la durée avant de la vivre**.
 
 > ⭐ **La première fois que ça compte ne doit jamais être la première fois que ça se fait.** C'est autant pour vous que pour lui.
 
@@ -148,8 +152,8 @@ Avant qu'une séance compte, elle se joue **une fois à blanc** — la même cho
 
 ## Ce qui n'est pas de votre ressort, et ne le sera pas
 
-- **Vous n'êtes pas sa thérapeute.** Il en a un dispositif pour ça, et un médecin.
-- **Vous n'avez rien à surveiller entre les séances.** Aucun suivi, aucun rappel à lui faire, aucune assiduité à vérifier.
+- **Vous n'êtes pas sa thérapeute.** Il a un dispositif pour ça, et un médecin.
+- **Vous n'avez rien à surveiller entre les séances.** Aucun suivi, aucun rappel à lui faire, rien à vérifier.
 - **Une séance arrêtée n'est pas une séance ratée.** Arrêtée sur le signal, arrêtée parce que vous ne saviez pas quoi faire, arrêtée parce que ce n'était pas le bon jour : **dans tous les cas, c'est un résultat valable, et il n'y a rien à rattraper.**
 - **Vous pouvez dire non.** À une séance, à un jour, au rôle entier. Sans avoir à l'expliquer.
 

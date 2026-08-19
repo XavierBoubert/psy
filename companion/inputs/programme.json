@@ -1,7 +1,7 @@
 {
-  "version": 8,
-  "publie_le": "2026-08-19",
-  "supervision": "2026-08-19-programme-v8",
+  "version": 10,
+  "publie_le": "2026-08-20",
+  "supervision": "2026-08-20-programme-v10",
   "etapes": [
     {
       "id": "check-in",
@@ -46,6 +46,42 @@
       "montrable": true
     },
     {
+      "id": "panique-13-symptomes",
+      "titre": "Les 13 symptômes de la panique",
+      "type": "fiche",
+      "rubrique": "crise",
+      "quand": "au_besoin",
+      "document": "panique-13-symptomes",
+      "montrable": false
+    },
+    {
+      "id": "vasovagal-ce-qui-se-passe",
+      "titre": "Le malaise vagal — ce qui se passe",
+      "type": "fiche",
+      "rubrique": "crise",
+      "quand": "au_besoin",
+      "document": "vasovagal-ce-qui-se-passe",
+      "montrable": false
+    },
+    {
+      "id": "tension-appliquee-le-geste",
+      "titre": "La tension appliquée — le geste",
+      "type": "fiche",
+      "rubrique": "crise",
+      "quand": "au_besoin",
+      "document": "tension-appliquee-le-geste",
+      "montrable": false
+    },
+    {
+      "id": "shutdown-ce-qui-reste-ouvert",
+      "titre": "Quand la parole se coupe — ce qui reste ouvert",
+      "type": "fiche",
+      "rubrique": "crise",
+      "quand": "au_besoin",
+      "document": "shutdown-ce-qui-reste-ouvert",
+      "montrable": false
+    },
+    {
       "id": "ppc-palier-1",
       "titre": "Masque tenu a la main",
       "type": "exercice",
@@ -66,6 +102,60 @@
       "montrable": false
     },
     {
+      "id": "ppc-pourquoi-maintenant",
+      "titre": "Le masque — pourquoi maintenant",
+      "type": "fiche",
+      "rubrique": "therapie",
+      "quand": "sans_date",
+      "document": "ppc-pourquoi-maintenant",
+      "montrable": false
+    },
+    {
+      "id": "alimentation-les-quatre-regles",
+      "titre": "Les quatre règles des repas",
+      "type": "fiche",
+      "rubrique": "therapie",
+      "quand": "sans_date",
+      "document": "alimentation-les-quatre-regles",
+      "montrable": false
+    },
+    {
+      "id": "activite-sans-impact",
+      "titre": "Bouger sans impact",
+      "type": "fiche",
+      "rubrique": "therapie",
+      "quand": "sans_date",
+      "document": "activite-sans-impact",
+      "montrable": false
+    },
+    {
+      "id": "jour-de-vol",
+      "titre": "Le jour du vol",
+      "type": "fiche",
+      "rubrique": "therapie",
+      "quand": "au_besoin",
+      "document": "jour-de-vol",
+      "montrable": false
+    },
+    {
+      "id": "sejour-tunisie",
+      "titre": "Le séjour — ce qui est décidé d'avance",
+      "type": "fiche",
+      "rubrique": "therapie",
+      "quand": "sans_date",
+      "document": "sejour-tunisie",
+      "montrable": false
+    },
+    {
+      "id": "role-chourouk",
+      "titre": "Pour Chourouk — son rôle, à lire à froid",
+      "type": "fiche",
+      "rubrique": "therapie",
+      "quand": "sans_date",
+      "document": "role-chourouk",
+      "montrable": true
+    },
+    {
       "id": "email-isorni",
       "titre": "Envoyer l'email préparé au Dr Isorni",
       "type": "demarche",
@@ -74,47 +164,31 @@
       "detail": "Le brouillon est prêt dans le dossier. Il a vocation à partir avant la consultation du 03/09, pour qu'il arrive préparé — pas à être lu sur place."
     },
     {
-      "id": "essai-a-deux",
-      "titre": "Essai à deux — vérifier le déroulé de bout en bout",
-      "type": "seance-duo",
-      "rubrique": "therapie",
-      "quand": "au_besoin",
-      "duree_minutes": 3,
-      "entrainement_requis": true,
-      "signal_arret": "Xavier fait « non » de la main. On s'arrête, sans rien demander.",
-      "avant": [
-        "Le téléphone est dans tes mains, et il y reste du début à la fin.",
-        "Xavier t'a montré le « non » de la main avant qu'on commence.",
-        "La porte est fermée, et rien ne doit interrompre les trois prochaines minutes."
-      ],
-      "sequence": [
-        {
-          "pour": "aide",
-          "consigne": "Assieds-toi en face de lui, à un mètre. Garde l'écran tourné vers toi.",
-          "secondes": 30
-        },
-        {
-          "pour": "patient",
-          "consigne": "Lis à voix haute, mot pour mot : « Ceci est un essai du dispositif. Rien d'autre n'est demandé que de rester assis jusqu'au bout. »",
-          "secondes": 30
-        },
-        {
-          "pour": "aide",
-          "consigne": "Ne parle pas pendant ce temps. L'écran passe seul à la consigne suivante.",
-          "secondes": 45
-        },
-        {
-          "pour": "patient",
-          "consigne": "Lis à voix haute, mot pour mot : « L'essai est terminé. Le déroulé est allé jusqu'à sa dernière ligne. »",
-          "secondes": 20
-        }
-      ],
-      "arret": [
-        "Il fait le signal d'arrêt → on s'arrête, on ne demande rien.",
-        "Il ne répond plus aux consignes → on s'arrête, c'est un shutdown, pas un refus.",
-        "Tu ne sais pas quoi faire → on s'arrête. Ne jamais improviser."
-      ],
-      "sortie_libre": true
+      "id": "comment-marche-kokoro",
+      "titre": "Comment Kokoro fonctionne",
+      "type": "fiche",
+      "rubrique": "documentation",
+      "quand": "sans_date",
+      "document": "comment-marche-kokoro",
+      "montrable": false
+    },
+    {
+      "id": "ou-vont-mes-reponses",
+      "titre": "Où vont mes réponses",
+      "type": "fiche",
+      "rubrique": "documentation",
+      "quand": "sans_date",
+      "document": "ou-vont-mes-reponses",
+      "montrable": false
+    },
+    {
+      "id": "pourquoi-pas-de-score",
+      "titre": "Pourquoi il n'y a jamais de score",
+      "type": "fiche",
+      "rubrique": "documentation",
+      "quand": "sans_date",
+      "document": "pourquoi-pas-de-score",
+      "montrable": false
     },
     {
       "id": "rapport-psy-2026-08",
