@@ -52,6 +52,8 @@
 | **Questionnaire** | ✅ | Type porté et disponible — une question par écran, choix fermés, « passer » et arrêt libres → écrit `reponses/` **item par item**. ⭐ **Aucune échelle validée ne part dans Kokoro** *(tranché le 19/08/2026)* : elles se passent avec Claude Psy |
 | **Séance à deux** | 🔜 | K6. Le type `seance-duo` existe au contrat, pas encore dans l'app |
 
+⭐ **Le circuit complet est constaté, pas seulement écrit** *(19/08/2026)* : une étape publiée depuis le PC est apparue sur le téléphone, a été faite, et sa réponse est revenue au dossier par `psy:sync` — **valide au format, sans intervention manuelle**. Un bilan s'est ouvert dans le lecteur PDF du téléphone et s'est partagé depuis lui. **Le partage est celui du lecteur, jamais une fonction de Kokoro.**
+
 ---
 
 ## 3. Le contenu — ce qu'il lit, ce qu'il écrit
