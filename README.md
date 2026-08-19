@@ -178,7 +178,7 @@ Tous s'exécutent depuis la racine, et **les arguments de chemin sont résolus p
 | `npm run psy:sync` | `psy/scripts/psy-sync.ts` | ⭐ **Verse au dépôt tout ce que Kokoro a écrit** — `journal/` et `reponses/`. **N'écrase jamais un fichier existant**, valide chaque fichier, signale tout nom hors convention |
 | `npm run psy:pdf2md` | `psy/scripts/psy-pdf2md.ts` | Convertit un PDF en Markdown. `-- <source.pdf> <destination.md>` |
 | `npm run psy:docx2md` | `psy/scripts/psy-docx2md.ts` | Convertit un DOCX en Markdown. `-- <source.docx> <destination.md>` |
-| `npm run psy:md2pdf` | `psy/scripts/psy-md2pdf.ts` | Convertit un Markdown en PDF *(Puppeteer/Chromium headless)*. `-- <source.md> <destination.pdf>` |
+| `npm run psy:md2pdf` | `psy/scripts/psy-md2pdf.ts` | Convertit un Markdown en PDF *(Puppeteer/Chromium headless)*. ⭐ **Format liseuse — page 90 × 155 mm, corps 12 pt** : le PDF se lit ajusté à la largeur d'un écran de téléphone, une page par écran. `-- <source.md> <destination.pdf>` |
 | `npm run companion:kokoro` | `companion/android/kokoro` | ⭐ **Compile, teste, installe et ouvre Kokoro sur le téléphone**, ⭐ **par le Wi-Fi, sans câble** *(15/08/2026 — le lien se renoue tout seul)*. C'est le même script que `./kokoro` — il existe pour que **Xavier déploie sans passer par Claude** |
 | `npm run companion:image` | `companion/scripts/companion-image.ts` | Génère des planches de recherche graphique via Gemini |
 | `npm run companion:decoupe` | `companion/scripts/companion-decoupe.ts` | Détoure une planche : le fond magenta `#FF00FF` devient le canal alpha |
