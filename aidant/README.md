@@ -59,4 +59,4 @@ Le superviseur le vérifie sur **chaque** séquence, et il cherche deux fautes d
 
 ## Ce qui n'existe pas encore
 
-🔜 **K6 — la séance à deux** est le prochain jalon de Kokoro *([`../PLAN.md`](../PLAN.md))*. À ce jour, **aucune séquence `seance-duo` n'est écrite ni publiée**, et le mode entraînement n'a jamais tourné. ⚠️ **Écrit ne veut pas dire appliqué.**
+🔜 **La séance à deux existe sur le téléphone, la clinique n'y est pas encore** *([`../psy/PLAN.md`](../psy/PLAN.md) §8)*. Une seule `seance-duo` a été publiée — **un essai de circuit de trois minutes**, entraînement puis séquence, menés le 19/08/2026 : **elle ne travaille rien.** ⚠️ **Aucune séquence clinique n'est écrite**, et 🔴 **Chourouk n'a toujours rien reçu d'écrit** — depuis que les critères d'arrêt se cochent avant d'entrer au lieu d'être rappelés pendant, **la fiche de rôle porte, hors écran, ce que l'écran ne rappelle plus.** ⚠️ **Écrit ne veut pas dire appliqué.**

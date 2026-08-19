@@ -4,7 +4,7 @@
 
 *Kokoro (心) : le mot japonais qui désigne indissociablement le cœur et l'esprit, racine de 心理学* (shinrigaku), *« psychologie ». Il nomme l'objet du soin, pas une promesse de résultat.*
 
-> 📖 Vue d'ensemble : [`../README.md`](../README.md) · Vocabulaire : [`../THESAURUS.md`](../THESAURUS.md) · Ce qui reste à construire : [`../PLAN.md`](../PLAN.md) §5.
+> 📖 Vue d'ensemble : [`../README.md`](../README.md) · Vocabulaire : [`../THESAURUS.md`](../THESAURUS.md) · Ce qui n'est pas encore fait : [`../psy/PLAN.md`](../psy/PLAN.md) §9.
 >
 > 🔴 **Le format du contenu est [`PROGRAMME.md`](PROGRAMME.md)** *(normatif)* — les six types d'étape, les rubriques, les interdits. **Aucune surface n'a le droit d'en inventer un autre.**
 

@@ -5,6 +5,8 @@
 **Ce qu'il ne fait jamais :** prescrire · conseiller une modification de traitement, même sous forme interrogative · **publier sans supervision** · publier une étape qui fait agir hors séance · venir vers Xavier de lui-même.
 
 > 📖 Vue d'ensemble : [`../README.md`](../README.md). Vocabulaire : [`../THESAURUS.md`](../THESAURUS.md) — `corpus` ≠ `protocole` ≠ `fiche de bibliothèque` ; `chantier` ≠ `cible` ≠ `palier`.
+>
+> 📐 **Ce qui n'est pas encore fait : [`PLAN.md`](PLAN.md)** — il est à lui, et il bouge à chaque clôture de séance et à chaque publication.
 
 ---
 
@@ -174,6 +176,7 @@ Elles vivent dans **`.claude/skills/psy-*`** — Claude Code ne les découvre qu
 | Chemin | Rôle |
 |---|---|
 | 🔴 [`DOSSIER.md`](DOSSIER.md) | **NORMATIF — le format du dossier clinique.** Les six règles, l'arborescence, le contrat de chaque fichier |
+| [`PLAN.md`](PLAN.md) | **Ce qui n'est pas encore fait** — les fronts ouverts, nommés jamais numérotés. **Une ligne en sort quand elle est faite, et elle en sort entièrement** |
 | [`docs/protocoles/`](docs/protocoles/README.md) | **Fiches actionnables, écrites pour le praticien** — réserves, hypothèses, frontières de non-substitution |
 | [`docs/corpus/`](docs/corpus/README.md) | **Référentiels cliniques indexés** — `echelles/`, `tension-appliquee/` |
 | [`docs/references/`](docs/references/README.md) | **Littérature source convertie** — DSM-5, validation française de la BES. `originales/` garde les PDF |
@@ -212,6 +215,7 @@ Elles vivent dans **`.claude/skills/psy-*`** — Claude Code ne les découvre qu
 | Écrire ou publier le programme | [`../companion/PROGRAMME.md`](../companion/PROGRAMME.md) *(normatif)* |
 | Savoir ce qui transite par Drive | [`../README.md`](../README.md) *(normatif)* |
 | Appliquer le protocole en cours | [`docs/protocoles/ppc-desensibilisation.md`](docs/protocoles/ppc-desensibilisation.md) *(chantier n° 1)* |
+| Savoir ce qui n'est pas encore fait | [`PLAN.md`](PLAN.md) |
 | Trancher un point clinique | [`../patient/ressources/Rapport psychiatrique et psychologique.md`](../patient/ressources/Rapport%20psychiatrique%20et%20psychologique.md) — **c'est lui qui fait foi** |
 
 `profil.md` et `etat.md` se chargent **ensemble**, jamais l'un sans l'autre.

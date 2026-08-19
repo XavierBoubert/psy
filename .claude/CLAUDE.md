@@ -4,7 +4,7 @@
 
 > 📖 **La documentation du dispositif est [`README.md`](../README.md)** — les rôles, le circuit du contenu, le transit, les conventions, les scripts, les invariants. **Ce fichier ne la duplique pas : il dit comment travailler dedans.**
 >
-> 📐 Ce qui reste à construire : [`PLAN.md`](../PLAN.md). Le vocabulaire fait foi dans [`THESAURUS.md`](../THESAURUS.md) — **un mot, une chose** : `protocole` ≠ `fiche de bibliothèque`, `chantier` ≠ `cible` ≠ `palier`, et « étape » a deux sens.
+> 📐 Ce qui n'est pas encore fait : [`psy/PLAN.md`](../psy/PLAN.md) — **il appartient à Claude Psy.** Le vocabulaire fait foi dans [`THESAURUS.md`](../THESAURUS.md) — **un mot, une chose** : `protocole` ≠ `fiche de bibliothèque`, `chantier` ≠ `cible` ≠ `palier`, et « étape » a deux sens.
 
 ---
 

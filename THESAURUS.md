@@ -51,14 +51,14 @@
 
 | Terme | Définition | Granularité |
 |---|---|---|
-| **Étape** *(de la feuille de route)* | Une tranche de construction du dispositif, numérotée. [`PLAN.md`](PLAN.md) | Des semaines |
+| **Front** *(du plan)* | Un **domaine de travail ouvert** du dispositif — somatique, crise, documentation, agoraphobie… **Nommé, jamais numéroté.** [`psy/PLAN.md`](psy/PLAN.md) | Des semaines |
 | **Jalon** | Une tranche de construction **de Kokoro**, numérotée K0, K1, … | Des jours |
 | **Chantier** | Un **domaine de travail somatique** ouvert : PPC, alimentation, activité physique. **À partir du palier 1, un seul chantier progresse à la fois** | Des mois |
 | **Cible** | Ce sur quoi **une séance** travaille. **Une seule par séance.** Identifiants dans [`psy/DOSSIER.md`](psy/DOSSIER.md) §6 | Une séance |
 | **Palier** | Un **cran d'exposition graduée** à l'intérieur d'un chantier ou d'un protocole. On monte quand un **critère comptable** est atteint — jamais quand on « se sent prêt » | Des jours |
-| **Étape** *(du programme)* | Une **ligne affichée dans Kokoro**. Six types, §5 ci-dessous | Minutes |
+| **Étape** | Une **ligne affichée dans Kokoro**. Six types, §5 ci-dessous | Minutes |
 
-> ⚠️ **« Étape » a deux sens et c'est le seul mot du projet dans ce cas.** L'un désigne une tranche de feuille de route, l'autre une ligne dans Kokoro. Le contexte tranche toujours ; en cas de doute, dire **« étape de la feuille de route »** ou **« étape du programme »**.
+> ⭐ **« Étape » n'a plus qu'un sens : une ligne du programme, dans Kokoro.** La feuille de route est faite de **fronts nommés** — ⚠️ **un renvoi à une « Étape N du PLAN », où qu'il subsiste, désigne une numérotation qui n'existe plus.**
 
 > ⭐ **Palier ≠ progression.** Un palier se cote **en séance**, à partir du journal. **Il n'apparaît jamais dans Kokoro** — ni le palier atteint, ni l'historique, ni un pourcentage. C'est ce qui empêche un streak d'exister.
 

@@ -2,7 +2,7 @@
 
 **Un psychologue/psychiatre virtuel basé sur Claude, conçu pour Xavier.** Un dispositif, pas un chatbot.
 
-> 📖 **Ce README décrit ce que le dispositif *est*.** Ce qui reste à construire est dans [`PLAN.md`](PLAN.md) ; le vocabulaire fait foi dans [`THESAURUS.md`](THESAURUS.md) — *un mot, une chose*.
+> 📖 **Ce README décrit ce que le dispositif *est*.** Ce qui n'est pas encore fait est dans [`psy/PLAN.md`](psy/PLAN.md) — **le plan appartient à Claude Psy** ; le vocabulaire fait foi dans [`THESAURUS.md`](THESAURUS.md) — *un mot, une chose*.
 
 ---
 
@@ -33,11 +33,11 @@
 ## 2. Le circuit du contenu
 
 ```
-Claude Psy ──── programme + bibliothèque ────► Kokoro ──── journal + réponses ────► dossier
-     ▲            (companion/inputs/)                      (companion/outputs/)        │
-     │              après supervision                                                  │
-     └───────────────────── Claude Superviseur ◄───────────────────────────────────────┘
-                             (superviseur/outputs/)
+Claude Psy ── programme · bibliothèque · bilans ──► Kokoro ── journal + réponses ──► dossier
+     ▲               (companion/inputs/)                     (companion/outputs/)       │
+     │           🔴 supervision bloquante                                                │
+     └────────────────────────── Claude Superviseur ◄───────────────────────────────────┘
+                                 (superviseur/outputs/)
 ```
 
 **Claude Psy écrit tout le contenu, Claude Superviseur le vise, Kokoro l'affiche, Xavier l'utilise, et ce que Kokoro recueille revient au dossier.** L'aidant n'entre dans la boucle que sur une étape `seance-duo`, et n'y lit que des consignes.
@@ -50,6 +50,8 @@ Claude Psy ──── programme + bibliothèque ────► Kokoro ──�
 | Kokoro → PC | **`npm run psy:sync`** | `companion/outputs/journal/` + `companion/outputs/reponses/` |
 
 🔴 **`psy:publish` refuse la publication entière** si un invariant est enfreint ou si la supervision de la version qui sort manque *(voir [`superviseur/README.md`](superviseur/README.md))*. **Un refus se corrige, il ne se contourne pas** — aucune option de forçage n'existe, et il ne doit jamais en exister une.
+
+⭐ **Les deux surfaces vérifient les mêmes interdits et ne réagissent pas pareil, volontairement.** Le PC **refuse tout** — ici on peut corriger, donc on corrige. **Kokoro écarte la seule ligne fautive et affiche le reste** — sur le téléphone on ne peut rien corriger, et perdre tout le programme pour une ligne serait pire.
 
 ⭐ **La documentation se publie à tout moment ; le reste du programme se publie à la clôture d'une séance.** Une fiche est à portée dès qu'elle est écrite et supervisée — **Xavier n'attend pas la séance suivante pour comprendre ce qui lui arrive**. Les étapes qui font agir — `ecran`, `exercice`, `questionnaire`, `demarche`, `seance-duo` — se décident avec lui, en séance. **La supervision est bloquante dans les deux cas, et toute publication s'annonce à Xavier au moment où elle se fait.**
 
@@ -147,7 +149,7 @@ H:\Mon Drive\kokoro\               ← hors dépôt, jamais partagé
 
 **Deux exceptions, et elles sont motivées :**
 
-- **`PLAN.md` et `THESAURUS.md` restent à la racine** : ils ne sont à aucun rôle, ils sont au dispositif.
+- **`THESAURUS.md` reste à la racine** : il n'est à aucun rôle, il est au dispositif. ⭐ **`PLAN.md`, lui, a rejoint [`psy/`](psy/PLAN.md)** — ce qui reste à faire est du travail de Claude Psy, et **un plan sans propriétaire ne se met à jour nulle part.**
 - **Les skills vivent dans `.claude/skills/psy-*`** — Claude Code ne les découvre que là. Ce n'est pas un choix d'organisation, c'est une contrainte de l'outil.
 
 ---
@@ -172,7 +174,7 @@ Tous s'exécutent depuis la racine, et **les arguments de chemin sont résolus p
 
 | Commande | Source | Objet |
 |---|---|---|
-| `npm run psy:publish` | `psy/scripts/psy-publish.ts` | 🔴 **Publie la thérapie et la bibliothèque vers Kokoro.** Valide le programme et chaque fiche, **vérifie la supervision**, **convertit chaque fiche en PDF** *(seules celles qui ont changé)*, et **refuse la publication entière** au moindre manquement. ⭐ **Sans `--seance`, une étape qui fait agir nouvelle ou modifiée est refusée** — seule la documentation part hors séance. `--refaire` reconvertit toute la bibliothèque |
+| `npm run psy:publish` | `psy/scripts/psy-publish.ts` | 🔴 **Publie la thérapie, la bibliothèque et les bilans vers Kokoro.** Valide le programme, chaque fiche et chaque bilan, **vérifie la supervision**, **convertit en PDF** *(seuls les documents qui ont changé)*, **retire du transit ce que le programme n'appelle plus**, et **refuse la publication entière** au moindre manquement. ⭐ **Sans `--seance`, une étape qui fait agir nouvelle ou modifiée est refusée** — seules la documentation et les bilans partent hors séance. `--refaire` reconvertit tout |
 | `npm run psy:sync` | `psy/scripts/psy-sync.ts` | ⭐ **Verse au dépôt tout ce que Kokoro a écrit** — `journal/` et `reponses/`. **N'écrase jamais un fichier existant**, valide chaque fichier, signale tout nom hors convention |
 | `npm run psy:pdf2md` | `psy/scripts/psy-pdf2md.ts` | Convertit un PDF en Markdown. `-- <source.pdf> <destination.md>` |
 | `npm run psy:docx2md` | `psy/scripts/psy-docx2md.ts` | Convertit un DOCX en Markdown. `-- <source.docx> <destination.md>` |
@@ -180,6 +182,8 @@ Tous s'exécutent depuis la racine, et **les arguments de chemin sont résolus p
 | `npm run companion:kokoro` | `companion/android/kokoro` | ⭐ **Compile, teste, installe et ouvre Kokoro sur le téléphone**, ⭐ **par le Wi-Fi, sans câble** *(15/08/2026 — le lien se renoue tout seul)*. C'est le même script que `./kokoro` — il existe pour que **Xavier déploie sans passer par Claude** |
 | `npm run companion:image` | `companion/scripts/companion-image.ts` | Génère des planches de recherche graphique via Gemini |
 | `npm run companion:decoupe` | `companion/scripts/companion-decoupe.ts` | Détoure une planche : le fond magenta `#FF00FF` devient le canal alpha |
+| `npm run companion:fondu` | `companion/scripts/companion-fondu.ts` | Fond le bandeau de notification dans le décor |
+| `npm run companion:icone` | `companion/scripts/companion-icone.ts` | Fabrique les icônes de Kokoro — le lanceur et la notification. 🔴 **Aucune image d'icône ne se retouche à la main** |
 | `npm run typecheck` | — | `tsc --noEmit` sur `psy/scripts/` et `companion/scripts/` |
 
 ⭐ **`psy:publish` et `psy:sync` portent le chemin du transit Drive en dur** : c'est la forme de tous les jours. Pour un autre dossier de transit, appeler le script directement — `node psy/scripts/psy-publish.ts <dossier>`.
@@ -217,7 +221,7 @@ Ils viennent des contraintes de Xavier *(détail : [`patient/README.md`](patient
 | Écrire ou lire une donnée du dossier | [`psy/DOSSIER.md`](psy/DOSSIER.md) *(normatif)* |
 | Écrire ou publier le programme | [`companion/PROGRAMME.md`](companion/PROGRAMME.md) *(normatif)* |
 | Employer le bon mot | [`THESAURUS.md`](THESAURUS.md) |
-| Savoir ce qui reste à construire | [`PLAN.md`](PLAN.md) |
+| Savoir ce qui n'est pas encore fait | [`psy/PLAN.md`](psy/PLAN.md) |
 
 > 🔴 **Avant toute intervention clinique**, charger [`psy/outputs/dossier/profil.md`](psy/outputs/dossier/profil.md) *(contexte permanent)* **et** [`psy/outputs/dossier/etat.md`](psy/outputs/dossier/etat.md) *(état courant)*, **ensemble et jamais l'un sans l'autre**. Le premier dit *qui est Xavier*, le second *où on en est*.
 >
