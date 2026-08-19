@@ -26,6 +26,13 @@ sealed interface Support {
     data class Texte(val contenu: String) : Support
 }
 
+enum class Pour(val cle: String) {
+    AIDE("aide"),
+    PATIENT("patient"),
+}
+
+data class Consigne(val pour: Pour, val consigne: String, val secondes: Int)
+
 data class Choix(val valeur: Int, val libelle: String)
 
 data class QuestionFermee(val id: String, val enonce: String, val choix: List<Choix>)
@@ -59,6 +66,14 @@ sealed interface Etape {
 
     data class Fiche(override val reperes: Reperes, val support: Support) : Etape
 
+    data class SeanceDuo(
+        override val reperes: Reperes,
+        val signalArret: String,
+        val avant: List<String>,
+        val sequence: List<Consigne>,
+        val arret: List<String>,
+    ) : Etape
+
     data class Bilan(override val reperes: Reperes, val document: String, val date: String) : Etape
 }
 
@@ -79,6 +94,8 @@ val PROGRAMME_ABSENT = Programme(version = 0, etapes = emptyList())
 private val KEBAB = Regex("""^[a-z0-9-]+$""")
 
 private val DATE = Regex("""^\d{4}-\d{2}-\d{2}$""")
+
+private val DERNIER_CRITERE = Regex("""ne sais pas quoi faire""", RegexOption.IGNORE_CASE)
 
 fun lireProgramme(json: String): Programme {
     val racine = lireJson(json) ?: return PROGRAMME_ABSENT
@@ -116,6 +133,7 @@ private fun etape(valeur: Valeur): Etape? {
         "questionnaire" -> questionnaire(reperes, valeur)
         "demarche" -> valeur.permis("detail")?.let { Etape.Demarche(reperes, it) }
         "fiche" -> support(valeur)?.let { Etape.Fiche(reperes, it) }
+        "seance-duo" -> seanceDuo(reperes, valeur)
         else -> null
     }
 }
@@ -177,6 +195,43 @@ private fun choix(valeur: Valeur): Choix? {
     val libelle = valeur.permis("libelle") ?: return null
 
     return Choix(valeur = chiffre, libelle = libelle)
+}
+
+// L'aidant ne peut ni corriger ni improviser : une séance à deux amputée d'un critère d'arrêt tombe entière.
+private fun seanceDuo(reperes: Reperes, valeur: Valeur): Etape.SeanceDuo? {
+    if (valeur.booleen("entrainement_requis") != true || valeur.booleen("sortie_libre") != true) return null
+
+    val signal = valeur.permis("signal_arret") ?: return null
+    val avant = textesPermis(valeur, "avant") ?: return null
+    val arret = textesPermis(valeur, "arret")?.takeIf { it.size >= 2 } ?: return null
+    if (!DERNIER_CRITERE.containsMatchIn(arret.last())) return null
+
+    val lues = valeur.elements("sequence").map(::consigne)
+    if (lues.isEmpty() || lues.any { it == null }) return null
+
+    return Etape.SeanceDuo(
+        reperes = reperes,
+        signalArret = signal,
+        avant = avant,
+        sequence = lues.filterNotNull(),
+        arret = arret,
+    )
+}
+
+private fun consigne(valeur: Valeur): Consigne? {
+    val pour = Pour.entries.firstOrNull { it.cle == valeur.texte("pour") } ?: return null
+    val dite = valeur.permis("consigne") ?: return null
+    val secondes = valeur.entier("secondes")?.takeIf { it > 0 } ?: return null
+
+    return Consigne(pour = pour, consigne = dite, secondes = secondes)
+}
+
+private fun textesPermis(valeur: Valeur, cle: String): List<String>? {
+    val lus = valeur.elements(cle).map { element ->
+        (element as? Valeur.Texte)?.contenu?.takeIf { it.isNotBlank() && estPermis(it) }
+    }
+
+    return if (lus.any { it == null }) null else lus.filterNotNull()
 }
 
 private fun support(etape: Valeur): Support? {

@@ -1,7 +1,7 @@
 {
-  "version": 6,
+  "version": 8,
   "publie_le": "2026-08-19",
-  "supervision": "2026-08-19-programme-v6",
+  "supervision": "2026-08-19-programme-v8",
   "etapes": [
     {
       "id": "check-in",
@@ -66,44 +66,55 @@
       "montrable": false
     },
     {
-      "id": "ppc-releve",
-      "titre": "Demander le relevé de télésuivi",
-      "type": "demarche",
-      "rubrique": "therapie",
-      "quand": "sans_date",
-      "detail": "Link Sommeil, sur les 3 derniers mois : heures par nuit, nombre de nuits utilisées, fuites, IAH résiduel. Des chiffres, pas une impression."
-    },
-    {
-      "id": "ppc-prise-en-charge",
-      "titre": "Demander où en est la prise en charge",
-      "type": "demarche",
-      "rubrique": "therapie",
-      "quand": "sans_date",
-      "detail": "Link Sommeil : le masque bouche + nez est-il pris en charge, et jusqu'a quand ? Ou en est le renouvellement trois mois apres. Reponse ecrite."
-    },
-    {
-      "id": "ppc-consultation-roisman",
-      "titre": "Demander une consultation de reprise au Dr Roisman",
-      "type": "demarche",
-      "rubrique": "therapie",
-      "quand": "sans_date",
-      "detail": "En annonçant que la reprise se fera par paliers écrits. Solliciter le pneumologue après trois mois d'usage irrégulier n'est pas un aveu d'échec : c'est la démarche normale."
-    },
-    {
-      "id": "ppc-voyage",
-      "titre": "Demander comment emporter l'appareil en Tunisie",
-      "type": "demarche",
-      "rubrique": "therapie",
-      "quand": "sans_date",
-      "detail": "Départ le 07/09. Bagage cabine (l'appareil est un matériel médical, généralement hors franchise sur présentation de l'ordonnance), adaptateur et tension, eau de l'humidificateur. Réponse écrite avant le départ."
-    },
-    {
       "id": "email-isorni",
       "titre": "Envoyer l'email préparé au Dr Isorni",
       "type": "demarche",
       "rubrique": "therapie",
       "quand": "sans_date",
       "detail": "Le brouillon est prêt dans le dossier. Il a vocation à partir avant la consultation du 03/09, pour qu'il arrive préparé — pas à être lu sur place."
+    },
+    {
+      "id": "essai-a-deux",
+      "titre": "Essai à deux — vérifier le déroulé de bout en bout",
+      "type": "seance-duo",
+      "rubrique": "therapie",
+      "quand": "au_besoin",
+      "duree_minutes": 3,
+      "entrainement_requis": true,
+      "signal_arret": "Xavier fait « non » de la main. On s'arrête, sans rien demander.",
+      "avant": [
+        "Le téléphone est dans tes mains, et il y reste du début à la fin.",
+        "Xavier t'a montré le « non » de la main avant qu'on commence.",
+        "La porte est fermée, et rien ne doit interrompre les trois prochaines minutes."
+      ],
+      "sequence": [
+        {
+          "pour": "aide",
+          "consigne": "Assieds-toi en face de lui, à un mètre. Garde l'écran tourné vers toi.",
+          "secondes": 30
+        },
+        {
+          "pour": "patient",
+          "consigne": "Lis à voix haute, mot pour mot : « Ceci est un essai du dispositif. Rien d'autre n'est demandé que de rester assis jusqu'au bout. »",
+          "secondes": 30
+        },
+        {
+          "pour": "aide",
+          "consigne": "Ne parle pas pendant ce temps. L'écran passe seul à la consigne suivante.",
+          "secondes": 45
+        },
+        {
+          "pour": "patient",
+          "consigne": "Lis à voix haute, mot pour mot : « L'essai est terminé. Le déroulé est allé jusqu'à sa dernière ligne. »",
+          "secondes": 20
+        }
+      ],
+      "arret": [
+        "Il fait le signal d'arrêt → on s'arrête, on ne demande rien.",
+        "Il ne répond plus aux consignes → on s'arrête, c'est un shutdown, pas un refus.",
+        "Tu ne sais pas quoi faire → on s'arrête. Ne jamais improviser."
+      ],
+      "sortie_libre": true
     },
     {
       "id": "rapport-psy-2026-08",

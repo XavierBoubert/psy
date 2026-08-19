@@ -38,6 +38,8 @@ sealed interface Contexte {
 
     data class Questionnaire(val etape: Etape.Questionnaire) : Contexte
 
+    data class SeanceDuo(val etape: Etape.SeanceDuo, val entraine: Boolean) : Contexte
+
     data object Reglages : Contexte
 
     data object Checkin : Contexte

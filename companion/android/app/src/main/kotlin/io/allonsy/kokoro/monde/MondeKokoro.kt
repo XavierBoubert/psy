@@ -53,6 +53,7 @@ import io.allonsy.kokoro.programme.PROGRAMME_ABSENT
 import io.allonsy.kokoro.programme.Programme
 import io.allonsy.kokoro.programme.ReponseItem
 import io.allonsy.kokoro.programme.Support
+import io.allonsy.kokoro.programme.entrainementMene
 import io.allonsy.kokoro.programme.faite
 import io.allonsy.kokoro.reglages.EtatAutorisations
 import io.allonsy.kokoro.reglages.PARALLAXE_PAR_DEFAUT
@@ -83,6 +84,7 @@ fun MondeKokoro(
     programme: Programme = PROGRAMME_ABSENT,
     faites: Faites = AUCUNE_FAITE,
     onRendu: (String, Issue, List<ReponseItem>) -> Unit = { _, _, _ -> },
+    onEntrainement: (String) -> Unit = {},
     onPdf: (String) -> Unit = {},
     onBilan: (String) -> Unit = {},
     parallaxe: Parallaxe = PARALLAXE_PAR_DEFAUT,
@@ -145,6 +147,7 @@ fun MondeKokoro(
             is Etape.Ecran -> agir(etape.fonction)
             is Etape.Exercice -> ouvrirPanneau(Contexte.Exercice(etape))
             is Etape.Questionnaire -> ouvrirPanneau(Contexte.Questionnaire(etape))
+            is Etape.SeanceDuo -> ouvrirPanneau(Contexte.SeanceDuo(etape, faites.entrainementMene(etape)))
             is Etape.Demarche -> ouvrirPanneau(Contexte.Demarche(etape, faites.faite(etape)))
             is Etape.Fiche -> lireLaFiche(etape)
             is Etape.Bilan -> onBilan(etape.document)
@@ -245,6 +248,7 @@ fun MondeKokoro(
             donneesReglages = donneesReglages,
             donneesCheckin = donneesCheckin,
             onRendu = onRendu,
+            onEntrainement = onEntrainement,
             onFermer = { ouverte = null },
         )
 
@@ -375,6 +379,7 @@ private fun PanneauOuvert(
     donneesReglages: DonneesReglages,
     donneesCheckin: DonneesCheckin,
     onRendu: (String, Issue, List<ReponseItem>) -> Unit,
+    onEntrainement: (String) -> Unit,
     onFermer: () -> Unit,
 ) {
     // Attend locuteur, pas seulement visible : sinon le panneau glisse avant que Kokoro n'ait fini son vol (700 ms).
@@ -410,6 +415,14 @@ private fun PanneauOuvert(
             is Contexte.Questionnaire -> PanneauQuestionnaire(
                 etape = contexte.etape,
                 onRendu = { issue, items -> onRendu(contexte.etape.reperes.id, issue, items) },
+                onFermer = onFermer,
+            )
+
+            is Contexte.SeanceDuo -> PanneauSeanceDuo(
+                etape = contexte.etape,
+                entraine = contexte.entraine,
+                onIssue = { issue -> onRendu(contexte.etape.reperes.id, issue, emptyList()) },
+                onEntrainementMene = { onEntrainement(contexte.etape.reperes.id) },
                 onFermer = onFermer,
             )
 

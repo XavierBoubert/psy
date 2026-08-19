@@ -262,6 +262,35 @@
     <string name="questionnaire_action_fermer">Fermer</string>
     <string name="questionnaire_fini">C\'est enregistré dans le dossier.</string>
 
+    <!--
+      ⭐ La séance à deux — companion/PROGRAMME.md §3. Le téléphone passe dans les mains de l'aidant :
+      Kokoro tient la cadence, il ne lui demande jamais de juger. 🔴 Le signal d'arrêt reste à l'écran
+      le signal d'arrêt et les critères sont une case à cocher avant d'entrer, jamais un rappel qui suit les
+      consignes. L'entraînement est la même séquence jouée à blanc : ce n'est pas une donnée clinique, et rien
+      ne s'en déduit.
+    -->
+    <string name="duo_accueil">Passe le téléphone. Tout ce qui suit est écrit pour la personne qui accompagne.</string>
+    <string name="duo_entrainement_mene">L\'entraînement a été mené jusqu\'au bout.</string>
+    <string name="duo_accueil_entrainement">L\'entraînement joue la même séquence à blanc, sans le matériel. La première fois qui compte ne doit pas être la première fois qu\'on le découvre.</string>
+    <string name="duo_action_entrainement">L\'entraînement, à blanc</string>
+    <string name="duo_action_seance">La séance</string>
+    <string name="duo_entrainement_en_cours">Entraînement — à blanc, sans le matériel.</string>
+    <string name="duo_avant_titre">À vérifier avant d\'entrer dans le déroulé.</string>
+    <string name="duo_avant_reste">Le déroulé s\'ouvre quand tout est coché</string>
+    <string name="duo_action_commencer">On commence</string>
+    <string name="duo_minuteur_ouvert">Le minuteur tourne tant que cet écran reste ouvert. L\'écran passe seul à la consigne suivante.</string>
+    <string name="duo_avant_cadence_entrainement">L\'entraînement ne se chronomètre pas : tu passes d\'une consigne à l\'autre à ton rythme.</string>
+    <string name="duo_duree_annonce">Entraînement — ce temps est celui que la consigne durera en séance.</string>
+    <string name="duo_action_suivante">Passer à la consigne suivante</string>
+    <string name="duo_action_finir">Finir l\'entraînement</string>
+    <string name="duo_rang">Consigne %1$d sur %2$d</string>
+    <string name="duo_sortie_libre">On peut arrêter avant la fin, sans avoir à le justifier.</string>
+    <string name="duo_action_arreter">On s\'arrête</string>
+    <string name="duo_mene">Le déroulé est allé jusqu\'au bout.</string>
+    <string name="duo_arrete">On s\'est arrêté là.</string>
+    <string name="duo_fini">C\'est enregistré dans le dossier.</string>
+    <string name="duo_action_fermer">Fermer</string>
+
     <string name="reponse_dossier_absent">Le dossier synchronisé n\'est pas choisi : rien n\'a été enregistré.</string>
     <string name="reponse_echec">L\'enregistrement dans le dossier n\'a pas abouti.</string>
 

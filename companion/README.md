@@ -50,7 +50,7 @@
 | **`reponses/`** | ✅ | Un fichier par étape faite, `AAAA-MM-JJ-HHMM-<id>.json`. 🔴 **Kokoro se souvient localement de ce qu'il a écrit** — l'état d'une étape ne dépend jamais d'un aller-retour par Drive |
 | **Bilan** | ✅ | Lit les étapes `bilan` de `programme.json`, **groupées par mois décroissant** sur la `date` du document, et **confie le PDF au lecteur du téléphone**. ⭐ **Aucun score, aucun seuil, aucune interprétation à l'écran, et aucune fonction de partage** |
 | **Questionnaire** | ✅ | Type porté et disponible — une question par écran, choix fermés, « passer » et arrêt libres → écrit `reponses/` **item par item**. ⭐ **Aucune échelle validée ne part dans Kokoro** *(tranché le 19/08/2026)* : elles se passent avec Claude Psy |
-| **Séance à deux** | 🔜 | K6. Le type `seance-duo` existe au contrat, pas encore dans l'app |
+| **Séance à deux** | 🏗️ | K6. Type porté : accueil, entraînement à blanc, cases à cocher avant d'entrer — dont **une case qui porte le signal d'arrêt et les critères, et sans laquelle le déroulé ne s'ouvre pas** —, puis la séquence chronométrée qui passe seule d'une consigne à l'autre. ⭐ **Rien ne flotte autour de la consigne** : elle dit elle-même à qui elle s'adresse. **L'entraînement mené se retient localement** — l'issue n'est pas dans le nom du fichier. **Il reste à le jouer avec Chourouk**, c'est le critère de fin |
 
 ⭐ **Le circuit complet est constaté, pas seulement écrit** *(19/08/2026)* : une étape publiée depuis le PC est apparue sur le téléphone, a été faite, et sa réponse est revenue au dossier par `psy:sync` — **valide au format, sans intervention manuelle**. Un bilan s'est ouvert dans le lecteur PDF du téléphone et s'est partagé depuis lui. **Le partage est celui du lecteur, jamais une fonction de Kokoro.**
 

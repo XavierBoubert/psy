@@ -499,11 +499,18 @@ fun PanneauDialogue(
     onFermer: () -> Unit,
     modifier: Modifier = Modifier,
     ecart: Dp = 18.dp,
+    // Un panneau qui enchaîne des pages repart du haut à chaque changement : sans ça, la nouvelle page s'ouvre au milieu.
+    remonteSur: Any? = null,
     contenu: @Composable ColumnScope.() -> Unit,
 ) {
     val palette = LocalPaletteKokoro.current
     val porte = LocalPanneauPorte.current
     val blocageScrim = remember { MutableInteractionSource() }
+    val defilement = rememberScrollState()
+
+    LaunchedEffect(remonteSur) {
+        if (remonteSur != null) defilement.scrollTo(0)
+    }
 
     Column(
         modifier = modifier
@@ -546,7 +553,7 @@ fun PanneauDialogue(
                     .fillMaxWidth()
                     .matiere(palette = palette, rayon = BULLE_RAYON)
                     .clip(DEDANS_BULLE)
-                    .verticalScroll(rememberScrollState())
+                    .verticalScroll(defilement)
                     .padding(horizontal = MARGE_PANNEAU)
                     .padding(top = 20.dp, bottom = 24.dp + EPAISSEUR),
                 verticalArrangement = Arrangement.spacedBy(ecart),

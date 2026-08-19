@@ -14,8 +14,8 @@ android {
         applicationId = "io.allonsy.kokoro"
         minSdk = 31
         targetSdk = 36
-        versionCode = 5
-        versionName = "K4"
+        versionCode = 6
+        versionName = "K6"
     }
 
     buildTypes {
@@ -33,6 +33,11 @@ android {
         compose = true
         buildConfig = true
     }
+}
+
+// Le programme publié est relu par un test : sans cette entrée, Gradle le croit à jour et la garde se tait.
+tasks.withType<Test>().configureEach {
+    inputs.files(fileTree("../../inputs")).withPropertyName("contenuPublie")
 }
 
 kotlin {

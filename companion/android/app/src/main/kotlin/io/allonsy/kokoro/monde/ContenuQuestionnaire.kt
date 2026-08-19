@@ -45,7 +45,7 @@ fun PanneauQuestionnaire(
         if (rang + 1 < etape.questions.size) rang += 1 else rendre(Issue.TERMINE, rendus)
     }
 
-    PanneauDialogue(titre = etape.reperes.titre, ecart = 16.dp, onFermer = onFermer) {
+    PanneauDialogue(titre = etape.reperes.titre, ecart = 16.dp, remonteSur = vue to rang, onFermer = onFermer) {
         when (vue) {
             VuePassation.AVANT -> Avant(
                 questions = etape.questions.size,

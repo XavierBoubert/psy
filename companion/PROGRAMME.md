@@ -176,11 +176,11 @@ Deux formes, exclusives l'une de l'autre :
   "avant": [
     "Pièce calme, lumière baissée, porte fermée.",
     "Le téléphone reste dans tes mains du début à la fin.",
-    "Relis les critères d'arrêt — bouton en bas, à tout moment."
+    "Xavier t'a montré le « non » de la main avant qu'on commence."
   ],
   "sequence": [
     { "pour": "aide",    "consigne": "Assieds-toi en face de lui, à un mètre.", "secondes": 30 },
-    { "pour": "patient", "consigne": "Pose les deux pieds à plat. Appuie tes talons dans le sol.", "secondes": 60 },
+    { "pour": "patient", "consigne": "Lis à voix haute, mot pour mot : « Pose les deux pieds à plat. »", "secondes": 60 },
     { "pour": "aide",    "consigne": "Ne parle pas pendant ce temps. Le minuteur t'avertit.", "secondes": 60 }
   ],
   "arret": [
@@ -194,15 +194,15 @@ Deux formes, exclusives l'une de l'autre :
 | Champ | Règle |
 |---|---|
 | `entrainement_requis` | 🔴 **Toujours `true`.** La première exécution réelle ne peut pas être la première fois que l'aidant découvre le déroulé. Kokoro propose l'**entraînement** tant qu'il n'a pas été fait au moins une fois |
-| `signal_arret` | 🔴 **Obligatoire, non vide, et rappelé à l'écran en permanence.** ⭐ **C'est le champ le plus important du type** : Xavier doit pouvoir arrêter **sans parler**, parce que c'est exactement ce qui tombe en premier. Le geste se convient **à froid**, jamais pendant. 🔴 **Le geste convenu est le « non » de la main** — il se recopie tel quel dans chaque `seance-duo`, **il ne se réinvente pas d'une séance à l'autre** |
+| `signal_arret` | 🔴 **Obligatoire et non vide.** ⭐ **C'est le champ le plus important du type** : Xavier doit pouvoir arrêter **sans parler**, parce que c'est exactement ce qui tombe en premier. Le geste se convient **à froid**, jamais pendant. 🔴 **Le geste convenu est le « non » de la main** — il se recopie tel quel dans chaque `seance-duo`, **il ne se réinvente pas d'une séance à l'autre**. **Kokoro l'affiche en tête de la case à cocher des critères d'arrêt** *(voir `arret`)* |
 | `avant` | Ce qui doit être vrai avant de commencer. L'aidant coche, ou n'entre pas dans la séquence |
-| `sequence` | Consignes ordonnées. `pour` vaut `aide` (elle fait) ou `patient` (elle lit à voix haute, **mot pour mot**). `secondes` est le temps tenu par l'appareil. 🔴 **Aucune consigne ne demande une réponse gestuelle de la main** — le « non » de la main est réservé à l'arrêt, et un geste ambigu se lit comme un arrêt manqué |
-| `arret` | 🔴 **Obligatoire, au moins deux entrées, accessibles en un tap à tout moment.** ⭐ **La dernière est toujours « tu ne sais pas quoi faire → on s'arrête »** — l'aidant n'improvise jamais |
+| `sequence` | Consignes ordonnées. `secondes` est le temps tenu par l'appareil. 🔴 **La consigne dit elle-même à qui elle s'adresse** — « Lis à voix haute, mot pour mot : … » quand elle est destinée à Xavier. **Kokoro n'affiche aucune étiquette autour d'elle** ; `pour` *(`aide` · `patient`)* reste obligatoire et **contrôlé** au dépôt comme à la lecture, mais **il ne s'affiche pas**. 🔴 **Aucune consigne ne demande une réponse gestuelle de la main** — le « non » de la main est réservé à l'arrêt, et un geste ambigu se lit comme un arrêt manqué |
+| `arret` | 🔴 **Obligatoire, au moins deux entrées.** ⭐ **La dernière est toujours « tu ne sais pas quoi faire → on s'arrête »** — l'aidant n'improvise jamais. 🔴 **Kokoro les porte sur une case à cocher de l'écran *avant*, le signal d'arrêt en tête** : elles se lisent **avant** d'entrer, et le déroulé ne s'ouvre pas tant que la case n'est pas cochée. ⭐ **Cocher est la seule preuve qu'elles ont été lues** — un rappel permanent et un bouton « quand s'arrêter » encombraient chaque consigne sans rien garantir |
 | `sortie_libre` | `true`, comme partout |
 
 > 🔴 **Ce que le type ne porte jamais** *(contrôle **C10**)* : un diagnostic, un score, une hypothèse, un compte rendu — **rien qui apprenne à l'aidant quelque chose sur Xavier qu'il n'a pas décidé de partager**. Et aucune consigne qui **lui demande de juger** : « estime si ça va », « décide s'il faut continuer », « rassure-le ». **Une consigne qui demande un jugement clinique la met en faute quoi qu'elle fasse.**
 
-> ⭐ **Le mode entraînement compte autant que la séance.** C'est **la même séquence, jouée à blanc**, sans le matériel réel. Il renvoie `issue: "entrainement"` — **ce n'est pas une donnée clinique et rien ne s'en déduit**. **La première fois que ça compte ne doit pas être la première fois que ça se fait.**
+> ⭐ **Le mode entraînement compte autant que la séance.** C'est **la même séquence, jouée à blanc**, sans le matériel réel — 🔴 **et sans minuteur** *(19/08/2026)* : **l'aidant passe d'une consigne à l'autre à la main**, et le temps affiché est celui que la consigne **durera en séance**. ⭐ **Deux raisons, et la seconde est la vraie** : un déroulé qui s'enchaîne tout seul ne laisse pas le temps de se préparer, **et voir la durée avant de la vivre est précisément ce qu'un entraînement sert à donner.** Il renvoie `issue: "entrainement"` — **ce n'est pas une donnée clinique et rien ne s'en déduit**. **La première fois que ça compte ne doit pas être la première fois que ça se fait.**
 
 > ⚠️ **Limite connue du format : `sequence` est linéaire, elle ne sait pas exprimer une répétition en séries.** Un déroulé de stimulation bilatérale est fait de séries — *n* allers-retours, une pause, on recommence. 🔴 **Déplier trente consignes identiques serait un contournement, pas une solution** : le format porterait une cadence sans jamais la nommer, et le Superviseur n'aurait rien à contrôler. **L'extension se décide en séance, sous supervision — pas à l'implémentation.**
 

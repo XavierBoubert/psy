@@ -36,6 +36,16 @@ private const val QUESTIONNAIRE =
               { "valeur": 1, "libelle": "Un" },
               { "valeur": 2, "libelle": "Deux" } ] } ] }"""
 
+private const val SEANCE_DUO =
+    """{ "id": "essai-a-deux", "titre": "Essai à deux", "type": "seance-duo", "rubrique": "therapie",
+        "quand": "au_besoin", "entrainement_requis": true,
+        "signal_arret": "Xavier fait « non » de la main. On s'arrête, sans rien demander.",
+        "avant": [ "Le téléphone reste dans tes mains du début à la fin." ],
+        "sequence": [ { "pour": "aide", "consigne": "Assieds-toi en face de lui.", "secondes": 30 } ],
+        "arret": [ "Il fait le signal d'arrêt → on s'arrête, on ne demande rien.",
+          "Tu ne sais pas quoi faire → on s'arrête. Ne jamais improviser." ],
+        "sortie_libre": true }"""
+
 private const val DEMARCHE =
     """{ "id": "ppc-releve", "titre": "Demander le relevé", "type": "demarche", "rubrique": "therapie",
         "quand": "sans_date", "detail": "Des chiffres, pas une impression." }"""
@@ -51,8 +61,10 @@ private const val BILAN_2026 =
 class ProgrammeTest {
 
     @Test
-    fun `lit les six types portes par Kokoro`() {
-        val lu = lireProgramme(programme("$ECRAN, $EXERCICE, $QUESTIONNAIRE, $DEMARCHE, $FICHE_PDF, $BILAN_2026"))
+    fun `lit les sept types portes par Kokoro`() {
+        val lu = lireProgramme(
+            programme("$ECRAN, $EXERCICE, $QUESTIONNAIRE, $DEMARCHE, $FICHE_PDF, $SEANCE_DUO, $BILAN_2026"),
+        )
 
         assertEquals(7, lu.version)
         assertEquals(
@@ -62,6 +74,7 @@ class ProgrammeTest {
                 Etape.Questionnaire::class,
                 Etape.Demarche::class,
                 Etape.Fiche::class,
+                Etape.SeanceDuo::class,
                 Etape.Bilan::class,
             ),
             lu.etapes.map { it::class },

@@ -36,6 +36,8 @@ import io.allonsy.kokoro.journal.checkinDuJourExiste
 import io.allonsy.kokoro.journal.cheminAffichable
 import io.allonsy.kokoro.journal.ecrireCheckin
 import io.allonsy.kokoro.journal.enregistrerDossier
+import io.allonsy.kokoro.journal.entrainementsMenes
+import io.allonsy.kokoro.journal.marquerEntrainement
 import io.allonsy.kokoro.journal.intentChoisirDossier
 import io.allonsy.kokoro.journal.jourCourant
 import io.allonsy.kokoro.journal.lireDossier
@@ -157,6 +159,7 @@ class MondeActivity : ComponentActivity() {
                     programme = programme.value,
                     faites = faites.value,
                     onRendu = { etape, issue, items -> enregistrerReponse(etape, issue, items) },
+                    onEntrainement = { etape -> retenirLEntrainement(etape) },
                     onPdf = { document -> ouvrirLeDocument { pdfDeLaBibliotheque(this@MondeActivity, document) } },
                     onBilan = { document -> ouvrirLeDocument { pdfDuBilan(this@MondeActivity, document) } },
                     ouvrirCheckin = ouvrirCheckinDemande.value,
@@ -206,7 +209,11 @@ class MondeActivity : ComponentActivity() {
             val lu = withContext(Dispatchers.IO) { programmeDuDossier() }
             val rendues = withContext(Dispatchers.IO) { listerReponses(this@MondeActivity) }
             programme.value = lu
-            faites.value = Faites(jour = jourCourant(), reponses = rendues)
+            faites.value = Faites(
+                jour = jourCourant(),
+                reponses = rendues,
+                entrainements = entrainementsMenes(this@MondeActivity),
+            )
             sejour.value = sejour.value.copy(vides = videsDe(lu))
         }
     }
@@ -231,6 +238,11 @@ class MondeActivity : ComponentActivity() {
                 is ResultatEcriture.Echec -> getString(R.string.reponse_echec)
             }
         }
+    }
+
+    private fun retenirLEntrainement(etape: String) {
+        marquerEntrainement(this, etape)
+        faites.value = faites.value.copy(entrainements = faites.value.entrainements + etape)
     }
 
     // Deux échecs distincts, deux phrases distinctes : le document n'est pas arrivé, ou le téléphone n'a pas de lecteur.

@@ -13,6 +13,7 @@ private const val CLE_ARBRE = "arbre_dossier"
 private const val CLE_DERNIER_JOUR = "dernier_jour_ecrit"
 private const val CLE_SOUS_DOSSIER = "sous_dossier_"
 private const val CLE_REPONSES_ECRITES = "reponses_ecrites"
+private const val CLE_ENTRAINEMENTS = "entrainements_menes"
 private const val SOUS_DOSSIER = "journal"
 private const val SOUS_DOSSIER_REPONSES = "reponses"
 private const val SOUS_DOSSIER_BIBLIOTHEQUE = "bibliotheque"
@@ -181,6 +182,19 @@ private fun retenirLaReponse(context: Context, nom: String) {
     val prefs = context.getSharedPreferences(FICHIER, Context.MODE_PRIVATE)
     prefs.edit().putStringSet(CLE_REPONSES_ECRITES, reponsesRetenues(context) + nom).apply()
 }
+
+// L'issue n'est pas dans le nom du fichier : l'entraînement mené se retient ici, il ne se relit pas de Drive.
+fun marquerEntrainement(context: Context, etape: String) {
+    context.getSharedPreferences(FICHIER, Context.MODE_PRIVATE)
+        .edit()
+        .putStringSet(CLE_ENTRAINEMENTS, entrainementsMenes(context) + etape)
+        .apply()
+}
+
+fun entrainementsMenes(context: Context): Set<String> =
+    context.getSharedPreferences(FICHIER, Context.MODE_PRIVATE)
+        .getStringSet(CLE_ENTRAINEMENTS, emptySet())
+        .orEmpty()
 
 private fun reponsesRetenues(context: Context): Set<String> =
     context.getSharedPreferences(FICHIER, Context.MODE_PRIVATE)
