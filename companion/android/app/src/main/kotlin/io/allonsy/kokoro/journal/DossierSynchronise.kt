@@ -16,6 +16,7 @@ private const val CLE_REPONSES_ECRITES = "reponses_ecrites"
 private const val SOUS_DOSSIER = "journal"
 private const val SOUS_DOSSIER_REPONSES = "reponses"
 private const val SOUS_DOSSIER_BIBLIOTHEQUE = "bibliotheque"
+private const val SOUS_DOSSIER_BILANS = "bilans"
 private const val FICHIER_PROGRAMME = "programme.json"
 private const val MIME_JSON = "application/json"
 
@@ -186,10 +187,16 @@ private fun reponsesRetenues(context: Context): Set<String> =
         .getStringSet(CLE_REPONSES_ECRITES, emptySet())
         .orEmpty()
 
-fun pdfDeLaBibliotheque(context: Context, document: String): Uri? {
+fun pdfDeLaBibliotheque(context: Context, document: String): Uri? =
+    pdfDuDossier(context, SOUS_DOSSIER_BIBLIOTHEQUE, document)
+
+fun pdfDuBilan(context: Context, document: String): Uri? =
+    pdfDuDossier(context, SOUS_DOSSIER_BILANS, document)
+
+private fun pdfDuDossier(context: Context, nom: String, document: String): Uri? {
     val racine = racineDuDossier(context) ?: return null
     rafraichir(context, racine)
-    val dossier = enfant(context, racine, SOUS_DOSSIER_BIBLIOTHEQUE) ?: return null
+    val dossier = enfant(context, racine, nom) ?: return null
     rafraichir(context, dossier)
     return enfant(context, dossier, "$document.pdf")
 }

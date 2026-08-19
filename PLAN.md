@@ -46,7 +46,7 @@
 
 - [ ] **Premier brief Dr Isorni**, à écrire à la séance du **week-end du 29-30/08**
 - [ ] Passer les échelles restantes : **TAS-20** · **CAT-Q + GAD-7/PHQ-9** · **BES** dès obtention. Plafond 20 min par séance ; **l'échelle n'est jamais la cible de la séance**
-- [ ] 🔴 **Verser les bilans finalisés dans Kokoro** — jalon **K8**, Étape 5. ⭐ **Les échelles se passent avec Claude Psy, en conversation** *(tranché le 19/08/2026)* : **Kokoro porte le bilan, jamais la passation**
+- [x] ✅ **Les quatre bilans finalisés sont publiés vers Kokoro** *(19/08/2026)* — jalon **K8**, Étape 5. ⭐ **Les échelles se passent avec Claude Psy, en conversation** *(tranché le 19/08/2026)* : **Kokoro porte le bilan, jamais la passation**
 - [ ] ✈️ **Sécuriser l'ordonnance de venlafaxine pour le séjour.** **Logistique, pas posologie**
 
 ### Étape 3 — Outils de crise 🔴 *ouverte*
@@ -67,7 +67,7 @@
 | Jalon | Objet | Critère de fin |
 |---|---|---|
 | 🔴 **K5** *(en cours)* | **Le programme et la bibliothèque** — Kokoro lit `programme.json` + `bibliotheque/`, affiche par rubrique, écrit `reponses/`. ✅ **Thérapie, Documentation et Bilan sont entièrement lues du dossier** — `ecran`, `exercice` *(minuteur)*, `questionnaire` *(une question par écran, réponses item par item)*, `demarche` *(bouton « c'est fait »)*, `fiche` ; ✅ **le circuit complet a bouclé le 18/08/2026** ; ⏳ **mais le premier aller-retour a demandé un sauvetage à la main** *(voir ci-dessous)*, et **`seance-duo` n'est pas porté** — c'est K6 | Une étape publiée depuis le PC apparaît sur le téléphone, est faite par Xavier, et sa réponse revient au dossier — **valide au format, sans intervention manuelle** |
-| 🔴 **K8** *(haute priorité)* | **Les bilans** — type d'étape `bilan`, canal `companion/inputs/bilans/`, écran *Bilan* groupé **par mois**. ⭐ **Xavier passe les échelles avec Claude Psy ; Kokoro porte les bilans finalisés en PDF, consultables et partageables à tout moment** *(tranché le 19/08/2026)* | Les quatre bilans rétrospectifs sont sur le téléphone, ouvrables par le lecteur du téléphone, et partageables depuis lui |
+| ⏳ **K8** *(publié, à constater)* | **Les bilans** — type d'étape `bilan`, canal `companion/inputs/bilans/`, écran *Bilan* groupé **par mois**. ⭐ **Xavier passe les échelles avec Claude Psy ; Kokoro porte les bilans finalisés en PDF, consultables et partageables à tout moment** *(tranché le 19/08/2026)*. ✅ **Format, app, scripts et les quatre bilans sont faits et publiés** *(programme v6, 19/08/2026)* ; ⏳ **il reste à les ouvrir depuis le téléphone** | Les quatre bilans rétrospectifs sont sur le téléphone, ouvrables par le lecteur du téléphone, et partageables depuis lui |
 | 🔜 **K6** | **La séance à deux** — type `seance-duo`, **mode entraînement** obligatoire, **signal d'arrêt** rappelé en permanence, **critères d'arrêt à un tap**. ⭐ **Le jalon qui ouvre les thérapies impossibles en solo** | Un entraînement joué en entier par Chourouk, puis une séance réelle menée à son terme **ou arrêtée sur le signal** — l'un et l'autre valent |
 
 > ⚠️ **Le critère de fin de K5 n'est pas encore atteint, et c'est une nuance qui compte.** La première réponse a bien fait le trajet, mais **Drive avait accepté deux dossiers `reponses/`** et le fichier a dû être récupéré à la main dans le second. **Les trois défauts sont corrigés** — une lecture ne crée plus de dossier, la création est doublement gardée, `psy-sync` lit et signale les dossiers en double. **K5 se ferme au premier aller-retour qui se passe de moi.**
@@ -87,19 +87,19 @@
 
 **Le travail :**
 
-- [ ] **Format** — type `bilan` dans [`companion/PROGRAMME.md`](companion/PROGRAMME.md) : `document` obligatoire *(jamais `texte`)*, `date` en `AAAA-MM-JJ` **celle du bilan, pas de la publication**, `rubrique: bilan` forcée, `quand` absent. ⚠️ **Un type distinct, et non une `fiche`** : la règle « toute fiche s'affiche sur *Documentation* » a été tranchée le 18/08 pour garder l'écran de crise à trois boutons sans défilement — **on ne la rouvre pas**
-- [ ] **Kokoro** — `ContenuBilan` groupe **par mois décroissant** au lieu de `quand`, et route vers `ouvrirLePdf`. ⭐ **La date appartient au document, pas à l'assiduité de Xavier** : ce n'est pas un historique de progression, l'invariant *zéro streak* n'est pas touché
-- [ ] **Scripts** — `psy:publish` convertit `bilans/<id>.md` en `bilans/<id>.pdf` par `md2pdf` et retire du transit ce que le programme n'appelle plus, **avec son propre jeu de contrôles** *(les interdits de fiche ne s'y appliquent pas)*. `psy:sync` n'a rien à faire : **un bilan ne renvoie rien**
-- [ ] **Verser les quatre bilans rétrospectifs** — hors séance, un par un, sous supervision
+- [x] ✅ **Format** — type `bilan` dans [`companion/PROGRAMME.md`](companion/PROGRAMME.md) §3 : `document` obligatoire *(jamais `texte`, jamais `montrable`)*, `date` en `AAAA-MM-JJ` **celle du bilan, pas de la publication**, `quand` absent. 🔴 **Conséquence tranchée à l'implémentation : la rubrique `bilan` est réservée au type `bilan`** — sinon une étape rangée là n'aurait pas de place à l'écran et **disparaîtrait en silence**. `psy:publish` refuse, Kokoro écarte
+- [x] ✅ **Kokoro** — `ContenuBilan` groupe **par mois décroissant** sur la `date`, et route vers `ouvrirLePdf` du dossier `bilans/`. ⭐ **La date appartient au document, pas à l'assiduité de Xavier** : l'invariant *zéro streak* n'est pas touché
+- [x] ✅ **Scripts** — `psy:publish` convertit `bilans/<id>.md` en `bilans/<id>.pdf` et retire du transit ce que le programme n'appelle plus, **avec son propre jeu de contrôles** *(les sept familles d'interdits ne s'appliquent pas au corps d'un bilan, seulement à son titre affiché)*. Un bilan **se publie hors séance**. `psy:sync` n'a rien à faire : **un bilan ne renvoie rien**
+- [x] ✅ **Les quatre bilans rétrospectifs sont versés** — programme **v6**, publiés hors séance le 19/08/2026 sous la supervision `2026-08-19-programme-v6`. ⏳ **Le critère de fin se constate au téléphone, pas au transit** : il faut qu'un des quatre s'ouvre dans le lecteur PDF
 
 | Bilan | Mois | Source | État |
 |---|---|---|---|
-| **Évaluation TSA** — Emeline Saley | **2024-04** | [`patient/ressources/Evaluation Xavier.md`](patient/ressources/Evaluation%20Xavier.md) | à mettre en forme |
-| **Conclusion de polysomnographie** — Dr Roisman | **2026-01** | [`patient/ressources/20260119 … Conclusion Polysomnographie.md`](patient/ressources/20260119%20Gabriel%20ROISMAN%20Conclusion%20Polysomnographie.md) | à mettre en forme |
-| **Rapport psychiatrique et psychologique** v2.4 | **2026-08** | [`patient/ressources/Rapport psychiatrique et psychologique.md`](patient/ressources/Rapport%20psychiatrique%20et%20psychologique.md) | à mettre en forme |
-| **VVIQ** — passation du 09/08/2026, 18/80 | **2026-08** | [`psy/outputs/dossier/mesures/2026-08-09-vviq.json`](psy/outputs/dossier/mesures/2026-08-09-vviq.json) | 🔴 **aucun compte-rendu n'existe — il est à écrire** |
+| **Évaluation TSA** — Emeline Saley | **2024-04** | [`patient/ressources/Evaluation Xavier.md`](patient/ressources/Evaluation%20Xavier.md) | ✅ publié |
+| **Conclusion de polysomnographie** — Dr Roisman | **2026-01** | [`patient/ressources/20260119 … Conclusion Polysomnographie.md`](patient/ressources/20260119%20Gabriel%20ROISMAN%20Conclusion%20Polysomnographie.md) | ✅ publié |
+| **Rapport psychiatrique et psychologique** v2.4 | **2026-08** | [`patient/ressources/Rapport psychiatrique et psychologique.md`](patient/ressources/Rapport%20psychiatrique%20et%20psychologique.md) | ✅ publié **verbatim** |
+| **VVIQ** — passation du 09/08/2026, 18/80 | **2026-08** | [`psy/outputs/dossier/mesures/2026-08-09-vviq.json`](psy/outputs/dossier/mesures/2026-08-09-vviq.json) | ✅ **compte rendu rédigé et publié** |
 
-> ⚠️ **Le VVIQ n'a jamais produit de document.** Seule la passation item par item existe. Le bilan est **à rédiger** : les items, le score, ce que l'échelle établit — l'aphantasie comme donnée mesurée — et **ce qu'elle ne dit pas**.
+> ⭐ **Le VVIQ n'avait jamais produit de document — il en a un.** Les seize items avec leurs réponses, le score et sa lecture, ce que l'échelle établit *(l'aphantasie visuelle comme donnée mesurée)* et **ce qu'elle ne dit pas** *(ni l'imagerie motrice, ni auditive, ni spatiale — et aucune norme française)*. ⚠️ **C'est le seul des quatre bilans que Xavier n'avait jamais lu** : constat n° 4 de la supervision v6.
 >
 > 🔴 **Les PDF de [`patient/ressources/originales/`](patient/ressources/originales/) ne sont pas la source.** C'est une archive, jamais une entrée : le bilan se compose depuis le Markdown, et `psy:publish` le convertit comme le reste.
 

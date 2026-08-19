@@ -34,7 +34,8 @@ data class Reperes(
     val id: String,
     val titre: String,
     val rubrique: Rubrique,
-    val quand: Quand,
+    // Nul sur un bilan, et sur lui seul : sa date appartient au document, pas à l'assiduité de Xavier.
+    val quand: Quand?,
     val dureeMinutes: Int?,
 )
 
@@ -57,6 +58,8 @@ sealed interface Etape {
     data class Demarche(override val reperes: Reperes, val detail: String) : Etape
 
     data class Fiche(override val reperes: Reperes, val support: Support) : Etape
+
+    data class Bilan(override val reperes: Reperes, val document: String, val date: String) : Etape
 }
 
 val Etape.id: String get() = reperes.id
@@ -65,7 +68,7 @@ val Etape.titre: String get() = reperes.titre
 
 val Etape.rubrique: Rubrique get() = reperes.rubrique
 
-val Etape.quand: Quand get() = reperes.quand
+val Etape.quand: Quand? get() = reperes.quand
 
 val Etape.dureeMinutes: Int? get() = reperes.dureeMinutes
 
@@ -74,6 +77,8 @@ data class Programme(val version: Int, val etapes: List<Etape>)
 val PROGRAMME_ABSENT = Programme(version = 0, etapes = emptyList())
 
 private val KEBAB = Regex("""^[a-z0-9-]+$""")
+
+private val DATE = Regex("""^\d{4}-\d{2}-\d{2}$""")
 
 fun lireProgramme(json: String): Programme {
     val racine = lireJson(json) ?: return PROGRAMME_ABSENT
@@ -85,15 +90,27 @@ fun lireProgramme(json: String): Programme {
 }
 
 fun Programme.etapesDe(rubrique: Rubrique): List<Etape> =
-    etapes.filter { it.rubrique == rubrique && it !is Etape.Fiche }
+    etapes.filter { it.rubrique == rubrique && it !is Etape.Fiche && it !is Etape.Bilan }
 
 // PROGRAMME.md §3 : une fiche vit sur Documentation quelle que soit sa rubrique.
 fun Programme.fiches(): List<Etape.Fiche> = etapes.filterIsInstance<Etape.Fiche>()
 
+fun Programme.bilans(): List<Etape.Bilan> =
+    etapes.filterIsInstance<Etape.Bilan>().sortedByDescending { it.date }
+
+fun moisDe(date: String): String = date.take(7)
+
 private fun etape(valeur: Valeur): Etape? {
     val reperes = reperes(valeur) ?: return null
+    val type = valeur.texte("type")
+    val bilan = type == "bilan"
 
-    return when (valeur.texte("type")) {
+    // La rubrique bilan est réservée au type bilan : rangée là, une autre étape n'aurait pas de place à l'écran.
+    if (bilan != (reperes.rubrique == Rubrique.BILAN)) return null
+    if (bilan) return bilan(reperes, valeur)
+    if (reperes.quand == null) return null
+
+    return when (type) {
         "ecran" -> fonction(valeur)?.let { Etape.Ecran(reperes, it) }
         "exercice" -> exercice(reperes, valeur)
         "questionnaire" -> questionnaire(reperes, valeur)
@@ -107,9 +124,19 @@ private fun reperes(valeur: Valeur): Reperes? {
     val id = valeur.texte("id")?.takeIf { it.matches(KEBAB) } ?: return null
     val titre = valeur.permis("titre") ?: return null
     val rubrique = Rubrique.entries.firstOrNull { it.cle == valeur.texte("rubrique") } ?: return null
-    val quand = Quand.entries.firstOrNull { it.cle == valeur.texte("quand") } ?: return null
+    val quand = Quand.entries.firstOrNull { it.cle == valeur.texte("quand") }
 
     return Reperes(id = id, titre = titre, rubrique = rubrique, quand = quand, dureeMinutes = valeur.entier("duree_minutes"))
+}
+
+// Un bilan ne porte jamais de texte affiché ni de partage : Kokoro confie le PDF au lecteur du téléphone.
+private fun bilan(reperes: Reperes, valeur: Valeur): Etape.Bilan? {
+    if (reperes.quand != null || valeur.champ("texte") != null || valeur.champ("montrable") != null) return null
+
+    val document = valeur.texte("document")?.takeIf { it.matches(KEBAB) } ?: return null
+    val date = valeur.texte("date")?.takeIf { it.matches(DATE) } ?: return null
+
+    return Etape.Bilan(reperes = reperes, document = document, date = date)
 }
 
 private fun fonction(valeur: Valeur): Fonction? =

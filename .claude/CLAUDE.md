@@ -90,7 +90,7 @@ Elles vivent dans `.claude/skills/psy-*` — Claude Code ne les découvre que l�
 
 ## 🔴 Rien ne sort sans supervision
 
-**Quatre points où une erreur atteint quelqu'un** — le programme publié, la bibliothèque publiée, les consignes de séance à deux *(vers Chourouk)*, le brief *(vers le Dr Isorni)*. **Chacun exige une passe du Superviseur portant explicitement sur la version qui sort**, et `npm run psy:publish` refuse mécaniquement sans elle.
+**Cinq points où une erreur atteint quelqu'un** — le programme publié, la bibliothèque publiée, **un bilan publié**, les consignes de séance à deux *(vers Chourouk)*, le brief *(vers le Dr Isorni)*. **Chacun exige une passe du Superviseur portant explicitement sur la version qui sort**, et `npm run psy:publish` refuse mécaniquement sans elle.
 
 **Un refus se corrige, il ne se contourne pas** — aucune option de forçage n'existe, et il ne doit jamais en exister une.
 
@@ -102,7 +102,7 @@ Depuis la racine, **scopés par rôle** ; les chemins sont résolus par rapport 
 
 | Commande | Objet |
 |---|---|
-| `npm run psy:publish` | 🔴 Publie la thérapie et la bibliothèque vers Kokoro — **fiches converties en PDF au passage**. **La documentation part à tout moment ; les étapes qui font agir, à la clôture d'une séance et avec `--seance`** — sans le drapeau, elles sont refusées |
+| `npm run psy:publish` | 🔴 Publie la thérapie, la bibliothèque et les bilans vers Kokoro — **fiches et bilans convertis en PDF au passage**. **La documentation et les bilans partent à tout moment ; les étapes qui font agir, à la clôture d'une séance et avec `--seance`** — sans le drapeau, elles sont refusées |
 | `npm run psy:sync` | Verse au dépôt ce que Kokoro a écrit. **N'écrase jamais un fichier existant** |
 | `npm run psy:pdf2md` · `psy:docx2md` · `psy:md2pdf` | Conversion de documents |
 | `npm run companion:kokoro` | Compile, teste, installe et ouvre Kokoro. **Jamais `gradlew` ni `adb` à la main** |

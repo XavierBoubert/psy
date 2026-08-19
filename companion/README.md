@@ -48,7 +48,8 @@
 | **Documentation** | ✅ | Lit `programme.json` du dossier synchronisé, filtre les fiches, **confie le PDF au lecteur du téléphone** |
 | **Thérapie** | ✅ | Lit les étapes `therapie` de `programme.json`, groupées par `quand` — `ecran`, `exercice` *(minuteur dans le panneau)*, `demarche` *(bouton « c'est fait »)*. **Rien n'est écrit en dur dans l'app** |
 | **`reponses/`** | ✅ | Un fichier par étape faite, `AAAA-MM-JJ-HHMM-<id>.json`. 🔴 **Kokoro se souvient localement de ce qu'il a écrit** — l'état d'une étape ne dépend jamais d'un aller-retour par Drive |
-| **Bilan** | ✅ | Lit les étapes `bilan` de `programme.json` et porte le type `questionnaire` — une question par écran, choix fermés, « passer » et arrêt libres → écrit `reponses/` **item par item**. ⭐ **Aucun score, aucun seuil, aucune interprétation à l'écran** |
+| **Bilan** | ✅ | Lit les étapes `bilan` de `programme.json`, **groupées par mois décroissant** sur la `date` du document, et **confie le PDF au lecteur du téléphone**. ⭐ **Aucun score, aucun seuil, aucune interprétation à l'écran, et aucune fonction de partage** |
+| **Questionnaire** | ✅ | Type porté et disponible — une question par écran, choix fermés, « passer » et arrêt libres → écrit `reponses/` **item par item**. ⭐ **Aucune échelle validée ne part dans Kokoro** *(tranché le 19/08/2026)* : elles se passent avec Claude Psy |
 | **Séance à deux** | 🔜 | K6. Le type `seance-duo` existe au contrat, pas encore dans l'app |
 
 ---
@@ -59,10 +60,12 @@
 
 | Sens | Fichiers | Format *(normatif)* | Acheminé par |
 |---|---|---|---|
-| Kokoro **lit** | `programme.json` · `bibliotheque/*.pdf` | [`PROGRAMME.md`](PROGRAMME.md) | `npm run psy:publish` |
+| Kokoro **lit** | `programme.json` · `bibliotheque/*.pdf` · `bilans/*.pdf` | [`PROGRAMME.md`](PROGRAMME.md) | `npm run psy:publish` |
 | Kokoro **écrit** | `journal/AAAA-MM-JJ.json` · `reponses/AAAA-MM-JJ-HHMM-<id>.json` | [`../psy/DOSSIER.md`](../psy/DOSSIER.md) | `npm run psy:sync` |
 
 ⭐ **Ni profil, ni état, ni séances, ni crises, ni mesures, ni briefs, ni supervisions ne quittent le PC.** **Le contenu publié est *dérivé*, jamais *extrait*** : il porte ce qu'il y a à faire, jamais ce qui a été constaté, mesuré ou diagnostiqué.
+
+⚠️ **Le bilan est la seule exception, et elle est écrite** : ce n'est ni un dérivé ni un extrait du dossier, **c'est un compte rendu que Xavier possède déjà**, mis en forme et versé tel quel. Canal distinct `bilans/`, contrôles propres *([`PROGRAMME.md` §6](PROGRAMME.md))*.
 
 🔴 **`outputs/` est append-only** *(règle R2)*. `psy:sync` n'écrase jamais un fichier existant, et **un doublon Drive ne se supprime jamais sans être lu : c'est une donnée clinique.**
 

@@ -9,13 +9,13 @@
 ## 1. Le circuit
 
 ```
-Claude Psy ──écrit── companion/inputs/programme.json + companion/inputs/bibliotheque/
+Claude Psy ──écrit── companion/inputs/programme.json + bibliotheque/ + bilans/
                             │
                     Claude Superviseur ── verdict: publiable   (bloquant)
                             │
                      npm run psy:publish
                             ▼
-             Drive/programme.json + Drive/bibliotheque/
+        Drive/programme.json + Drive/bibliotheque/ + Drive/bilans/
                             ▼
                          Kokoro
                             │
@@ -28,7 +28,7 @@ Claude Psy ──écrit── companion/inputs/programme.json + companion/inputs
 
 **Le dépôt reste la source de vérité. Drive n'est qu'un tuyau.**
 
-⭐ **La documentation se publie à tout moment** — une fiche est à portée dès qu'elle est écrite et supervisée. **Xavier n'attend pas la séance suivante pour comprendre ce qui lui arrive.**
+⭐ **La documentation et les bilans se publient à tout moment** — une fiche est à portée dès qu'elle est écrite et supervisée. **Xavier n'attend pas la séance suivante pour comprendre ce qui lui arrive.**
 🔴 **Le reste du programme se publie à la clôture d'une séance** — `ecran`, `exercice`, `questionnaire`, `demarche`, `seance-duo` : ce qui fait agir se décide avec lui.
 **Dans les deux cas : supervision bloquante, et annonce à Xavier au moment de la publication.** La prévisibilité tient à l'annonce, pas au calendrier.
 
@@ -61,9 +61,9 @@ Champs communs, tous obligatoires sauf `duree_minutes` :
 |---|---|
 | `id` | identifiant stable, `kebab-case`. ⚠️ **Ne change jamais** — c'est lui qui relie une réponse à son étape |
 | `titre` | ce qui s'affiche dans la liste |
-| `type` | `ecran` · `exercice` · `questionnaire` · `demarche` · `fiche` · `seance-duo` |
-| `rubrique` | `crise` · `therapie` · `bilan` · `documentation` — **c'est le groupement principal de l'écran d'accueil** |
-| `quand` | `aujourdhui` · `au_besoin` · `sans_date` |
+| `type` | `ecran` · `exercice` · `questionnaire` · `demarche` · `fiche` · `seance-duo` · `bilan` |
+| `rubrique` | `crise` · `therapie` · `bilan` · `documentation` — **c'est le groupement principal de l'écran d'accueil**. 🔴 **`bilan` est réservée au type `bilan`** |
+| `quand` | `aujourdhui` · `au_besoin` · `sans_date` — **absent sur un `bilan`, et sur lui seul** |
 | `duree_minutes` | entier, ou absent si la durée n'est pas connue d'avance |
 
 ### `ecran` — ouvre une fonction déjà construite dans Kokoro
@@ -94,7 +94,7 @@ Valeurs de `ecran` : `check-in` · `mot-code` · `tension-appliquee` · `phrase-
 ### `questionnaire` — des questions fermées, une par écran
 
 ```json
-{ "id": "gad7", "titre": "Questionnaire GAD-7", "type": "questionnaire", "rubrique": "bilan",
+{ "id": "gad7", "titre": "Questionnaire GAD-7", "type": "questionnaire", "rubrique": "therapie",
   "quand": "sans_date", "duree_minutes": 5,
   "questions": [
     { "id": "q1", "enonce": "…", "choix": [
@@ -146,6 +146,26 @@ Deux formes, exclusives l'une de l'autre :
 
 🔴 **Une fiche s'affiche sur l'écran *Documentation*, quelle que soit sa `rubrique`** *(tranché par Xavier le 18/08/2026)*. La bibliothèque entière y vit, groupée par `quand` : c'est ce qui garde à l'écran de crise ses **trois boutons sans défilement**. La `rubrique` d'une fiche ne place donc rien — elle ne range que les étapes qui font agir.
 
+### `bilan` — un compte rendu que Xavier possède déjà
+
+```json
+{ "id": "vviq-2026-08", "titre": "VVIQ — imagerie mentale", "type": "bilan",
+  "rubrique": "bilan", "date": "2026-08-09", "document": "vviq-2026-08" }
+```
+
+| Champ | Règle |
+|---|---|
+| `rubrique` | 🔴 **Toujours `bilan`** — et aucun autre type ne porte cette rubrique. L'écran *Bilan* ne montre que des bilans ; **une étape rangée là sans place à l'écran disparaîtrait en silence** |
+| `quand` | 🔴 **Absent** — ⭐ **la date appartient au document, pas à l'assiduité de Xavier** |
+| `date` | `AAAA-MM-JJ`, **celle du bilan, jamais celle de la publication**. L'écran groupe **par mois décroissant** |
+| `document` | Obligatoire — l'identifiant nu d'un fichier de **`companion/inputs/bilans/<id>.md`**, converti en `bilans/<id>.pdf` par `psy:publish`. 🔴 **Jamais `texte`** |
+
+🔴 **Un bilan ne passe pas par la bibliothèque** — canal distinct, contrôles distincts. Une fiche est *écrite pour Xavier* et *lisible par l'aidant* ; **un bilan n'est ni l'un ni l'autre : c'est un document qu'il possède déjà, adressé à lui seul.** Les sept familles d'interdits du §7 **ne s'appliquent donc pas au corps d'un bilan** — elles restent appliquées à son `titre`, qui, lui, s'affiche dans Kokoro.
+
+🔴 **`montrable` n'existe pas sur un bilan, et Kokoro n'offre aucune fonction de partage.** Il confie le PDF au lecteur du téléphone — picto « dehors », comme une fiche. ⭐ **Le partage est un acte de Xavier dans son lecteur, pas une fonction du dispositif.**
+
+⭐ **Un bilan se publie à tout moment, hors séance** — comme la documentation, et **sous supervision bloquante portant sur une seule question : ce document ne contient rien que Xavier ne sache déjà.** Il ne renvoie rien : `reponses/` ne le connaît pas.
+
 ### `seance-duo` — un déroulé chronométré tenu par l'aidant
 
 ```json
@@ -191,6 +211,7 @@ Deux formes, exclusives l'une de l'autre :
 ## 4. L'écran d'accueil
 
 Groupé par **rubrique**, puis par **`quand`** : *aujourd'hui* · *quand j'en ai besoin* · *sans date*.
+**Seul l'écran *Bilan* fait exception : il groupe par mois décroissant, sur la `date` du document.**
 **Aucun score, aucune progression, aucun historique, aucun palier atteint.**
 
 ---
@@ -239,6 +260,14 @@ Un fichier par étape faite, dans `reponses/` : `AAAA-MM-JJ-HHMM-<id>.json`
 > ⚠️ **Une fiche ne dit donc jamais où Xavier en est rendu.** Elle périmerait au premier passage de palier, **sans que rien ne force sa réécriture**, et c'est la version figée qu'il ouvrirait pour comprendre. **C'est le mode de défaillance C8 appliqué à la bibliothèque** — constaté sur `ppc-les-paliers` avant publication.
 
 **Les fiches sont soumises aux mêmes vérifications que les étapes** : `npm run psy:publish` lit chaque fichier de la bibliothèque et applique les sept familles d'interdits. 🔴 **Kokoro les réapplique à la lecture, sur ce qu'il affiche lui-même** — le titre d'une fiche et le `texte` d'une étape ; **le corps d'un PDF, lui, n'est vérifié qu'au dépôt.**
+
+### Les bilans — l'autre canal
+
+**`companion/inputs/bilans/<id>.md`** — un fichier Markdown par bilan, converti en **`bilans/<id>.pdf`** par `psy:publish`, qui retire du transit tout bilan que le programme n'appelle plus. **Aucun bilan ne vit dans `bibliotheque/`, et aucune fiche ne vit dans `bilans/`.**
+
+🔴 **Les sept familles d'interdits du §7 ne s'appliquent pas au corps d'un bilan** : un rapport clinique réel nomme des traitements, des diagnostics et des praticiens, et c'est précisément sa raison d'être. `psy:publish` y applique ses propres contrôles — le `document` appelé existe, le titre affiché est permis, `texte` et `montrable` sont absents.
+
+⭐ **Un bilan ne se réécrit pas pour Xavier : il est déjà à lui.** C'est ce qui le sépare d'une fiche, et ce qui remplace **C9** sur ce canal.
 
 ---
 

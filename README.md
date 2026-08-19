@@ -46,14 +46,14 @@ Claude Psy ──── programme + bibliothèque ────► Kokoro ──�
 
 | Sens | Commande | Ce qui passe |
 |---|---|---|
-| PC → Kokoro | **`npm run psy:publish`** | `companion/inputs/programme.json` + `companion/inputs/bibliotheque/` |
+| PC → Kokoro | **`npm run psy:publish`** | `companion/inputs/programme.json` + `companion/inputs/bibliotheque/` + `companion/inputs/bilans/` |
 | Kokoro → PC | **`npm run psy:sync`** | `companion/outputs/journal/` + `companion/outputs/reponses/` |
 
 🔴 **`psy:publish` refuse la publication entière** si un invariant est enfreint ou si la supervision de la version qui sort manque *(voir [`superviseur/README.md`](superviseur/README.md))*. **Un refus se corrige, il ne se contourne pas** — aucune option de forçage n'existe, et il ne doit jamais en exister une.
 
 ⭐ **La documentation se publie à tout moment ; le reste du programme se publie à la clôture d'une séance.** Une fiche est à portée dès qu'elle est écrite et supervisée — **Xavier n'attend pas la séance suivante pour comprendre ce qui lui arrive**. Les étapes qui font agir — `ecran`, `exercice`, `questionnaire`, `demarche`, `seance-duo` — se décident avec lui, en séance. **La supervision est bloquante dans les deux cas, et toute publication s'annonce à Xavier au moment où elle se fait.**
 
-### 🔴 Les quatre points où une erreur sort du dispositif
+### 🔴 Les cinq points où une erreur sort du dispositif
 
 Une erreur interne se corrige. Une erreur qui **sort** atteint quelqu'un.
 
@@ -61,6 +61,7 @@ Une erreur interne se corrige. Une erreur qui **sort** atteint quelqu'un.
 |---|---|---|
 | **Le programme publié** | Xavier, **sans intermédiaire pour objecter** | `npm run psy:publish` *(mécanique)* **+ supervision bloquante** |
 | **La bibliothèque publiée** | Xavier, idem | Identique — **C9 s'applique ici en premier** |
+| **Un bilan publié** | Xavier, idem | Identique, **mais C9 ne s'y applique pas** — la question est : **ce document ne contient rien que Xavier ne sache déjà** |
 | **Les consignes de séance à deux** | **L'aidant** | Identique, **plus C10** |
 | **Le brief** | Le Dr Isorni | **Supervision bloquante** + Xavier relit et décide de transmettre |
 
@@ -87,6 +88,7 @@ Une erreur interne se corrige. Une erreur qui **sort** atteint quelqu'un.
 |---|---|---|---|
 | **PC → Kokoro** | `programme.json` — la thérapie du moment | Claude Psy | *(source : `companion/inputs/`)* |
 | **PC → Kokoro** | `bibliotheque/*.pdf` — la documentation accessible à Xavier. ⭐ **Le Markdown ne part pas** : `psy:publish` le convertit en PDF, et Kokoro le confie au lecteur du téléphone | Claude Psy | *(source : `companion/inputs/bibliotheque/*.md`)* |
+| **PC → Kokoro** | `bilans/*.pdf` — les comptes rendus que Xavier possède déjà. ⭐ **Canal distinct de la bibliothèque** : un bilan n'est ni écrit pour lui, ni lisible par l'aidant | Claude Psy | *(source : `companion/inputs/bilans/*.md`)* |
 | **Kokoro → PC** | `journal/AAAA-MM-JJ.json` — les check-ins | Kokoro | `companion/outputs/journal/` |
 | **Kokoro → PC** | `reponses/AAAA-MM-JJ-HHMM-<id>.json` — ce qui a été fait | Kokoro | `companion/outputs/reponses/` |
 
@@ -94,7 +96,9 @@ Une erreur interne se corrige. Une erreur qui **sort** atteint quelqu'un.
 
 > ⭐ **La distinction qui tient tout : le contenu publié est *dérivé*, jamais *extrait*.** Le programme porte **ce qu'il y a à faire**, jamais ce qui a été constaté, mesuré ou diagnostiqué. Une fiche de bibliothèque est **réécrite pour Xavier**, jamais copiée d'un protocole. C'est le contrôle **C9**.
 >
-> ✅ **Aucun fichier n'a deux auteurs.** `programme.json` et `bibliotheque/` sont écrits par le PC seul ; `journal/` et `reponses/` par Kokoro seul. **C'est une condition de l'arbitrage, pas une observation** — c'est ce qui rend le risque de conflit tolérable.
+> ⚠️ **Le bilan est la seule exception, et elle est écrite** : ni dérivé ni extrait, **c'est un compte rendu que Xavier possède déjà**, versé tel quel par le canal `bilans/`. **C9 n'y a pas de prise** — la question devient : *ce document ne contient rien qu'il ne sache déjà*.
+>
+> ✅ **Aucun fichier n'a deux auteurs.** `programme.json`, `bibliotheque/` et `bilans/` sont écrits par le PC seul ; `journal/` et `reponses/` par Kokoro seul. **C'est une condition de l'arbitrage, pas une observation** — c'est ce qui rend le risque de conflit tolérable.
 
 ### L'arborescence du transit
 
@@ -102,7 +106,9 @@ Une erreur interne se corrige. Une erreur qui **sort** atteint quelqu'un.
 H:\Mon Drive\kokoro\               ← hors dépôt, jamais partagé
   programme.json                   ← PC écrit,    Kokoro lit
   bibliotheque/
-    <id>.md                        ← PC écrit,    Kokoro lit
+    <id>.pdf                       ← PC écrit,    Kokoro lit
+  bilans/
+    <id>.pdf                       ← PC écrit,    Kokoro lit
   journal/
     AAAA-MM-JJ.json                ← Kokoro écrit, PC lit
   reponses/

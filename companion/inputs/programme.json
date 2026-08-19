@@ -1,7 +1,7 @@
 {
-  "version": 5,
+  "version": 6,
   "publie_le": "2026-08-19",
-  "supervision": "2026-08-19-programme-v5",
+  "supervision": "2026-08-19-programme-v6",
   "etapes": [
     {
       "id": "check-in",
@@ -82,6 +82,14 @@
       "detail": "Link Sommeil : le masque bouche + nez est-il pris en charge, et jusqu'a quand ? Ou en est le renouvellement trois mois apres. Reponse ecrite."
     },
     {
+      "id": "ppc-consultation-roisman",
+      "titre": "Demander une consultation de reprise au Dr Roisman",
+      "type": "demarche",
+      "rubrique": "therapie",
+      "quand": "sans_date",
+      "detail": "En annonçant que la reprise se fera par paliers écrits. Solliciter le pneumologue après trois mois d'usage irrégulier n'est pas un aveu d'échec : c'est la démarche normale."
+    },
+    {
       "id": "ppc-voyage",
       "titre": "Demander comment emporter l'appareil en Tunisie",
       "type": "demarche",
@@ -96,6 +104,38 @@
       "rubrique": "therapie",
       "quand": "sans_date",
       "detail": "Le brouillon est prêt dans le dossier. Il a vocation à partir avant la consultation du 03/09, pour qu'il arrive préparé — pas à être lu sur place."
+    },
+    {
+      "id": "rapport-psy-2026-08",
+      "titre": "Rapport psychiatrique et psychologique",
+      "type": "bilan",
+      "rubrique": "bilan",
+      "date": "2026-08-08",
+      "document": "rapport-psy-2026-08"
+    },
+    {
+      "id": "vviq-2026-08",
+      "titre": "VVIQ — imagerie mentale",
+      "type": "bilan",
+      "rubrique": "bilan",
+      "date": "2026-08-09",
+      "document": "vviq-2026-08"
+    },
+    {
+      "id": "polysomnographie-2026-01",
+      "titre": "Polysomnographie — Dr Roisman",
+      "type": "bilan",
+      "rubrique": "bilan",
+      "date": "2026-01-19",
+      "document": "polysomnographie-2026-01"
+    },
+    {
+      "id": "evaluation-tsa-2024-04",
+      "titre": "Évaluation TSA — Emeline Saley",
+      "type": "bilan",
+      "rubrique": "bilan",
+      "date": "2024-04-05",
+      "document": "evaluation-tsa-2024-04"
     }
   ]
 }

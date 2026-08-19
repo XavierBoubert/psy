@@ -55,6 +55,7 @@
 |---|---|---|
 | Le programme publié | Xavier, **sans intermédiaire pour objecter** | `npm run psy:publish` *(mécanique)* **+ supervision bloquante** |
 | La bibliothèque publiée | Xavier, idem | Identique — **C9 s'applique ici en premier** |
+| Un bilan publié | Xavier, idem | Identique, **mais C9 ne s'y applique pas** : rien n'est réécrit ni dérivé. **La question est : ce document ne contient-il rien que Xavier ne sache déjà ?** |
 | Les consignes de séance à deux | **L'aidant** | Identique, **plus C10** |
 | Le brief | Le Dr Isorni | **Supervision bloquante** + Xavier relit et décide de transmettre |
 

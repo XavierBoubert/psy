@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.allonsy.kokoro.R
@@ -28,9 +29,11 @@ import io.allonsy.kokoro.programme.Programme
 import io.allonsy.kokoro.programme.Quand
 import io.allonsy.kokoro.programme.Rubrique
 import io.allonsy.kokoro.programme.Support
+import io.allonsy.kokoro.programme.bilans
 import io.allonsy.kokoro.programme.etapesDe
 import io.allonsy.kokoro.programme.faite
 import io.allonsy.kokoro.programme.fiches
+import io.allonsy.kokoro.programme.moisDe
 import io.allonsy.kokoro.programme.quand
 import io.allonsy.kokoro.ui.BandeTitre
 import io.allonsy.kokoro.ui.BoutonEpais
@@ -250,46 +253,56 @@ private fun libelleDe(quand: Quand): Int = when (quand) {
     Quand.SANS_DATE -> R.string.monde_quand_sans_date
 }
 
+// Groupé par mois du document, du plus récent au plus ancien : c'est la date du bilan, jamais une progression.
 @Composable
 fun ContenuBilan(
     perchoirs: Perchoirs,
     programme: Programme,
-    faites: Faites,
-    onOuvrir: (Etape) -> Unit,
+    onBilan: (Etape.Bilan) -> Unit,
     fige: Boolean = false,
 ) {
     val palette = LocalPaletteKokoro.current
-    val aPasser = programme.etapesDe(Rubrique.BILAN)
+    val bilans = programme.bilans()
 
     EcranDeBord(
         titre = stringResource(R.string.monde_bilan_titre),
         couleur = palette.beurre,
-        defilant = aPasser.isNotEmpty(),
+        defilant = bilans.isNotEmpty(),
         fige = fige,
     ) {
         BandeDeTete(perchoirs = perchoirs, poses = listOf(Perchoir.BILAN))
 
-        if (aPasser.isEmpty()) {
+        if (bilans.isEmpty()) {
             CadreVide(texte = stringResource(R.string.monde_bilan_vide))
             return@EcranDeBord
         }
 
-        Quand.entries.forEach { quand ->
-            val duQuand = aPasser.filter { it.quand == quand }
-            if (duQuand.isEmpty()) return@forEach
-
+        bilans.groupBy { moisDe(it.date) }.forEach { (mois, duMois) ->
             BandeDeSection(perchoirs = perchoirs, poses = emptyList()) {
                 Pancarte(
-                    texte = stringResource(libelleDe(quand)),
+                    texte = libelleDuMois(mois),
                     couleur = palette.beurre,
                     modifier = Modifier.padding(start = 2.dp),
                 )
             }
-            duQuand.forEach { etape ->
-                CarteDEtape(etape = etape, faite = faites.faite(etape), onClic = { onOuvrir(etape) })
+            duMois.forEach { bilan ->
+                Carte(
+                    titre = bilan.reperes.titre,
+                    picto = { PictoDehors() },
+                    onClic = { onBilan(bilan) },
+                    modifier = Modifier.padding(bottom = ECART_CARTES),
+                )
             }
         }
     }
+}
+
+@Composable
+private fun libelleDuMois(mois: String): String {
+    val noms = stringArrayResource(R.array.monde_mois)
+    val rang = mois.takeLast(2).toIntOrNull() ?: return mois
+
+    return noms.getOrNull(rang - 1)?.let { "$it ${mois.take(4)}" } ?: mois
 }
 
 @Composable

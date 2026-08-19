@@ -84,6 +84,7 @@ fun MondeKokoro(
     faites: Faites = AUCUNE_FAITE,
     onRendu: (String, Issue, List<ReponseItem>) -> Unit = { _, _, _ -> },
     onPdf: (String) -> Unit = {},
+    onBilan: (String) -> Unit = {},
     parallaxe: Parallaxe = PARALLAXE_PAR_DEFAUT,
     envoiEnCours: Boolean = false,
     accesPerdu: Boolean = false,
@@ -146,6 +147,7 @@ fun MondeKokoro(
             is Etape.Questionnaire -> ouvrirPanneau(Contexte.Questionnaire(etape))
             is Etape.Demarche -> ouvrirPanneau(Contexte.Demarche(etape, faites.faite(etape)))
             is Etape.Fiche -> lireLaFiche(etape)
+            is Etape.Bilan -> onBilan(etape.document)
         }
     }
 
@@ -222,6 +224,7 @@ fun MondeKokoro(
                         programme = programme,
                         faites = faites,
                         onFiche = lireLaFiche,
+                        onBilan = { bilan -> onBilan(bilan.document) },
                         onEtape = ouvrirLEtape,
                         onFonction = agir,
                         onReglages = { ouvrirPanneau(Contexte.Reglages) },
@@ -301,6 +304,7 @@ private fun ContenuEcran(
     programme: Programme,
     faites: Faites,
     onFiche: (Etape.Fiche) -> Unit,
+    onBilan: (Etape.Bilan) -> Unit,
     onEtape: (Etape) -> Unit,
     onFonction: (Fonction) -> Unit,
     onReglages: () -> Unit,
@@ -327,8 +331,7 @@ private fun ContenuEcran(
         Ecran.BILAN -> ContenuBilan(
             perchoirs = perchoirs,
             programme = programme,
-            faites = faites,
-            onOuvrir = onEtape,
+            onBilan = onBilan,
             fige = fige,
         )
 

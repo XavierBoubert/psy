@@ -26,7 +26,7 @@ private const val EXERCICE =
         "minuteur_secondes": 300, "sortie_libre": true }"""
 
 private const val QUESTIONNAIRE =
-    """{ "id": "gad7", "titre": "Questionnaire GAD-7", "type": "questionnaire", "rubrique": "bilan",
+    """{ "id": "gad7", "titre": "Questionnaire GAD-7", "type": "questionnaire", "rubrique": "therapie",
         "quand": "sans_date", "duree_minutes": 5, "questions": [
           { "id": "q1", "enonce": "Combien de jours cette semaine as-tu quitté le logement ?", "choix": [
               { "valeur": 0, "libelle": "Aucun jour" },
@@ -40,11 +40,19 @@ private const val DEMARCHE =
     """{ "id": "ppc-releve", "titre": "Demander le relevé", "type": "demarche", "rubrique": "therapie",
         "quand": "sans_date", "detail": "Des chiffres, pas une impression." }"""
 
+private const val BILAN_2024 =
+    """{ "id": "evaluation-tsa", "titre": "Évaluation TSA", "type": "bilan", "rubrique": "bilan",
+        "date": "2024-04-18", "document": "evaluation-tsa" }"""
+
+private const val BILAN_2026 =
+    """{ "id": "vviq-2026-08", "titre": "VVIQ — imagerie mentale", "type": "bilan", "rubrique": "bilan",
+        "date": "2026-08-09", "document": "vviq-2026-08" }"""
+
 class ProgrammeTest {
 
     @Test
-    fun `lit les cinq types portes par Kokoro`() {
-        val lu = lireProgramme(programme("$ECRAN, $EXERCICE, $QUESTIONNAIRE, $DEMARCHE, $FICHE_PDF"))
+    fun `lit les six types portes par Kokoro`() {
+        val lu = lireProgramme(programme("$ECRAN, $EXERCICE, $QUESTIONNAIRE, $DEMARCHE, $FICHE_PDF, $BILAN_2026"))
 
         assertEquals(7, lu.version)
         assertEquals(
@@ -54,6 +62,7 @@ class ProgrammeTest {
                 Etape.Questionnaire::class,
                 Etape.Demarche::class,
                 Etape.Fiche::class,
+                Etape.Bilan::class,
             ),
             lu.etapes.map { it::class },
         )
@@ -94,13 +103,46 @@ class ProgrammeTest {
         assertTrue(lu.etapes.isEmpty())
     }
 
-    // PROGRAMME.md §3 : un questionnaire vit sur Bilan, et cet écran n'est plus vide par construction.
+    // PROGRAMME.md §3 : l'écran Bilan ne porte que des bilans, du mois le plus récent au plus ancien.
     @Test
-    fun `le questionnaire se range sur l'ecran Bilan`() {
-        val lu = lireProgramme(programme("$QUESTIONNAIRE, $DEMARCHE"))
+    fun `les bilans se rangent par date decroissante, hors des etapes qui font agir`() {
+        val lu = lireProgramme(programme("$BILAN_2024, $BILAN_2026, $DEMARCHE"))
 
-        assertEquals(listOf("gad7"), lu.etapesDe(Rubrique.BILAN).map { it.id })
+        assertEquals(listOf("vviq-2026-08", "evaluation-tsa"), lu.bilans().map { it.id })
+        assertEquals(listOf("2026-08", "2024-04"), lu.bilans().map { moisDe(it.date) })
         assertEquals(listOf("ppc-releve"), lu.etapesDe(Rubrique.THERAPIE).map { it.id })
+        assertTrue(lu.etapesDe(Rubrique.BILAN).isEmpty())
+    }
+
+    @Test
+    fun `le bilan porte son document et sa date`() {
+        val bilan = lireProgramme(programme(BILAN_2026)).bilans().single()
+
+        assertEquals("vviq-2026-08", bilan.document)
+        assertEquals("2026-08-09", bilan.date)
+        assertNull(bilan.reperes.quand)
+    }
+
+    // La rubrique bilan est réservée au type bilan : rangée là, une autre étape n'aurait pas de place à l'écran.
+    @Test
+    fun `la rubrique bilan et le type bilan ne vont pas l'un sans l'autre`() {
+        val questionnaireRange = QUESTIONNAIRE.replace(""""rubrique": "therapie"""", """"rubrique": "bilan"""")
+        val bilanAilleurs = BILAN_2026.replace(""""rubrique": "bilan"""", """"rubrique": "therapie"""")
+
+        assertTrue(lireProgramme(programme("$questionnaireRange, $bilanAilleurs")).etapes.isEmpty())
+    }
+
+    @Test
+    fun `un bilan date, dessine ou partageable autrement est ecarte`() {
+        val sansDate = BILAN_2026.replace(""""date": "2026-08-09", """, "")
+        val dateFloue = BILAN_2026.replace("2026-08-09", "août 2026")
+        val avecQuand = BILAN_2026.replace(""""date":""", """"quand": "sans_date", "date":""")
+        val avecTexte = BILAN_2026.replace(""""document":""", """"texte": "Le bilan tient ici.", "document":""")
+        val montrable = BILAN_2026.replace(""""document":""", """"montrable": true, "document":""")
+
+        assertTrue(
+            lireProgramme(programme("$sansDate, $dateFloue, $avecQuand, $avecTexte, $montrable")).etapes.isEmpty(),
+        )
     }
 
     @Test
@@ -170,8 +212,8 @@ class ProgrammeTest {
     @Test
     fun `une fiche a deux supports ou a document hors kebab-case est ecartee`() {
         val deuxSupports = """{ "id": "deux-supports", "titre": "Deux supports", "type": "fiche",
-            "rubrique": "bilan", "quand": "au_besoin", "document": "deux-supports", "texte": "Aussi un texte." }"""
-        val chemin = """{ "id": "ailleurs", "titre": "Ailleurs", "type": "fiche", "rubrique": "bilan",
+            "rubrique": "documentation", "quand": "au_besoin", "document": "deux-supports", "texte": "Aussi un texte." }"""
+        val chemin = """{ "id": "ailleurs", "titre": "Ailleurs", "type": "fiche", "rubrique": "documentation",
             "quand": "au_besoin", "document": "../secrets/dossier" }"""
 
         assertTrue(lireProgramme(programme("$deuxSupports, $chemin")).fiches().isEmpty())

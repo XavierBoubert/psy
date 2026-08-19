@@ -6,17 +6,22 @@ import { convertirEnPdf } from './md2pdf.ts';
 const PROJECT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const SOURCE = resolve(PROJECT_ROOT, 'companion/inputs/programme.json');
 const BIBLIOTHEQUE = resolve(PROJECT_ROOT, 'companion/inputs/bibliotheque');
+const BILANS = resolve(PROJECT_ROOT, 'companion/inputs/bilans');
 const SUPERVISIONS = resolve(PROJECT_ROOT, 'superviseur/outputs');
 
 const USAGE = 'Usage: psy-publish <dossier-de-transit-drive> [--seance] [--refaire]';
 
-const TYPES = ['ecran', 'exercice', 'questionnaire', 'demarche', 'fiche', 'seance-duo'] as const;
+const TYPES = ['ecran', 'exercice', 'questionnaire', 'demarche', 'fiche', 'seance-duo', 'bilan'] as const;
 const POUR = ['aide', 'patient'] as const;
 const QUAND = ['aujourdhui', 'au_besoin', 'sans_date'] as const;
 const RUBRIQUES = ['crise', 'therapie', 'bilan', 'documentation'] as const;
 const ECRANS = ['check-in', 'mot-code', 'tension-appliquee', 'phrase-soignant'] as const;
 
-const CLES_NON_TEXTUELLES = ['id', 'type', 'quand', 'rubrique', 'ecran', 'document', 'pour'] as const;
+const CLES_NON_TEXTUELLES = ['id', 'type', 'quand', 'rubrique', 'ecran', 'document', 'pour', 'date'] as const;
+
+const KEBAB = /^[a-z0-9-]+$/;
+
+const JOUR = /^\d{4}-\d{2}-\d{2}$/;
 
 type Interdit = {
   readonly motif: RegExp;
@@ -164,7 +169,7 @@ const problemeQuestion = (question: unknown, rang: number): ReadonlyArray<string
   const choix = question['choix'];
 
   const communs = [
-    typeof question['id'] === 'string' && /^[a-z0-9-]+$/.test(question['id'])
+    typeof question['id'] === 'string' && KEBAB.test(question['id'])
       ? null
       : `${nom} : id absent ou hors kebab-case`,
     estTexteNonVide(question['enonce']) ? null : `${nom} : enonce absent`,
@@ -178,24 +183,52 @@ const problemeQuestion = (question: unknown, rang: number): ReadonlyArray<string
   return [...communs, ...propres].filter((probleme): probleme is string => probleme !== null);
 };
 
+// Un bilan est le seul type sans « quand », et le seul de la rubrique bilan : c'est ce qui lui donne sa place a l'ecran.
+const problemesDeBilan = (etape: Record<string, unknown>): ReadonlyArray<string | null> => {
+  const document = etape['document'];
+  const date = etape['date'];
+
+  return [
+    etape['quand'] === undefined
+      ? null
+      : '« quand » sur un bilan — sa date appartient au document, pas a l\'assiduite de Xavier',
+    typeof document === 'string' && KEBAB.test(document)
+      ? null
+      : 'document absent ou hors kebab-case — un bilan est toujours un PDF de companion/inputs/bilans/',
+    typeof date === 'string' && JOUR.test(date)
+      ? null
+      : 'date absente ou hors AAAA-MM-JJ — c\'est celle du bilan, jamais celle de la publication',
+    etape['texte'] === undefined ? null : 'un bilan ne porte jamais « texte »',
+    etape['montrable'] === undefined
+      ? null
+      : 'un bilan n\'est jamais montrable — le partage est un acte de Xavier dans son lecteur, pas une fonction du dispositif',
+  ];
+};
+
 const problemesDeForme = (etape: Record<string, unknown>): ReadonlyArray<string> => {
   const type = etape['type'];
   const quand = etape['quand'];
 
   const rubrique = etape['rubrique'];
+  const bilan = type === 'bilan';
 
   const communs = [
-    typeof etape['id'] === 'string' && /^[a-z0-9-]+$/.test(etape['id']) ? null : 'id absent ou hors kebab-case',
+    typeof etape['id'] === 'string' && KEBAB.test(etape['id']) ? null : 'id absent ou hors kebab-case',
     typeof etape['titre'] === 'string' && etape['titre'].length > 0 ? null : 'titre absent',
     TYPES.some((connu) => connu === type) ? null : `type inconnu : ${String(type)}`,
     RUBRIQUES.some((connue) => connue === rubrique) ? null : `rubrique inconnue : ${String(rubrique)}`,
-    QUAND.some((connu) => connu === quand) ? null : `quand inconnu : ${String(quand)}`,
+    (rubrique === 'bilan') === bilan
+      ? null
+      : 'la rubrique bilan est reservee au type bilan — rangee la, une autre etape n\'aurait pas de place a l\'ecran',
+    bilan || QUAND.some((connu) => connu === quand) ? null : `quand inconnu : ${String(quand)}`,
     etape['duree_minutes'] === undefined || typeof etape['duree_minutes'] === 'number'
       ? null
       : 'duree_minutes n\'est pas un nombre',
   ];
 
   const propres = ((): ReadonlyArray<string | null> => {
+    if (type === 'bilan') return problemesDeBilan(etape);
+
     if (type === 'ecran') {
       return [ECRANS.some((connu) => connu === etape['ecran']) ? null : `ecran inconnu : ${String(etape['ecran'])}`];
     }
@@ -235,7 +268,7 @@ const problemesDeForme = (etape: Record<string, unknown>): ReadonlyArray<string>
 
     if (typeof document === 'string') {
       return [
-        /^[a-z0-9-]+$/.test(document) ? null : `document hors kebab-case : ${document}`,
+        KEBAB.test(document) ? null : `document hors kebab-case : ${document}`,
         texte === undefined ? null : 'une fiche porte « texte » OU « document », jamais les deux',
       ];
     }
@@ -308,22 +341,22 @@ const relireSupervision = async (parsed: unknown): Promise<ReadonlyArray<string>
   ].filter((probleme): probleme is string => probleme !== null);
 };
 
-type Fiche = {
+type Document = {
   readonly id: string;
   readonly contenu: string;
   readonly source: string;
   readonly modifieLe: number;
 };
 
-const lireBibliotheque = async (): Promise<ReadonlyArray<Fiche>> => {
-  const noms = await readdir(BIBLIOTHEQUE).catch(() => null);
+const lireDocuments = async (dossier: string): Promise<ReadonlyArray<Document>> => {
+  const noms = await readdir(dossier).catch(() => null);
   if (noms === null) return [];
 
   const fichiers = noms.filter((nom) => nom.endsWith('.md') && nom !== 'README.md');
 
   return Promise.all(
     fichiers.map(async (nom) => {
-      const source = join(BIBLIOTHEQUE, nom);
+      const source = join(dossier, nom);
 
       return {
         id: nom.replace(/\.md$/, ''),
@@ -335,32 +368,36 @@ const lireBibliotheque = async (): Promise<ReadonlyArray<Fiche>> => {
   );
 };
 
-const documentsAppeles = (parsed: unknown): ReadonlyArray<string> => {
+const documentsAppeles = (parsed: unknown, type: string): ReadonlyArray<string> => {
   if (!isRecord(parsed) || !Array.isArray(parsed['etapes'])) return [];
 
   return parsed['etapes'].flatMap((etape: unknown) =>
-    isRecord(etape) && typeof etape['document'] === 'string' ? [etape['document']] : [],
+    isRecord(etape) && etape['type'] === type && typeof etape['document'] === 'string' ? [etape['document']] : [],
   );
 };
 
-const relireBibliotheque = (parsed: unknown, fiches: ReadonlyArray<Fiche>): ReadonlyArray<string> => {
-  const appeles = documentsAppeles(parsed);
+const manquants = (appeles: ReadonlyArray<string>, documents: ReadonlyArray<Document>, dossier: string): ReadonlyArray<string> =>
+  appeles
+    .filter((id) => !documents.some((document) => document.id === id))
+    .map((id) => `document introuvable : companion/inputs/${dossier}/${id}.md`);
 
-  const manquants = appeles
-    .filter((id) => !fiches.some((fiche) => fiche.id === id))
-    .map((id) => `document introuvable : companion/inputs/bibliotheque/${id}.md`);
-
+const relireBibliotheque = (parsed: unknown, fiches: ReadonlyArray<Document>): ReadonlyArray<string> => {
   const fautives = fiches.flatMap((fiche) => {
     const texte = normalise(fiche.contenu);
 
     return INTERDITS.flatMap((interdit) => (interdit.motif.test(texte) ? [`bibliotheque/${fiche.id}.md — ${interdit.raison}`] : []));
   });
 
-  return [...manquants, ...fautives];
+  return [...manquants(documentsAppeles(parsed, 'fiche'), fiches, 'bibliotheque'), ...fautives];
 };
 
-// La documentation part a tout moment ; les etapes qui font agir se decident avec Xavier, en seance.
-const FONT_AGIR = TYPES.filter((type) => type !== 'fiche');
+// 🔴 Les sept familles d'interdits ne s'appliquent pas au corps d'un bilan : un rapport clinique reel nomme
+// des traitements et des diagnostics, et c'est sa raison d'etre. Le titre affiche, lui, reste verifie comme le reste.
+const relireBilans = (parsed: unknown, bilans: ReadonlyArray<Document>): ReadonlyArray<string> =>
+  manquants(documentsAppeles(parsed, 'bilan'), bilans, 'bilans');
+
+// La documentation et les bilans partent a tout moment ; les etapes qui font agir se decident avec Xavier, en seance.
+const FONT_AGIR = TYPES.filter((type) => type !== 'fiche' && type !== 'bilan');
 
 const canonique = (valeur: unknown): string => {
   if (Array.isArray(valeur)) return `[${valeur.map(canonique).join(',')}]`;
@@ -416,42 +453,42 @@ type Publication = {
   readonly retirees: ReadonlyArray<string>;
 };
 
-const estAJour = async (fiche: Fiche, destination: string): Promise<boolean> => {
+const estAJour = async (document: Document, destination: string): Promise<boolean> => {
   const pdf = await stat(destination).catch(() => null);
 
-  return pdf !== null && pdf.mtimeMs >= fiche.modifieLe;
+  return pdf !== null && pdf.mtimeMs >= document.modifieLe;
 };
 
 // Le Markdown ne part pas : il passe la supervision au depot, et Kokoro ne recoit que le PDF.
-const publier = async (
+const convertir = async (
   cible: string,
-  brut: string,
-  fiches: ReadonlyArray<Fiche>,
+  nom: string,
+  documents: ReadonlyArray<Document>,
   refaireTout: boolean,
 ): Promise<Publication> => {
-  const dossier = join(cible, 'bibliotheque');
+  const dossier = join(cible, nom);
   await mkdir(dossier, { recursive: true });
 
-  const attendus = fiches.map((fiche) => `${fiche.id}.pdf`);
+  const attendus = documents.map((document) => `${document.id}.pdf`);
   const presents = await readdir(dossier).catch(() => []);
-  const retirees = presents.filter((nom) => !attendus.some((attendu) => attendu === nom));
-  await Promise.all(retirees.map((nom) => rm(join(dossier, nom), { force: true })));
+  const retirees = presents.filter((present) => !attendus.some((attendu) => attendu === present));
+  await Promise.all(retirees.map((present) => rm(join(dossier, present), { force: true })));
 
   const cibles = await Promise.all(
-    fiches.map(async (fiche) => {
-      const destination = join(dossier, `${fiche.id}.pdf`);
+    documents.map(async (document) => {
+      const destination = join(dossier, `${document.id}.pdf`);
 
-      return { fiche, destination, aJour: !refaireTout && (await estAJour(fiche, destination)) };
+      return { document, destination, aJour: !refaireTout && (await estAJour(document, destination)) };
     }),
   );
 
   const aConvertir = cibles.filter(({ aJour }) => !aJour);
-  await convertirEnPdf(aConvertir.map(({ fiche, destination }) => ({ sourcePath: fiche.source, destinationPath: destination })));
-
-  await writeFile(join(cible, 'programme.json'), brut, 'utf8');
+  await convertirEnPdf(
+    aConvertir.map(({ document, destination }) => ({ sourcePath: document.source, destinationPath: destination })),
+  );
 
   return {
-    converties: aConvertir.map(({ fiche }) => fiche.id),
+    converties: aConvertir.map(({ document }) => document.id),
     reprises: cibles.length - aConvertir.length,
     retirees,
   };
@@ -480,12 +517,14 @@ const main = async (): Promise<void> => {
 
   const brut = await readFile(SOURCE, 'utf8');
   const parsed: unknown = JSON.parse(brut);
-  const fiches = await lireBibliotheque();
+  const fiches = await lireDocuments(BIBLIOTHEQUE);
+  const bilans = await lireDocuments(BILANS);
 
   const problemes = [
     ...relireProgramme(parsed),
     ...(await relireSupervision(parsed)),
     ...relireBibliotheque(parsed, fiches),
+    ...relireBilans(parsed, bilans),
     ...(options.seance ? [] : await relireHorsSeance(parsed, cible)),
   ];
 
@@ -499,18 +538,25 @@ const main = async (): Promise<void> => {
     return;
   }
 
-  const publication = await publier(cible, brut, fiches, options.refaireTout);
+  const publiees = await convertir(cible, 'bibliotheque', fiches, options.refaireTout);
+  const verses = await convertir(cible, 'bilans', bilans, options.refaireTout);
+  await writeFile(join(cible, 'programme.json'), brut, 'utf8');
 
   const etapes = isRecord(parsed) && Array.isArray(parsed['etapes']) ? parsed['etapes'].length : 0;
   const version = isRecord(parsed) ? String(parsed['version']) : '?';
   const supervision = isRecord(parsed) ? String(parsed['supervision']) : '?';
 
+  const dire = (dossier: string, total: number, publication: Publication): void => {
+    console.log(
+      `         ${dossier} — ${total} document(s) en PDF : ${publication.converties.length} convertis, ${publication.reprises} inchanges`,
+    );
+    publication.converties.forEach((id) => console.log(`         converti ${id}.pdf`));
+    publication.retirees.forEach((nom) => console.log(`         retire   ${nom}`));
+  };
+
   console.log(`publie   programme.json — version ${version}, ${etapes} etapes`);
-  console.log(
-    `         bibliotheque — ${fiches.length} fiche(s) en PDF : ${publication.converties.length} converties, ${publication.reprises} inchangees`,
-  );
-  publication.converties.forEach((id) => console.log(`         converti ${id}.pdf`));
-  publication.retirees.forEach((nom) => console.log(`         retire   ${nom}`));
+  dire('bibliotheque', fiches.length, publiees);
+  dire('bilans', bilans.length, verses);
   console.log(`vise par ${supervision}`);
   console.log(`portee   ${options.seance ? 'seance — tout le programme' : 'hors seance — documentation seule'}`);
   console.log(`vers     ${cible}`);

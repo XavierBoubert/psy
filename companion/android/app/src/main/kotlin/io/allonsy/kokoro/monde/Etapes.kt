@@ -11,6 +11,7 @@ import io.allonsy.kokoro.programme.Etape
 import io.allonsy.kokoro.programme.Programme
 import io.allonsy.kokoro.programme.Quand
 import io.allonsy.kokoro.programme.Rubrique
+import io.allonsy.kokoro.programme.bilans
 import io.allonsy.kokoro.programme.etapesDe
 import io.allonsy.kokoro.programme.fiches
 import io.allonsy.kokoro.ui.BoutonEpais
@@ -23,7 +24,7 @@ val ECRANS_VIDES = setOf(Ecran.THERAPIE, Ecran.DOCUMENTATION, Ecran.BILAN)
 
 fun videsDe(programme: Programme): Set<Ecran> = buildSet {
     if (programme.etapesDe(Rubrique.THERAPIE).isEmpty()) add(Ecran.THERAPIE)
-    if (programme.etapesDe(Rubrique.BILAN).isEmpty()) add(Ecran.BILAN)
+    if (programme.bilans().isEmpty()) add(Ecran.BILAN)
     if (programme.fiches().isEmpty()) add(Ecran.DOCUMENTATION)
 }
 

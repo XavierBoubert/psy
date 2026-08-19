@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -41,6 +42,7 @@ import io.allonsy.kokoro.journal.lireDossier
 import io.allonsy.kokoro.journal.ecrireReponse
 import io.allonsy.kokoro.journal.listerReponses
 import io.allonsy.kokoro.journal.pdfDeLaBibliotheque
+import io.allonsy.kokoro.journal.pdfDuBilan
 import io.allonsy.kokoro.journal.texteDuProgramme
 import io.allonsy.kokoro.journal.valeursReprises
 import io.allonsy.kokoro.programme.AUCUNE_FAITE
@@ -155,7 +157,8 @@ class MondeActivity : ComponentActivity() {
                     programme = programme.value,
                     faites = faites.value,
                     onRendu = { etape, issue, items -> enregistrerReponse(etape, issue, items) },
-                    onPdf = { document -> ouvrirLeDocument(document) },
+                    onPdf = { document -> ouvrirLeDocument { pdfDeLaBibliotheque(this@MondeActivity, document) } },
+                    onBilan = { document -> ouvrirLeDocument { pdfDuBilan(this@MondeActivity, document) } },
                     ouvrirCheckin = ouvrirCheckinDemande.value,
                     onCheckinOuvert = { ouvrirCheckinDemande.value = false },
                     parallaxe = reglages.value.parallaxe,
@@ -231,9 +234,9 @@ class MondeActivity : ComponentActivity() {
     }
 
     // Deux échecs distincts, deux phrases distinctes : le document n'est pas arrivé, ou le téléphone n'a pas de lecteur.
-    private fun ouvrirLeDocument(document: String) {
+    private fun ouvrirLeDocument(resoudre: () -> Uri?) {
         lifecycleScope.launch {
-            val pdf = withContext(Dispatchers.IO) { pdfDeLaBibliotheque(this@MondeActivity, document) }
+            val pdf = withContext(Dispatchers.IO) { resoudre() }
             accuse.value = when {
                 pdf == null -> getString(R.string.bibliotheque_document_absent)
                 ouvrirLePdf(this@MondeActivity, pdf) -> null
