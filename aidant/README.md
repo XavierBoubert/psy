@@ -49,7 +49,8 @@ Le superviseur le vérifie sur **chaque** séquence, et il cherche deux fautes d
 
 | Chemin | Rôle |
 |---|---|
-| [`ressources/fiche-chourouk.md`](ressources/fiche-chourouk.md) | ⭐ **La seule chose écrite qu'elle reçoit** — une explication des shutdowns de Xavier. **Elle ne lui demande rien et ne lui attribue aucun rôle thérapeutique.** ⚠️ Elle porte une note interne **à retirer avant transmission**, et **Xavier relit et décide de la transmettre ou non** |
+| [`ressources/fiche-chourouk.md`](ressources/fiche-chourouk.md) | ⭐ **La seule chose écrite qu'elle reçoit** — en deux parties : les **shutdowns**, puis **le rôle qu'elle a accepté** *(le « non » de la main, les critères d'arrêt, le mode entraînement, et ce qu'on ne lui demande jamais)*. 🔴 **Elle n'y apprend ni diagnostic, ni score, ni hypothèse.** ⚠️ Note interne **à retirer avant transmission** · **supervision bloquante** · **Xavier relit et décide de la transmettre ou non** |
+| [`../companion/inputs/bibliotheque/fiche-chourouk.md`](../companion/inputs/bibliotheque/fiche-chourouk.md) | La **carte du moment**, montrée sur le téléphone pendant un shutdown. Elle ne parle que de ça et **ne porte aucun numéro d'appel**. 🔴 **Les deux fiches ne fusionnent pas** — l'une se lit à froid, l'autre pendant |
 | [`scripts/`](scripts/README.md) | **Vide aujourd'hui** — voir le README |
 
 **Les déroulés qu'elle exécute ne vivent pas ici** : ce sont des étapes `seance-duo` du programme, écrites par Claude Psy et publiées dans [`../companion/inputs/`](../companion/inputs/). **Elle ne les lit que dans Kokoro**, jamais dans le dépôt.

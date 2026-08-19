@@ -2,6 +2,8 @@ import { mkdir, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises'
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { convertirEnPdf } from './md2pdf.ts';
+import { ProgrammeSchema, TYPES } from './schemas/programme.ts';
+import { decrire } from './schemas/problemes.ts';
 
 const PROJECT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const SOURCE = resolve(PROJECT_ROOT, 'companion/inputs/programme.json');
@@ -11,17 +13,7 @@ const SUPERVISIONS = resolve(PROJECT_ROOT, 'superviseur/outputs');
 
 const USAGE = 'Usage: psy-publish <dossier-de-transit-drive> [--seance] [--refaire]';
 
-const TYPES = ['ecran', 'exercice', 'questionnaire', 'demarche', 'fiche', 'seance-duo', 'bilan'] as const;
-const POUR = ['aide', 'patient'] as const;
-const QUAND = ['aujourdhui', 'au_besoin', 'sans_date'] as const;
-const RUBRIQUES = ['crise', 'therapie', 'bilan', 'documentation'] as const;
-const ECRANS = ['check-in', 'mot-code', 'tension-appliquee', 'phrase-soignant'] as const;
-
 const CLES_NON_TEXTUELLES = ['id', 'type', 'quand', 'rubrique', 'ecran', 'document', 'pour', 'date'] as const;
-
-const KEBAB = /^[a-z0-9-]+$/;
-
-const JOUR = /^\d{4}-\d{2}-\d{2}$/;
 
 type Interdit = {
   readonly motif: RegExp;
@@ -89,8 +81,6 @@ const problemesInterdits = (etape: Record<string, unknown>): ReadonlyArray<strin
   );
 };
 
-const estTexteNonVide = (value: unknown): boolean => typeof value === 'string' && value.trim().length > 0;
-
 // C10 — l'aidant execute un deroule, elle ne juge jamais (elle n'est pas therapeute).
 const JUGEMENTS: ReadonlyArray<Interdit> = [
   {
@@ -113,204 +103,35 @@ const problemesJugement = (etape: Record<string, unknown>): ReadonlyArray<string
   return JUGEMENTS.flatMap((interdit) => (textes.some((texte) => interdit.motif.test(texte)) ? [interdit.raison] : []));
 };
 
-const problemeConsigne = (consigne: unknown, rang: number): string | null => {
-  if (!isRecord(consigne)) return `consigne ${rang + 1} : ce n'est pas un objet`;
+const idDeLetape = (parsed: unknown, rang: number): string => {
+  const etapes = isRecord(parsed) ? parsed['etapes'] : null;
+  const etape = Array.isArray(etapes) ? etapes[rang] : null;
 
-  if (!POUR.some((connu) => connu === consigne['pour'])) return `consigne ${rang + 1} : « pour » vaut ${String(consigne['pour'])}, attendu aide ou patient`;
-
-  if (!estTexteNonVide(consigne['consigne'])) return `consigne ${rang + 1} : texte absent`;
-
-  return typeof consigne['secondes'] === 'number' && consigne['secondes'] > 0
-    ? null
-    : `consigne ${rang + 1} : « secondes » absent ou nul — une seance a deux est chronometree`;
-};
-
-// Une seance a deux implique une tierce personne : ces gardes sont les garde-fous eux-memes, pas de simples validations de forme.
-const problemesDuo = (etape: Record<string, unknown>): ReadonlyArray<string> => {
-  const sequence = etape['sequence'];
-  const arret = etape['arret'];
-  const avant = etape['avant'];
-
-  const gardes = [
-    etape['entrainement_requis'] === true
-      ? null
-      : 'entrainement_requis doit valoir true — la premiere seance reelle ne peut pas etre la premiere fois que l\'aide decouvre le deroule',
-    estTexteNonVide(etape['signal_arret'])
-      ? null
-      : 'signal_arret absent — Xavier doit pouvoir arreter SANS PARLER, c\'est exactement ce qui tombe en premier',
-    Array.isArray(arret) && arret.length >= 2 && arret.every(estTexteNonVide)
-      ? null
-      : 'arret : au moins deux criteres d\'arret, non vides',
-    Array.isArray(avant) && avant.every(estTexteNonVide) ? null : 'avant : liste de textes non vides',
-    etape['sortie_libre'] === true ? null : 'sortie_libre doit valoir true',
-  ];
-
-  if (!Array.isArray(sequence) || sequence.length === 0) return [...gardes.filter((p): p is string => p !== null), 'sequence absente'];
-
-  return [...gardes, ...sequence.map(problemeConsigne), ...problemesJugement(etape)].filter(
-    (probleme): probleme is string => probleme !== null,
-  );
-};
-
-// 🔴 Un item perdu produit un score faux, donc faussement rassurant : Kokoro ecarte le questionnaire entier,
-// et le PC refuse la publication plutot que de laisser partir une echelle amputee en silence.
-const problemeChoix = (choix: unknown, question: string, rang: number): string | null => {
-  if (!isRecord(choix)) return `${question}, choix ${rang + 1} : ce n'est pas un objet`;
-
-  if (!Number.isInteger(choix['valeur'])) return `${question}, choix ${rang + 1} : « valeur » absente ou non entiere`;
-
-  return estTexteNonVide(choix['libelle']) ? null : `${question}, choix ${rang + 1} : « libelle » absent`;
-};
-
-const problemeQuestion = (question: unknown, rang: number): ReadonlyArray<string> => {
-  if (!isRecord(question)) return [`question ${rang + 1} : ce n'est pas un objet`];
-
-  const nom = typeof question['id'] === 'string' ? question['id'] : `question ${rang + 1}`;
-  const choix = question['choix'];
-
-  const communs = [
-    typeof question['id'] === 'string' && KEBAB.test(question['id'])
-      ? null
-      : `${nom} : id absent ou hors kebab-case`,
-    estTexteNonVide(question['enonce']) ? null : `${nom} : enonce absent`,
-    Array.isArray(choix) && choix.length >= 2
-      ? null
-      : `${nom} : moins de deux choix — une question est toujours un choix ferme, jamais une saisie de texte`,
-  ];
-
-  const propres = Array.isArray(choix) ? choix.map((un: unknown, place: number) => problemeChoix(un, nom, place)) : [];
-
-  return [...communs, ...propres].filter((probleme): probleme is string => probleme !== null);
-};
-
-// Un bilan est le seul type sans « quand », et le seul de la rubrique bilan : c'est ce qui lui donne sa place a l'ecran.
-const problemesDeBilan = (etape: Record<string, unknown>): ReadonlyArray<string | null> => {
-  const document = etape['document'];
-  const date = etape['date'];
-
-  return [
-    etape['quand'] === undefined
-      ? null
-      : '« quand » sur un bilan — sa date appartient au document, pas a l\'assiduite de Xavier',
-    typeof document === 'string' && KEBAB.test(document)
-      ? null
-      : 'document absent ou hors kebab-case — un bilan est toujours un PDF de companion/inputs/bilans/',
-    typeof date === 'string' && JOUR.test(date)
-      ? null
-      : 'date absente ou hors AAAA-MM-JJ — c\'est celle du bilan, jamais celle de la publication',
-    etape['texte'] === undefined ? null : 'un bilan ne porte jamais « texte »',
-    etape['montrable'] === undefined
-      ? null
-      : 'un bilan n\'est jamais montrable — le partage est un acte de Xavier dans son lecteur, pas une fonction du dispositif',
-  ];
-};
-
-const problemesDeForme = (etape: Record<string, unknown>): ReadonlyArray<string> => {
-  const type = etape['type'];
-  const quand = etape['quand'];
-
-  const rubrique = etape['rubrique'];
-  const bilan = type === 'bilan';
-
-  const communs = [
-    typeof etape['id'] === 'string' && KEBAB.test(etape['id']) ? null : 'id absent ou hors kebab-case',
-    typeof etape['titre'] === 'string' && etape['titre'].length > 0 ? null : 'titre absent',
-    TYPES.some((connu) => connu === type) ? null : `type inconnu : ${String(type)}`,
-    RUBRIQUES.some((connue) => connue === rubrique) ? null : `rubrique inconnue : ${String(rubrique)}`,
-    (rubrique === 'bilan') === bilan
-      ? null
-      : 'la rubrique bilan est reservee au type bilan — rangee la, une autre etape n\'aurait pas de place a l\'ecran',
-    bilan || QUAND.some((connu) => connu === quand) ? null : `quand inconnu : ${String(quand)}`,
-    etape['duree_minutes'] === undefined || typeof etape['duree_minutes'] === 'number'
-      ? null
-      : 'duree_minutes n\'est pas un nombre',
-  ];
-
-  const propres = ((): ReadonlyArray<string | null> => {
-    if (type === 'bilan') return problemesDeBilan(etape);
-
-    if (type === 'ecran') {
-      return [ECRANS.some((connu) => connu === etape['ecran']) ? null : `ecran inconnu : ${String(etape['ecran'])}`];
-    }
-
-    if (type === 'exercice') {
-      return [
-        typeof etape['consigne'] === 'string' ? null : 'consigne absente',
-        typeof etape['minuteur_secondes'] === 'number' ? null : 'minuteur_secondes absent',
-        etape['sortie_libre'] === true ? null : 'sortie_libre doit valoir true — sortir avant la fin est toujours permis',
-      ];
-    }
-
-    if (type === 'questionnaire') {
-      const questions = etape['questions'];
-
-      if (!Array.isArray(questions) || questions.length === 0) return ['questions absentes'];
-
-      const identifiants = questions.flatMap((question: unknown) =>
-        isRecord(question) && typeof question['id'] === 'string' ? [question['id']] : [],
-      );
-      const doublons = identifiants.filter((id, rang) => identifiants.indexOf(id) !== rang);
-
-      return [
-        ...doublons.map((id) => `question en double : ${id} — un id relie un item a sa reponse`),
-        ...questions.flatMap(problemeQuestion),
-      ];
-    }
-
-    if (type === 'demarche') {
-      return [typeof etape['detail'] === 'string' ? null : 'detail absent'];
-    }
-
-    if (type === 'seance-duo') return problemesDuo(etape);
-
-    const texte = etape['texte'];
-    const document = etape['document'];
-
-    if (typeof document === 'string') {
-      return [
-        KEBAB.test(document) ? null : `document hors kebab-case : ${document}`,
-        texte === undefined ? null : 'une fiche porte « texte » OU « document », jamais les deux',
-      ];
-    }
-
-    return [typeof texte === 'string' ? null : 'ni « texte » ni « document » — une fiche doit porter l\'un des deux'];
-  })();
-
-  return [...communs, ...propres].filter((probleme): probleme is string => probleme !== null);
-};
-
-const relire = (etape: unknown, rang: number): ReadonlyArray<string> => {
-  if (!isRecord(etape)) return [`etape ${rang + 1} : ce n'est pas un objet`];
-
-  const nom = typeof etape['id'] === 'string' ? etape['id'] : `etape ${rang + 1}`;
-
-  return [...problemesDeForme(etape), ...problemesInterdits(etape)].map((probleme) => `${nom} — ${probleme}`);
+  return isRecord(etape) && typeof etape['id'] === 'string' ? etape['id'] : `etape ${rang + 1}`;
 };
 
 const relireProgramme = (parsed: unknown): ReadonlyArray<string> => {
-  if (!isRecord(parsed)) return ['la racine n\'est pas un objet'];
+  const relu = ProgrammeSchema.safeParse(parsed);
 
-  const etapes = parsed['etapes'];
+  if (relu.success) return [];
 
-  const entete = [
-    typeof parsed['version'] === 'number' ? null : 'version absente ou non numerique',
-    typeof parsed['publie_le'] === 'string' ? null : 'publie_le absent',
-    typeof parsed['supervision'] === 'string' && parsed['supervision'].length > 0
-      ? null
-      : 'supervision absente — rien ne se publie sans une passe du superviseur (superviseur/README.md §4)',
-    Array.isArray(etapes) ? null : 'etapes absentes',
-  ].filter((probleme): probleme is string => probleme !== null);
+  return relu.error.issues.map((issue) =>
+    issue.path[0] === 'etapes' && typeof issue.path[1] === 'number'
+      ? `${idDeLetape(parsed, issue.path[1])} — ${decrire(issue, 2)}`
+      : decrire(issue),
+  );
+};
 
-  if (!Array.isArray(etapes)) return entete;
+const relireContenu = (parsed: unknown): ReadonlyArray<string> => {
+  const etapes = isRecord(parsed) && Array.isArray(parsed['etapes']) ? parsed['etapes'] : [];
 
-  const identifiants = etapes.flatMap((etape) => (isRecord(etape) && typeof etape['id'] === 'string' ? [etape['id']] : []));
-  const doublons = identifiants.filter((id, rang) => identifiants.indexOf(id) !== rang);
+  return etapes.flatMap((etape: unknown, rang: number) => {
+    if (!isRecord(etape)) return [];
 
-  return [
-    ...entete,
-    ...doublons.map((id) => `id en double : ${id} — un id relie une reponse a son etape, il doit etre unique`),
-    ...etapes.flatMap(relire),
-  ];
+    const jugements = etape['type'] === 'seance-duo' ? problemesJugement(etape) : [];
+
+    return [...problemesInterdits(etape), ...jugements].map((probleme) => `${idDeLetape(parsed, rang)} — ${probleme}`);
+  });
 };
 
 const champFrontmatter = (contenu: string, champ: string): string | null => {
@@ -522,6 +343,7 @@ const main = async (): Promise<void> => {
 
   const problemes = [
     ...relireProgramme(parsed),
+    ...relireContenu(parsed),
     ...(await relireSupervision(parsed)),
     ...relireBibliotheque(parsed, fiches),
     ...relireBilans(parsed, bilans),

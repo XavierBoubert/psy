@@ -1,24 +1,14 @@
 import { copyFile, mkdir, readFile, readdir } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import type { ZodType } from 'zod';
+import { JournalSchema, ReponseSchema } from './schemas/dossier.ts';
+import { decrire } from './schemas/problemes.ts';
 
 const PROJECT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const SORTIES = resolve(PROJECT_ROOT, 'companion/outputs');
 
 const USAGE = 'Usage: psy-sync <dossier-de-transit-drive>';
-
-const CORE_FIELDS = [
-  'shutdowns',
-  'exposition_sociale',
-  'retrait_sensoriel',
-  'renoncements',
-  'activites_investies',
-  'sommeil_heures',
-  'missions_actives',
-] as const;
-
-const KNOWN_SOURCES = ['claude-code', 'android'] as const;
-const KNOWN_ISSUES = ['termine', 'arrete_avant_la_fin', 'fait', 'entrainement'] as const;
 
 type Flux = {
   readonly nom: string;
@@ -36,57 +26,30 @@ type Issue =
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
 
-const estNombreOuNull = (value: unknown): boolean => value === null || typeof value === 'number';
+const relireAvec = (schema: ZodType, parsed: Record<string, unknown>): string | null => {
+  const relu = schema.safeParse(parsed);
 
-const validerJournal = (parsed: Record<string, unknown>, nom: string): string | null => {
-  if (parsed['date'] !== nom.replace('.json', '')) return 'le champ « date » ne correspond pas au nom du fichier';
-
-  const source = parsed['source'];
-  if (typeof source !== 'string' || !KNOWN_SOURCES.some((connue) => connue === source)) {
-    return `source inconnue : ${String(source)}`;
-  }
-
-  const noyau = parsed['noyau'];
-  if (!isRecord(noyau)) return 'le noyau est absent';
-
-  const manquants = CORE_FIELDS.filter((champ) => !(champ in noyau));
-  if (manquants.length > 0) return `champs de noyau manquants : ${manquants.join(', ')}`;
-
-  const mauvaisType = CORE_FIELDS.filter((champ) => !estNombreOuNull(noyau[champ]));
-  if (mauvaisType.length > 0) return `champs de noyau qui ne sont ni un nombre ni null : ${mauvaisType.join(', ')}`;
-
-  if (!isRecord(parsed['campagne'])) return 'le bloc « campagne » est absent';
-
-  const notes = parsed['notes'];
-  if (notes !== null && typeof notes !== 'string') return 'le champ « notes » n\'est ni null ni du texte';
-
-  return null;
+  return relu.success ? null : relu.error.issues.map((issue) => decrire(issue)).join(' · ');
 };
+
+const rassembler = (problemes: ReadonlyArray<string | null>): string | null =>
+  problemes.filter((probleme): probleme is string => probleme !== null).join(' · ') || null;
+
+const validerJournal = (parsed: Record<string, unknown>, nom: string): string | null =>
+  rassembler([
+    parsed['date'] === nom.replace('.json', '') ? null : 'le champ « date » ne correspond pas au nom du fichier',
+    relireAvec(JournalSchema, parsed),
+  ]);
 
 const validerReponse = (parsed: Record<string, unknown>, nom: string): string | null => {
   const etape = parsed['etape'];
-  if (typeof etape !== 'string' || !/^[a-z0-9-]+$/.test(etape)) return 'le champ « etape » est absent ou hors kebab-case';
 
-  if (!nom.endsWith(`-${etape}.json`)) return `le nom du fichier ne se termine pas par l'étape « ${etape} »`;
-
-  if (typeof parsed['horodatage'] !== 'string') return 'le champ « horodatage » est absent';
-
-  const issue = parsed['issue'];
-  if (typeof issue !== 'string' || !KNOWN_ISSUES.some((connue) => connue === issue)) {
-    return `issue inconnue : ${String(issue)}`;
-  }
-
-  const source = parsed['source'];
-  if (typeof source !== 'string' || !KNOWN_SOURCES.some((connue) => connue === source)) {
-    return `source inconnue : ${String(source)}`;
-  }
-
-  const reponses = parsed['reponses'];
-  if (reponses !== null && !isRecord(reponses) && !Array.isArray(reponses)) {
-    return 'le champ « reponses » n\'est ni null, ni un objet, ni une liste';
-  }
-
-  return null;
+  return rassembler([
+    typeof etape === 'string' && nom.endsWith(`-${etape}.json`)
+      ? null
+      : 'le nom du fichier ne se termine pas par l\'étape qu\'il porte',
+    relireAvec(ReponseSchema, parsed),
+  ]);
 };
 
 const FLUX: ReadonlyArray<Flux> = [
