@@ -1,7 +1,7 @@
 {
-  "version": 10,
+  "version": 11,
   "publie_le": "2026-08-20",
-  "supervision": "2026-08-20-programme-v10",
+  "supervision": "2026-08-20-programme-v11",
   "etapes": [
     {
       "id": "check-in",
@@ -82,15 +82,131 @@
       "montrable": false
     },
     {
+      "id": "ppc-prediction",
+      "titre": "Avant le masque — ce que je prédis",
+      "type": "questionnaire",
+      "rubrique": "therapie",
+      "quand": "aujourdhui",
+      "duree_minutes": 1,
+      "questions": [
+        {
+          "id": "duree",
+          "enonce": "Avant de poser le masque : jusqu'où prédis-tu que le minuteur ira aujourd'hui ?",
+          "choix": [
+            {
+              "valeur": 0,
+              "libelle": "Je vais le retirer dans la première minute"
+            },
+            {
+              "valeur": 1,
+              "libelle": "Entre une et deux minutes"
+            },
+            {
+              "valeur": 2,
+              "libelle": "Entre deux et quatre minutes"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Il ira jusqu'au bout des cinq minutes"
+            }
+          ]
+        },
+        {
+          "id": "cause",
+          "enonce": "Qu'est-ce qui, selon toi, va te faire retirer le masque ?",
+          "choix": [
+            {
+              "valeur": 0,
+              "libelle": "Rien — je vais le garder jusqu'au bout"
+            },
+            {
+              "valeur": 1,
+              "libelle": "L'air passe mal"
+            },
+            {
+              "valeur": 2,
+              "libelle": "Le contact du masque sur le visage"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Une toux"
+            },
+            {
+              "valeur": 4,
+              "libelle": "Autre chose"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ppc-palier-1",
-      "titre": "Masque tenu a la main",
+      "titre": "Masque tenu à la main",
       "type": "exercice",
       "rubrique": "therapie",
       "quand": "aujourdhui",
       "duree_minutes": 5,
-      "consigne": "Masque contre le visage, tenu a la main. Sans sangles, sans machine, en journee, pendant que tu fais autre chose. Le minuteur part avant que tu le poses.",
+      "consigne": "Masque contre le visage, tenu à la main. Sans sangles, sans machine, en journée, pendant que tu fais autre chose. Le minuteur part avant que tu le poses.",
       "minuteur_secondes": 300,
       "sortie_libre": true
+    },
+    {
+      "id": "ppc-constat",
+      "titre": "Après le masque — ce qui s'est passé",
+      "type": "questionnaire",
+      "rubrique": "therapie",
+      "quand": "aujourdhui",
+      "duree_minutes": 1,
+      "questions": [
+        {
+          "id": "duree",
+          "enonce": "Jusqu'où le minuteur est-il allé ?",
+          "choix": [
+            {
+              "valeur": 0,
+              "libelle": "Je l'ai retiré dans la première minute"
+            },
+            {
+              "valeur": 1,
+              "libelle": "Entre une et deux minutes"
+            },
+            {
+              "valeur": 2,
+              "libelle": "Entre deux et quatre minutes"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Il est allé jusqu'au bout des cinq minutes"
+            }
+          ]
+        },
+        {
+          "id": "cause",
+          "enonce": "Qu'est-ce qui t'a fait retirer le masque ?",
+          "choix": [
+            {
+              "valeur": 0,
+              "libelle": "Rien — je l'ai gardé jusqu'au bout"
+            },
+            {
+              "valeur": 1,
+              "libelle": "L'air passait mal"
+            },
+            {
+              "valeur": 2,
+              "libelle": "Le contact du masque sur le visage"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Une toux"
+            },
+            {
+              "valeur": 4,
+              "libelle": "Autre chose"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "ppc-les-paliers",
@@ -154,14 +270,6 @@
       "quand": "sans_date",
       "document": "role-chourouk",
       "montrable": true
-    },
-    {
-      "id": "email-isorni",
-      "titre": "Envoyer l'email préparé au Dr Isorni",
-      "type": "demarche",
-      "rubrique": "therapie",
-      "quand": "sans_date",
-      "detail": "Le brouillon est prêt dans le dossier. Il a vocation à partir avant la consultation du 03/09, pour qu'il arrive préparé — pas à être lu sur place."
     },
     {
       "id": "comment-marche-kokoro",

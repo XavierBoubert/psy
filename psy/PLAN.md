@@ -16,10 +16,7 @@
 
 🔴 **Chantier n° 1 : la reprise de la PPC par désensibilisation.** SAOS sévère insuffisamment traité. Protocole : [`docs/protocoles/ppc-desensibilisation.md`](docs/protocoles/ppc-desensibilisation.md). **Palier 1 ouvert depuis le 18/08/2026** — masque bouche + nez tenu à la main, 5 min en journée, minuteur lancé avant.
 
-🔴 **Le critère qui commande : trois jours où le minuteur va au bout.** Il **se compte** sur les `issue: termine` de [`../companion/outputs/reponses/`](../companion/outputs/reponses/), **il ne se demande pas.** ⭐ **Au 19/08 : une séance sur trois.** Une séance arrêtée avant la fin ne compte pas, **et ne se commente pas** — on refait le même palier le lendemain.
-
-- [ ] ⭐ **Recueillir une prédiction avant chaque séance de palier**, puis ce qui est arrivé — *ce que tu prédis* / *ce qui s'est passé*, jamais une cotation. **C'est le seul ingrédient actif de l'exposition qui ne soit pas câblé** → [`docs/corpus/agoraphobie-exposition/`](docs/corpus/agoraphobie-exposition/README.md)
-- [ ] **Envoyer l'email au Dr Isorni** — rédigé, non envoyé *(`../patient/ressources/20260808 Email au Dr Isorni.md`)*. **Seul praticien encore dans l'ignorance des deux diagnostics somatiques**, et **dernier point ouvert avant les paliers hauts**. ✈️ **Il part avant le 03/09**, pas pendant
+🔴 **Le critère qui commande : trois jours où le minuteur va au bout.** Il **se compte** sur les `issue: termine` de [`../companion/outputs/reponses/`](../companion/outputs/reponses/), **il ne se demande pas.** ⭐ **Au 20/08 : une séance sur trois.** ⭐ **Depuis le 20/08, une prédiction précède chaque séance et un constat la suit** — l'écart entre les deux se lit en séance, jamais à l'écran. Une séance arrêtée avant la fin ne compte pas, **et ne se commente pas** — on refait le même palier le lendemain.
 
 ⚠️ **`ppc_minutes` ne mesure pas ce chantier-ci et ne peut pas le mesurer.** C'est la donnée du télésuivi, donc **de la machine allumée** : elle reste à 0 par construction aux paliers 1 et 2. **Un 0 n'est pas un constat d'immobilité, c'est ce que le protocole prévoit.** Elle redevient l'indicateur au palier 3 — c'est là que le relevé se redemande à Link Sommeil.
 
@@ -70,9 +67,8 @@
 
 ## 7. La séance à deux, puis la réouverture de l'EMDR
 
-🔴 **La fiche de rôle de Chourouk est devenue une dépendance de conception** *(19/08/2026)* : depuis que les critères d'arrêt se cochent **avant** d'entrer et ne sont plus rappelés pendant la séquence, **la fiche porte, hors écran, ce que l'écran ne rappelle plus.**
+🔴 **La fiche de rôle de Chourouk est une dépendance de conception** *(19/08/2026)* : depuis que les critères d'arrêt se cochent **avant** d'entrer et ne sont plus rappelés pendant la séquence, **la fiche porte, hors écran, ce que l'écran ne rappelle plus.** ✅ **Chourouk l'a lue et acceptée le 20/08/2026** — ⚠️ **et c'est un rapport de Xavier, pas un constat du dispositif** : à revérifier de la même façon si la fiche est réécrite. ⚠️ **Ne pas la confondre avec `fiche-chourouk`**, la carte montrée pendant un shutdown — **deux documents, deux usages.**
 
-- [ ] 🔴 **Chourouk doit avoir lu la fiche avant la première `seance-duo` clinique.** Elle est **publiée depuis le 20/08** *(`role-chourouk`, montrable)* : le document est à portée, **sa lecture ne l'est pas** — aucun dispositif ne la constate, elle se demande. ⚠️ **Ne pas la confondre avec `fiche-chourouk`**, la **carte du moment** montrée pendant un shutdown. **Deux documents, deux usages, ils ne fusionnent pas**
 - [ ] **Écrire la première séance à deux clinique : la stabilisation non visuelle** — kit d'auto-apaisement corporel et sensoriel, **sans aucune imagerie** *(phase 1 de [`README.md`](README.md) §6)*
 - [ ] **Écrire la stimulation bilatérale comme `seance-duo`** — ⭐ **l'aidant fait le geste, Kokoro tient la cadence.** ⚠️ **Bloquée par un point de format** : `sequence` est linéaire et ne sait pas exprimer une **répétition en séries** — §8 ci-dessous
 - [ ] **Rouvrir l'EMDR** sous les critères chiffrés de [`README.md`](README.md) §6, **après avis du Dr Isorni**
@@ -94,4 +90,4 @@
 - [ ] **Sourcer ou retirer le « 63 à 84 % » de [`docs/protocoles/ppc-desensibilisation.md`](docs/protocoles/ppc-desensibilisation.md) §0** — chiffre sans référence vérifiable au dossier, **retiré de la fiche de bibliothèque avant publication** *(C6, supervision v9)*. Le protocole le porte toujours
 - [ ] **Obtenir les textes intégraux des corpus 2 et 3** — Fairburn (2008), Craske et al. (2014), Barlow & Craske. ⚠️ **Deux références restent à vérifier avant toute citation en brief** ; chaque README dit lesquelles
 - [ ] **Verser les trois PDF HAS** dans [`docs/references/originales/`](docs/references/originales/) — publics et gratuits, URL dans [`has-recommandations/`](docs/corpus/has-recommandations/README.md)
-- [ ] **Purger les renvois à une « Étape N du PLAN ».** La feuille de route n'est plus numérotée : `etat.md` §1, les en-têtes des protocoles et deux comptes rendus de séance citent une numérotation qui n'existe plus. **`etat.md` se corrige à la prochaine clôture de séance ; chaque protocole, au prochain passage dessus** — ⚠️ **un compte rendu daté ne se réécrit pas**
+- [ ] **Purger les renvois à une « Étape N du PLAN ».** La feuille de route n'est plus numérotée : les en-têtes des protocoles et deux comptes rendus de séance citent une numérotation qui n'existe plus. ✅ **`etat.md` §1 est corrigé le 20/08.** **Restent les en-têtes des protocoles, au prochain passage sur chacun** — ⚠️ **un compte rendu daté ne se réécrit pas**

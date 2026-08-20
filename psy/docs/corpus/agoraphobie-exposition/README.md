@@ -108,7 +108,7 @@ Avion, aéroport, foule, trois semaines hors routine. **Une exposition thérapeu
 | Durée décidée avant, portée par un minuteur externe | ✅ Conforme |
 | Retrait avant la fin autorisé sans justification | ✅ Conforme |
 | Redescente d'un palier annoncée à l'avance | ✅ Conforme |
-| **Aucune prédiction n'est recueillie avant la séance** | ⏳ **Manque.** C'est le seul ingrédient actif du modèle qui ne soit pas câblé — à trancher en séance : **ce qui se recueille doit rester une prédiction vérifiable, jamais une cotation** |
+| Prédiction recueillie avant la séance, constat après | ✅ **Câblé le 20/08/2026** — `ppc-prediction` et `ppc-constat` dans Kokoro, règle 9 du protocole §4. Deux questions fermées, **aucune cotation**. ⚠️ **Rien n'empêche de remplir la prédiction après coup** : la validité tient à l'ordre des cartes à l'écran, pas à un contrôle |
 
 ---
 
@@ -116,7 +116,7 @@ Avion, aéroport, foule, trois semaines hors routine. **Une exposition thérapeu
 
 | Sortie | État |
 |---|---|
-| Paliers d'agoraphobie écrits, puis publiés dans Kokoro comme étapes `exercice` | ⏳ **Étape 4 — à écrire en séance** |
+| Paliers d'agoraphobie écrits, puis publiés dans Kokoro comme étapes `exercice` | ⏳ **À écrire en séance** — ⭐ **la mécanique prédiction / constat du masque ressert telle quelle** |
 | [`protocoles/ppc-desensibilisation.md`](../../protocoles/ppc-desensibilisation.md) | ✅ en cours d'application, palier 1 |
 | [`protocoles/jour-de-vol.md`](../../protocoles/jour-de-vol.md) | ✅ écrit — ⚠️ **kit, pas programme** |
 

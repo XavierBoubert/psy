@@ -1,93 +1,7 @@
-# Email au Dr Isorni — questions en vue de la prochaine consultation
+# Dossier de préparation — email au Dr Isorni
 
-**Rédigé le :** 08/08/2026
-**Destinataire :** Dr Jean-Baptiste Isorni, psychiatre — 2 rue Jean Houdon, 78000 Versailles
-**Objet du document :** brouillon d'email prêt à envoyer, suivi de notes explicatives à usage interne.
+✅ **Envoyé le 20/08/2026.** **Le document parti est [`20260820 Email au Dr Isorni.md`](./20260820%20Email%20au%20Dr%20Isorni.md)**, converti en `Email au Dr Isorni.pdf` à la racine du dépôt. **Ce fichier-ci ne contient plus le corps de l'email** — il porte le fondement de chaque question, et ne s'envoie pas.
 
----
-
-## ⚠️ À compléter avant envoi
-
-Deux informations manquent et **doivent** être renseignées par Xavier — elles sont signalées par `[…]` dans le texte :
-
-1. ~~L'observance de la PPC~~ → **RÉPONDU, puis CORRIGÉ le 09/08/2026** après versement du compte rendu du Dr Roisman du 04/05/2026 : la PPC n'est pas *inutilisée*, elle est **utilisée de façon très irrégulière**. Le pneumologue l'a documenté, a modifié les réglages (humidificateur, 6-12 cm H₂O, EPR 2) et **a renouvelé la prise en charge**. ⭐ **IAH résiduel < 6/h sous appareil.** Le paragraphe de l'email a été réécrit en conséquence. Reste à préciser, si Xavier le souhaite : le nombre de nuits réellement utilisées (relevé de télésuivi) et les modèles de masque déjà essayés.
-2. **La date du prochain rendez-vous**, pour caler la formule d'introduction.
-
----
-
-# ✉️ EMAIL — à copier-coller
-
-**Objet :** Xavier Boubert — deux comptes rendus médicaux récents et quelques questions avant notre prochain rendez-vous
-
-Bonjour Docteur,
-
-Je vous écris avant notre prochaine consultation car deux examens réalisés cette année ont abouti à des diagnostics que vous n'avez, je crois, pas reçus — ils ont été adressés à d'autres correspondants. Ils me semblent avoir un lien direct avec ce que nous suivons ensemble, et ils soulèvent quelques questions sur mon traitement, que je viens de reprendre.
-
-Je vous joins les deux comptes rendus complets.
-
-## 1. Un syndrome d'apnées du sommeil sévère
-
-Polysomnographie du 29/10/2025, conclusion du Dr Gabriel Roisman (pneumologue, centre SomnoGalien) le 19/01/2026, adressée à ma médecin généraliste, le Dr Célia Fournier.
-
-- **SAOS sévère, index d'apnées-hypopnées à 35/h** (48/h en incluant les micro-éveils liés à l'effort respiratoire)
-- Sommeil très fragmenté : **61 micro-éveils par heure**, 55 éveils intra-sommeil
-- **Déficit marqué en sommeil lent profond et en sommeil paradoxal** (7,2 % de sommeil paradoxal)
-- Échelle de somnolence d'Epworth : **14** — index de sévérité de l'insomnie : **20**
-- Également noté : des mouvements périodiques des jambes (31/h pendant le sommeil, dont 15/h réveillants), dans un contexte d'impatiences
-- Une PPC m'a été prescrite le 19/01/2026.
-- **J'ai revu le Dr Roisman le 04/05/2026** — courrier de nouveau adressé au seul Dr Fournier. Il y note une **utilisation très irrégulière de la PPC**, une mauvaise tolérance avec **fuites au masque et toux sèche**, et il a modifié le traitement : mise en place d'un **humidificateur**, pression ramenée à **6-12 cm H₂O**, activation de la fonction **EPR niveau 2**, prise en charge renouvelée.
-- **Point important : sous appareil, mon IAH résiduel est inférieur à 6/h** (contre 35/h sans). Quand je le porte, ça marche.
-
-Je dois vous dire honnêtement où j'en suis : **je n'utilise la PPC que de façon très irrégulière**, et cela n'a pas changé depuis mai. Mon apnée du sommeil sévère est donc **insuffisamment traitée** à ce jour, sept mois après le diagnostic.
-
-Je compte reprendre sérieusement. En y réfléchissant, je me demande si mes difficultés ne tiennent pas en partie à mon profil : je supporte mal les contacts sur le visage, je suis très sensible au bruit, et j'ai une peur marquée des espaces clos — ce qui fait beaucoup de raisons de mal tolérer un masque serré relié à une machine. J'ai lu qu'il existait des **méthodes d'adaptation progressive** — une désensibilisation par paliers, proche de ce qu'on fait en exposition graduée —, et que le type de masque comptait beaucoup (le modèle narinaire touchant moins le visage que le masque nasal). Je vais reprendre contact avec le Dr Roisman et le prestataire, notamment pour faire préciser **si mes fuites viennent du masque ou de la bouche** — je crois comprendre que la réponse change le matériel à essayer.
-
-## 2. Une stéato-hépatite non alcoolique (NASH)
-
-Biopsie hépatique du 15/06/2026 (celle au cours de laquelle j'ai fait deux malaises), compte rendu anatomopathologique du 13/07/2026, Dr Naïma Talhi — CH Argenteuil.
-
-- **Stéato-hépatite non alcoolique (NASH)** : stéatose S2, ballonnisation hépatocytaire, infiltrat inflammatoire
-- **Sans fibrose** — le foie n'est pas lésé
-- Indication initiale : cytolyse à quatre fois la normale, GGT au double de la normale ; sérologies virales et auto-anticorps négatifs, pas de consommation d'alcool
-- La Dr Bouarioua (hépato-gastro-entérologue) conclut que le traitement psychotrope n'est pas en cause et insiste sur la nécessité d'une perte de poids.
-
-Un élément de contexte : je pesais **104 kg** au moment de la polysomnographie (octobre 2025) et j'en pèse **environ 110** aujourd'hui, pour 1,77 m. J'ai donc pris **6 kg en neuf mois**, période pendant laquelle j'étais sous paroxétine.
-
-Je précise un point qui me préoccupe un peu : le compte rendu de biopsie mentionne que les GGT ont doublé « suite à sa mise sous venlafaxine sans bilan hépatique préalable ». L'histologie a écarté une cause médicamenteuse — mais comme il n'existait pas de bilan de référence avant, je n'ai pas de point de comparaison.
-
-## Mes questions
-
-Je les ai classées par ordre d'importance, sachant que le temps de consultation est limité.
-
-**1. L'alprazolam est-il compatible avec un SAOS sévère ?** J'en prends si besoin. J'ai lu que les benzodiazépines pouvaient aggraver les apnées du sommeil. Faut-il en limiter l'usage, le remplacer, ou est-ce sans conséquence à la dose où je le prends ?
-
-**2. La venlafaxine peut-elle aggraver les mouvements périodiques des jambes ?** J'en ai 31 par heure à la polysomnographie et je ressens des impatiences. Je viens de reprendre la venlafaxine le 07/08/2026. Faut-il surveiller ce point, et faut-il faire doser ma ferritine, que je crois recommandée dans ce contexte ?
-
-**3. Faut-il un bilan hépatique de référence maintenant que je reprends la venlafaxine ?** Compte tenu de ce qui s'est passé la première fois — absence de bilan préalable, puis GGT doublées — cela me paraîtrait prudent, mais je préfère vous poser la question.
-
-**4. Quelle part de mes symptômes le SAOS pourrait-il expliquer ?** Les troubles de la concentration et la distractibilité figurent sur mon certificat, et l'aggravation de 2026 a été attribuée au contexte de vie et au changement de traitement. Est-ce qu'un SAOS sévère non traité — avec 61 micro-éveils par heure et pratiquement pas de sommeil profond — pourrait en expliquer une partie ? Et faut-il attendre que l'apnée soit correctement traitée avant de conclure sur le plan attentionnel ?
-
-**5. La paroxétine a-t-elle pu contribuer à ma prise de poids ?** Je comprends qu'elle n'est pas responsable de l'atteinte du foie. Mais c'est la prise de poids qui a causé la stéato-hépatite, et j'ai pris ces 6 kg pendant l'année où j'étais sous paroxétine. Est-ce une piste à considérer ?
-
-**Si nous avons le temps**, j'aimerais aussi aborder :
-- la confirmation du trouble anxieux généralisé, dont les critères de fatigue, d'irritabilité et de sommeil sont difficiles à distinguer de ce que produit l'apnée du sommeil ;
-- la phobie du sang et des gestes médicaux — mes trois malaises sont tous survenus lors de soins, et il existe apparemment une technique spécifique (la « tension appliquée ») pour éviter ces syncopes ;
-- une difficulté que je n'ai jamais évoquée : **je ne ressens pas la satiété**. Je mange environ le double d'un adulte sans jamais percevoir que j'ai assez mangé. Cela me semble avoir un rapport direct avec le poids, donc avec le foie, et je me demande si c'est lié à mon profil.
-
-Je vous remercie de votre attention, et reste à votre disposition d'ici là.
-
-Bien cordialement,
-
-**Xavier Boubert**
-Né le 03/03/1986
-
-**Pièces jointes :**
-- Conclusion de polysomnographie — Dr Gabriel Roisman, 19/01/2026
-- Demande de PPC — Dr Gabriel Roisman, 19/01/2026
-- Compte rendu de biopsie hépatique — Dr Naïma Talhi, CH Argenteuil, 13/07/2026
-- Courriel de résultats — Dr Leila Bouarioua
-
----
 ---
 
 # 📋 NOTES INTERNES — ne pas envoyer
@@ -101,6 +15,7 @@ Né le 03/03/1986
 | 3 | **Bilan hépatique de référence** | Le compte rendu de biopsie note textuellement « GGT à deux fois la normale suite à sa mise sous venlafaxine **sans bilan hépatique préalable** ». L'histologie a tranché en faveur d'une cause métabolique, donc la Dr Bouarioua a raison — mais l'absence de valeur de départ empêche toute comparaison. La venlafaxine ayant été reprise le 07/08/2026, c'est le moment exact où un bilan de référence a du sens. |
 | 4 | **Part attribuable au SAOS** | Le rapport listait quatre hypothèses concurrentes pour la distractibilité, dont une dette de sommeil respiratoire. **Ce n'était pas une hypothèse : c'est un diagnostic posé depuis janvier 2026, sévère, et qui n'a apparemment pas circulé jusqu'au psychiatre.** 61 micro-éveils/h avec 7,2 % de sommeil paradoxal produisent à eux seuls fatigue, irritabilité, troubles cognitifs et dégradation de l'humeur. |
 | 5 | **Paroxétine et poids** | Chronologie désormais chiffrée : 104 kg en octobre 2025 → 110 kg en août 2026, soit **+6 kg en neuf mois sous paroxétine**. La paroxétine est l'ISRS le plus associé à une prise de poids (risque de gagner ≥ 5 % du poids initial majoré de 10 à 15 %). La venlafaxine, reprise le 07/08/2026, a un profil plus neutre — le changement joue en sa faveur sur ce plan. |
+| 6 | **Réserve tensionnelle sur la tension appliquée** | La technique élève transitoirement la tension artérielle par salves de contraction. Une seule valeur existe au dossier — 13 de systolique, cabinet, ≈ 02/2026, **diastolique inconnue, et antérieure à la reprise de la venlafaxine du 07/08**. C'est une baseline, pas un feu vert : `protocoles/tension-appliquee.md` §5 réserve le risque théorique aux cycles répétés chez un hypertendu non contrôlé, ce qui n'est pas établi ici — ni écarté. |
 
 ## La boucle que ces documents mettent en évidence
 
@@ -138,11 +53,9 @@ SAOS sévère (IAH 35, 61 micro-éveils/h)
 
 ## À faire ensuite
 
-- [ ] Compléter les deux `[…]` avant envoi
 - [ ] Réviser le rapport (chronologie, §6.3, §8, §9.21, §10.1) — le SAOS y figure encore comme hypothèse à explorer alors qu'il est diagnostiqué
 - [ ] Verser au dossier : télésuivi PPC, ferritine si elle est dosée, bilan hépatique de référence
 - [ ] Envisager d'adresser une copie au Dr Fournier (médecin généraliste), qui est destinataire du courrier du pneumologue et le pivot naturel de la coordination
 
 ---
 
-*Document rédigé le 08/08/2026 — projet « Psy ». Le corps de l'email est à relire et à ajuster par Xavier avant envoi : c'est sa parole, pas celle du dispositif.*

@@ -107,6 +107,7 @@ Et tant que 61 micro-éveils par heure fragmentent chaque nuit, **aucune évalua
 6. **Aucune relaxation par visualisation.** Aphantasie. Si un ancrage est utile : appui des pieds au sol, mains sur les cuisses, expiration allongée comptée. Du corporel, du verbal, rien de visuel.
 7. **Trois séances non tenues d'affilée sur un même palier → on redescend d'un palier**, on ne « serre pas les dents ». La redescente s'annonce avant, elle ne se subit pas.
 8. **Interruption prévue (voyage, maladie, semaine de surcharge) : le palier ne progresse pas, et on redescend d'un palier à la reprise.** Décidé à l'avance, jamais constaté après coup. ✈️ **S'applique au séjour du 07/09/2026** : aucune progression pendant les vacances, reprise un palier plus bas au retour. Ce n'est pas une sanction — c'est la manière normale de reprendre une exposition interrompue.
+9. ⭐ **Une prédiction se recueille avant chaque séance, et le constat après** — *jusqu'où le minuteur ira* et *ce qui fera retirer le masque*, puis ce qui est arrivé. **C'est l'ingrédient actif du modèle par apprentissage inhibiteur** *(Craske et al., 2014 — [`corpus/agoraphobie-exposition/`](../corpus/agoraphobie-exposition/README.md))* : ce qui soigne est le **démenti d'une attente**, pas la baisse de l'anxiété pendant la séance. 🔴 **Jamais une cotation** — une prédiction porte sur un événement du monde et se vérifie de l'extérieur, ce qu'un ressenti ne fait pas. **L'écart se lit en séance ; il ne se commente jamais sur le téléphone**, et une prédiction confirmée n'est pas un échec.
 
 ---
 
@@ -129,6 +130,7 @@ Et tant que 61 micro-éveils par heure fragmentent chaque nuit, **aucune évalua
 |---|---|---|
 | Minutes d'utilisation | `journal/AAAA-MM-JJ.json` → `campagne.ppc_minutes` | Entier ≥ 0. **Donnée du télésuivi de l'appareil quand elle existe**, pas une estimation. |
 | Palier en cours | `seances/AAAA-MM-JJ-seance.md` → frontmatter `palier_atteint` | 0 à 6 |
+| **Prédiction avant la séance, constat après** | `companion/outputs/reponses/…-ppc-prediction.json` et `…-ppc-constat.json` | Réponses item par item. **L'écart entre les deux est la donnée** — il se lit à la clôture, jamais à l'écran |
 | Panique survenue pendant une séance | `crises/AAAA-MM-JJ-HHMM-panique.json` | Cf. `psy/DOSSIER.md` §5 |
 | Réponses du prestataire (interfaces, réglages, prise en charge) | Compte-rendu de séance, section `## Décisions` | — |
 | Observance et IAH résiduel du télésuivi | `etat.md` § Chiffres de référence | Mis à jour à la clôture de séance |
