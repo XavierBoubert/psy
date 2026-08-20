@@ -37,7 +37,7 @@
 | **Corpus** | `psy/docs/corpus/` | **Claude Psy** | La **littérature** : article, échelle publiée, recommandation. Une source citable, avec sa date et **ce qu'elle ne dit pas** |
 | **Protocole** | `psy/docs/protocoles/` | **Le praticien** | La **fiche qu'on applique**, adaptée au profil. Porte diagnostics, pronostics, réserves, hypothèses non tranchées, frontières de non-substitution |
 | **Fiche de bibliothèque** | `companion/inputs/bibliotheque/` | **Xavier** *(ou l'aidant)* | Ce qu'il y a **à faire, et pourquoi**. **Réécrite**, jamais copiée d'un protocole |
-| **Programme** | `companion/inputs/programme.json` | **Kokoro** | La liste des **étapes** du moment. Un fichier, une version, une supervision |
+| **Programme** | `companion/inputs/programme.json` | **Kokoro** | La liste des **cartes** du moment. Un fichier, une version, une supervision |
 | **Rapport** | `patient/ressources/Rapport…md` | **Claude Psy** | Le document clinique de référence. **En cas de doute clinique, c'est lui qui fait foi**, jamais une fiche |
 | **Dossier** | `psy/outputs/dossier/` + `companion/outputs/` | **Le dispositif** | La mémoire longitudinale — **source de vérité unique**. Réparti sur deux rôles, **il se charge en entier** |
 
@@ -56,9 +56,10 @@
 | **Chantier** | Un **domaine de travail somatique** ouvert : PPC, alimentation, activité physique. **À partir du palier 1, un seul chantier progresse à la fois** | Des mois |
 | **Cible** | Ce sur quoi **une séance** travaille. **Une seule par séance.** Identifiants dans [`psy/DOSSIER.md`](psy/DOSSIER.md) §6 | Une séance |
 | **Palier** | Un **cran d'exposition graduée** à l'intérieur d'un chantier ou d'un protocole. On monte quand un **critère comptable** est atteint — jamais quand on « se sent prêt » | Des jours |
-| **Étape** | Une **ligne affichée dans Kokoro**. Six types, §5 ci-dessous | Minutes |
+| **Carte** | Une **ligne affichée dans Kokoro**. Deux types, §5 ci-dessous | Minutes |
+| **Étape** | Un **écran du panneau d'une carte**. Six types, §5 ci-dessous | Secondes |
 
-> ⭐ **« Étape » n'a plus qu'un sens : une ligne du programme, dans Kokoro.** La feuille de route est faite de **fronts nommés** — ⚠️ **un renvoi à une « Étape N du PLAN », où qu'il subsiste, désigne une numérotation qui n'existe plus.**
+> ⭐ **Une carte est ce qu'on ouvre ; une étape est un écran de ce qui s'ouvre.** La feuille de route, elle, est faite de **fronts nommés** — ⚠️ **un renvoi à une « Étape N du PLAN », où qu'il subsiste, désigne une numérotation qui n'existe plus.**
 
 > ⭐ **Palier ≠ progression.** Un palier se cote **en séance**, à partir du journal. **Il n'apparaît jamais dans Kokoro** — ni le palier atteint, ni l'historique, ni un pourcentage. C'est ce qui empêche un streak d'exister.
 
@@ -68,8 +69,8 @@
 
 | Terme | Rythme | Support | Ce qui s'y passe |
 |---|---|---|---|
-| **Check-in** | Quotidien, < 2 min | **Kokoro** | Compteurs et choix fermés. **Aucune saisie de texte.** → `companion/outputs/journal/` |
-| **Séance** *(de fond)* | Hebdomadaire, week-end | Claude Code | ⭐ **Le battement du dispositif.** Ouverture / **une seule cible** / clôture obligatoire / compte rendu. **Seule fenêtre d'écriture des étapes qui font agir** — la documentation se publie à tout moment |
+| **Check-in** | Quotidien, < 2 min | **Kokoro** | Une carte comme les autres, d'`id` `check-in` — compteurs et choix fermés, une note facultative. → `reponses/`, d'où `psy:sync` **reconstruit** `companion/outputs/journal/` |
+| **Séance** *(de fond)* | Hebdomadaire, week-end | Claude Code | ⭐ **Le battement du dispositif.** Ouverture / **une seule cible** / clôture obligatoire / compte rendu. **Seule fenêtre d'écriture des cartes qui font agir** — la documentation se publie à tout moment |
 | **Séance à deux** | Ponctuelle | **Kokoro**, tenu par l'**aidant** | Un déroulé **chronométré**, lu et exécuté par l'aidant. §6 ci-dessous |
 | **Entraînement** | Avant toute séance à deux | **Kokoro** | La **même séquence, à blanc**, sans le matériel réel. Sert à ce que l'aidant connaisse le déroulé **avant** que ça compte |
 | **Passation** | Ponctuelle | **Kokoro** *(sauf PHQ-9)* | Une **échelle** administrée item par item → `psy/outputs/dossier/mesures/` |
@@ -80,25 +81,35 @@
 
 ---
 
-## 5. Les six types d'étape du programme
+## 5. Les cartes et leurs étapes
 
 *Contrat complet : [`companion/PROGRAMME.md`](companion/PROGRAMME.md).*
 
+**Deux types de carte, et rien d'autre :**
+
+| Type | Ce que Kokoro fait |
+|---|---|
+| `panneau` | Ouvre son panneau et **déroule ses étapes**, une par écran |
+| `pdf` | **Confie un document au lecteur du téléphone** — picto « dehors », sortie de l'app. Une fiche de bibliothèque ou un bilan |
+
+**Six types d'étape, et rien d'autre :**
+
 | Type | Ce que Kokoro affiche | Ce qu'il renvoie |
 |---|---|---|
-| `ecran` | Ouvre une fonction déjà construite dans l'app (mot-code, tension appliquée…) | selon l'écran |
-| `exercice` | Un déroulé guidé **au minuteur**, pour Xavier seul | `termine` · `arrete_avant_la_fin` |
-| `questionnaire` | Des questions **fermées**, une par écran | les réponses item par item |
-| `demarche` | **Une chose à faire dans le monde réel** — un appel, un email, une demande | `fait`, ou rien |
-| `fiche` | Un texte à lire — ou à **montrer** à quelqu'un | rien |
-| `seance-duo` | Un déroulé **chronométré, tenu par l'aidant** | `termine` · `arrete_avant_la_fin` · `entrainement` |
+| `info` | Un texte à lire — ou à **montrer** à quelqu'un (`montrable`) | rien |
+| `question` | Un **choix fermé** ou un **compteur**, une par écran | la valeur, ou `null` si passée |
+| `note` | ⭐ **La seule saisie libre du dispositif**, toujours facultative | le texte, ou `null` |
+| `minuteur` | Un temps **tenu par l'appareil**, sans son ni vibration au terme | rien de plus que l'issue |
+| `checklist` | Des cases qui **ouvrent la suite** — rien ne passe tant que tout n'est pas coché | rien |
+| `confirmation` | Un bouton pour **une chose faite dans le monde réel** | `fait` |
 
-**Deux attributs transverses :**
+**Trois attributs transverses :**
 
 | Terme | Sens |
 |---|---|
 | **Rubrique** | Le **groupement d'écran** : `crise` · `therapie` · `bilan` · `documentation`. C'est là que Xavier va chercher |
 | **`quand`** | `aujourdhui` · `au_besoin` · `sans_date`. **Ce n'est pas une échéance** — rien n'est en retard, jamais |
+| **`porteur`** | `patient` *(par défaut)* · `aidant` — qui **tient le téléphone** pendant le déroulé (§6) |
 
 > ⭐ **`sortie_libre` vaut toujours `true`.** Le champ existe pour que ce soit **écrit**, pas pour être mis à `false`. Sortir avant la fin **n'est pas un échec** et ne se commente nulle part.
 
@@ -108,7 +119,7 @@
 
 | Terme | Sens exact |
 |---|---|
-| **Porteur** | Qui **tient le téléphone**. Sur une `seance-duo`, c'est **toujours l'aidant** |
+| **Porteur** | Qui **tient le téléphone**. Une séance à deux est une carte de `porteur: "aidant"` |
 | **Consigne** | Une instruction **littérale et chronométrée**, adressée soit à l'aidant (`pour: "aide"`), soit lue à voix haute au patient (`pour: "patient"`) |
 | **Séquence** | La suite ordonnée de consignes. **L'aidant ne fait que ce que Kokoro affiche** — elle n'ajoute rien, n'anticipe rien |
 | 🔴 **Signal d'arrêt** | Le geste, **convenu à froid**, par lequel Xavier arrête la séance **sans parler**. Il est rappelé à l'écran en permanence. **Sans lui, aucune séance à deux ne démarre** |

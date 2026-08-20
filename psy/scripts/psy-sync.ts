@@ -1,8 +1,9 @@
-import { copyFile, mkdir, readFile, readdir } from 'node:fs/promises';
+import { copyFile, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { ZodType } from 'zod';
-import { JournalSchema, ReponseSchema } from './schemas/dossier.ts';
+import type { Journal, Reponse } from './schemas/dossier.ts';
+import { CARTE_DU_JOURNAL, JournalSchema, NOYAU, QUESTION_DES_NOTES, ReponseSchema } from './schemas/dossier.ts';
 import { decrire } from './schemas/problemes.ts';
 
 const PROJECT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
@@ -21,7 +22,8 @@ type Issue =
   | { readonly kind: 'verse'; readonly flux: string; readonly nom: string }
   | { readonly kind: 'deja-la'; readonly flux: string; readonly nom: string }
   | { readonly kind: 'doublon'; readonly flux: string; readonly nom: string }
-  | { readonly kind: 'a-la-main'; readonly flux: string; readonly nom: string; readonly raison: string };
+  | { readonly kind: 'a-la-main'; readonly flux: string; readonly nom: string; readonly raison: string }
+  | { readonly kind: 'journal'; readonly flux: string; readonly nom: string };
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -42,12 +44,12 @@ const validerJournal = (parsed: Record<string, unknown>, nom: string): string | 
   ]);
 
 const validerReponse = (parsed: Record<string, unknown>, nom: string): string | null => {
-  const etape = parsed['etape'];
+  const carte = parsed['carte'];
 
   return rassembler([
-    typeof etape === 'string' && nom.endsWith(`-${etape}.json`)
+    typeof carte === 'string' && nom.endsWith(`-${carte}.json`)
       ? null
-      : 'le nom du fichier ne se termine pas par l\'étape qu\'il porte',
+      : 'le nom du fichier ne se termine pas par la carte qu\'il porte',
     relireAvec(ReponseSchema, parsed),
   ]);
 };
@@ -129,13 +131,87 @@ const verserUnFlux = async (transit: string, flux: Flux): Promise<ReadonlyArray<
   return lots.flat();
 };
 
+// 🔴 Kokoro n'écrit plus le journal : il rend une réponse comme pour n'importe quelle carte, et c'est ici
+// qu'elle redevient un journal. L'id « check-in » est le seul lien — Kokoro n'interprète rien, et le format
+// du dossier ne bouge pas d'un champ. Les identifiants de question sont en kebab-case, les clés en snake_case.
+const cleDuJournal = (question: string): string => question.replaceAll('-', '_');
+
+const chiffresDe = (reponse: Reponse): ReadonlyMap<string, number | null> =>
+  new Map(
+    (reponse.reponses || []).flatMap((item): ReadonlyArray<readonly [string, number | null]> =>
+      item.valeur === undefined ? [] : [[cleDuJournal(item.question), item.valeur]],
+    ),
+  );
+
+const journalDeLaReponse = (reponse: Reponse): Journal => {
+  const chiffres = chiffresDe(reponse);
+  const note = (reponse.reponses || []).find((item) => item.question === QUESTION_DES_NOTES);
+  const horsNoyau = [...chiffres].filter(([cle]) => !NOYAU.some((champ) => champ === cle));
+
+  return {
+    date: reponse.horodatage.slice(0, 10),
+    source: reponse.source,
+    noyau: {
+      shutdowns: chiffres.get('shutdowns') ?? null,
+      exposition_sociale: chiffres.get('exposition_sociale') ?? null,
+      retrait_sensoriel: chiffres.get('retrait_sensoriel') ?? null,
+      renoncements: chiffres.get('renoncements') ?? null,
+      activites_investies: chiffres.get('activites_investies') ?? null,
+      sommeil_heures: chiffres.get('sommeil_heures') ?? null,
+      missions_actives: chiffres.get('missions_actives') ?? null,
+    },
+    campagne: Object.fromEntries(horsNoyau),
+    notes: note?.texte || null,
+  };
+};
+
+const reponsesDuJournal = async (): Promise<ReadonlyArray<Reponse>> => {
+  const noms = await readdir(join(SORTIES, 'reponses')).catch(() => [] as ReadonlyArray<string>);
+  const retenus = noms.filter((nom) => nom.endsWith(`-${CARTE_DU_JOURNAL}.json`));
+
+  const lus = await Promise.all(
+    retenus.map(async (nom) => {
+      const relu = ReponseSchema.safeParse(JSON.parse(await readFile(join(SORTIES, 'reponses', nom), 'utf8')));
+
+      return relu.success ? [relu.data] : [];
+    }),
+  );
+
+  return lus.flat();
+};
+
+// ⭐ Un jour déjà au journal n'est jamais réécrit : le dépôt garde ce qui y est arrivé en premier.
+const reconstruireLeJournal = async (): Promise<ReadonlyArray<Issue>> => {
+  const reponses = await reponsesDuJournal();
+  const existants = await readdir(join(SORTIES, 'journal')).catch(() => [] as ReadonlyArray<string>);
+
+  const ecrits = await Promise.all(
+    reponses.map(async (reponse): Promise<ReadonlyArray<Issue>> => {
+      const journal = journalDeLaReponse(reponse);
+      const nom = `${journal.date}.json`;
+      if (existants.includes(nom)) return [];
+
+      const probleme = relireAvec(JournalSchema, journal);
+      if (probleme !== null) return [{ kind: 'a-la-main', flux: 'journal', nom, raison: probleme }];
+
+      await writeFile(join(SORTIES, 'journal', nom), `${JSON.stringify(journal, null, 2)}\n`, 'utf8');
+
+      return [{ kind: 'journal', flux: 'journal', nom }];
+    }),
+  );
+
+  return ecrits.flat();
+};
+
 const rapporter = (issues: ReadonlyArray<Issue>): void => {
   const verses = issues.filter((issue) => issue.kind === 'verse');
+  const journaux = issues.filter((issue) => issue.kind === 'journal');
   const inchanges = issues.filter((issue) => issue.kind === 'deja-la');
   const doublons = issues.filter((issue) => issue.kind === 'doublon');
   const aLaMain = issues.filter((issue) => issue.kind === 'a-la-main');
 
   verses.forEach((issue) => console.log(`versé    ${issue.flux}/${issue.nom}`));
+  journaux.forEach((issue) => console.log(`journal  ${issue.flux}/${issue.nom} — reconstruit depuis la carte ${CARTE_DU_JOURNAL}`));
   inchanges.forEach((issue) => console.log(`inchangé ${issue.flux}/${issue.nom} — déjà au dossier, jamais écrasé`));
   doublons.forEach((issue) => console.log(`doublon  ${issue.nom} — Drive a créé un second dossier ; son contenu est versé, lui reste à supprimer`));
   aLaMain.forEach((issue) => {
@@ -156,8 +232,9 @@ const main = async (): Promise<void> => {
   const racine = resolve(PROJECT_ROOT, transit);
 
   const issues = await Promise.all(FLUX.map((flux) => verserUnFlux(racine, flux)));
+  const journaux = await reconstruireLeJournal();
 
-  rapporter(issues.flat());
+  rapporter([...issues.flat(), ...journaux]);
 };
 
 main().catch((error: unknown) => {

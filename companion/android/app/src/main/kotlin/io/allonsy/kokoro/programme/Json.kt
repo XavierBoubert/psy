@@ -26,6 +26,8 @@ fun Valeur.texte(cle: String): String? = (champ(cle) as? Valeur.Texte)?.contenu
 
 fun Valeur.entier(cle: String): Int? = (champ(cle) as? Valeur.Nombre)?.contenu?.toInt()
 
+fun Valeur.nombre(cle: String): Double? = (champ(cle) as? Valeur.Nombre)?.contenu
+
 fun Valeur.booleen(cle: String): Boolean? = (champ(cle) as? Valeur.Booleen)?.contenu
 
 fun Valeur.elements(cle: String): List<Valeur> = (champ(cle) as? Valeur.Liste)?.elements.orEmpty()

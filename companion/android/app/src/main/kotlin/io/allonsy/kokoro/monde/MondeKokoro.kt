@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -37,22 +36,17 @@ import io.allonsy.kokoro.corps.Passe
 import io.allonsy.kokoro.corps.locuteurEnScene
 import io.allonsy.kokoro.crise.ContenuPhrase
 import io.allonsy.kokoro.crise.ContenuTension
+import io.allonsy.kokoro.crise.PorteDeCrise
 import io.allonsy.kokoro.decor.Decor
 import io.allonsy.kokoro.decor.PaletteDecor
 import io.allonsy.kokoro.decor.rememberInclinaison
-import io.allonsy.kokoro.journal.Champ
-import io.allonsy.kokoro.journal.Checkin
-import io.allonsy.kokoro.journal.ContenuJournal
-import io.allonsy.kokoro.journal.EtapeJournal
 import io.allonsy.kokoro.programme.AUCUNE_FAITE
-import io.allonsy.kokoro.programme.Etape
+import io.allonsy.kokoro.programme.Carte
 import io.allonsy.kokoro.programme.Faites
-import io.allonsy.kokoro.programme.Fonction
 import io.allonsy.kokoro.programme.Issue
 import io.allonsy.kokoro.programme.PROGRAMME_ABSENT
 import io.allonsy.kokoro.programme.Programme
 import io.allonsy.kokoro.programme.ReponseItem
-import io.allonsy.kokoro.programme.Support
 import io.allonsy.kokoro.programme.entrainementMene
 import io.allonsy.kokoro.programme.faite
 import io.allonsy.kokoro.reglages.EtatAutorisations
@@ -77,24 +71,19 @@ fun MondeKokoro(
     palette: PaletteDecor,
     contactNom: String,
     sejour: Sejour,
-    onFonction: (Fonction) -> Unit,
+    onPorteDeCrise: (PorteDeCrise) -> Unit,
     donneesReglages: DonneesReglages,
-    donneesCheckin: DonneesCheckin,
     modifier: Modifier = Modifier,
     programme: Programme = PROGRAMME_ABSENT,
     faites: Faites = AUCUNE_FAITE,
     onRendu: (String, Issue, List<ReponseItem>) -> Unit = { _, _, _ -> },
     onEntrainement: (String) -> Unit = {},
-    onPdf: (String) -> Unit = {},
-    onBilan: (String) -> Unit = {},
+    onPdf: (Carte.Pdf) -> Unit = {},
     parallaxe: Parallaxe = PARALLAXE_PAR_DEFAUT,
     envoiEnCours: Boolean = false,
     accesPerdu: Boolean = false,
     accuse: String? = null,
     onAccuseFini: () -> Unit = {},
-    // Demande externe (crise → check-in) : JournalActivity n'existant plus, MondeActivity la porte jusqu'ici.
-    ouvrirCheckin: Boolean = false,
-    onCheckinOuvert: () -> Unit = {},
 ) {
     var position by remember { mutableIntStateOf(0) }
     val perchoirs = rememberPerchoirs()
@@ -116,52 +105,31 @@ fun MondeKokoro(
     val entier = rememberEntierAnime()
 
     val sejourDuJour = remember(sejour, programme, faites) {
-        sejour.copy(toutFait = toutFaitAujourdhui(programme, faites, sejour.checkinFait))
+        sejour.copy(toutFait = toutFaitAujourdhui(programme, faites))
     }
 
     BackHandler(enabled = ouverte != null) { ouverte = null }
 
     val ouvrirPanneau: (Contexte) -> Unit = { contexte ->
-        if (contexte == Contexte.Checkin) donneesCheckin.onOuverture()
         affichee = contexte
         ouverte = contexte
     }
 
-    // Tension et phrase ne quittent plus le monde : elles s'ouvrent dans le panneau, comme les réglages et le check-in.
-    val agir: (Fonction) -> Unit = { fonction ->
-        when (fonction) {
-            Fonction.TENSION -> ouvrirPanneau(Contexte.Tension)
-            Fonction.PHRASE -> ouvrirPanneau(Contexte.Phrase)
-            Fonction.CHECK_IN -> ouvrirPanneau(Contexte.Checkin)
-            Fonction.MOT_CODE -> onFonction(fonction)
+    // Tension et phrase ne quittent pas le monde : elles s'ouvrent dans le panneau, comme les réglages.
+    val agir: (PorteDeCrise) -> Unit = { porte ->
+        when (porte) {
+            PorteDeCrise.TENSION -> ouvrirPanneau(Contexte.Tension)
+            PorteDeCrise.PHRASE -> ouvrirPanneau(Contexte.Phrase)
+            PorteDeCrise.MOT_CODE -> onPorteDeCrise(porte)
         }
     }
 
-    // Une fiche PDF quitte l'app : c'est le lecteur du téléphone qui l'affiche, jamais Kokoro.
-    val lireLaFiche: (Etape.Fiche) -> Unit = { fiche ->
-        when (val support = fiche.support) {
-            is Support.Texte -> ouvrirPanneau(Contexte.Lecture(fiche.reperes.titre, support.contenu))
-            is Support.Pdf -> onPdf(support.document)
+    // Kokoro n'interprète pas une carte : il ouvre son panneau, ou confie son PDF au lecteur du téléphone.
+    val ouvrirLaCarte: (Carte) -> Unit = { carte ->
+        when (carte) {
+            is Carte.Panneau -> ouvrirPanneau(Contexte.Panneau(carte))
+            is Carte.Pdf -> onPdf(carte)
         }
-    }
-
-    // Kokoro n'interprète pas une étape : il ouvre la surface de son type, et renvoie ce que Xavier en a fait.
-    val ouvrirLEtape: (Etape) -> Unit = { etape ->
-        when (etape) {
-            is Etape.Ecran -> agir(etape.fonction)
-            is Etape.Exercice -> ouvrirPanneau(Contexte.Exercice(etape))
-            is Etape.Questionnaire -> ouvrirPanneau(Contexte.Questionnaire(etape))
-            is Etape.SeanceDuo -> ouvrirPanneau(Contexte.SeanceDuo(etape, faites.entrainementMene(etape)))
-            is Etape.Demarche -> ouvrirPanneau(Contexte.Demarche(etape, faites.faite(etape)))
-            is Etape.Fiche -> lireLaFiche(etape)
-            is Etape.Bilan -> onBilan(etape.document)
-        }
-    }
-
-    LaunchedEffect(ouvrirCheckin) {
-        if (!ouvrirCheckin) return@LaunchedEffect
-        ouvrirPanneau(Contexte.Checkin)
-        onCheckinOuvert()
     }
 
     Box(
@@ -229,15 +197,12 @@ fun MondeKokoro(
                         ecran = ecranEn(rang),
                         perchoirs = perchoirs,
                         contactNom = contactNom,
-                        checkinFait = sejour.checkinFait,
                         envoiEnCours = envoiEnCours,
                         accesPerdu = accesPerdu,
                         programme = programme,
                         faites = faites,
-                        onFiche = lireLaFiche,
-                        onBilan = { bilan -> onBilan(bilan.document) },
-                        onEtape = ouvrirLEtape,
-                        onFonction = agir,
+                        onCarte = ouvrirLaCarte,
+                        onPorteDeCrise = agir,
                         onReglages = { ouvrirPanneau(Contexte.Reglages) },
                         fige = ouverte != null,
                     )
@@ -253,8 +218,8 @@ fun MondeKokoro(
             contexte = affichee,
             visible = ouverte != null,
             locuteur = locuteur,
+            faites = faites,
             donneesReglages = donneesReglages,
-            donneesCheckin = donneesCheckin,
             onRendu = onRendu,
             onEntrainement = onEntrainement,
             onFermer = { ouverte = null },
@@ -275,7 +240,7 @@ fun SceneDeCrise(
     palette: PaletteDecor,
     contactNom: String,
     envoiEnCours: Boolean,
-    onFonction: (Fonction) -> Unit,
+    onPorteDeCrise: (PorteDeCrise) -> Unit,
     onFermer: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -291,7 +256,7 @@ fun SceneDeCrise(
             perchoirs = perchoirs,
             contactNom = contactNom,
             envoiEnCours = envoiEnCours,
-            onFonction = onFonction,
+            onFonction = onPorteDeCrise,
             onFermer = onFermer,
         )
 
@@ -311,15 +276,12 @@ private fun ContenuEcran(
     ecran: Ecran,
     perchoirs: Perchoirs,
     contactNom: String,
-    checkinFait: Boolean,
     envoiEnCours: Boolean,
     accesPerdu: Boolean,
     programme: Programme,
     faites: Faites,
-    onFiche: (Etape.Fiche) -> Unit,
-    onBilan: (Etape.Bilan) -> Unit,
-    onEtape: (Etape) -> Unit,
-    onFonction: (Fonction) -> Unit,
+    onCarte: (Carte) -> Unit,
+    onPorteDeCrise: (PorteDeCrise) -> Unit,
     onReglages: () -> Unit,
     fige: Boolean,
 ) {
@@ -328,24 +290,23 @@ private fun ContenuEcran(
             perchoirs = perchoirs,
             programme = programme,
             faites = faites,
-            checkinFait = checkinFait,
             accesPerdu = accesPerdu,
             fige = fige,
             onReglages = onReglages,
-            onOuvrir = onEtape,
+            onOuvrir = onCarte,
         )
 
         Ecran.DOCUMENTATION -> ContenuDocumentation(
             perchoirs = perchoirs,
             programme = programme,
-            onFiche = onFiche,
+            onDocument = onCarte,
             fige = fige,
         )
 
         Ecran.BILAN -> ContenuBilan(
             perchoirs = perchoirs,
             programme = programme,
-            onBilan = onBilan,
+            onBilan = onCarte,
             fige = fige,
         )
 
@@ -353,7 +314,7 @@ private fun ContenuEcran(
             perchoirs = perchoirs,
             contactNom = contactNom,
             envoiEnCours = envoiEnCours,
-            onFonction = onFonction,
+            onFonction = onPorteDeCrise,
         )
     }
 }
@@ -368,26 +329,13 @@ data class DonneesReglages(
     val onChoisirDossier: () -> Unit,
 )
 
-// État et actions du panneau check-in — porté par MondeActivity, plus par JournalActivity.
-data class DonneesCheckin(
-    val etape: EtapeJournal,
-    val checkin: Checkin,
-    val repris: Map<Champ, Double>,
-    val onRepondre: (Champ, Double?) -> Unit,
-    val onNote: (String?) -> Unit,
-    val onChoisirDossier: () -> Unit,
-    val onArreter: () -> Unit,
-    // Rejoue demarrerCheckin() côté Activity à chaque ouverture — sans ça, une carte déjà écrite hier resterait affichée.
-    val onOuverture: () -> Unit = {},
-)
-
 @Composable
 private fun PanneauOuvert(
     contexte: Contexte?,
     visible: Boolean,
     locuteur: Boolean,
+    faites: Faites,
     donneesReglages: DonneesReglages,
-    donneesCheckin: DonneesCheckin,
     onRendu: (String, Issue, List<ReponseItem>) -> Unit,
     onEntrainement: (String) -> Unit,
     onFermer: () -> Unit,
@@ -400,39 +348,13 @@ private fun PanneauOuvert(
     ) {
         // contexte vient de affichee, pas de ouverte : ça garde le contenu affiché pendant la descente du panneau.
         when (contexte) {
-            is Contexte.Lecture -> PanneauLecture(
-                titre = contexte.titre,
-                texte = contexte.texte,
-                onFermer = onFermer,
-            )
-
-            is Contexte.Demarche -> PanneauDemarche(
-                etape = contexte.etape,
-                faite = contexte.faite,
-                onFait = {
-                    onRendu(contexte.etape.reperes.id, Issue.FAIT, emptyList())
-                    onFermer()
-                },
-                onFermer = onFermer,
-            )
-
-            is Contexte.Exercice -> PanneauExercice(
-                etape = contexte.etape,
-                onIssue = { issue -> onRendu(contexte.etape.reperes.id, issue, emptyList()) },
-                onFermer = onFermer,
-            )
-
-            is Contexte.Questionnaire -> PanneauQuestionnaire(
-                etape = contexte.etape,
-                onRendu = { issue, items -> onRendu(contexte.etape.reperes.id, issue, items) },
-                onFermer = onFermer,
-            )
-
-            is Contexte.SeanceDuo -> PanneauSeanceDuo(
-                etape = contexte.etape,
-                entraine = contexte.entraine,
-                onIssue = { issue -> onRendu(contexte.etape.reperes.id, issue, emptyList()) },
-                onEntrainementMene = { onEntrainement(contexte.etape.reperes.id) },
+            is Contexte.Panneau -> PanneauCarte(
+                carte = contexte.carte,
+                faite = faites.faite(contexte.carte),
+                entraine = faites.entrainementMene(contexte.carte),
+                reprises = faites.reprises,
+                onRendu = { issue, items -> onRendu(contexte.carte.reperes.id, issue, items) },
+                onEntrainementMene = { onEntrainement(contexte.carte.reperes.id) },
                 onFermer = onFermer,
             )
 
@@ -449,17 +371,6 @@ private fun PanneauOuvert(
             Contexte.Tension -> ContenuTension(onFermer = onFermer)
 
             Contexte.Phrase -> ContenuPhrase(onFermer = onFermer)
-
-            Contexte.Checkin -> ContenuJournal(
-                etape = donneesCheckin.etape,
-                checkin = donneesCheckin.checkin,
-                repris = donneesCheckin.repris,
-                onRepondre = donneesCheckin.onRepondre,
-                onNote = donneesCheckin.onNote,
-                onChoisirDossier = donneesCheckin.onChoisirDossier,
-                onArreter = donneesCheckin.onArreter,
-                onFermer = onFermer,
-            )
 
             null -> Unit
         }

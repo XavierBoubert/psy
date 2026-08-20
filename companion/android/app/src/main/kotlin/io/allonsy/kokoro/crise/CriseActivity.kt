@@ -21,8 +21,6 @@ import androidx.core.content.ContextCompat
 import io.allonsy.kokoro.R
 import io.allonsy.kokoro.decor.DECOR_JOUR
 import io.allonsy.kokoro.decor.DECOR_NUIT
-import io.allonsy.kokoro.monde.EXTRA_OUVRIR_CHECKIN
-import io.allonsy.kokoro.monde.MondeActivity
 import io.allonsy.kokoro.monde.SceneDeCrise
 import io.allonsy.kokoro.reglages.REGLAGES_INITIAUX
 import io.allonsy.kokoro.reglages.estNuit
@@ -31,7 +29,6 @@ import io.allonsy.kokoro.reglages.minuteCourante
 import io.allonsy.kokoro.ui.Accuse
 import io.allonsy.kokoro.ui.LocalPanneauPorte
 import io.allonsy.kokoro.ui.ThemeMonde
-import io.allonsy.kokoro.programme.Fonction
 
 // Seul le mot-code s'ouvre depuis l'extérieur : la notification ouvre la scène de crise, et tout le reste s'y touche.
 const val EXTRA_ECRAN = "ecran"
@@ -95,7 +92,7 @@ class CriseActivity : ComponentActivity() {
                             palette = if (nuit.value) DECOR_NUIT else DECOR_JOUR,
                             contactNom = reglages.value.contactNom,
                             envoiEnCours = envoi.value == ResultatEnvoi.EN_COURS,
-                            onFonction = { ouvrir(it) },
+                            onPorteDeCrise = { ouvrir(it) },
                             onFermer = { finish() },
                         )
                         ContenuCrise(
@@ -144,17 +141,11 @@ class CriseActivity : ComponentActivity() {
         ecran.value = ecranDemande(depuis)
     }
 
-    private fun ouvrir(fonction: Fonction) {
-        when (fonction) {
-            // JournalActivity n'existe plus : le check-in est un panneau interne à MondeActivity.
-            Fonction.CHECK_IN -> startActivity(
-                Intent(this, MondeActivity::class.java)
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    .putExtra(EXTRA_OUVRIR_CHECKIN, true),
-            )
-            Fonction.MOT_CODE -> envoyerLeMotCode()
-            Fonction.TENSION -> ecran.value = EcranCrise.Tension
-            Fonction.PHRASE -> ecran.value = EcranCrise.Phrase
+    private fun ouvrir(porte: PorteDeCrise) {
+        when (porte) {
+            PorteDeCrise.MOT_CODE -> envoyerLeMotCode()
+            PorteDeCrise.TENSION -> ecran.value = EcranCrise.Tension
+            PorteDeCrise.PHRASE -> ecran.value = EcranCrise.Phrase
         }
     }
 

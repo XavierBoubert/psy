@@ -23,7 +23,7 @@ Sources sur lesquelles le dispositif appuie ses affirmations. Règle : **toute a
 
 | Corpus | Statut |
 |---|---|
-| Protocole EMDR — ⭐ **stimulation bilatérale conduite par un tiers** (cadence, longueur des séries, critères d'arrêt) | ⏸️ reporté avec l'axe EMDR (`psy/README.md` §6). ⚠️ **Besoin requalifié le 14/08/2026** : l'aidant joue le geste en `seance-duo` — ce n'est plus un instrument à spécifier, c'est un **geste à scripter** |
+| Protocole EMDR — ⭐ **stimulation bilatérale conduite par un tiers** (cadence, longueur des séries, critères d'arrêt) | ⏸️ reporté avec l'axe EMDR (`psy/README.md` §6). ⚠️ **Besoin requalifié le 14/08/2026** : l'aidant joue le geste sur une carte qu'elle tient — ce n'est plus un instrument à spécifier, c'est un **geste à scripter** |
 | CIM-11 | ❓ optionnel |
 
 ## Tranché

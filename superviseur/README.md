@@ -43,7 +43,7 @@
 | **C7** | **Prolifération** | Plus de doctrine produite qu'exécutée. Compter les fiches écrites contre les fois appliquées. **Ce n'est pas une critique de rythme, c'est un risque** |
 | **C8** | ⭐ **Programme désynchronisé** | Le programme publié affirme un palier, une cible ou une démarche que `etat.md` ne porte pas. **C'est une copie, et une copie périme** |
 | **C9** | 🔴 **Contenu non dérivé** | Une fiche de bibliothèque **copiée** d'un protocole au lieu d'être **réécrite pour Xavier** : diagnostic, pronostic, nom de praticien, hypothèse non tranchée |
-| **C10** | 🔴 **Contenu adressé à l'aidant** | Une consigne de `seance-duo` qui **apprend** quelque chose sur Xavier à l'aidant — diagnostic, score, hypothèse, compte rendu — ou qui **lui demande un jugement clinique**. Chercher aussi une séquence **sans signal d'arrêt rappelé** ou **sans critères d'arrêt accessibles** |
+| **C10** | 🔴 **Contenu adressé à l'aidant** | Une consigne d'une carte de `porteur: "aidant"` qui **apprend** quelque chose sur Xavier à l'aidant — diagnostic, score, hypothèse, compte rendu — ou qui **lui demande un jugement clinique**. Chercher aussi une séquence **sans signal d'arrêt rappelé** ou **sans critères d'arrêt accessibles** |
 
 ---
 
@@ -82,7 +82,7 @@ controles: [C1, C2, C3, C4, C5, C6, C7, C8, C9, C10]
 
 **Pour le brief, il n'y a pas de script — la garde est dans le skill :** `psy-brief-isorni` écrit `transmis: false` **et** un champ `supervise:` vide ; le brief ne se propose à la transmission qu'une fois ce champ rempli par une supervision de verdict `publiable`. **Xavier relit et décide ensuite** — la supervision ne remplace pas son arbitrage, elle le précède.
 
-> ⭐ **Ne pas refaire le travail du script.** Visualisation, cotation de ressenti, streak, numéro d'urgence, prodrome, traitement, relaxation sur vasovagal : `npm run psy:publish` les attrape déjà, **il ne fatigue pas et ne s'habitue pas**. Ce que le superviseur regarde est **ce que le script ne peut pas voir** : une étape conforme mot à mot et **fausse cliniquement**.
+> ⭐ **Ne pas refaire le travail du script.** Visualisation, cotation de ressenti, streak, numéro d'urgence, prodrome, traitement, relaxation sur vasovagal : `npm run psy:publish` les attrape déjà, **il ne fatigue pas et ne s'habitue pas**. Ce que le superviseur regarde est **ce que le script ne peut pas voir** : une carte conforme mot à mot et **fausse cliniquement**.
 
 ---
 

@@ -13,83 +13,101 @@ enum class Rubrique(val cle: String) {
     DOCUMENTATION("documentation"),
 }
 
-enum class Fonction(val cle: String) {
-    CHECK_IN("check-in"),
-    MOT_CODE("mot-code"),
-    TENSION("tension-appliquee"),
-    PHRASE("phrase-soignant"),
-}
-
-sealed interface Support {
-    data class Pdf(val document: String) : Support
-
-    data class Texte(val contenu: String) : Support
-}
-
-enum class Pour(val cle: String) {
-    AIDE("aide"),
+// Qui tient le téléphone. Sur une carte portée par l'aidant, Kokoro tient la cadence et ne lui demande jamais de juger.
+enum class Porteur(val cle: String) {
     PATIENT("patient"),
+    AIDANT("aidant"),
 }
 
-data class Consigne(val pour: Pour, val consigne: String, val secondes: Int)
+// Guidée : une étape à la fois, dans l'ordre, jusqu'à l'issue. Libre : un sommaire, chaque étape se ferme et y revient.
+enum class Allure { GUIDEE, LIBRE }
 
-data class Choix(val valeur: Int, val libelle: String)
+enum class Unite(val cle: String) {
+    BRUTE("brute"),
+    MINUTES("minutes"),
+    HEURES("heures"),
+    KILOS("kilos"),
+}
 
-data class QuestionFermee(val id: String, val enonce: String, val choix: List<Choix>)
+data class Choix(val valeur: Double, val libelle: String)
+
+data class Compteur(
+    val depart: Double,
+    val pas: Double,
+    val grandPas: Double,
+    val minimum: Double,
+    val unite: Unite,
+)
+
+sealed interface Saisie {
+    data class Fermee(val choix: List<Choix>) : Saisie
+
+    data class Reglee(val compteur: Compteur) : Saisie
+}
+
+sealed interface Etape {
+    data class Info(val texte: String, val montrable: Boolean = false) : Etape
+
+    data class Question(
+        val id: String,
+        val enonce: String,
+        val precision: String?,
+        val saisie: Saisie,
+        // Repart de la dernière valeur donnée à cette question, jamais d'un ressenti à retrouver.
+        val reprise: Boolean = false,
+    ) : Etape
+
+    data class Note(val id: String, val enonce: String, val precision: String?) : Etape
+
+    data class Minuteur(val secondes: Int, val consigne: String?, val pour: Porteur?) : Etape
+
+    data class Checklist(val enonce: String, val lignes: List<String>) : Etape
+
+    data class Confirmation(val libelle: String) : Etape
+}
+
+// Une étape qui n'écrit rien ne fait pas rendre la carte : une fiche lue ne renvoie pas plus qu'avant.
+val Etape.rend: Boolean
+    get() = this is Etape.Question || this is Etape.Note || this is Etape.Minuteur || this is Etape.Confirmation
 
 data class Reperes(
     val id: String,
     val titre: String,
     val rubrique: Rubrique,
-    // Nul sur un bilan, et sur lui seul : sa date appartient au document, pas à l'assiduité de Xavier.
+    // Nul sur une carte du dossier Bilan, et sur elle seule : sa date appartient au document, pas à l'assiduité de Xavier.
     val quand: Quand?,
     val dureeMinutes: Int?,
 )
 
-sealed interface Etape {
+sealed interface Carte {
     val reperes: Reperes
 
-    data class Ecran(override val reperes: Reperes, val fonction: Fonction) : Etape
-
-    data class Exercice(
+    data class Panneau(
         override val reperes: Reperes,
-        val consigne: String,
-        val minuteurSecondes: Int,
-    ) : Etape
+        val etapes: List<Etape>,
+        val porteur: Porteur = Porteur.PATIENT,
+        val allure: Allure = Allure.GUIDEE,
+        val signalArret: String? = null,
+        val arret: List<String> = emptyList(),
+    ) : Carte
 
-    data class Questionnaire(
-        override val reperes: Reperes,
-        val questions: List<QuestionFermee>,
-    ) : Etape
-
-    data class Demarche(override val reperes: Reperes, val detail: String) : Etape
-
-    data class Fiche(override val reperes: Reperes, val support: Support) : Etape
-
-    data class SeanceDuo(
-        override val reperes: Reperes,
-        val signalArret: String,
-        val avant: List<String>,
-        val sequence: List<Consigne>,
-        val arret: List<String>,
-    ) : Etape
-
-    data class Bilan(override val reperes: Reperes, val document: String, val date: String) : Etape
+    // date non nulle : le document vit dans bilans/, pas dans la bibliothèque — canal distinct, contrôles distincts.
+    data class Pdf(override val reperes: Reperes, val document: String, val date: String? = null) : Carte
 }
 
-val Etape.id: String get() = reperes.id
+val Carte.id: String get() = reperes.id
 
-val Etape.titre: String get() = reperes.titre
+val Carte.titre: String get() = reperes.titre
 
-val Etape.rubrique: Rubrique get() = reperes.rubrique
+val Carte.rubrique: Rubrique get() = reperes.rubrique
 
-val Etape.quand: Quand? get() = reperes.quand
+val Carte.quand: Quand? get() = reperes.quand
 
-val Etape.dureeMinutes: Int? get() = reperes.dureeMinutes
+val Carte.dureeMinutes: Int? get() = reperes.dureeMinutes
 
-data class Programme(val version: Int, val etapes: List<Etape>)
+data class Programme(val version: Int, val cartes: List<Carte>)
 
-val PROGRAMME_ABSENT = Programme(version = 0, etapes = emptyList())
+val PROGRAMME_ABSENT = Programme(version = 0, cartes = emptyList())
 
 private val KEBAB = Regex("""^[a-z0-9-]+$""")
 
@@ -102,38 +120,29 @@ fun lireProgramme(json: String): Programme {
 
     return Programme(
         version = racine.entier("version") ?: 0,
-        etapes = racine.elements("etapes").mapNotNull(::etape),
+        cartes = racine.elements("cartes").mapNotNull(::carte),
     )
 }
 
-fun Programme.etapesDe(rubrique: Rubrique): List<Etape> =
-    etapes.filter { it.rubrique == rubrique && it !is Etape.Fiche && it !is Etape.Bilan }
+fun Programme.cartesDe(rubrique: Rubrique): List<Carte> =
+    cartes.filter { it.rubrique == rubrique && it !is Carte.Pdf }
 
-// PROGRAMME.md §3 : une fiche vit sur Documentation quelle que soit sa rubrique.
-fun Programme.fiches(): List<Etape.Fiche> = etapes.filterIsInstance<Etape.Fiche>()
+// Un PDF vit sur Documentation quelle que soit sa rubrique ; un bilan a son propre écran.
+fun Programme.documents(): List<Carte.Pdf> =
+    cartes.filterIsInstance<Carte.Pdf>().filter { it.date == null }
 
-fun Programme.bilans(): List<Etape.Bilan> =
-    etapes.filterIsInstance<Etape.Bilan>().sortedByDescending { it.date }
+fun Programme.bilans(): List<Carte.Pdf> =
+    cartes.filterIsInstance<Carte.Pdf>().filter { it.date != null }.sortedByDescending { it.date }
 
 fun moisDe(date: String): String = date.take(7)
 
-private fun etape(valeur: Valeur): Etape? {
+private fun carte(valeur: Valeur): Carte? {
     val reperes = reperes(valeur) ?: return null
-    val type = valeur.texte("type")
-    val bilan = type == "bilan"
+    val bilan = reperes.rubrique == Rubrique.BILAN
 
-    // La rubrique bilan est réservée au type bilan : rangée là, une autre étape n'aurait pas de place à l'écran.
-    if (bilan != (reperes.rubrique == Rubrique.BILAN)) return null
-    if (bilan) return bilan(reperes, valeur)
-    if (reperes.quand == null) return null
-
-    return when (type) {
-        "ecran" -> fonction(valeur)?.let { Etape.Ecran(reperes, it) }
-        "exercice" -> exercice(reperes, valeur)
-        "questionnaire" -> questionnaire(reperes, valeur)
-        "demarche" -> valeur.permis("detail")?.let { Etape.Demarche(reperes, it) }
-        "fiche" -> support(valeur)?.let { Etape.Fiche(reperes, it) }
-        "seance-duo" -> seanceDuo(reperes, valeur)
+    return when (valeur.texte("type")) {
+        "pdf" -> pdf(reperes, valeur, bilan)
+        "panneau" -> if (bilan) null else panneau(reperes, valeur)
         else -> null
     }
 }
@@ -144,86 +153,137 @@ private fun reperes(valeur: Valeur): Reperes? {
     val rubrique = Rubrique.entries.firstOrNull { it.cle == valeur.texte("rubrique") } ?: return null
     val quand = Quand.entries.firstOrNull { it.cle == valeur.texte("quand") }
 
-    return Reperes(id = id, titre = titre, rubrique = rubrique, quand = quand, dureeMinutes = valeur.entier("duree_minutes"))
+    return Reperes(
+        id = id,
+        titre = titre,
+        rubrique = rubrique,
+        quand = quand,
+        dureeMinutes = valeur.entier("duree_minutes"),
+    )
 }
 
-// Un bilan ne porte jamais de texte affiché ni de partage : Kokoro confie le PDF au lecteur du téléphone.
-private fun bilan(reperes: Reperes, valeur: Valeur): Etape.Bilan? {
-    if (reperes.quand != null || valeur.champ("texte") != null || valeur.champ("montrable") != null) return null
-
+// Une carte rangée au Bilan sans date n'aurait pas de place à l'écran, et disparaîtrait en silence.
+private fun pdf(reperes: Reperes, valeur: Valeur, bilan: Boolean): Carte.Pdf? {
     val document = valeur.texte("document")?.takeIf { it.matches(KEBAB) } ?: return null
-    val date = valeur.texte("date")?.takeIf { it.matches(DATE) } ?: return null
+    val date = valeur.texte("date")?.takeIf { it.matches(DATE) }
 
-    return Etape.Bilan(reperes = reperes, document = document, date = date)
+    if (bilan != (date != null)) return null
+    if (bilan != (reperes.quand == null)) return null
+
+    return Carte.Pdf(reperes = reperes, document = document, date = date)
 }
 
-private fun fonction(valeur: Valeur): Fonction? =
-    Fonction.entries.firstOrNull { it.cle == valeur.texte("ecran") }
+private fun panneau(reperes: Reperes, valeur: Valeur): Carte.Panneau? {
+    if (reperes.quand == null) return null
+    if (valeur.booleen("sortie_libre") != true) return null
 
-private fun exercice(reperes: Reperes, valeur: Valeur): Etape.Exercice? {
-    val consigne = valeur.permis("consigne") ?: return null
-    val secondes = valeur.entier("minuteur_secondes")?.takeIf { it > 0 } ?: return null
-
-    return Etape.Exercice(reperes = reperes, consigne = consigne, minuteurSecondes = secondes)
-}
-
-// Un questionnaire amputé d'un item produirait un score faux, donc faussement rassurant : il tombe entier ou pas du tout.
-private fun questionnaire(reperes: Reperes, valeur: Valeur): Etape.Questionnaire? {
-    val lues = valeur.elements("questions").map(::question)
+    val porteur = Porteur.entries.firstOrNull { it.cle == valeur.texte("porteur") } ?: Porteur.PATIENT
+    val lues = valeur.elements("etapes").map { etape(it, porteur) }
     if (lues.isEmpty() || lues.any { it == null }) return null
 
-    val questions = lues.filterNotNull()
+    val carte = Carte.Panneau(
+        reperes = reperes,
+        etapes = lues.filterNotNull(),
+        porteur = porteur,
+        signalArret = valeur.permis("signal_arret"),
+        arret = textesPermis(valeur, "arret").orEmpty(),
+    )
 
-    return if (questions.distinctBy { it.id }.size == questions.size) {
-        Etape.Questionnaire(reperes = reperes, questions = questions)
-    } else {
-        null
-    }
+    return if (porteur == Porteur.AIDANT && !tenable(carte)) null else carte
 }
 
-private fun question(valeur: Valeur): QuestionFermee? {
+// L'aidant ne peut ni corriger ni improviser : une carte qu'elle tient tombe entière s'il lui manque de quoi s'arrêter.
+private fun tenable(carte: Carte.Panneau): Boolean {
+    val minuteurs = carte.etapes.filterIsInstance<Etape.Minuteur>()
+
+    return carte.signalArret != null &&
+        carte.arret.size >= 2 &&
+        DERNIER_CRITERE.containsMatchIn(carte.arret.last()) &&
+        carte.etapes.first() is Etape.Checklist &&
+        minuteurs.isNotEmpty() &&
+        minuteurs.all { it.pour != null && it.consigne != null }
+}
+
+private fun etape(valeur: Valeur, porteur: Porteur): Etape? = when (valeur.texte("type")) {
+    "info" -> valeur.permis("texte")?.let {
+        Etape.Info(texte = it, montrable = valeur.booleen("montrable") == true)
+    }
+
+    "question" -> question(valeur)
+    "note" -> note(valeur)
+    "minuteur" -> minuteur(valeur, porteur)
+    "checklist" -> checklist(valeur)
+    "confirmation" -> valeur.permis("libelle")?.let(Etape::Confirmation)
+    else -> null
+}
+
+// Un item perdu produit un score faux, donc faussement rassurant : une question amputée emporte la carte entière.
+private fun question(valeur: Valeur): Etape.Question? {
     val id = valeur.texte("id")?.takeIf { it.matches(KEBAB) } ?: return null
     val enonce = valeur.permis("enonce") ?: return null
+    val precision = valeur.permisSiPresent("precision") ?: return null
+    val saisie = saisie(valeur) ?: return null
+
+    return Etape.Question(
+        id = id,
+        enonce = enonce,
+        precision = precision.ifEmpty { null },
+        saisie = saisie,
+        reprise = valeur.booleen("reprise") == true,
+    )
+}
+
+private fun saisie(valeur: Valeur): Saisie? {
+    val compteur = valeur.champ("compteur")
     val lus = valeur.elements("choix").map(::choix)
+
+    if (compteur != null && lus.isNotEmpty()) return null
+    if (compteur != null) return compteur(compteur)?.let(Saisie::Reglee)
     if (lus.size < 2 || lus.any { it == null }) return null
 
-    return QuestionFermee(id = id, enonce = enonce, choix = lus.filterNotNull())
+    return Saisie.Fermee(lus.filterNotNull())
+}
+
+private fun compteur(valeur: Valeur): Compteur? {
+    val pas = valeur.nombre("pas")?.takeIf { it > 0.0 } ?: return null
+    val grandPas = valeur.nombre("grand_pas")?.takeIf { it >= pas } ?: return null
+    val minimum = valeur.nombre("minimum") ?: return null
+    val depart = valeur.nombre("depart")?.takeIf { it >= minimum } ?: return null
+    val unite = Unite.entries.firstOrNull { it.cle == valeur.texte("unite") } ?: return null
+
+    return Compteur(depart = depart, pas = pas, grandPas = grandPas, minimum = minimum, unite = unite)
 }
 
 private fun choix(valeur: Valeur): Choix? {
-    val chiffre = valeur.entier("valeur") ?: return null
+    val chiffre = valeur.nombre("valeur") ?: return null
     val libelle = valeur.permis("libelle") ?: return null
 
     return Choix(valeur = chiffre, libelle = libelle)
 }
 
-// L'aidant ne peut ni corriger ni improviser : une séance à deux amputée d'un critère d'arrêt tombe entière.
-private fun seanceDuo(reperes: Reperes, valeur: Valeur): Etape.SeanceDuo? {
-    if (valeur.booleen("entrainement_requis") != true || valeur.booleen("sortie_libre") != true) return null
+private fun note(valeur: Valeur): Etape.Note? {
+    val id = valeur.texte("id")?.takeIf { it.matches(KEBAB) } ?: return null
+    val enonce = valeur.permis("enonce") ?: return null
+    val precision = valeur.permisSiPresent("precision") ?: return null
 
-    val signal = valeur.permis("signal_arret") ?: return null
-    val avant = textesPermis(valeur, "avant") ?: return null
-    val arret = textesPermis(valeur, "arret")?.takeIf { it.size >= 2 } ?: return null
-    if (!DERNIER_CRITERE.containsMatchIn(arret.last())) return null
-
-    val lues = valeur.elements("sequence").map(::consigne)
-    if (lues.isEmpty() || lues.any { it == null }) return null
-
-    return Etape.SeanceDuo(
-        reperes = reperes,
-        signalArret = signal,
-        avant = avant,
-        sequence = lues.filterNotNull(),
-        arret = arret,
-    )
+    return Etape.Note(id = id, enonce = enonce, precision = precision.ifEmpty { null })
 }
 
-private fun consigne(valeur: Valeur): Consigne? {
-    val pour = Pour.entries.firstOrNull { it.cle == valeur.texte("pour") } ?: return null
-    val dite = valeur.permis("consigne") ?: return null
+private fun minuteur(valeur: Valeur, porteur: Porteur): Etape.Minuteur? {
     val secondes = valeur.entier("secondes")?.takeIf { it > 0 } ?: return null
+    val consigne = valeur.permisSiPresent("consigne") ?: return null
+    val pour = Porteur.entries.firstOrNull { it.cle == valeur.texte("pour") }
 
-    return Consigne(pour = pour, consigne = dite, secondes = secondes)
+    if (porteur == Porteur.AIDANT && pour == null) return null
+
+    return Etape.Minuteur(secondes = secondes, consigne = consigne.ifEmpty { null }, pour = pour)
+}
+
+private fun checklist(valeur: Valeur): Etape.Checklist? {
+    val enonce = valeur.permis("enonce") ?: return null
+    val lignes = textesPermis(valeur, "lignes")?.takeIf { it.isNotEmpty() } ?: return null
+
+    return Etape.Checklist(enonce = enonce, lignes = lignes)
 }
 
 private fun textesPermis(valeur: Valeur, cle: String): List<String>? {
@@ -234,16 +294,7 @@ private fun textesPermis(valeur: Valeur, cle: String): List<String>? {
     return if (lus.any { it == null }) null else lus.filterNotNull()
 }
 
-private fun support(etape: Valeur): Support? {
-    val document = etape.texte("document")
-    val texte = etape.texte("texte")
-
-    return when {
-        document != null && texte != null -> null
-        document != null -> document.takeIf { it.matches(KEBAB) }?.let(Support::Pdf)
-        texte != null -> texte.takeIf { it.isNotBlank() && estPermis(it) }?.let(Support::Texte)
-        else -> null
-    }
-}
-
 private fun Valeur.permis(cle: String): String? = texte(cle)?.takeIf { it.isNotBlank() && estPermis(it) }
+
+// Distingue « champ absent » (permis, rendu vide) de « champ fautif » (null, qui écarte la carte).
+private fun Valeur.permisSiPresent(cle: String): String? = if (champ(cle) == null) "" else permis(cle)

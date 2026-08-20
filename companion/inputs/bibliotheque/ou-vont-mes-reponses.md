@@ -2,7 +2,7 @@
 
 ## Le trajet, en entier
 
-1. **Tu fais une étape dans Kokoro.** Le téléphone écrit un petit fichier : quelle étape, quand, et l'issue — allée au bout, arrêtée avant la fin, ou faite.
+1. **Tu fais une carte dans Kokoro.** Le téléphone écrit un petit fichier : quelle carte, quand, et l'issue — allée au bout, arrêtée avant la fin, ou faite.
 2. **Ce fichier part dans ton Drive**, dans un dossier qui n'appartient qu'à toi.
 3. **Sur ton ordinateur, une commande le verse dans ton dossier de suivi.** Le dossier sur ton ordinateur est **la référence** ; le Drive n'est qu'un tuyau entre les deux.
 4. **C'est là que ça sert :** en séance, pour décider de la suite.
@@ -15,12 +15,12 @@
 
 | Ce qui part | Ce qui ne part pas |
 |---|---|
-| L'identifiant de l'étape et l'heure | Aucun texte libre — **il n'y a nulle part où en écrire** |
-| L'issue : au bout, arrêtée avant la fin, ou faite | Aucune position, aucun contact, aucun contenu du téléphone |
-| Les réponses d'un questionnaire, question par question | Aucun score : rien n'est calculé sur le téléphone |
-| Les réponses du point du jour | Rien qui ressemble à une note de la journée |
+| L'identifiant de la carte et l'heure | Aucune position, aucun contact, aucun contenu du téléphone |
+| L'issue : au bout, arrêtée avant la fin, ou faite | Aucun score : rien n'est calculé sur le téléphone |
+| Les réponses, question par question | Rien que tu n'aies toi-même saisi à l'écran |
+| **La note du point du jour, si tu en écris une** | Aucun autre texte : c'est le seul champ libre du dispositif |
 
-**Une étape que tu n'as pas faite n'écrit rien.** Ce n'est pas un blanc dans un tableau, ce n'est pas une donnée négative : il n'y a simplement pas de fichier, et personne ne le compte.
+**Une carte que tu n'as pas faite n'écrit rien.** Ce n'est pas un blanc dans un tableau, ce n'est pas une donnée négative : il n'y a simplement pas de fichier, et personne ne le compte.
 
 ---
 

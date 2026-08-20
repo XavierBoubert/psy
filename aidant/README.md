@@ -6,7 +6,7 @@
 >
 > 🔴 **Elle n'est pas thérapeute.** Tout ce qui demande un jugement clinique est **hors de son rôle**. Elle suit un déroulé ; elle ne juge pas, n'interprète pas, ne rassure pas hors script.
 
-Le format des déroulés qu'elle exécute : [`companion/PROGRAMME.md`](../companion/PROGRAMME.md) §3 *(le type d'étape `seance-duo`)*. Vue d'ensemble : [`../README.md`](../README.md).
+Le format des déroulés qu'elle exécute : [`companion/PROGRAMME.md`](../companion/PROGRAMME.md) §5 *(les cartes de `porteur: "aidant"`)*. Vue d'ensemble : [`../README.md`](../README.md).
 
 ---
 
@@ -53,10 +53,10 @@ Le superviseur le vérifie sur **chaque** séquence, et il cherche deux fautes d
 | [`../companion/inputs/bibliotheque/fiche-chourouk.md`](../companion/inputs/bibliotheque/fiche-chourouk.md) | La **carte du moment**, montrée sur le téléphone pendant un shutdown. Elle ne parle que de ça et **ne porte aucun numéro d'appel**. 🔴 **Les deux fiches ne fusionnent pas** — l'une se lit à froid, l'autre pendant |
 | [`scripts/`](scripts/README.md) | **Vide aujourd'hui** — voir le README |
 
-**Les déroulés qu'elle exécute ne vivent pas ici** : ce sont des étapes `seance-duo` du programme, écrites par Claude Psy et publiées dans [`../companion/inputs/`](../companion/inputs/). **Elle ne les lit que dans Kokoro**, jamais dans le dépôt.
+**Les déroulés qu'elle exécute ne vivent pas ici** : ce sont des cartes de `porteur: "aidant"` du programme, écrites par Claude Psy et publiées dans [`../companion/inputs/`](../companion/inputs/). **Elle ne les lit que dans Kokoro**, jamais dans le dépôt.
 
 ---
 
 ## Ce qui n'existe pas encore
 
-🔜 **La séance à deux existe sur le téléphone, la clinique n'y est pas encore** *([`../psy/PLAN.md`](../psy/PLAN.md) §7)*. Une seule `seance-duo` a été publiée — **un essai de circuit de trois minutes**, entraînement puis séquence, menés le 19/08/2026 : **elle ne travaille rien.** ⚠️ **Aucune séquence clinique n'est écrite**, et 🔴 **Chourouk n'a toujours rien reçu d'écrit** — depuis que les critères d'arrêt se cochent avant d'entrer au lieu d'être rappelés pendant, **la fiche de rôle porte, hors écran, ce que l'écran ne rappelle plus.** ⚠️ **Écrit ne veut pas dire appliqué.**
+🔜 **La séance à deux existe sur le téléphone, la clinique n'y est pas encore** *([`../psy/PLAN.md`](../psy/PLAN.md) §7)*. Une seule carte tenue par l'aidant a été publiée — **un essai de circuit de trois minutes**, entraînement puis séquence, menés le 19/08/2026 : **elle ne travaille rien.** ⚠️ **Aucune séquence clinique n'est écrite**, et 🔴 **Chourouk n'a toujours rien reçu d'écrit** — depuis que les critères d'arrêt se cochent avant d'entrer au lieu d'être rappelés pendant, **la fiche de rôle porte, hors écran, ce que l'écran ne rappelle plus.** ⚠️ **Écrit ne veut pas dire appliqué.**

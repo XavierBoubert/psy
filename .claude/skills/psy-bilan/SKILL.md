@@ -8,7 +8,7 @@ description: Passation et cotation d'une échelle validée avec Xavier — VVIQ,
 **Une passation = un fichier. Les réponses item par item sont conservées, toujours.**
 Un score seul n'est pas une mesure, c'est un résumé (`psy/DOSSIER.md` §7).
 
-> ⭐ **Depuis le 13/08/2026, les échelles se passent dans Kokoro** *(arbitrage de Xavier)* — publiées en séance comme `questionnaire`, rubrique `bilan` : **VVIQ · TAS-20 · CAT-Q · GAD-7 · BES · MAIA**.
+> ⭐ **Depuis le 13/08/2026, les échelles se passent dans Kokoro** *(arbitrage de Xavier)* — publiées en séance comme une carte `panneau` d'étapes `question`, rubrique `bilan` : **VVIQ · TAS-20 · CAT-Q · GAD-7 · BES · MAIA**.
 >
 > **Ce n'est pas seulement commode.** Une passation en conversation demande de tenir un fil, de suivre le rythme de quelqu'un d'autre et de répondre à voix haute — **trois charges que le format fermé de Kokoro supprime** : une question par écran, des choix fermés, « passer » écrit `null`, et **on peut s'arrêter au milieu sans le justifier**.
 >

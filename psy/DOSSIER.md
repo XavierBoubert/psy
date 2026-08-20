@@ -37,7 +37,7 @@ psy/outputs/dossier/                     ← écrit par Claude Psy
   briefs/          briefs Dr Isorni ........... MD   — AAAA-MM-JJ-isorni.md
 
 companion/outputs/                       ← écrit par Kokoro, versé par `npm run psy:sync`
-  journal/         check-ins quotidiens ....... JSON — AAAA-MM-JJ.json
+  journal/         check-ins quotidiens ....... JSON — AAAA-MM-JJ.json (reconstruit par psy:sync)
   reponses/        ce que Xavier a fait ....... JSON — AAAA-MM-JJ-HHMM-<id>.json
 
 psy/docs/gabarits/                       ← ni l'un ni l'autre : des modèles vierges
@@ -121,9 +121,11 @@ Un fichier par jour. **Cible : moins de 2 minutes, zéro saisie de texte obligat
 
 ## 4. `reponses/AAAA-MM-JJ-HHMM-<id>.json` — ce que Xavier a fait
 
-Écrit par Kokoro, un fichier par étape faite. **Format défini dans [`../companion/PROGRAMME.md`](../companion/PROGRAMME.md).**
+Écrit par Kokoro, un fichier par carte rendue. **Format défini dans [`../companion/PROGRAMME.md`](../companion/PROGRAMME.md).**
 
-> ⭐ **`arrete_avant_la_fin` n'est pas un échec et ne se commente nulle part.** Une étape non faite ne produit aucun fichier — **et ce n'est pas une donnée**.
+🔴 **C'est le seul fichier que Kokoro écrit.** Le journal ci-dessus n'en est pas un : `npm run psy:sync` le **reconstruit** à partir des réponses de la carte d'`id` `check-in` — les `id` de question en `kebab-case` deviennent les clés en `snake_case`. **Le format du journal ne bouge pas d'un champ, et Kokoro ne l'interprète jamais.**
+
+> ⭐ **`arrete_avant_la_fin` n'est pas un échec et ne se commente nulle part.** Une carte non faite ne produit aucun fichier — **et ce n'est pas une donnée**.
 
 ---
 

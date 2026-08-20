@@ -12,7 +12,7 @@ Créneau : week-end en journée, fixe, annoncé, jamais déplacé sans préavis.
 
 ## 0. Charger le contexte — avant la première phrase
 
-> ⭐ **La séance est le battement hebdomadaire du dispositif.** C'est le seul moment où les données de Kokoro remontent (`npm run psy:sync`) et où **les étapes qui font agir** sont réécrites (`npm run psy:publish`). **Entre deux séances, seule la documentation peut changer sur l'écran de Xavier** — elle se publie à tout moment, annoncée dans la conversation. La prévisibilité tient à l'annonce, pas au calendrier.
+> ⭐ **La séance est le battement hebdomadaire du dispositif.** C'est le seul moment où les données de Kokoro remontent (`npm run psy:sync`) et où **les cartes qui font agir** sont réécrites (`npm run psy:publish`). **Entre deux séances, seules la documentation et les bilans peuvent changer sur l'écran de Xavier** — elle se publie à tout moment, annoncée dans la conversation. La prévisibilité tient à l'annonce, pas au calendrier.
 
 **Obligatoire, dans cet ordre :**
 
@@ -136,16 +136,16 @@ Copier `psy/docs/gabarits/seance.md` → `psy/outputs/dossier/seances/AAAA-MM-JJ
 6. **`npm run psy:publish`** — il **refuse la publication entière** si la supervision manque, ne correspond pas à la version, ou si une étape ou une fiche enfreint un invariant. **Un refus se corrige, il ne se contourne pas.**
 
 > ⚠️ **Quatre règles, et elles ne se négocient pas.**
-> **(a)** Les étapes qui font agir — `ecran`, `exercice`, `questionnaire`, `demarche`, `seance-duo` — ne se publient **qu'en séance**. **La documentation, elle, se publie à tout moment** : Xavier n'attend pas la séance suivante pour comprendre ce qui lui arrive, et une fiche annoncée quand elle arrive n'est pas un changement d'interface non annoncé. *(Autre publication hors séance autorisée : retirer une étape devenue dangereuse ou fausse — annoncée avant, et supervisée comme le reste.)*
+> **(a)** Les cartes qui font agir — celles dont au moins une étape renvoie une réponse : `question`, `note`, `minuteur`, `confirmation` — ne se publient **qu'en séance**. **La documentation, elle, se publie à tout moment** : Xavier n'attend pas la séance suivante pour comprendre ce qui lui arrive, et une fiche annoncée quand elle arrive n'est pas un changement d'interface non annoncé. *(Autre publication hors séance autorisée : retirer une carte devenue dangereuse ou fausse — annoncée avant, et supervisée comme le reste.)*
 > **(b)** Le programme **ne porte jamais de palier atteint, d'historique ni de progression**. Il porte ce qu'il y a à faire, au présent. Les paliers se cotent ici, en séance, dans le compte-rendu — jamais sur l'écran. ⭐ **Un bilan publié est un texte daté écrit ici, jamais un graphique que l'app calcule.**
 > **(c)** Ce qui est publié est **annoncé pendant la séance**, étape par étape. Xavier ne découvre jamais son écran modifié.
 > **(d)** 🔴 **Rien ne se publie sans supervision.** Ni le programme, ni la bibliothèque. **Il n'existe aucune option de forçage, et il ne doit jamais en exister une.**
 
 **Le frontmatter du compte-rendu porte la trace :** `programme_publie: <version>` et `supervision: <fichier>` — ou `null` si rien n'a été publié.
 
-#### ⭐ Publier une séance à deux *(type `seance-duo`, 13/08/2026)*
+#### ⭐ Publier une séance à deux *(carte de `porteur: "aidant"`, 13/08/2026)*
 
-Une thérapie qui ne se conduit pas seul se publie comme `seance-duo` : un déroulé **chronométré**, tenu par l'**aidant** (aujourd'hui Chourouk), qui **ne fait que ce que l'écran affiche**.
+Une thérapie qui ne se conduit pas seul se publie comme une carte de `porteur: "aidant"` : un déroulé **chronométré**, tenu par l'**aidant** (aujourd'hui Chourouk), qui **ne fait que ce que l'écran affiche**.
 
 🔴 **Quatre conditions, et `npm run psy:publish` refuse sans elles :**
 
@@ -160,7 +160,7 @@ Une thérapie qui ne se conduit pas seul se publie comme `seance-duo` : un déro
 
 #### ⭐ Publier une échelle *(13/08/2026)*
 
-Les échelles se passent désormais **dans Kokoro**, comme `questionnaire` en rubrique `bilan` : **VVIQ · TAS-20 · CAT-Q · GAD-7 · BES · MAIA**.
+Les échelles se passent désormais **dans Kokoro**, comme une carte `panneau` d'étapes `question` en rubrique `bilan` : **VVIQ · TAS-20 · CAT-Q · GAD-7 · BES · MAIA**.
 
 - ⛔ **Les items se recopient depuis `psy/docs/corpus/echelles/`, jamais de mémoire.**
 - 🔴 **Le PHQ-9 ne se publie jamais** — seul instrument porteur d'un déclencheur d'escalade ; il se passe **en conversation**, avec `psy-bilan`.
@@ -173,7 +173,7 @@ Les échelles se passent désormais **dans Kokoro**, comme `questionnaire` en ru
 | Interdit | Raison |
 |---|---|
 | **Conseiller une modification de traitement**, même sous forme de question ou d'hypothèse | Non-substitution (`README.md` §2). Toute question pharmacologique va au brief Dr Isorni (`etat.md` §5) — nulle part ailleurs. |
-| Conduire un **protocole de retraitement EMDR** | Suspendu par arbitrage du 08/08/2026. ⭐ **Depuis le 14/08/2026, la stimulation bilatérale est un geste joué par l'aidant en `seance-duo`, pas un logiciel** — mais **tenir l'instrument n'est pas conduire un retraitement**, et ça ne déverrouille rien. Réouverture sous les critères chiffrés du `psy/README.md` §6, après avis du Dr Isorni. |
+| Conduire un **protocole de retraitement EMDR** | Suspendu par arbitrage du 08/08/2026. ⭐ **Depuis le 14/08/2026, la stimulation bilatérale est un geste joué par l'aidant sur une carte qu'elle tient, pas un logiciel** — mais **tenir l'instrument n'est pas conduire un retraitement**, et ça ne déverrouille rien. Réouverture sous les critères chiffrés du `psy/README.md` §6, après avis du Dr Isorni. |
 | Confondre panique, vasovagal et shutdown | Parades différentes ; la mauvaise parade aggrave (`profil.md` §3). |
 | Terminer sans clôture | Garde-fou câblé. |
 | Toute technique de visualisation | Aphantasie. |

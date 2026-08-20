@@ -1,95 +1,249 @@
 {
-  "version": 11,
+  "version": 12,
   "publie_le": "2026-08-20",
-  "supervision": "2026-08-20-programme-v11",
-  "etapes": [
+  "supervision": "2026-08-20-programme-v12",
+  "cartes": [
     {
       "id": "check-in",
       "titre": "Check-in du jour",
-      "type": "ecran",
+      "type": "panneau",
       "rubrique": "therapie",
       "quand": "aujourdhui",
       "duree_minutes": 2,
-      "ecran": "check-in"
-    },
-    {
-      "id": "mot-code",
-      "titre": "Mot-code à Chourouk",
-      "type": "ecran",
-      "rubrique": "crise",
-      "quand": "au_besoin",
-      "ecran": "mot-code"
-    },
-    {
-      "id": "tension-appliquee",
-      "titre": "Tension appliquée",
-      "type": "ecran",
-      "rubrique": "crise",
-      "quand": "au_besoin",
-      "ecran": "tension-appliquee"
-    },
-    {
-      "id": "phrase-soignant",
-      "titre": "La phrase pour le soignant",
-      "type": "ecran",
-      "rubrique": "crise",
-      "quand": "au_besoin",
-      "ecran": "phrase-soignant"
+      "sortie_libre": true,
+      "etapes": [
+        {
+          "type": "question",
+          "id": "shutdowns",
+          "enonce": "Combien de fois aujourd'hui as-tu perdu la parole ou été incapable de traiter une demande ?",
+          "compteur": {
+            "depart": 0,
+            "pas": 1,
+            "grand_pas": 5,
+            "minimum": 0,
+            "unite": "brute"
+          }
+        },
+        {
+          "type": "question",
+          "id": "exposition-sociale",
+          "enonce": "Combien d'heures d'interaction sociale non choisie ?",
+          "choix": [
+            {
+              "valeur": 0,
+              "libelle": "Aucune"
+            },
+            {
+              "valeur": 1,
+              "libelle": "Moins d'une heure"
+            },
+            {
+              "valeur": 2,
+              "libelle": "Une à trois heures"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Plus de trois heures"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "retrait-sensoriel",
+          "enonce": "Combien de fois as-tu dû te retirer, mettre un casque, baisser la lumière, quitter une pièce ?",
+          "compteur": {
+            "depart": 0,
+            "pas": 1,
+            "grand_pas": 5,
+            "minimum": 0,
+            "unite": "brute"
+          }
+        },
+        {
+          "type": "question",
+          "id": "renoncements",
+          "enonce": "À combien de choses as-tu renoncé à cause de l'angoisse — sortie, courses, appel, déplacement ?",
+          "compteur": {
+            "depart": 0,
+            "pas": 1,
+            "grand_pas": 5,
+            "minimum": 0,
+            "unite": "brute"
+          }
+        },
+        {
+          "type": "question",
+          "id": "activites-investies",
+          "enonce": "Combien d'activités as-tu pu investir hors obligations ?",
+          "choix": [
+            {
+              "valeur": 0,
+              "libelle": "Aucune"
+            },
+            {
+              "valeur": 1,
+              "libelle": "Une"
+            },
+            {
+              "valeur": 2,
+              "libelle": "Deux"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Trois ou plus"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "sommeil-heures",
+          "enonce": "Combien d'heures de sommeil, réveils compris ?",
+          "compteur": {
+            "depart": 7,
+            "pas": 0.5,
+            "grand_pas": 1,
+            "minimum": 0,
+            "unite": "heures"
+          }
+        },
+        {
+          "type": "question",
+          "id": "missions-actives",
+          "enonce": "Combien de missions professionnelles en cours ?",
+          "compteur": {
+            "depart": 0,
+            "pas": 1,
+            "grand_pas": 1,
+            "minimum": 0,
+            "unite": "brute"
+          },
+          "reprise": true
+        },
+        {
+          "type": "question",
+          "id": "ppc-minutes",
+          "enonce": "Combien de minutes de PPC cette nuit ?",
+          "precision": "Le chiffre du télésuivi, pas une estimation. S'il n'est pas consultable : passer.",
+          "compteur": {
+            "depart": 0,
+            "pas": 15,
+            "grand_pas": 60,
+            "minimum": 0,
+            "unite": "minutes"
+          }
+        },
+        {
+          "type": "question",
+          "id": "repas-servis-une-fois",
+          "enonce": "Sur les repas d'aujourd'hui, combien ont été servis une seule fois, quantité décidée avant ?",
+          "choix": [
+            {
+              "valeur": 0,
+              "libelle": "0"
+            },
+            {
+              "valeur": 1,
+              "libelle": "1"
+            },
+            {
+              "valeur": 2,
+              "libelle": "2"
+            },
+            {
+              "valeur": 3,
+              "libelle": "3"
+            },
+            {
+              "valeur": 4,
+              "libelle": "4"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "activite-minutes",
+          "enonce": "Combien de minutes d'activité ?",
+          "compteur": {
+            "depart": 0,
+            "pas": 5,
+            "grand_pas": 15,
+            "minimum": 0,
+            "unite": "minutes"
+          }
+        },
+        {
+          "type": "question",
+          "id": "poids-kg",
+          "enonce": "Poids du jour ?",
+          "precision": "Une fois par semaine. Les autres jours : passer, sans commentaire.",
+          "compteur": {
+            "depart": 110,
+            "pas": 0.1,
+            "grand_pas": 1,
+            "minimum": 0,
+            "unite": "kilos"
+          },
+          "reprise": true
+        },
+        {
+          "type": "note",
+          "id": "notes",
+          "enonce": "Quelque chose à ajouter ?",
+          "precision": "Facultatif. Le champ peut rester vide."
+        }
+      ]
     },
     {
       "id": "fiche-chourouk",
       "titre": "Pour Chourouk — quand je ne peux plus parler",
-      "type": "fiche",
+      "type": "pdf",
       "rubrique": "crise",
       "quand": "au_besoin",
-      "document": "fiche-chourouk",
-      "montrable": true
+      "document": "fiche-chourouk"
     },
     {
       "id": "panique-13-symptomes",
       "titre": "Les 13 symptômes de la panique",
-      "type": "fiche",
+      "type": "pdf",
       "rubrique": "crise",
       "quand": "au_besoin",
-      "document": "panique-13-symptomes",
-      "montrable": false
+      "document": "panique-13-symptomes"
     },
     {
       "id": "vasovagal-ce-qui-se-passe",
       "titre": "Le malaise vagal — ce qui se passe",
-      "type": "fiche",
+      "type": "pdf",
       "rubrique": "crise",
       "quand": "au_besoin",
-      "document": "vasovagal-ce-qui-se-passe",
-      "montrable": false
+      "document": "vasovagal-ce-qui-se-passe"
     },
     {
       "id": "tension-appliquee-le-geste",
       "titre": "La tension appliquée — le geste",
-      "type": "fiche",
+      "type": "pdf",
       "rubrique": "crise",
       "quand": "au_besoin",
-      "document": "tension-appliquee-le-geste",
-      "montrable": false
+      "document": "tension-appliquee-le-geste"
     },
     {
       "id": "shutdown-ce-qui-reste-ouvert",
       "titre": "Quand la parole se coupe — ce qui reste ouvert",
-      "type": "fiche",
+      "type": "pdf",
       "rubrique": "crise",
       "quand": "au_besoin",
-      "document": "shutdown-ce-qui-reste-ouvert",
-      "montrable": false
+      "document": "shutdown-ce-qui-reste-ouvert"
     },
     {
       "id": "ppc-prediction",
       "titre": "Avant le masque — ce que je prédis",
-      "type": "questionnaire",
+      "type": "panneau",
       "rubrique": "therapie",
       "quand": "aujourdhui",
       "duree_minutes": 1,
-      "questions": [
+      "sortie_libre": true,
+      "etapes": [
         {
+          "type": "question",
           "id": "duree",
           "enonce": "Avant de poser le masque : jusqu'où prédis-tu que le minuteur ira aujourd'hui ?",
           "choix": [
@@ -112,6 +266,7 @@
           ]
         },
         {
+          "type": "question",
           "id": "cause",
           "enonce": "Qu'est-ce qui, selon toi, va te faire retirer le masque ?",
           "choix": [
@@ -142,23 +297,33 @@
     {
       "id": "ppc-palier-1",
       "titre": "Masque tenu à la main",
-      "type": "exercice",
+      "type": "panneau",
       "rubrique": "therapie",
       "quand": "aujourdhui",
       "duree_minutes": 5,
-      "consigne": "Masque contre le visage, tenu à la main. Sans sangles, sans machine, en journée, pendant que tu fais autre chose. Le minuteur part avant que tu le poses.",
-      "minuteur_secondes": 300,
-      "sortie_libre": true
+      "sortie_libre": true,
+      "etapes": [
+        {
+          "type": "info",
+          "texte": "Masque contre le visage, tenu à la main. Sans sangles, sans machine, en journée, pendant que tu fais autre chose. Le minuteur part avant que tu le poses."
+        },
+        {
+          "type": "minuteur",
+          "secondes": 300
+        }
+      ]
     },
     {
       "id": "ppc-constat",
       "titre": "Après le masque — ce qui s'est passé",
-      "type": "questionnaire",
+      "type": "panneau",
       "rubrique": "therapie",
       "quand": "aujourdhui",
       "duree_minutes": 1,
-      "questions": [
+      "sortie_libre": true,
+      "etapes": [
         {
+          "type": "question",
           "id": "duree",
           "enonce": "Jusqu'où le minuteur est-il allé ?",
           "choix": [
@@ -181,6 +346,7 @@
           ]
         },
         {
+          "type": "question",
           "id": "cause",
           "enonce": "Qu'est-ce qui t'a fait retirer le masque ?",
           "choix": [
@@ -211,97 +377,87 @@
     {
       "id": "ppc-les-paliers",
       "titre": "Les paliers du masque",
-      "type": "fiche",
+      "type": "pdf",
       "rubrique": "therapie",
       "quand": "au_besoin",
-      "document": "ppc-les-paliers",
-      "montrable": false
+      "document": "ppc-les-paliers"
     },
     {
       "id": "ppc-pourquoi-maintenant",
       "titre": "Le masque — pourquoi maintenant",
-      "type": "fiche",
+      "type": "pdf",
       "rubrique": "therapie",
       "quand": "sans_date",
-      "document": "ppc-pourquoi-maintenant",
-      "montrable": false
+      "document": "ppc-pourquoi-maintenant"
     },
     {
       "id": "alimentation-les-quatre-regles",
       "titre": "Les quatre règles des repas",
-      "type": "fiche",
+      "type": "pdf",
       "rubrique": "therapie",
       "quand": "sans_date",
-      "document": "alimentation-les-quatre-regles",
-      "montrable": false
+      "document": "alimentation-les-quatre-regles"
     },
     {
       "id": "activite-sans-impact",
       "titre": "Bouger sans impact",
-      "type": "fiche",
+      "type": "pdf",
       "rubrique": "therapie",
       "quand": "sans_date",
-      "document": "activite-sans-impact",
-      "montrable": false
+      "document": "activite-sans-impact"
     },
     {
       "id": "jour-de-vol",
       "titre": "Le jour du vol",
-      "type": "fiche",
+      "type": "pdf",
       "rubrique": "therapie",
       "quand": "au_besoin",
-      "document": "jour-de-vol",
-      "montrable": false
+      "document": "jour-de-vol"
     },
     {
       "id": "sejour-tunisie",
       "titre": "Le séjour — ce qui est décidé d'avance",
-      "type": "fiche",
+      "type": "pdf",
       "rubrique": "therapie",
       "quand": "sans_date",
-      "document": "sejour-tunisie",
-      "montrable": false
+      "document": "sejour-tunisie"
     },
     {
       "id": "role-chourouk",
       "titre": "Pour Chourouk — son rôle, à lire à froid",
-      "type": "fiche",
+      "type": "pdf",
       "rubrique": "therapie",
       "quand": "sans_date",
-      "document": "role-chourouk",
-      "montrable": true
+      "document": "role-chourouk"
     },
     {
       "id": "comment-marche-kokoro",
       "titre": "Comment Kokoro fonctionne",
-      "type": "fiche",
+      "type": "pdf",
       "rubrique": "documentation",
       "quand": "sans_date",
-      "document": "comment-marche-kokoro",
-      "montrable": false
+      "document": "comment-marche-kokoro"
     },
     {
       "id": "ou-vont-mes-reponses",
       "titre": "Où vont mes réponses",
-      "type": "fiche",
+      "type": "pdf",
       "rubrique": "documentation",
       "quand": "sans_date",
-      "document": "ou-vont-mes-reponses",
-      "montrable": false
+      "document": "ou-vont-mes-reponses"
     },
     {
       "id": "pourquoi-pas-de-score",
       "titre": "Pourquoi il n'y a jamais de score",
-      "type": "fiche",
+      "type": "pdf",
       "rubrique": "documentation",
       "quand": "sans_date",
-      "document": "pourquoi-pas-de-score",
-      "montrable": false
+      "document": "pourquoi-pas-de-score"
     },
     {
       "id": "rapport-psy-2026-08",
       "titre": "Rapport psychiatrique et psychologique",
-      "type": "bilan",
+      "type": "pdf",
       "rubrique": "bilan",
       "date": "2026-08-08",
       "document": "rapport-psy-2026-08"
@@ -309,7 +465,7 @@
     {
       "id": "vviq-2026-08",
       "titre": "VVIQ — imagerie mentale",
-      "type": "bilan",
+      "type": "pdf",
       "rubrique": "bilan",
       "date": "2026-08-09",
       "document": "vviq-2026-08"
@@ -317,7 +473,7 @@
     {
       "id": "polysomnographie-2026-01",
       "titre": "Polysomnographie — Dr Roisman",
-      "type": "bilan",
+      "type": "pdf",
       "rubrique": "bilan",
       "date": "2026-01-19",
       "document": "polysomnographie-2026-01"
@@ -325,7 +481,7 @@
     {
       "id": "evaluation-tsa-2024-04",
       "titre": "Évaluation TSA — Emeline Saley",
-      "type": "bilan",
+      "type": "pdf",
       "rubrique": "bilan",
       "date": "2024-04-05",
       "document": "evaluation-tsa-2024-04"

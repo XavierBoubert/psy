@@ -4,7 +4,7 @@
 
 > 📖 **La documentation du dispositif est [`README.md`](../README.md)** — les rôles, le circuit du contenu, le transit, les conventions, les scripts, les invariants. **Ce fichier ne la duplique pas : il dit comment travailler dedans.**
 >
-> 📐 Ce qui n'est pas encore fait : [`psy/PLAN.md`](../psy/PLAN.md) — **il appartient à Claude Psy.** Le vocabulaire fait foi dans [`THESAURUS.md`](../THESAURUS.md) — **un mot, une chose** : `protocole` ≠ `fiche de bibliothèque`, `chantier` ≠ `cible` ≠ `palier`, et « étape » a deux sens.
+> 📐 Ce qui n'est pas encore fait : [`psy/PLAN.md`](../psy/PLAN.md) — **il appartient à Claude Psy.** Le vocabulaire fait foi dans [`THESAURUS.md`](../THESAURUS.md) — **un mot, une chose** : `protocole` ≠ `fiche de bibliothèque`, `chantier` ≠ `cible` ≠ `palier`, et une `carte` n'est pas une `étape` — la carte s'ouvre, l'étape est un écran de ce qui s'ouvre.
 
 ---
 
@@ -76,8 +76,8 @@ Elles vivent dans `.claude/skills/psy-*` — Claude Code ne les découvre que l�
 
 | Skill | Rôle |
 |---|---|
-| `psy-seance` | **Séance de fond hebdomadaire** — ouverture / une seule cible / clôture obligatoire → `psy/outputs/dossier/seances/`. ⭐ **Battement du dispositif** : `psy:sync` en ouverture, supervision puis `psy:publish` en clôture. **Seule fenêtre d'écriture des étapes qui font agir** — la documentation se publie à tout moment |
-| `psy-journal` | Check-in quotidien — 7 questions fermées, < 2 min → `companion/outputs/journal/` |
+| `psy-seance` | **Séance de fond hebdomadaire** — ouverture / une seule cible / clôture obligatoire → `psy/outputs/dossier/seances/`. ⭐ **Battement du dispositif** : `psy:sync` en ouverture, supervision puis `psy:publish` en clôture. **Seule fenêtre d'écriture des cartes qui font agir** — la documentation se publie à tout moment |
+| `psy-journal` | Check-in quotidien **en conversation** — questions fermées, < 2 min → `companion/outputs/journal/`. *(Dans Kokoro, c'est la carte `check-in`, et `psy:sync` reconstruit le journal.)* |
 | `psy-crise` | **Triage de crise** — sécurité avant mécanisme, panique / vasovagal / shutdown, escalade 3114, voies sans parole |
 | `psy-bilan` | Passation et cotation d'une échelle → `psy/outputs/dossier/mesures/`. Items lus dans `psy/docs/corpus/echelles/`, **jamais restitués de mémoire** |
 | `psy-brief-isorni` | Brief d'une page avant consultation → `psy/outputs/dossier/briefs/`, `transmis: false`. **Aucune proposition pharmacologique** |
@@ -102,8 +102,8 @@ Depuis la racine, **scopés par rôle** ; les chemins sont résolus par rapport 
 
 | Commande | Objet |
 |---|---|
-| `npm run psy:publish` | 🔴 Publie la thérapie, la bibliothèque et les bilans vers Kokoro — **fiches et bilans convertis en PDF au passage**. **La documentation et les bilans partent à tout moment ; les étapes qui font agir, à la clôture d'une séance et avec `--seance`** — sans le drapeau, elles sont refusées |
-| `npm run psy:sync` | Verse au dépôt ce que Kokoro a écrit. **N'écrase jamais un fichier existant** |
+| `npm run psy:publish` | 🔴 Publie la thérapie, la bibliothèque et les bilans vers Kokoro — **fiches et bilans convertis en PDF au passage**. **La documentation et les bilans partent à tout moment ; les cartes qui font agir, à la clôture d'une séance et avec `--seance`** — sans le drapeau, elles sont refusées |
+| `npm run psy:sync` | Verse au dépôt ce que Kokoro a écrit, et **reconstruit le journal depuis la carte `check-in`**. **N'écrase jamais un fichier existant** |
 | `npm run psy:pdf2md` · `psy:docx2md` · `psy:md2pdf` | Conversion de documents |
 | `npm run companion:kokoro` | Compile, teste, installe et ouvre Kokoro. **Jamais `gradlew` ni `adb` à la main** |
 | `npm run companion:image` · `companion:decoupe` · `companion:fondu` | Planches de recherche graphique, détourage du fond magenta, et fondu du bandeau de notification |

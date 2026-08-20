@@ -18,7 +18,9 @@ import io.allonsy.kokoro.ui.PanneauExtrude
 import io.allonsy.kokoro.ui.PileDeBoutons
 import io.allonsy.kokoro.ui.TypoKokoro
 import io.allonsy.kokoro.ui.grave
-import io.allonsy.kokoro.programme.Fonction
+
+// 🔴 Les trois portes de l'écran de crise sont bâties dans l'app : elles tiennent sans programme et sans Drive.
+enum class PorteDeCrise { MOT_CODE, TENSION, PHRASE }
 
 private val HAUTEUR_CRISE = 88.dp
 private val ECART_PORTES = 26.dp
@@ -37,7 +39,7 @@ internal fun PanneauCrise(
 fun PortesDeCrise(
     contactNom: String,
     envoiEnCours: Boolean,
-    onFonction: (Fonction) -> Unit,
+    onFonction: (PorteDeCrise) -> Unit,
     modifier: Modifier = Modifier,
     motCode: Modifier = Modifier,
 ) {
@@ -45,7 +47,7 @@ fun PortesDeCrise(
     PileDeBoutons(modifier = modifier, ecart = ECART_PORTES) {
         BoutonEpais(
             libelle = stringResource(R.string.crise_bouton_mot_code, contactNom),
-            onClic = { onFonction(Fonction.MOT_CODE) },
+            onClic = { onFonction(PorteDeCrise.MOT_CODE) },
             modifier = motCode,
             couleur = palette.azur,
             actif = !envoiEnCours,
@@ -54,14 +56,14 @@ fun PortesDeCrise(
         )
         BoutonEpais(
             libelle = stringResource(R.string.crise_bouton_tension),
-            onClic = { onFonction(Fonction.TENSION) },
+            onClic = { onFonction(PorteDeCrise.TENSION) },
             couleur = palette.azur,
             hauteurMinimale = HAUTEUR_CRISE,
             style = TypoKokoro.boutonCrise,
         )
         BoutonEpais(
             libelle = stringResource(R.string.phrase_titre),
-            onClic = { onFonction(Fonction.PHRASE) },
+            onClic = { onFonction(PorteDeCrise.PHRASE) },
             couleur = palette.azur,
             hauteurMinimale = HAUTEUR_CRISE,
             style = TypoKokoro.boutonCrise,

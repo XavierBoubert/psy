@@ -1,6 +1,7 @@
 package io.allonsy.kokoro.ui
 
 import android.os.SystemClock
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
@@ -41,6 +42,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -166,12 +168,13 @@ private fun appuiTenu(interactions: InteractionSource): State<Boolean> {
     return appuye
 }
 
+// La carte telle qu'elle se voit dans une liste — le modèle, lui, vit dans programme/Programme.kt.
 @Composable
-fun Carte(
+fun Vignette(
     titre: String,
     modifier: Modifier = Modifier,
     duree: String? = null,
-    // Une étape faite reste lisible et ouvrable : elle s'efface, elle ne se coche pas et ne se compte nulle part.
+    // Une carte faite reste lisible et ouvrable : elle s'efface, elle ne se coche pas et ne se compte nulle part.
     faite: Boolean = false,
     picto: (@Composable () -> Unit)? = null,
     onClic: () -> Unit,
@@ -491,7 +494,7 @@ private val DEDANS_BULLE = object : Shape {
 // Faux hors du monde : aucune scène ne porte le panneau — ni queue de bulle, ni Kokoro dessous, et il descend jusqu'en bas.
 val LocalPanneauPorte = staticCompositionLocalOf { true }
 
-// Le panneau de toute ouverture de contexte (démarche, réglages, check-in, tension, phrase) : une seule forme,
+// Le panneau de toute ouverture de contexte (une carte, les réglages, la tension, la phrase) : une seule forme,
 // une seule expression, jamais une page plein écran à bandeau — Xavier, 17/08/2026.
 @Composable
 fun PanneauDialogue(
@@ -729,6 +732,40 @@ fun Accuse(texte: String?, onFini: () -> Unit, modifier: Modifier = Modifier) {
 
 private const val PARUTION_ACCUSE_MS = 220
 private const val TENUE_ACCUSE_MS = 4_000L
+
+data class Feuillet(val libelle: String, val contenu: @Composable ColumnScope.() -> Unit)
+
+// L'allure libre du panneau : un sommaire, puis une page à la fois, chacune refermée par un retour. Rien
+// ne s'enchaîne tout seul et rien ne défile longuement — un écran fait une chose, et on sait d'où l'on vient.
+@Composable
+fun Feuilleton(titre: String, feuillets: List<Feuillet>, onFermer: () -> Unit) {
+    var ouvert by remember { mutableStateOf<Int?>(null) }
+    val courant = ouvert?.let(feuillets::getOrNull)
+
+    BackHandler(enabled = courant != null) { ouvert = null }
+
+    PanneauDialogue(
+        titre = courant?.libelle ?: titre,
+        ecart = 14.dp,
+        remonteSur = ouvert,
+        onFermer = onFermer,
+    ) {
+        if (courant == null) {
+            feuillets.forEachIndexed { rang, feuillet ->
+                BoutonEpais(libelle = feuillet.libelle, onClic = { ouvert = rang }, hauteurMinimale = 72.dp)
+            }
+            return@PanneauDialogue
+        }
+
+        courant.contenu(this)
+        BoutonEpais(
+            libelle = stringResource(R.string.carte_action_retour),
+            onClic = { ouvert = null },
+            modifier = Modifier.padding(top = 10.dp),
+            hauteurMinimale = 62.dp,
+        )
+    }
+}
 
 @Composable
 fun Separateur(modifier: Modifier = Modifier) {

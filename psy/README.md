@@ -2,7 +2,7 @@
 
 **Le psychiatre et le psychologue.** Une **séance de fond par semaine**. **Il construit tout le contenu** — protocoles, désensibilisations, bilans, questionnaires, briefs, programme — et le donne à Kokoro. Il connaît le dossier mieux que Xavier ne s'en souvient.
 
-**Ce qu'il ne fait jamais :** prescrire · conseiller une modification de traitement, même sous forme interrogative · **publier sans supervision** · publier une étape qui fait agir hors séance · venir vers Xavier de lui-même.
+**Ce qu'il ne fait jamais :** prescrire · conseiller une modification de traitement, même sous forme interrogative · **publier sans supervision** · publier une carte qui fait agir hors séance · venir vers Xavier de lui-même.
 
 > 📖 Vue d'ensemble : [`../README.md`](../README.md). Vocabulaire : [`../THESAURUS.md`](../THESAURUS.md) — `corpus` ≠ `protocole` ≠ `fiche de bibliothèque` ; `chantier` ≠ `cible` ≠ `palier`.
 >
@@ -49,7 +49,7 @@ Six leviers structurels, qui se cumulent :
 | **À l'ouverture de séance** | `npm run psy:sync` | Verse au dépôt ce que Kokoro a écrit. **N'écrase jamais un fichier existant** |
 | **À la clôture de séance** *(thérapie)* · **à tout moment** *(documentation)* | `npm run psy:publish` | Publie la thérapie et la bibliothèque. 🔴 **Refuse tout si un invariant est enfreint ou si la supervision manque** |
 
-**Entre deux séances, seule la documentation peut changer sur l'écran de Xavier** — et elle s'annonce dans la conversation au moment où elle est publiée. Les étapes qui font agir attendent la séance.
+**Entre deux séances, seules la documentation et les bilans peuvent changer sur l'écran de Xavier** — et ils s'annoncent dans la conversation au moment où ils sont publiés. Les cartes qui font agir attendent la séance.
 
 ---
 
@@ -157,7 +157,7 @@ Elles vivent dans **`.claude/skills/psy-*`** — Claude Code ne les découvre qu
 | Skill | Rôle | Écrit dans |
 |---|---|---|
 | `psy-seance` | ⭐ **Séance de fond hebdomadaire** — ouverture / une seule cible / clôture obligatoire. `psy:sync` en ouverture, supervision puis `psy:publish` en clôture. **Seule fenêtre d'écriture du programme** | `outputs/dossier/seances/` |
-| `psy-journal` | Check-in quotidien — questions fermées, < 2 min, aucune saisie de texte obligatoire | `../companion/outputs/journal/` |
+| `psy-journal` | Check-in quotidien **en conversation** — questions fermées, < 2 min, aucune saisie de texte obligatoire. *(Dans Kokoro, c'est la carte `check-in`.)* | `../companion/outputs/journal/` |
 | `psy-crise` | **Triage de crise** — sécurité avant mécanisme, panique / vasovagal / shutdown, escalade 3114, voies sans parole | `outputs/dossier/crises/` |
 | `psy-bilan` | Passation et cotation d'une échelle — items lus dans le corpus, **jamais de mémoire** | `outputs/dossier/mesures/` |
 | `psy-brief-isorni` | Brief avant consultation — chiffres **calculés** depuis le journal, réserves obligatoires, **aucune proposition pharmacologique** | `outputs/dossier/briefs/` |

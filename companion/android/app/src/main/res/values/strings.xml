@@ -88,55 +88,11 @@
     <string name="arret_syncope">Perte de connaissance : s\'allonger, jambes surélevées, ne pas se relever avant 10 minutes. Si la personne ne se relève pas, recours médical d\'urgence immédiat, par le moyen le plus rapide sur place.</string>
     <string name="arret_discriminant">S\'il n\'y a ni aiguille, ni geste médical, ni sang, ce n\'est pas la bonne parade. La tension appliquée remonte une tension qui chute ; elle n\'a rien à faire dans une attaque de panique.</string>
 
-    <string name="journal_titre">Check-in du jour</string>
-    <string name="journal_rang">Question %1$d sur %2$d</string>
-
-    <string name="journal_q_shutdowns">Combien de fois aujourd\'hui as-tu perdu la parole ou été incapable de traiter une demande ?</string>
-    <string name="journal_q_exposition">Combien d\'heures d\'interaction sociale non choisie ?</string>
-    <string name="journal_exposition_0">Aucune</string>
-    <string name="journal_exposition_1">Moins d\'une heure</string>
-    <string name="journal_exposition_2">Une à trois heures</string>
-    <string name="journal_exposition_3">Plus de trois heures</string>
-    <string name="journal_q_retrait">Combien de fois as-tu dû te retirer, mettre un casque, baisser la lumière, quitter une pièce ?</string>
-    <string name="journal_q_renoncements">À combien de choses as-tu renoncé à cause de l\'angoisse — sortie, courses, appel, déplacement ?</string>
-    <string name="journal_q_activites">Combien d\'activités as-tu pu investir hors obligations ?</string>
-    <string name="journal_activites_0">Aucune</string>
-    <string name="journal_activites_1">Une</string>
-    <string name="journal_activites_2">Deux</string>
-    <string name="journal_activites_3">Trois ou plus</string>
-    <string name="journal_q_sommeil">Combien d\'heures de sommeil, réveils compris ?</string>
-    <string name="journal_q_missions">Combien de missions professionnelles en cours ?</string>
-    <string name="journal_q_ppc">Combien de minutes de PPC cette nuit ?</string>
-    <string name="journal_p_ppc">Le chiffre du télésuivi, pas une estimation. S\'il n\'est pas consultable : passer.</string>
-    <string name="journal_q_repas">Sur les repas d\'aujourd\'hui, combien ont été servis une seule fois, quantité décidée avant ?</string>
-    <string name="journal_repas_0">0</string>
-    <string name="journal_repas_1">1</string>
-    <string name="journal_repas_2">2</string>
-    <string name="journal_repas_3">3</string>
-    <string name="journal_repas_4">4</string>
-    <string name="journal_q_activite">Combien de minutes d\'activité ?</string>
-    <string name="journal_q_poids">Poids du jour ?</string>
-    <string name="journal_p_poids">Une fois par semaine. Les autres jours : passer, sans commentaire.</string>
-    <string name="journal_q_notes">Quelque chose à ajouter ?</string>
-    <string name="journal_p_notes">Facultatif. Le champ peut rester vide.</string>
-
-    <string name="journal_action_suivant">Suivant</string>
-    <string name="journal_action_passer">Passer — aucune réponse</string>
-    <string name="journal_action_arreter">Arrêter maintenant et enregistrer</string>
-    <string name="journal_action_enregistrer">Enregistrer</string>
-    <string name="journal_action_dossier">Choisir le dossier</string>
-
-    <string name="journal_dossier_explication">Kokoro écrit le check-in dans le dossier partagé avec le PC. Il faut le désigner une fois : sélectionner le dossier synchronisé par Syncthing. Kokoro n\'obtient de droit que sur celui-là, et sur rien d\'autre.</string>
-    <string name="journal_deja_ecrit">Un check-in existe déjà pour le %1$s. Il n\'est pas remplacé.</string>
-    <string name="journal_enregistre">C\'est enregistré.</string>
-    <string name="journal_echec">Le fichier n\'a pas été écrit.</string>
-    <string name="journal_echec_suite">Rien n\'est perdu du côté du dossier : aucun fichier n\'a été modifié.</string>
-
-    <string name="controle_section_journal">Check-in quotidien</string>
+    <string name="controle_section_dossier">Le dossier synchronisé</string>
     <string name="controle_dossier_choisi">Dossier : %1$s</string>
     <string name="controle_dossier_absent">Aucun dossier désigné.</string>
     <string name="controle_action_dossier">Désigner le dossier synchronisé</string>
-    <string name="controle_dossier_explication">Le check-in s\'écrit dans le sous-dossier « journal » du dossier désigné. Kokoro n\'a accès à aucun autre emplacement du téléphone.</string>
+    <string name="controle_dossier_explication">Kokoro écrit ce que tu rends dans le sous-dossier « reponses » du dossier désigné, et y lit le programme, la bibliothèque et les bilans. Il n\'a accès à aucun autre emplacement du téléphone.</string>
 
     <string name="controle_titre">Réglages</string>
     <string name="controle_section_contact">Destinataire du mot-code</string>
@@ -233,40 +189,29 @@
     <string name="monde_acces_action">Ouvrir les réglages</string>
 
     <!--
-      ⭐ Les étapes viennent du dossier synchronisé — companion/PROGRAMME.md. Kokoro n'en écrit
-      aucune : ce qui reste ici est ce qu'il dit lui-même autour d'elles.
+      ⭐ Les cartes viennent du dossier synchronisé — companion/PROGRAMME.md. Kokoro n'en écrit aucune :
+      ce qui reste ici est ce qu'il dit lui-même autour d'elles. La sortie libre est écrite avant de
+      commencer et rappelée pendant : arrêter n'a jamais à se justifier. 🔴 Rien à la fin ne commente ce
+      qui a été fait, aucun son ni vibration ne marque le terme, et aucun score ne s'affiche jamais.
     -->
-    <string name="etape_action_fait">C\'est fait</string>
-    <string name="etape_deja_faite">Déjà fait. La ligne partira du programme à la prochaine séance.</string>
+    <string name="carte_action_commencer">Je commence</string>
+    <string name="carte_action_suivant">Suivant</string>
+    <string name="carte_action_passer">Passer — aucune réponse</string>
+    <string name="carte_action_enregistrer">Enregistrer</string>
+    <string name="carte_action_arreter">J\'arrête ici</string>
+    <string name="carte_action_fermer">Fermer</string>
+    <string name="carte_action_retour">Retour</string>
+    <string name="carte_avant_reste">Le déroulé s\'ouvre quand tout est coché</string>
+    <string name="carte_sortie_libre">Je peux arrêter avant la fin, sans avoir à le justifier.</string>
+    <string name="carte_minuteur_ouvert">Le minuteur tourne tant que cet écran reste ouvert.</string>
+    <string name="carte_montrable">Cet écran peut être montré tel quel. Rien n\'oblige à le dire à voix haute.</string>
+    <string name="carte_rang_question">Question %1$d sur %2$d</string>
+    <string name="carte_rang_consigne">Consigne %1$d sur %2$d</string>
+    <string name="carte_fini">C\'est enregistré dans le dossier.</string>
+    <string name="carte_deja_faite">Déjà fait. La ligne partira du programme à la prochaine séance.</string>
 
     <!--
-      ⭐ L'exercice au minuteur — companion/PROGRAMME.md §3. La sortie libre est écrite avant de
-      commencer et rappelée pendant : arrêter n'a jamais à se justifier. 🔴 Rien à la fin ne
-      commente ce qui a été fait, et aucun son ni vibration ne marque le terme.
-    -->
-    <string name="exercice_action_commencer">Je commence</string>
-    <string name="exercice_action_arreter">J\'arrête ici</string>
-    <string name="exercice_action_fermer">Fermer</string>
-    <string name="exercice_sortie_libre">Je peux arrêter avant la fin, sans avoir à le justifier.</string>
-    <string name="exercice_minuteur_ouvert">Le minuteur tourne tant que cet écran reste ouvert.</string>
-    <string name="exercice_fini">C\'est enregistré dans le dossier.</string>
-
-    <!--
-      ⭐ La passation d'une échelle — companion/PROGRAMME.md §3. Une question par écran, des choix
-      fermés, « passer » écrit null. 🔴 Kokoro n'affiche jamais un score, un seuil ni une
-      interprétation : il renvoie les items, la cotation se fait en séance.
-    -->
-    <string name="questionnaire_annonce">%1$d questions, une par écran. Chaque réponse est à choisir dans une liste.</string>
-    <string name="questionnaire_sortie_libre">Je peux passer une question, ou arrêter au milieu, sans avoir à le justifier.</string>
-    <string name="questionnaire_rang">Question %1$d sur %2$d</string>
-    <string name="questionnaire_action_commencer">Je commence</string>
-    <string name="questionnaire_action_passer">Passer — aucune réponse</string>
-    <string name="questionnaire_action_arreter">J\'arrête ici</string>
-    <string name="questionnaire_action_fermer">Fermer</string>
-    <string name="questionnaire_fini">C\'est enregistré dans le dossier.</string>
-
-    <!--
-      ⭐ La séance à deux — companion/PROGRAMME.md §3. Le téléphone passe dans les mains de l'aidant :
+      ⭐ La séance à deux — une carte portée par l'aidant, companion/PROGRAMME.md §4. Le téléphone passe dans les mains de l'aidant :
       Kokoro tient la cadence, il ne lui demande jamais de juger. 🔴 Le signal d'arrêt reste à l'écran
       le signal d'arrêt et les critères sont une case à cocher avant d'entrer, jamais un rappel qui suit les
       consignes. L'entraînement est la même séquence jouée à blanc : ce n'est pas une donnée clinique, et rien
@@ -278,21 +223,12 @@
     <string name="duo_action_entrainement">L\'entraînement, à blanc</string>
     <string name="duo_action_seance">La séance</string>
     <string name="duo_entrainement_en_cours">Entraînement — à blanc, sans le matériel.</string>
-    <string name="duo_avant_titre">À vérifier avant d\'entrer dans le déroulé.</string>
-    <string name="duo_avant_reste">Le déroulé s\'ouvre quand tout est coché</string>
-    <string name="duo_action_commencer">On commence</string>
-    <string name="duo_minuteur_ouvert">Le minuteur tourne tant que cet écran reste ouvert. L\'écran passe seul à la consigne suivante.</string>
-    <string name="duo_avant_cadence_entrainement">L\'entraînement ne se chronomètre pas : tu passes d\'une consigne à l\'autre à ton rythme.</string>
+    <string name="duo_cadence_entrainement">L\'entraînement ne se chronomètre pas : tu passes d\'une consigne à l\'autre à ton rythme.</string>
     <string name="duo_duree_annonce">Entraînement — ce temps est celui que la consigne durera en séance.</string>
-    <string name="duo_action_suivante">Passer à la consigne suivante</string>
-    <string name="duo_action_finir">Finir l\'entraînement</string>
-    <string name="duo_rang">Consigne %1$d sur %2$d</string>
     <string name="duo_sortie_libre">On peut arrêter avant la fin, sans avoir à le justifier.</string>
     <string name="duo_action_arreter">On s\'arrête</string>
     <string name="duo_mene">Le déroulé est allé jusqu\'au bout.</string>
     <string name="duo_arrete">On s\'est arrêté là.</string>
-    <string name="duo_fini">C\'est enregistré dans le dossier.</string>
-    <string name="duo_action_fermer">Fermer</string>
 
     <string name="reponse_dossier_absent">Le dossier synchronisé n\'est pas choisi : rien n\'a été enregistré.</string>
     <string name="reponse_echec">L\'enregistrement dans le dossier n\'a pas abouti.</string>

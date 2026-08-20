@@ -6,7 +6,7 @@
 
 > 📖 Vue d'ensemble : [`../README.md`](../README.md) · Vocabulaire : [`../THESAURUS.md`](../THESAURUS.md) · Ce qui n'est pas encore fait : [`../psy/PLAN.md`](../psy/PLAN.md) §8.
 >
-> 🔴 **Le format du contenu est [`PROGRAMME.md`](PROGRAMME.md)** *(normatif)* — les six types d'étape, les rubriques, les interdits. **Aucune surface n'a le droit d'en inventer un autre.**
+> 🔴 **Le format du contenu est [`PROGRAMME.md`](PROGRAMME.md)** *(normatif)* — les deux types de carte, les six types d'étape, les rubriques, les interdits. **Aucune surface n'a le droit d'en inventer un autre.**
 
 ---
 
@@ -41,18 +41,18 @@
 | **Écran de crise** | ✅ | Trois boutons — mot-code, tension appliquée, phrase pour le soignant. **Deux portes, un seul contenu** : l'écran *Crise* du monde et `CriseActivity` affichent le **même composable** |
 | **Mot-code à Chourouk** | ✅ | SMS **envoyé en un appui**, téléphone verrouillé, sans réseau data. Aucun écran de confirmation. Le bouton se grise le temps de l'envoi ; un accusé paraît en bas |
 | **Tension appliquée** | ✅ | Quatre repères externes enchaînés, minuteur, critères d'arrêt à un tap |
-| **Check-in du jour** | ✅ | Panneau interne, questions fermées enchaînées, aucune saisie de texte → écrit `journal/AAAA-MM-JJ.json` |
+| **Check-in du jour** | ✅ | **Une carte du programme comme une autre**, d'`id` `check-in` — compteurs et choix fermés, une note facultative → `reponses/`, d'où `psy:sync` reconstruit `journal/AAAA-MM-JJ.json` |
 | **Le monde** | ✅ | Quatre écrans en anneau horizontal, décor en quatre couches, plage de nuit, Kokoro habitant |
 | **Le corps et la présence** | ✅ | Six expressions, dix postures, respiration, morphing du visage, lévitation, transit, ombre |
 | **Réglages** | ✅ | Panneau interne au bout de la roue dentée — **plus une Activity** |
 | **Documentation** | ✅ | Lit `programme.json` du dossier synchronisé, filtre les fiches, **confie le PDF au lecteur du téléphone** |
-| **Thérapie** | ✅ | Lit les étapes `therapie` de `programme.json`, groupées par `quand` — `ecran`, `exercice` *(minuteur dans le panneau)*, `demarche` *(bouton « c'est fait »)*. **Rien n'est écrit en dur dans l'app** |
-| **`reponses/`** | ✅ | Un fichier par étape faite, `AAAA-MM-JJ-HHMM-<id>.json`. 🔴 **Kokoro se souvient localement de ce qu'il a écrit** — l'état d'une étape ne dépend jamais d'un aller-retour par Drive |
-| **Bilan** | ✅ | Lit les étapes `bilan` de `programme.json`, **groupées par mois décroissant** sur la `date` du document, et **confie le PDF au lecteur du téléphone**. ⭐ **Aucun score, aucun seuil, aucune interprétation à l'écran, et aucune fonction de partage** |
+| **Thérapie** | ✅ | Lit les cartes `therapie` de `programme.json`, groupées par `quand`. **Une carte ouvre son panneau et déroule ses étapes** — info, question, note, minuteur, checklist, confirmation. **Rien n'est écrit en dur dans l'app** |
+| **`reponses/`** | ✅ | Un fichier par carte rendue, `AAAA-MM-JJ-HHMM-<id>.json`. 🔴 **Kokoro se souvient localement de ce qu'il a écrit** — l'état d'une carte ne dépend jamais d'un aller-retour par Drive |
+| **Bilan** | ✅ | Lit les cartes de rubrique `bilan`, **groupées par mois décroissant** sur la `date` du document, et **confie le PDF au lecteur du téléphone**. ⭐ **Aucun score, aucun seuil, aucune interprétation à l'écran, et aucune fonction de partage** |
 | **Questionnaire** | ✅ | Type porté et disponible — une question par écran, choix fermés, « passer » et arrêt libres → écrit `reponses/` **item par item**. ⭐ **Aucune échelle validée ne part dans Kokoro** *(tranché le 19/08/2026)* : elles se passent avec Claude Psy |
 | **Séance à deux** | 🏗️ | K6. Type porté : accueil, entraînement à blanc, cases à cocher avant d'entrer — dont **une case qui porte le signal d'arrêt et les critères, et sans laquelle le déroulé ne s'ouvre pas** —, puis la séquence chronométrée qui passe seule d'une consigne à l'autre. ⭐ **Rien ne flotte autour de la consigne** : elle dit elle-même à qui elle s'adresse. **L'entraînement mené se retient localement** — l'issue n'est pas dans le nom du fichier. **Il reste à le jouer avec Chourouk**, c'est le critère de fin |
 
-⭐ **Le circuit complet est constaté, pas seulement écrit** *(19/08/2026)* : une étape publiée depuis le PC est apparue sur le téléphone, a été faite, et sa réponse est revenue au dossier par `psy:sync` — **valide au format, sans intervention manuelle**. Un bilan s'est ouvert dans le lecteur PDF du téléphone et s'est partagé depuis lui. **Le partage est celui du lecteur, jamais une fonction de Kokoro.**
+⭐ **Le circuit complet est constaté, pas seulement écrit** *(19/08/2026)* : une carte publiée depuis le PC est apparue sur le téléphone, a été faite, et sa réponse est revenue au dossier par `psy:sync` — **valide au format, sans intervention manuelle**. Un bilan s'est ouvert dans le lecteur PDF du téléphone et s'est partagé depuis lui. **Le partage est celui du lecteur, jamais une fonction de Kokoro.**
 
 ---
 
@@ -63,7 +63,7 @@
 | Sens | Fichiers | Format *(normatif)* | Acheminé par |
 |---|---|---|---|
 | Kokoro **lit** | `programme.json` · `bibliotheque/*.pdf` · `bilans/*.pdf` | [`PROGRAMME.md`](PROGRAMME.md) | `npm run psy:publish` |
-| Kokoro **écrit** | `journal/AAAA-MM-JJ.json` · `reponses/AAAA-MM-JJ-HHMM-<id>.json` | [`../psy/DOSSIER.md`](../psy/DOSSIER.md) | `npm run psy:sync` |
+| Kokoro **écrit** | `reponses/AAAA-MM-JJ-HHMM-<id>.json` — 🔴 **et rien d'autre** ; `journal/` est reconstruit au dépôt | [`../psy/DOSSIER.md`](../psy/DOSSIER.md) | `npm run psy:sync` |
 
 ⭐ **Ni profil, ni état, ni séances, ni crises, ni mesures, ni briefs, ni supervisions ne quittent le PC.** **Le contenu publié est *dérivé*, jamais *extrait*** : il porte ce qu'il y a à faire, jamais ce qui a été constaté, mesuré ou diagnostiqué.
 
@@ -189,7 +189,7 @@ Ils viennent des contraintes de Xavier *(détail : [`../patient/README.md`](../p
 2. **Aucun texte ajouté** : les trois boutons ne bougent ni de place, ni de taille, ni de libellé.
 3. **Il ne vole pas et ne respire pas une fois posé** — seule place du dispositif dans ces deux cas. Il est **accoudé, pas posé au sol** : le faire léviter ferait glisser ses bras le long du bord et **son ombre tomberait sur l'interface**.
 4. **Il ne s'y endort jamais.** Pas de liste, et veiller est ce qu'il y fait.
-5. **Rien n'y dépend du dossier** — ni de l'heure, ni du check-in. Une seule pose, toujours la même.
+5. **Rien n'y dépend du dossier** — ni de l'heure, ni de ce qui reste à faire. Une seule pose, toujours la même.
 6. **La tête penche de 6°, bornée à 10°**, et c'est la seule inclinaison du dispositif. 🔴 **Le corps reste de face** : c'est ce qui distingue *veiller sur quelqu'un* de *le fixer*.
 
 > 🔴 **Une dérogation bornée, assumée, qui ne s'étend pas** : le fond de la notification porte une illustration peinte où Kokoro lève la main en V et fait un clin d'œil — quatre écarts avec le rig, demandés par Xavier après qu'ils lui ont été présentés un par un. **Elle n'entre pas dans le rig, ne crée pas de septième expression, ne s'étend à aucun écran et ne ramène aucun texte.** ⭐ **Le pari est qu'une image qu'on ne peut pas rater ne demande rien en retour. Si elle finit par se lire comme une attente, elle se retire.**
@@ -267,10 +267,10 @@ npm run companion:icone           # 🔴 aucune image d'icône ne se retouche à
 
 | Chemin | Rôle |
 |---|---|
-| 🔴 [`PROGRAMME.md`](PROGRAMME.md) | **NORMATIF — le format du programme et de la bibliothèque.** Les six types d'étape, les rubriques, les interdits |
-| [`android/`](android/) | **Le code** — `app/src/main/kotlin/io/allonsy/kokoro/` : `monde/` *(l'anneau, les écrans, les étapes)* · `corps/` *(le rig et les expressions)* · `decor/` *(les couches et l'inclinaison)* · `crise/` *(les trois portes)* · `journal/` *(le check-in et le dossier SAF)* · `programme/` *(la lecture et les interdits)* · `reglages/` · `ui/` *(la matière)* |
-| [`inputs/`](inputs/) | 🔴 **Ce que Claude Psy lui donne** : `programme.json` + [`bibliotheque/`](inputs/bibliotheque/README.md). **Écrit par le psy seul, jamais sans supervision.** La documentation se publie à tout moment ; **les étapes qui font agir, à la clôture d'une séance** |
-| [`outputs/`](outputs/) | 🔴 **Ce que Kokoro produit** : `journal/` *(check-ins)* + `reponses/` *(ce qui a été fait)*. **Écrit par Kokoro seul, append-only** |
+| 🔴 [`PROGRAMME.md`](PROGRAMME.md) | **NORMATIF — le format du programme et de la bibliothèque.** Les deux types de carte, les six types d'étape, les rubriques, les interdits |
+| [`android/`](android/) | **Le code** — `app/src/main/kotlin/io/allonsy/kokoro/` : `monde/` *(l'anneau, les écrans, le panneau des cartes)* · `corps/` *(le rig et les expressions)* · `decor/` *(les couches et l'inclinaison)* · `crise/` *(les trois portes)* · `dossier/` *(le dossier SAF partagé)* · `programme/` *(la lecture et les interdits)* · `reglages/` · `ui/` *(la matière)* |
+| [`inputs/`](inputs/) | 🔴 **Ce que Claude Psy lui donne** : `programme.json` + [`bibliotheque/`](inputs/bibliotheque/README.md). **Écrit par le psy seul, jamais sans supervision.** La documentation se publie à tout moment ; **les cartes qui font agir, à la clôture d'une séance** |
+| [`outputs/`](outputs/) | 🔴 **Ce que Kokoro produit** : `reponses/` *(ce qui a été rendu)*, plus `journal/` que `psy:sync` reconstruit depuis la carte `check-in`. **Append-only** |
 | [`ressources/retenus/`](ressources/retenus/) | **Ce qui fait foi** — `kokoro-corps-v2.svg` *(+ `-sleep`, `-right`)*, `kokoro-face.svg`, `logo.jpg`, les quatre planches magenta du décor, le fond de la notification |
 | [`ressources/prompts/`](ressources/prompts/) · `sorties/` | La recherche graphique — les chartes et les variantes · les candidats *(non versionné)* |
 | [`ressources/maquette/`](ressources/maquette/) | `kawaii.html` — la maquette du thème qui fait foi |

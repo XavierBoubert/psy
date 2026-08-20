@@ -2,7 +2,7 @@ import { mkdir, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises'
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { convertirEnPdf } from './md2pdf.ts';
-import { ProgrammeSchema, TYPES } from './schemas/programme.ts';
+import { ETAPES_QUI_RENDENT, ProgrammeSchema } from './schemas/programme.ts';
 import { decrire } from './schemas/problemes.ts';
 
 const PROJECT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
@@ -13,7 +13,7 @@ const SUPERVISIONS = resolve(PROJECT_ROOT, 'superviseur/outputs');
 
 const USAGE = 'Usage: psy-publish <dossier-de-transit-drive> [--seance] [--refaire]';
 
-const CLES_NON_TEXTUELLES = ['id', 'type', 'quand', 'rubrique', 'ecran', 'document', 'pour', 'date'] as const;
+const CLES_NON_TEXTUELLES = ['id', 'type', 'quand', 'rubrique', 'document', 'pour', 'porteur', 'date', 'unite'] as const;
 
 type Interdit = {
   readonly motif: RegExp;
@@ -73,8 +73,8 @@ const textesDe = (value: unknown, cle: string): ReadonlyArray<string> => {
   return [];
 };
 
-const problemesInterdits = (etape: Record<string, unknown>): ReadonlyArray<string> => {
-  const textes = textesDe(etape, '').map(normalise);
+const problemesInterdits = (carte: Record<string, unknown>): ReadonlyArray<string> => {
+  const textes = textesDe(carte, '').map(normalise);
 
   return INTERDITS.flatMap((interdit) =>
     textes.some((texte) => interdit.motif.test(texte)) ? [interdit.raison] : [],
@@ -97,17 +97,19 @@ const JUGEMENTS: ReadonlyArray<Interdit> = [
   },
 ];
 
-const problemesJugement = (etape: Record<string, unknown>): ReadonlyArray<string> => {
-  const textes = textesDe(etape, '').map(normalise);
+const problemesJugement = (carte: Record<string, unknown>): ReadonlyArray<string> => {
+  const textes = textesDe(carte, '').map(normalise);
 
   return JUGEMENTS.flatMap((interdit) => (textes.some((texte) => interdit.motif.test(texte)) ? [interdit.raison] : []));
 };
 
-const idDeLetape = (parsed: unknown, rang: number): string => {
-  const etapes = isRecord(parsed) ? parsed['etapes'] : null;
-  const etape = Array.isArray(etapes) ? etapes[rang] : null;
+const cartesDe = (parsed: unknown): ReadonlyArray<unknown> =>
+  isRecord(parsed) && Array.isArray(parsed['cartes']) ? parsed['cartes'] : [];
 
-  return isRecord(etape) && typeof etape['id'] === 'string' ? etape['id'] : `etape ${rang + 1}`;
+const idDeLaCarte = (parsed: unknown, rang: number): string => {
+  const carte = cartesDe(parsed)[rang];
+
+  return isRecord(carte) && typeof carte['id'] === 'string' ? carte['id'] : `carte ${rang + 1}`;
 };
 
 const relireProgramme = (parsed: unknown): ReadonlyArray<string> => {
@@ -116,23 +118,20 @@ const relireProgramme = (parsed: unknown): ReadonlyArray<string> => {
   if (relu.success) return [];
 
   return relu.error.issues.map((issue) =>
-    issue.path[0] === 'etapes' && typeof issue.path[1] === 'number'
-      ? `${idDeLetape(parsed, issue.path[1])} — ${decrire(issue, 2)}`
+    issue.path[0] === 'cartes' && typeof issue.path[1] === 'number'
+      ? `${idDeLaCarte(parsed, issue.path[1])} — ${decrire(issue, 2)}`
       : decrire(issue),
   );
 };
 
-const relireContenu = (parsed: unknown): ReadonlyArray<string> => {
-  const etapes = isRecord(parsed) && Array.isArray(parsed['etapes']) ? parsed['etapes'] : [];
+const relireContenu = (parsed: unknown): ReadonlyArray<string> =>
+  cartesDe(parsed).flatMap((carte: unknown, rang: number) => {
+    if (!isRecord(carte)) return [];
 
-  return etapes.flatMap((etape: unknown, rang: number) => {
-    if (!isRecord(etape)) return [];
+    const jugements = carte['porteur'] === 'aidant' ? problemesJugement(carte) : [];
 
-    const jugements = etape['type'] === 'seance-duo' ? problemesJugement(etape) : [];
-
-    return [...problemesInterdits(etape), ...jugements].map((probleme) => `${idDeLetape(parsed, rang)} — ${probleme}`);
+    return [...problemesInterdits(carte), ...jugements].map((probleme) => `${idDeLaCarte(parsed, rang)} — ${probleme}`);
   });
-};
 
 const champFrontmatter = (contenu: string, champ: string): string | null => {
   const trouve = new RegExp(`^${champ}\\s*:\\s*(.+?)\\s*$`, 'm').exec(contenu);
@@ -189,13 +188,14 @@ const lireDocuments = async (dossier: string): Promise<ReadonlyArray<Document>> 
   );
 };
 
-const documentsAppeles = (parsed: unknown, type: string): ReadonlyArray<string> => {
-  if (!isRecord(parsed) || !Array.isArray(parsed['etapes'])) return [];
-
-  return parsed['etapes'].flatMap((etape: unknown) =>
-    isRecord(etape) && etape['type'] === type && typeof etape['document'] === 'string' ? [etape['document']] : [],
+// La rubrique bilan est le seul discriminant : un bilan vit dans bilans/, tout autre PDF dans bibliotheque/.
+const documentsAppeles = (parsed: unknown, bilan: boolean): ReadonlyArray<string> =>
+  cartesDe(parsed).flatMap((carte: unknown) =>
+    isRecord(carte) && carte['type'] === 'pdf' && (carte['rubrique'] === 'bilan') === bilan &&
+    typeof carte['document'] === 'string'
+      ? [carte['document']]
+      : [],
   );
-};
 
 const manquants = (appeles: ReadonlyArray<string>, documents: ReadonlyArray<Document>, dossier: string): ReadonlyArray<string> =>
   appeles
@@ -209,16 +209,19 @@ const relireBibliotheque = (parsed: unknown, fiches: ReadonlyArray<Document>): R
     return INTERDITS.flatMap((interdit) => (interdit.motif.test(texte) ? [`bibliotheque/${fiche.id}.md — ${interdit.raison}`] : []));
   });
 
-  return [...manquants(documentsAppeles(parsed, 'fiche'), fiches, 'bibliotheque'), ...fautives];
+  return [...manquants(documentsAppeles(parsed, false), fiches, 'bibliotheque'), ...fautives];
 };
 
 // 🔴 Les sept familles d'interdits ne s'appliquent pas au corps d'un bilan : un rapport clinique reel nomme
 // des traitements et des diagnostics, et c'est sa raison d'etre. Le titre affiche, lui, reste verifie comme le reste.
 const relireBilans = (parsed: unknown, bilans: ReadonlyArray<Document>): ReadonlyArray<string> =>
-  manquants(documentsAppeles(parsed, 'bilan'), bilans, 'bilans');
+  manquants(documentsAppeles(parsed, true), bilans, 'bilans');
 
-// La documentation et les bilans partent a tout moment ; les etapes qui font agir se decident avec Xavier, en seance.
-const FONT_AGIR = TYPES.filter((type) => type !== 'fiche' && type !== 'bilan');
+// La documentation et les bilans partent a tout moment ; ce qui fait agir se decide avec Xavier, en seance.
+// Une carte fait agir des qu'une de ses etapes rend une reponse — un panneau qui ne fait que lire n'en est pas une.
+const faitAgir = (carte: Record<string, unknown>): boolean =>
+  Array.isArray(carte['etapes']) &&
+  carte['etapes'].some((etape: unknown) => isRecord(etape) && ETAPES_QUI_RENDENT.some((type) => type === etape['type']));
 
 const canonique = (valeur: unknown): string => {
   if (Array.isArray(valeur)) return `[${valeur.map(canonique).join(',')}]`;
@@ -233,15 +236,14 @@ const canonique = (valeur: unknown): string => {
   return JSON.stringify(valeur) ?? 'null';
 };
 
-const etapesQuiFontAgir = (parsed: unknown): ReadonlyMap<string, string> => {
-  if (!isRecord(parsed) || !Array.isArray(parsed['etapes'])) return new Map();
-
-  const retenues = parsed['etapes'].filter(
-    (etape: unknown) => isRecord(etape) && FONT_AGIR.some((type) => type === etape['type']) && typeof etape['id'] === 'string',
+const cartesQuiFontAgir = (parsed: unknown): ReadonlyMap<string, string> =>
+  new Map(
+    cartesDe(parsed).flatMap((carte: unknown): ReadonlyArray<readonly [string, string]> =>
+      isRecord(carte) && faitAgir(carte) && typeof carte['id'] === 'string'
+        ? [[carte['id'], canonique(carte)]]
+        : [],
+    ),
   );
-
-  return new Map(retenues.map((etape: Record<string, unknown>) => [String(etape['id']), canonique(etape)]));
-};
 
 const lireJson = async (chemin: string): Promise<unknown> => {
   const brut = await readFile(chemin, 'utf8').catch(() => null);
@@ -255,8 +257,8 @@ const lireJson = async (chemin: string): Promise<unknown> => {
 };
 
 const relireHorsSeance = async (parsed: unknown, cible: string): Promise<ReadonlyArray<string>> => {
-  const publiees = etapesQuiFontAgir(await lireJson(join(cible, 'programme.json')));
-  const aPublier = etapesQuiFontAgir(parsed);
+  const publiees = cartesQuiFontAgir(await lireJson(join(cible, 'programme.json')));
+  const aPublier = cartesQuiFontAgir(parsed);
 
   const touchees = [
     ...[...aPublier].filter(([id, forme]) => publiees.get(id) !== forme).map(([id]) => id),
@@ -264,7 +266,7 @@ const relireHorsSeance = async (parsed: unknown, cible: string): Promise<Readonl
   ];
 
   return touchees.map(
-    (id) => `${id} — etape qui fait agir, nouvelle ou modifiee : elle se decide avec Xavier, a la cloture d'une seance (--seance)`,
+    (id) => `${id} — carte qui fait agir, nouvelle ou modifiee : elle se decide avec Xavier, a la cloture d'une seance (--seance)`,
   );
 };
 
@@ -364,7 +366,7 @@ const main = async (): Promise<void> => {
   const verses = await convertir(cible, 'bilans', bilans, options.refaireTout);
   await writeFile(join(cible, 'programme.json'), brut, 'utf8');
 
-  const etapes = isRecord(parsed) && Array.isArray(parsed['etapes']) ? parsed['etapes'].length : 0;
+  const cartes = cartesDe(parsed).length;
   const version = isRecord(parsed) ? String(parsed['version']) : '?';
   const supervision = isRecord(parsed) ? String(parsed['supervision']) : '?';
 
@@ -376,7 +378,7 @@ const main = async (): Promise<void> => {
     publication.retirees.forEach((nom) => console.log(`         retire   ${nom}`));
   };
 
-  console.log(`publie   programme.json — version ${version}, ${etapes} etapes`);
+  console.log(`publie   programme.json — version ${version}, ${cartes} cartes`);
   dire('bibliotheque', fiches.length, publiees);
   dire('bilans', bilans.length, verses);
   console.log(`vise par ${supervision}`);

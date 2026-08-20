@@ -21,22 +21,22 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.allonsy.kokoro.R
+import io.allonsy.kokoro.crise.PorteDeCrise
 import io.allonsy.kokoro.crise.PortesDeCrise
-import io.allonsy.kokoro.programme.Etape
+import io.allonsy.kokoro.programme.Carte
 import io.allonsy.kokoro.programme.Faites
-import io.allonsy.kokoro.programme.Fonction
 import io.allonsy.kokoro.programme.Programme
 import io.allonsy.kokoro.programme.Rubrique
-import io.allonsy.kokoro.programme.Support
 import io.allonsy.kokoro.programme.bilans
-import io.allonsy.kokoro.programme.etapesDe
-import io.allonsy.kokoro.programme.fiches
+import io.allonsy.kokoro.programme.cartesDe
+import io.allonsy.kokoro.programme.documents
+import io.allonsy.kokoro.programme.faite
 import io.allonsy.kokoro.programme.moisDe
 import io.allonsy.kokoro.programme.quand
 import io.allonsy.kokoro.ui.BandeTitre
 import io.allonsy.kokoro.ui.BoutonEpais
 import io.allonsy.kokoro.ui.CadreVide
-import io.allonsy.kokoro.ui.Carte
+import io.allonsy.kokoro.ui.Vignette
 import io.allonsy.kokoro.ui.LocalPaletteKokoro
 import io.allonsy.kokoro.ui.Pancarte
 import io.allonsy.kokoro.ui.PictoDehors
@@ -99,13 +99,12 @@ fun ContenuTherapie(
     perchoirs: Perchoirs,
     programme: Programme,
     faites: Faites,
-    checkinFait: Boolean,
     accesPerdu: Boolean,
     onReglages: () -> Unit,
-    onOuvrir: (Etape) -> Unit,
+    onOuvrir: (Carte) -> Unit,
     fige: Boolean = false,
 ) {
-    val aFaire = programme.etapesDe(Rubrique.THERAPIE)
+    val aFaire = programme.cartesDe(Rubrique.THERAPIE)
 
     EcranDeBord(
         titre = stringResource(R.string.monde_therapie_titre),
@@ -139,11 +138,11 @@ fun ContenuTherapie(
                     modifier = Modifier.padding(start = 2.dp),
                 )
             }
-            aFaire.filter { it.quand == section.quand }.forEach { etape ->
-                CarteDEtape(
-                    etape = etape,
-                    faite = rendue(etape, faites, checkinFait),
-                    onClic = { onOuvrir(etape) },
+            aFaire.filter { it.quand == section.quand }.forEach { carte ->
+                CarteDuProgramme(
+                    carte = carte,
+                    faite = faites.faite(carte),
+                    onClic = { onOuvrir(carte) },
                 )
             }
         }
@@ -151,10 +150,11 @@ fun ContenuTherapie(
 }
 
 @Composable
-private fun CarteDEtape(etape: Etape, faite: Boolean, onClic: () -> Unit) {
-    Carte(
-        titre = etape.reperes.titre,
-        duree = etape.reperes.dureeMinutes?.let { stringResource(R.string.monde_duree_minutes, it) },
+private fun CarteDuProgramme(carte: Carte, faite: Boolean, onClic: () -> Unit) {
+    Vignette(
+        titre = carte.reperes.titre,
+        duree = carte.reperes.dureeMinutes?.let { stringResource(R.string.monde_duree_minutes, it) },
+        picto = if (carte is Carte.Pdf) ({ PictoDehors() }) else null,
         faite = faite,
         onClic = onClic,
         modifier = Modifier.padding(bottom = ECART_CARTES),
@@ -197,11 +197,11 @@ private fun Modifier.poser(perchoirs: Perchoirs, poses: List<Perchoir>): Modifie
 fun ContenuDocumentation(
     perchoirs: Perchoirs,
     programme: Programme,
-    onFiche: (Etape.Fiche) -> Unit,
+    onDocument: (Carte.Pdf) -> Unit,
     fige: Boolean = false,
 ) {
     val palette = LocalPaletteKokoro.current
-    val fiches = programme.fiches()
+    val fiches = programme.documents()
 
     EcranDeBord(
         titre = stringResource(R.string.monde_documentation_titre),
@@ -229,22 +229,10 @@ fun ContenuDocumentation(
                 )
             }
             fiches.filter { it.reperes.rubrique == rubrique }.forEach { fiche ->
-                CarteDeFiche(fiche = fiche, onClic = { onFiche(fiche) })
+                CarteDuProgramme(carte = fiche, faite = false, onClic = { onDocument(fiche) })
             }
         }
     }
-}
-
-@Composable
-private fun CarteDeFiche(fiche: Etape.Fiche, onClic: () -> Unit) {
-    val pdf = fiche.support is Support.Pdf
-
-    Carte(
-        titre = fiche.reperes.titre,
-        picto = if (pdf) ({ PictoDehors() }) else null,
-        onClic = onClic,
-        modifier = Modifier.padding(bottom = ECART_CARTES),
-    )
 }
 
 // Documentation : groupé par rubrique, la bibliothèque entière y vit quelle que soit la sienne.
@@ -262,7 +250,7 @@ private fun libelleDe(rubrique: Rubrique): Int = when (rubrique) {
 fun ContenuBilan(
     perchoirs: Perchoirs,
     programme: Programme,
-    onBilan: (Etape.Bilan) -> Unit,
+    onBilan: (Carte.Pdf) -> Unit,
     fige: Boolean = false,
 ) {
     val palette = LocalPaletteKokoro.current
@@ -280,7 +268,7 @@ fun ContenuBilan(
             return@EcranDeBord
         }
 
-        bilans.groupBy { moisDe(it.date) }.toList().forEachIndexed { rang, (mois, duMois) ->
+        bilans.groupBy { moisDe(it.date.orEmpty()) }.toList().forEachIndexed { rang, (mois, duMois) ->
             BandeDeSection(
                 perchoirs = perchoirs,
                 poses = if (rang == 0) listOf(Perchoir.BILAN) else emptyList(),
@@ -292,12 +280,7 @@ fun ContenuBilan(
                 )
             }
             duMois.forEach { bilan ->
-                Carte(
-                    titre = bilan.reperes.titre,
-                    picto = { PictoDehors() },
-                    onClic = { onBilan(bilan) },
-                    modifier = Modifier.padding(bottom = ECART_CARTES),
-                )
+                CarteDuProgramme(carte = bilan, faite = false, onClic = { onBilan(bilan) })
             }
         }
     }
@@ -316,7 +299,7 @@ fun ContenuCriseDuMonde(
     perchoirs: Perchoirs,
     contactNom: String,
     envoiEnCours: Boolean,
-    onFonction: (Fonction) -> Unit,
+    onFonction: (PorteDeCrise) -> Unit,
     onFermer: (() -> Unit)? = null,
 ) {
     EcranDeBord(

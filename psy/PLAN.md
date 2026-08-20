@@ -70,7 +70,7 @@
 🔴 **La fiche de rôle de Chourouk est une dépendance de conception** *(19/08/2026)* : depuis que les critères d'arrêt se cochent **avant** d'entrer et ne sont plus rappelés pendant la séquence, **la fiche porte, hors écran, ce que l'écran ne rappelle plus.** ✅ **Chourouk l'a lue et acceptée le 20/08/2026** — ⚠️ **et c'est un rapport de Xavier, pas un constat du dispositif** : à revérifier de la même façon si la fiche est réécrite. ⚠️ **Ne pas la confondre avec `fiche-chourouk`**, la carte montrée pendant un shutdown — **deux documents, deux usages.**
 
 - [ ] **Écrire la première séance à deux clinique : la stabilisation non visuelle** — kit d'auto-apaisement corporel et sensoriel, **sans aucune imagerie** *(phase 1 de [`README.md`](README.md) §6)*
-- [ ] **Écrire la stimulation bilatérale comme `seance-duo`** — ⭐ **l'aidant fait le geste, Kokoro tient la cadence.** ⚠️ **Bloquée par un point de format** : `sequence` est linéaire et ne sait pas exprimer une **répétition en séries** — §8 ci-dessous
+- [ ] **Écrire la stimulation bilatérale comme carte de `porteur: "aidant"`** — ⭐ **l'aidant fait le geste, Kokoro tient la cadence.** ⚠️ **Bloquée par un point de format** : la suite d'`etapes` est linéaire et ne sait pas exprimer une **répétition en séries** — §8 ci-dessous
 - [ ] **Rouvrir l'EMDR** sous les critères chiffrés de [`README.md`](README.md) §6, **après avis du Dr Isorni**
 - [ ] ⚠️ **Trancher avec le Dr Isorni, au déverrouillage de la phase 3 seulement : qui tient l'instrument quand Xavier verbalise du matériel lourd.** C'est **C10**, et la question se pose **avant**, jamais pendant
 
@@ -81,7 +81,7 @@
 - [ ] 🔴 **Relire [`../companion/PROGRAMME.md`](../companion/PROGRAMME.md) en entier contre le code.** **Deux champs déclarés normatifs et câblés nulle part en deux passes** : la ligne de nouveauté *(retirée du contrat le 20/08)* et **`montrable`, que le parseur ne lit que pour l'interdire sur un bilan** *(`programme/Programme.kt:152`)*. ⚠️ **Sans effet visible tant qu'une fiche part en PDF** — le lecteur du téléphone l'affiche plein écran de toute façon — **mais un contrat qui décrit une interface inexistante est le mode de défaillance C3**, et il ne se trouve qu'en relisant, jamais en écrivant
 - [ ] **Étendre `sequence` à la répétition en séries.** 🔴 **Déplier trente consignes identiques serait un contournement, pas une solution** — le format porterait une cadence sans jamais la nommer, et le Superviseur n'aurait rien à contrôler. **L'extension se décide en séance, sous supervision, avant d'être implémentée**
 - ⚠️ **L'état « l'entraînement a été mené jusqu'au bout » est porté par la mémoire locale de l'app** : une réinstallation l'efface. **Le sens de la défaillance est le bon** — on repropose un entraînement déjà fait — mais c'est une veille, pas un point réglé
-- ⚠️ **`pour` n'est plus affiché à l'écran** : une consigne destinée à Xavier qui ne dit pas *« Lis à voix haute, mot pour mot : … »* **ne sera lue par personne**. **Piège d'écriture pour chaque `seance-duo` à venir**
+- ⚠️ **`pour` n'est plus affiché à l'écran** : une consigne destinée à Xavier qui ne dit pas *« Lis à voix haute, mot pour mot : … »* **ne sera lue par personne**. **Piège d'écriture pour chaque carte tenue par l'aidant à venir**
 
 ---
 

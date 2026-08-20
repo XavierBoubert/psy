@@ -33,27 +33,27 @@
 ## 2. Le circuit du contenu
 
 ```
-Claude Psy ── programme · bibliothèque · bilans ──► Kokoro ── journal + réponses ──► dossier
+Claude Psy ── programme · bibliothèque · bilans ──► Kokoro ── réponses ──► dossier
      ▲               (companion/inputs/)                     (companion/outputs/)       │
      │           🔴 supervision bloquante                                                │
      └────────────────────────── Claude Superviseur ◄───────────────────────────────────┘
                                  (superviseur/outputs/)
 ```
 
-**Claude Psy écrit tout le contenu, Claude Superviseur le vise, Kokoro l'affiche, Xavier l'utilise, et ce que Kokoro recueille revient au dossier.** L'aidant n'entre dans la boucle que sur une étape `seance-duo`, et n'y lit que des consignes.
+**Claude Psy écrit tout le contenu, Claude Superviseur le vise, Kokoro l'affiche, Xavier l'utilise, et ce que Kokoro recueille revient au dossier.** L'aidant n'entre dans la boucle que sur une carte de `porteur: "aidant"`, et n'y lit que des consignes.
 
 **Les deux mouvements sont scriptés, jamais faits à la main :**
 
 | Sens | Commande | Ce qui passe |
 |---|---|---|
 | PC → Kokoro | **`npm run psy:publish`** | `companion/inputs/programme.json` + `companion/inputs/bibliotheque/` + `companion/inputs/bilans/` |
-| Kokoro → PC | **`npm run psy:sync`** | `companion/outputs/journal/` + `companion/outputs/reponses/` |
+| Kokoro → PC | **`npm run psy:sync`** | `companion/outputs/reponses/`, dont le script **reconstruit** `companion/outputs/journal/` |
 
 🔴 **`psy:publish` refuse la publication entière** si un invariant est enfreint ou si la supervision de la version qui sort manque *(voir [`superviseur/README.md`](superviseur/README.md))*. **Un refus se corrige, il ne se contourne pas** — aucune option de forçage n'existe, et il ne doit jamais en exister une.
 
 ⭐ **Les deux surfaces vérifient les mêmes interdits et ne réagissent pas pareil, volontairement.** Le PC **refuse tout** — ici on peut corriger, donc on corrige. **Kokoro écarte la seule ligne fautive et affiche le reste** — sur le téléphone on ne peut rien corriger, et perdre tout le programme pour une ligne serait pire.
 
-⭐ **La documentation se publie à tout moment ; le reste du programme se publie à la clôture d'une séance.** Une fiche est à portée dès qu'elle est écrite et supervisée — **Xavier n'attend pas la séance suivante pour comprendre ce qui lui arrive**. Les étapes qui font agir — `ecran`, `exercice`, `questionnaire`, `demarche`, `seance-duo` — se décident avec lui, en séance. **La supervision est bloquante dans les deux cas, et toute publication s'annonce à Xavier au moment où elle se fait.**
+⭐ **La documentation se publie à tout moment ; le reste du programme se publie à la clôture d'une séance.** Une fiche est à portée dès qu'elle est écrite et supervisée — **Xavier n'attend pas la séance suivante pour comprendre ce qui lui arrive**. Les cartes qui font agir — celles dont une étape renvoie une réponse — se décident avec lui, en séance. **La supervision est bloquante dans les deux cas, et toute publication s'annonce à Xavier au moment où elle se fait.**
 
 ### 🔴 Les cinq points où une erreur sort du dispositif
 
@@ -91,7 +91,7 @@ Une erreur interne se corrige. Une erreur qui **sort** atteint quelqu'un.
 | **PC → Kokoro** | `programme.json` — la thérapie du moment | Claude Psy | *(source : `companion/inputs/`)* |
 | **PC → Kokoro** | `bibliotheque/*.pdf` — la documentation accessible à Xavier. ⭐ **Le Markdown ne part pas** : `psy:publish` le convertit en PDF, et Kokoro le confie au lecteur du téléphone | Claude Psy | *(source : `companion/inputs/bibliotheque/*.md`)* |
 | **PC → Kokoro** | `bilans/*.pdf` — les comptes rendus que Xavier possède déjà. ⭐ **Canal distinct de la bibliothèque** : un bilan n'est ni écrit pour lui, ni lisible par l'aidant | Claude Psy | *(source : `companion/inputs/bilans/*.md`)* |
-| **Kokoro → PC** | `journal/AAAA-MM-JJ.json` — les check-ins | Kokoro | `companion/outputs/journal/` |
+| **Kokoro → PC** | `reponses/AAAA-MM-JJ-HHMM-<id>.json` — dont la carte `check-in`, d'où `psy:sync` reconstruit le journal | Kokoro | `companion/outputs/reponses/` puis `journal/` |
 | **Kokoro → PC** | `reponses/AAAA-MM-JJ-HHMM-<id>.json` — ce qui a été fait | Kokoro | `companion/outputs/reponses/` |
 
 **Ce qui ne transite jamais — et la liste est fermée :** `profil.md` · `etat.md` · `seances/` · `crises/` · `mesures/` · `briefs/` · `psy/docs/gabarits/` · `superviseur/outputs/` · `psy/docs/corpus/` · `psy/docs/protocoles/` *(à l'état brut)* · `psy/docs/references/` · `patient/ressources/` · `aidant/ressources/` · le code · `.git`.
@@ -100,7 +100,7 @@ Une erreur interne se corrige. Une erreur qui **sort** atteint quelqu'un.
 >
 > ⚠️ **Le bilan est la seule exception, et elle est écrite** : ni dérivé ni extrait, **c'est un compte rendu que Xavier possède déjà**, versé tel quel par le canal `bilans/`. **C9 n'y a pas de prise** — la question devient : *ce document ne contient rien qu'il ne sache déjà*.
 >
-> ✅ **Aucun fichier n'a deux auteurs.** `programme.json`, `bibliotheque/` et `bilans/` sont écrits par le PC seul ; `journal/` et `reponses/` par Kokoro seul. **C'est une condition de l'arbitrage, pas une observation** — c'est ce qui rend le risque de conflit tolérable.
+> ✅ **Aucun fichier n'a deux auteurs.** `programme.json`, `bibliotheque/` et `bilans/` sont écrits par le PC seul ; `reponses/` par Kokoro seul. **C'est une condition de l'arbitrage, pas une observation** — c'est ce qui rend le risque de conflit tolérable.
 
 ### L'arborescence du transit
 
@@ -161,7 +161,7 @@ H:\Mon Drive\kokoro\               ← hors dépôt, jamais partagé
 | Document | Ce qu'il fixe |
 |---|---|
 | 🔴 [`psy/DOSSIER.md`](psy/DOSSIER.md) | **Le format du dossier clinique** — les six règles invariables, l'arborescence, et le contrat de chaque type de fichier |
-| 🔴 [`companion/PROGRAMME.md`](companion/PROGRAMME.md) | **Le format du programme et de la bibliothèque** — les six types d'étape, les rubriques, les interdits vérifiés à la publication |
+| 🔴 [`companion/PROGRAMME.md`](companion/PROGRAMME.md) | **Le format du programme et de la bibliothèque** — les deux types de carte, les six types d'étape, les rubriques, les interdits vérifiés à la publication |
 | 🔴 [`superviseur/README.md`](superviseur/README.md) | **La supervision** — les dix contrôles, et le câblage qui la rend bloquante |
 | 🔴 [`THESAURUS.md`](THESAURUS.md) | **Le vocabulaire** — un mot, une chose |
 | 🔴 §3 ci-dessus | **Le transit** — ce qui a le droit de quitter le PC |
@@ -174,8 +174,8 @@ Tous s'exécutent depuis la racine, et **les arguments de chemin sont résolus p
 
 | Commande | Source | Objet |
 |---|---|---|
-| `npm run psy:publish` | `psy/scripts/psy-publish.ts` | 🔴 **Publie la thérapie, la bibliothèque et les bilans vers Kokoro.** Valide le programme, chaque fiche et chaque bilan, **vérifie la supervision**, **convertit en PDF** *(seuls les documents qui ont changé)*, **retire du transit ce que le programme n'appelle plus**, et **refuse la publication entière** au moindre manquement. ⭐ **Sans `--seance`, une étape qui fait agir nouvelle ou modifiée est refusée** — seules la documentation et les bilans partent hors séance. `--refaire` reconvertit tout |
-| `npm run psy:sync` | `psy/scripts/psy-sync.ts` | ⭐ **Verse au dépôt tout ce que Kokoro a écrit** — `journal/` et `reponses/`. **N'écrase jamais un fichier existant**, valide chaque fichier, signale tout nom hors convention |
+| `npm run psy:publish` | `psy/scripts/psy-publish.ts` | 🔴 **Publie la thérapie, la bibliothèque et les bilans vers Kokoro.** Valide le programme, chaque fiche et chaque bilan, **vérifie la supervision**, **convertit en PDF** *(seuls les documents qui ont changé)*, **retire du transit ce que le programme n'appelle plus**, et **refuse la publication entière** au moindre manquement. ⭐ **Sans `--seance`, une carte qui fait agir nouvelle ou modifiée est refusée** — seules la documentation et les bilans partent hors séance. `--refaire` reconvertit tout |
+| `npm run psy:sync` | `psy/scripts/psy-sync.ts` | ⭐ **Verse au dépôt tout ce que Kokoro a écrit** — `reponses/`, et **reconstruit `journal/` depuis les réponses de la carte `check-in`**. **N'écrase jamais un fichier existant**, valide chaque fichier, signale tout nom hors convention |
 | `npm run psy:pdf2md` | `psy/scripts/psy-pdf2md.ts` | Convertit un PDF en Markdown. `-- <source.pdf> <destination.md>` |
 | `npm run psy:docx2md` | `psy/scripts/psy-docx2md.ts` | Convertit un DOCX en Markdown. `-- <source.docx> <destination.md>` |
 | `npm run psy:md2pdf` | `psy/scripts/psy-md2pdf.ts` | Convertit un Markdown en PDF *(Puppeteer/Chromium headless)*. ⭐ **Format liseuse — page 90 × 155 mm, corps 12 pt** : le PDF se lit ajusté à la largeur d'un écran de téléphone, une page par écran. `-- <source.md> <destination.pdf>` |

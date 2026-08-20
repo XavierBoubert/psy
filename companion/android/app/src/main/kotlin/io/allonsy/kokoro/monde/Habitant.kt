@@ -99,7 +99,8 @@ private const val FONDU_ZZZ_MILLIS = 600
 
 fun ecartDeSortie(largeur: Float, sortie: Float): Float = largeur * sortie
 
-const val HEURE_DU_CHECKIN = 18
+// Passé cette heure, la liste du jour est ce qu'il désigne : avant, il n'y a rien à presser.
+const val HEURE_DU_SOIR = 18
 
 enum class Perchoir { AUJOURDHUI, SANS_DATE, DOCUMENTATION, BILAN, CRISE, PLAFOND }
 
@@ -140,7 +141,6 @@ data class Place(
 
 data class Sejour(
     val heure: Int,
-    val checkinFait: Boolean,
     val vides: Set<Ecran> = emptySet(),
     val toutFait: Boolean = false,
 )
@@ -152,9 +152,9 @@ fun place(ecran: Ecran, sejour: Sejour): Place? {
 
 private fun placeOrdinaire(ecran: Ecran, sejour: Sejour): Place? = when (ecran) {
     Ecran.THERAPIE -> when {
-        sejour.heure < HEURE_DU_CHECKIN -> pensifDevantLaListe()
+        sejour.heure < HEURE_DU_SOIR -> pensifDevantLaListe()
         sejour.toutFait -> plusRienAMontrer()
-        else -> montreLeCheckin(sejour.checkinFait)
+        else -> montreLaListe()
     }
 
     Ecran.DOCUMENTATION -> Place(
@@ -198,11 +198,10 @@ private fun plusRienAMontrer() = Place(
     expression = Expression.CHALEUREUX,
 )
 
-private fun montreLeCheckin(checkinFait: Boolean) = Place(
+private fun montreLaListe() = Place(
     perchoir = Perchoir.AUJOURDHUI,
     cadrage = Cadrage.A_DROITE,
     posture = Posture.Montre(Cote.GAUCHE),
-    expression = if (checkinFait) Expression.CHALEUREUX else null,
 )
 
 // Vrai quand la bande visée a défilé au-dessus du bandeau : en vol la pose d'arrivée n'est pas encore la sienne.

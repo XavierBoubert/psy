@@ -11,13 +11,13 @@ import io.allonsy.kokoro.corps.Posture
 import io.allonsy.kokoro.corps.Vol
 import io.allonsy.kokoro.corps.ombre
 import io.allonsy.kokoro.corps.reglage
+import io.allonsy.kokoro.programme.Carte
 import io.allonsy.kokoro.programme.Etape
 import io.allonsy.kokoro.programme.PROGRAMME_ABSENT
 import io.allonsy.kokoro.programme.Programme
 import io.allonsy.kokoro.programme.Quand
 import io.allonsy.kokoro.programme.Reperes
 import io.allonsy.kokoro.programme.Rubrique
-import io.allonsy.kokoro.programme.Support
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
@@ -28,35 +28,34 @@ private val TAILLE = Size(72f, 60f)
 
 private const val PRECISION = 1e-4f
 
-private val FICHE = Etape.Fiche(
+private val FICHE = Carte.Pdf(
     reperes = Reperes("fiche-chourouk", "Pour Chourouk", Rubrique.CRISE, Quand.AU_BESOIN, null),
-    support = Support.Pdf("fiche-chourouk"),
+    document = "fiche-chourouk",
 )
 
-private val DEMARCHE = Etape.Demarche(
+private val DEMARCHE = Carte.Panneau(
     reperes = Reperes("ppc-releve", "Demander le relevé", Rubrique.THERAPIE, Quand.SANS_DATE, null),
-    detail = "Des chiffres, pas une impression.",
+    etapes = listOf(Etape.Confirmation("C'est fait")),
 )
 
 class HabitantTest {
 
     private fun sejour(
         heure: Int = 9,
-        checkinFait: Boolean = false,
         vides: Set<Ecran> = emptySet(),
         toutFait: Boolean = false,
-    ) = Sejour(heure = heure, checkinFait = checkinFait, vides = vides, toutFait = toutFait)
+    ) = Sejour(heure = heure, vides = vides, toutFait = toutFait)
 
     // E13, Xavier 16/08/2026 (après refus superviseur du 15/08) : écran de crise = veille fixe, indépendante de tout état.
     @Test
     fun `l'ecran de crise porte une veille, et rien de plus`() {
         val places = listOf(0, 12, 17, 18, 23).flatMap { heure ->
-            listOf(true, false).map { fait ->
-                place(Ecran.CRISE, sejour(heure = heure, checkinFait = fait))
+            listOf(true, false).map { toutFait ->
+                place(Ecran.CRISE, sejour(heure = heure, toutFait = toutFait))
             }
         }
         assertEquals(
-            "L'écran de crise ne réagit à rien : ni à l'heure, ni au check-in",
+            "L'écran de crise ne réagit à rien : ni à l'heure, ni à ce qui reste à faire",
             1,
             places.toSet().size,
         )
@@ -83,13 +82,13 @@ class HabitantTest {
     }
 
     @Test
-    fun `il bascule vers le check in a dix huit heures`() {
-        (0 until HEURE_DU_CHECKIN).forEach { heure ->
+    fun `il bascule vers la liste du jour a dix huit heures`() {
+        (0 until HEURE_DU_SOIR).forEach { heure ->
             val place = place(Ecran.THERAPIE, sejour(heure = heure))
             assertEquals("À ${heure}h il est pensif", Posture.Pensif, place?.posture)
             assertEquals("À ${heure}h il se tient devant Sans date", Perchoir.SANS_DATE, place?.perchoir)
         }
-        (HEURE_DU_CHECKIN..23).forEach { heure ->
+        (HEURE_DU_SOIR..23).forEach { heure ->
             val place = place(Ecran.THERAPIE, sejour(heure = heure))
             assertEquals("À ${heure}h il montre", Posture.Montre(Cote.GAUCHE), place?.posture)
             assertEquals("À ${heure}h il se tient devant Aujourd'hui", Perchoir.AUJOURDHUI, place?.perchoir)
@@ -99,15 +98,15 @@ class HabitantTest {
     // Xavier, 20/08/2026 : plus rien à faire aujourd'hui, plus de bras levé — désigner une liste finie ne désigne rien.
     @Test
     fun `tout fait, il repose le bras`() {
-        (HEURE_DU_CHECKIN..23).forEach { heure ->
-            val place = place(Ecran.THERAPIE, sejour(heure = heure, checkinFait = true, toutFait = true))
+        (HEURE_DU_SOIR..23).forEach { heure ->
+            val place = place(Ecran.THERAPIE, sejour(heure = heure, toutFait = true))
             assertEquals("À ${heure}h il n'a plus rien à montrer", Posture.Repos, place?.posture)
             assertEquals("Chaleureux dit le fait accompli", Expression.CHALEUREUX, place?.expression)
             assertEquals(Perchoir.AUJOURDHUI, place?.perchoir)
         }
-        (0 until HEURE_DU_CHECKIN).forEach { heure ->
+        (0 until HEURE_DU_SOIR).forEach { heure ->
             assertEquals(
-                "Avant ${HEURE_DU_CHECKIN}h il n'a jamais eu le bras levé",
+                "Avant ${HEURE_DU_SOIR}h il n'a jamais eu le bras levé",
                 Posture.Pensif,
                 place(Ecran.THERAPIE, sejour(heure = heure, toutFait = true))?.posture,
             )
@@ -115,22 +114,21 @@ class HabitantTest {
     }
 
     @Test
-    fun `le check in seul fait ne suffit pas a reposer le bras`() {
-        val place = place(Ecran.THERAPIE, sejour(heure = 20, checkinFait = true, toutFait = false))
+    fun `une seule carte du jour restante suffit a garder le bras leve`() {
+        val place = place(Ecran.THERAPIE, sejour(heure = 20, toutFait = false))
         assertEquals(Posture.Montre(Cote.GAUCHE), place?.posture)
     }
 
-    // §4.4 : chaleureux n'a pas de contraire — rien ne doit signaler qu'une étape n'est pas faite.
+    // §4.4 : chaleureux n'a pas de contraire — rien ne doit signaler qu'une carte n'est pas faite.
     @Test
-    fun `le check in non fait ne se voit nulle part`() {
-        val fait = place(Ecran.THERAPIE, sejour(heure = 20, checkinFait = true))
-        val pasFait = place(Ecran.THERAPIE, sejour(heure = 20, checkinFait = false))
-        assertNotNull(fait)
-        assertNotNull(pasFait)
+    fun `ce qui reste a faire ne se signale nulle part`() {
+        val fini = place(Ecran.THERAPIE, sejour(heure = 20, toutFait = true))
+        val reste = place(Ecran.THERAPIE, sejour(heure = 20, toutFait = false))
+        assertNotNull(fini)
+        assertNotNull(reste)
 
-        assertEquals("Seule l'expression sépare les deux états", pasFait, fait?.copy(expression = null))
-        assertEquals(Expression.CHALEUREUX, fait?.expression)
-        assertNull("Rien ne dit qu'une étape n'est pas faite", pasFait?.expression)
+        assertEquals(Expression.CHALEUREUX, fini?.expression)
+        assertNull("Rien ne dit qu'une carte n'est pas faite", reste?.expression)
     }
 
     @Test
@@ -150,7 +148,7 @@ class HabitantTest {
 
     @Test
     fun `une fiche publiee reveille la documentation, jamais le bilan`() {
-        val programme = Programme(version = 2, etapes = listOf(FICHE))
+        val programme = Programme(version = 2, cartes = listOf(FICHE))
 
         assertEquals(setOf(Ecran.THERAPIE, Ecran.BILAN), videsDe(programme))
 
@@ -183,16 +181,16 @@ class HabitantTest {
         Ecran.entries.forEach { ecran ->
             assertTrue(
                 "$ecran l'endort sans qu'on sache encore ce qu'il y a dedans",
-                place(ecran, Sejour(heure = 9, checkinFait = false))?.posture != Posture.Sommeil,
+                place(ecran, Sejour(heure = 9))?.posture != Posture.Sommeil,
             )
         }
     }
 
     @Test
-    fun `une etape de therapie publiee reveille la therapie`() {
+    fun `une carte de therapie publiee reveille la therapie`() {
         assertEquals(
             setOf(Ecran.DOCUMENTATION, Ecran.BILAN),
-            videsDe(Programme(version = 2, etapes = listOf(DEMARCHE))),
+            videsDe(Programme(version = 2, cartes = listOf(DEMARCHE))),
         )
     }
 

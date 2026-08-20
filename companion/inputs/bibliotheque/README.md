@@ -34,4 +34,4 @@ C'est le contrôle **C9** du Superviseur — [`superviseur/README.md` §3](../..
 3. `npm run psy:publish` la copie vers le dossier de transit Drive, **hors séance si besoin**.
 4. **Elle s'annonce à Xavier au moment où elle est publiée**, dans la conversation en cours.
 
-⭐ **La documentation ne se met pas en file d'attente.** Une fiche qui répond à une question posée aujourd'hui sert aujourd'hui — ce qui doit attendre la séance, ce sont les étapes qui font agir.
+⭐ **La documentation ne se met pas en file d'attente.** Une fiche qui répond à une question posée aujourd'hui sert aujourd'hui — ce qui doit attendre la séance, ce sont les cartes qui font agir.

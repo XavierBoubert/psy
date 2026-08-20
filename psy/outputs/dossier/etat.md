@@ -154,7 +154,7 @@ Nourrisson né en 2026 (nuits fragmentées, charge sensorielle maximale **au dom
 
 | Sujet | Statut |
 |---|---|
-| **EMDR — retraitement** | ⏸️ Suspendu (arbitrage du 08/08/2026 : on commence par la TCC). ⭐ **Décision du 14/08/2026 : la stimulation bilatérale est jouée par l'aidant en `seance-duo` — c'est un geste, pas un logiciel.** 🔴 **Ça ne déverrouille rien : tenir l'instrument n'est pas conduire un retraitement.** Réouverture sous les critères chiffrés du **PLAN §3.6**, après avis du Dr Isorni. ⚠️ **Une condition de plus en phase 3** : un retraitement fait dire ce qui vient, donc **l'aide entend le matériel** — c'est C10, à trancher avec le Dr Isorni **avant**, jamais pendant. |
+| **EMDR — retraitement** | ⏸️ Suspendu (arbitrage du 08/08/2026 : on commence par la TCC). ⭐ **Décision du 14/08/2026 : la stimulation bilatérale est jouée par l'aidant sur une carte qu'elle tient — c'est un geste, pas un logiciel.** 🔴 **Ça ne déverrouille rien : tenir l'instrument n'est pas conduire un retraitement.** Réouverture sous les critères chiffrés du **PLAN §3.6**, après avis du Dr Isorni. ⚠️ **Une condition de plus en phase 3** : un retraitement fait dire ce qui vient, donc **l'aide entend le matériel** — c'est C10, à trancher avec le Dr Isorni **avant**, jamais pendant. |
 | **Psychologue en présentiel** | Écarté — **dette assumée**, à rediscuter une fois le dispositif en place. |
 | **Trauma d'enfance / TSPT** | Jamais évalué. Exploration légitime, pas maintenant. |
 

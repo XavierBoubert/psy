@@ -21,41 +21,38 @@ import io.allonsy.kokoro.crise.CriseActivity
 import io.allonsy.kokoro.crise.ECRAN_MOT_CODE
 import io.allonsy.kokoro.crise.EXTRA_ECHEC
 import io.allonsy.kokoro.crise.EXTRA_ECRAN
+import io.allonsy.kokoro.crise.PorteDeCrise
 import io.allonsy.kokoro.crise.creerCanalAcces
 import io.allonsy.kokoro.crise.publierAccesCrise
 import io.allonsy.kokoro.crise.tenterMotCode
 import io.allonsy.kokoro.decor.DECOR_JOUR
 import io.allonsy.kokoro.decor.DECOR_NUIT
 import io.allonsy.kokoro.decor.PaletteDecor
-import io.allonsy.kokoro.journal.Champ
-import io.allonsy.kokoro.journal.Checkin
-import io.allonsy.kokoro.journal.EtapeJournal
-import io.allonsy.kokoro.journal.QUESTIONS
-import io.allonsy.kokoro.journal.ResultatEcriture
-import io.allonsy.kokoro.journal.checkinDuJourExiste
-import io.allonsy.kokoro.journal.cheminAffichable
-import io.allonsy.kokoro.journal.ecrireCheckin
-import io.allonsy.kokoro.journal.enregistrerDossier
-import io.allonsy.kokoro.journal.entrainementsMenes
-import io.allonsy.kokoro.journal.marquerEntrainement
-import io.allonsy.kokoro.journal.intentChoisirDossier
-import io.allonsy.kokoro.journal.jourCourant
-import io.allonsy.kokoro.journal.lireDossier
-import io.allonsy.kokoro.journal.ecrireReponse
-import io.allonsy.kokoro.journal.listerReponses
-import io.allonsy.kokoro.journal.pdfDeLaBibliotheque
-import io.allonsy.kokoro.journal.pdfDuBilan
-import io.allonsy.kokoro.journal.texteDuProgramme
-import io.allonsy.kokoro.journal.valeursReprises
+import io.allonsy.kokoro.dossier.ResultatEcriture
+import io.allonsy.kokoro.dossier.cheminAffichable
+import io.allonsy.kokoro.dossier.derniereReponse
+import io.allonsy.kokoro.dossier.ecrireReponse
+import io.allonsy.kokoro.dossier.enregistrerDossier
+import io.allonsy.kokoro.dossier.entrainementsMenes
+import io.allonsy.kokoro.dossier.intentChoisirDossier
+import io.allonsy.kokoro.dossier.jourCourant
+import io.allonsy.kokoro.dossier.lireDossier
+import io.allonsy.kokoro.dossier.listerReponses
+import io.allonsy.kokoro.dossier.marquerEntrainement
+import io.allonsy.kokoro.dossier.pdfDeLaBibliotheque
+import io.allonsy.kokoro.dossier.pdfDuBilan
+import io.allonsy.kokoro.dossier.texteDuProgramme
 import io.allonsy.kokoro.programme.AUCUNE_FAITE
+import io.allonsy.kokoro.programme.Carte
+import io.allonsy.kokoro.programme.Etape
 import io.allonsy.kokoro.programme.Faites
-import io.allonsy.kokoro.programme.Fonction
 import io.allonsy.kokoro.programme.Issue
 import io.allonsy.kokoro.programme.PROGRAMME_ABSENT
 import io.allonsy.kokoro.programme.Programme
 import io.allonsy.kokoro.programme.ReponseItem
 import io.allonsy.kokoro.programme.lireProgramme
 import io.allonsy.kokoro.programme.reponseDe
+import io.allonsy.kokoro.programme.valeursDeLaReponse
 import io.allonsy.kokoro.reglages.EtatAutorisations
 import io.allonsy.kokoro.reglages.REGLAGES_INITIAUX
 import io.allonsy.kokoro.reglages.ecrireReglages
@@ -69,9 +66,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalTime
 
-// Depuis CriseActivity (JournalActivity n'existe plus) : demande d'ouvrir directement le panneau check-in.
-const val EXTRA_OUVRIR_CHECKIN = "ouvrir_checkin"
-
 // Ne s'affiche jamais par-dessus le verrouillage : c'est CriseActivity qui porte cette déclaration dans le manifeste.
 class MondeActivity : ComponentActivity() {
     private val nuit = mutableStateOf(false)
@@ -79,19 +73,13 @@ class MondeActivity : ComponentActivity() {
     private val accuse = mutableStateOf<String?>(null)
     private val envoiEnCours = mutableStateOf(false)
     private val accesPerdu = mutableStateOf(false)
-    private val sejour = mutableStateOf(Sejour(heure = 0, checkinFait = false))
+    private val sejour = mutableStateOf(Sejour(heure = 0))
     private val programme = mutableStateOf(PROGRAMME_ABSENT)
     private val faites = mutableStateOf(AUCUNE_FAITE)
 
-    // Ex-MainActivity : la roue dentée ouvre désormais un panneau interne, plus une Activity.
+    // Ex-MainActivity : la roue dentée ouvre un panneau interne, plus une Activity.
     private val autorisations = mutableStateOf(EtatAutorisations(false, false, false))
     private val dossier = mutableStateOf<String?>(null)
-
-    // Ex-JournalActivity : même raison — le check-in est un panneau interne.
-    private val etapeCheckin = mutableStateOf<EtapeJournal>(EtapeJournal.Repondre(0))
-    private val checkin = mutableStateOf(Checkin.vide(""))
-    private val repris = mutableStateOf<Map<Champ, Double>>(emptyMap())
-    private val ouvrirCheckinDemande = mutableStateOf(false)
 
     private val choixDossier = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult(),
@@ -99,7 +87,6 @@ class MondeActivity : ComponentActivity() {
         resultat.data?.data?.let { arbre ->
             enregistrerDossier(this, arbre)
             relire()
-            demarrerCheckin()
         }
     }
 
@@ -126,15 +113,13 @@ class MondeActivity : ComponentActivity() {
         creerCanalAcces(this)
         creerCanalAlerte(this)
         relire()
-        demarrerCheckin()
-        lireExtras(intent)
         setContent {
             ThemeMonde(nuit = nuit.value) {
                 MondeKokoro(
                     palette = paletteDuMoment(nuit.value),
                     contactNom = reglages.value.contactNom,
                     sejour = sejour.value,
-                    onFonction = { ouvrir(it) },
+                    onPorteDeCrise = { ouvrir(it) },
                     donneesReglages = DonneesReglages(
                         autorisations = autorisations.value,
                         reglages = reglages.value,
@@ -146,24 +131,11 @@ class MondeActivity : ComponentActivity() {
                         },
                         onChoisirDossier = { choixDossier.launch(intentChoisirDossier()) },
                     ),
-                    donneesCheckin = DonneesCheckin(
-                        etape = etapeCheckin.value,
-                        checkin = checkin.value,
-                        repris = repris.value,
-                        onRepondre = { champ, valeur -> repondreCheckin(champ, valeur) },
-                        onNote = { enregistrerCheckin(checkin.value.copy(notes = it)) },
-                        onChoisirDossier = { choixDossier.launch(intentChoisirDossier()) },
-                        onArreter = { enregistrerCheckin(checkin.value) },
-                        onOuverture = { demarrerCheckin() },
-                    ),
                     programme = programme.value,
                     faites = faites.value,
-                    onRendu = { etape, issue, items -> enregistrerReponse(etape, issue, items) },
-                    onEntrainement = { etape -> retenirLEntrainement(etape) },
-                    onPdf = { document -> ouvrirLeDocument { pdfDeLaBibliotheque(this@MondeActivity, document) } },
-                    onBilan = { document -> ouvrirLeDocument { pdfDuBilan(this@MondeActivity, document) } },
-                    ouvrirCheckin = ouvrirCheckinDemande.value,
-                    onCheckinOuvert = { ouvrirCheckinDemande.value = false },
+                    onRendu = { carte, issue, items -> enregistrerReponse(carte, issue, items) },
+                    onEntrainement = { carte -> retenirLEntrainement(carte) },
+                    onPdf = { carte -> ouvrirLeDocument(carte) },
                     parallaxe = reglages.value.parallaxe,
                     envoiEnCours = envoiEnCours.value,
                     accesPerdu = accesPerdu.value,
@@ -175,12 +147,6 @@ class MondeActivity : ComponentActivity() {
                 )
             }
         }
-    }
-
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        setIntent(intent)
-        lireExtras(intent)
     }
 
     override fun onResume() {
@@ -199,7 +165,7 @@ class MondeActivity : ComponentActivity() {
         accesPerdu.value = !publierAccesCrise(this)
         autorisations.value = lireAutorisations(this)
         dossier.value = cheminAffichable(this, lireDossier(this))
-        relireLeSejour()
+        sejour.value = sejour.value.copy(heure = LocalTime.now().hour)
         relireLeProgramme()
     }
 
@@ -208,11 +174,13 @@ class MondeActivity : ComponentActivity() {
         lifecycleScope.launch {
             val lu = withContext(Dispatchers.IO) { programmeDuDossier() }
             val rendues = withContext(Dispatchers.IO) { listerReponses(this@MondeActivity) }
+            val reprises = withContext(Dispatchers.IO) { reprisesDuProgramme(lu) }
             programme.value = lu
             faites.value = Faites(
                 jour = jourCourant(),
                 reponses = rendues,
                 entrainements = entrainementsMenes(this@MondeActivity),
+                reprises = reprises,
             )
             sejour.value = sejour.value.copy(vides = videsDe(lu))
         }
@@ -221,11 +189,21 @@ class MondeActivity : ComponentActivity() {
     private fun programmeDuDossier(): Programme =
         texteDuProgramme(this)?.let(::lireProgramme) ?: PROGRAMME_ABSENT
 
+    // Une question qui se reprend repart de la dernière valeur donnée : Xavier ne redonne pas ce qu'il a déjà donné.
+    private fun reprisesDuProgramme(programme: Programme): Map<String, Double> =
+        programme.cartes
+            .filterIsInstance<Carte.Panneau>()
+            .filter { carte -> carte.etapes.any { it is Etape.Question && it.reprise } }
+            .flatMap { carte ->
+                derniereReponse(this, carte.reperes.id)?.let(::valeursDeLaReponse)?.toList().orEmpty()
+            }
+            .toMap()
+
     // Le nom écrit rejoint la liste sans relire Drive : la carte se grise au tap, pas à la prochaine synchronisation.
-    private fun enregistrerReponse(etape: String, issue: Issue, items: List<ReponseItem>) {
+    private fun enregistrerReponse(carte: String, issue: Issue, items: List<ReponseItem>) {
         lifecycleScope.launch {
             val resultat = withContext(Dispatchers.IO) {
-                ecrireReponse(this@MondeActivity, reponseDe(etape, issue, items = items))
+                ecrireReponse(this@MondeActivity, reponseDe(carte, issue, items = items))
             }
             accuse.value = when (resultat) {
                 is ResultatEcriture.Ecrit -> {
@@ -240,15 +218,15 @@ class MondeActivity : ComponentActivity() {
         }
     }
 
-    private fun retenirLEntrainement(etape: String) {
-        marquerEntrainement(this, etape)
-        faites.value = faites.value.copy(entrainements = faites.value.entrainements + etape)
+    private fun retenirLEntrainement(carte: String) {
+        marquerEntrainement(this, carte)
+        faites.value = faites.value.copy(entrainements = faites.value.entrainements + carte)
     }
 
     // Deux échecs distincts, deux phrases distinctes : le document n'est pas arrivé, ou le téléphone n'a pas de lecteur.
-    private fun ouvrirLeDocument(resoudre: () -> Uri?) {
+    private fun ouvrirLeDocument(carte: Carte.Pdf) {
         lifecycleScope.launch {
-            val pdf = withContext(Dispatchers.IO) { resoudre() }
+            val pdf = withContext(Dispatchers.IO) { resoudreLePdf(carte) }
             accuse.value = when {
                 pdf == null -> getString(R.string.bibliotheque_document_absent)
                 ouvrirLePdf(this@MondeActivity, pdf) -> null
@@ -257,52 +235,16 @@ class MondeActivity : ComponentActivity() {
         }
     }
 
-    // Lu hors fil principal, sans état intermédiaire affiché : le défaut est « pas fait », et ça ne se voit pas.
-    private fun relireLeSejour() {
-        sejour.value = sejour.value.copy(heure = LocalTime.now().hour)
-        lifecycleScope.launch {
-            val fait = withContext(Dispatchers.IO) { checkinDuJourExiste(this@MondeActivity, jourCourant()) }
-            sejour.value = sejour.value.copy(checkinFait = fait)
+    // 🔴 Un bilan ne passe pas par la bibliothèque : canal distinct au dépôt, dossier distinct dans le transit.
+    private fun resoudreLePdf(carte: Carte.Pdf): Uri? =
+        if (carte.date == null) {
+            pdfDeLaBibliotheque(this, carte.document)
+        } else {
+            pdfDuBilan(this, carte.document)
         }
-    }
 
-    // demarrerCheckin() n'est pas rejoué ici : MondeKokoro le fait déjà via onOuverture en ouvrant le panneau.
-    private fun lireExtras(depuis: Intent) {
-        if (depuis.getBooleanExtra(EXTRA_OUVRIR_CHECKIN, false)) {
-            ouvrirCheckinDemande.value = true
-        }
-    }
-
-    // Même logique que l'ex-JournalActivity.demarrer() : rejouée à chaque ouverture, plus une seule fois au lancement.
-    private fun demarrerCheckin() {
-        val jour = jourCourant()
-        checkin.value = Checkin.vide(jour)
-        etapeCheckin.value = when {
-            lireDossier(this) == null -> EtapeJournal.DossierAbsent
-            checkinDuJourExiste(this, jour) -> EtapeJournal.DejaEcrit
-            else -> EtapeJournal.Repondre(0)
-        }
-        repris.value = if (etapeCheckin.value is EtapeJournal.Repondre) valeursReprises(this, jour) else emptyMap()
-    }
-
-    private fun repondreCheckin(champ: Champ, valeur: Double?) {
-        checkin.value = checkin.value.avec(champ, valeur)
-        val suivant = (etapeCheckin.value as? EtapeJournal.Repondre)?.index?.plus(1) ?: return
-        etapeCheckin.value = if (suivant < QUESTIONS.size) EtapeJournal.Repondre(suivant) else EtapeJournal.Note
-    }
-
-    private fun enregistrerCheckin(aEcrire: Checkin) {
-        etapeCheckin.value = when (val resultat = ecrireCheckin(this, aEcrire)) {
-            is ResultatEcriture.Ecrit -> EtapeJournal.Enregistre(resultat.nom)
-            ResultatEcriture.DossierAbsent -> EtapeJournal.DossierAbsent
-            ResultatEcriture.DejaEcritAujourdhui -> EtapeJournal.DejaEcrit
-            is ResultatEcriture.Echec -> EtapeJournal.Echoue(resultat.cause)
-        }
-    }
-
-    // Seul le mot-code remonte ici : check-in, tension et phrase sont des panneaux internes à MondeKokoro.
-    private fun ouvrir(fonction: Fonction) {
-        if (fonction == Fonction.MOT_CODE) envoyerLeMotCode()
+    private fun ouvrir(porte: PorteDeCrise) {
+        if (porte == PorteDeCrise.MOT_CODE) envoyerLeMotCode()
     }
 
     // Accusé et grisage posés avant la réponse du réseau : sans ça, un second tap enverrait le message deux fois.

@@ -41,7 +41,8 @@ import io.allonsy.kokoro.ui.ChampTexte
 import io.allonsy.kokoro.ui.Interrupteur
 import io.allonsy.kokoro.ui.LocalPaletteKokoro
 import io.allonsy.kokoro.ui.Pancarte
-import io.allonsy.kokoro.ui.PanneauDialogue
+import io.allonsy.kokoro.ui.Feuillet
+import io.allonsy.kokoro.ui.Feuilleton
 import io.allonsy.kokoro.ui.PanneauExtrude
 import io.allonsy.kokoro.ui.Separateur
 import io.allonsy.kokoro.ui.TypoKokoro
@@ -90,7 +91,8 @@ private fun ouvrirReglageNotifications(context: Context) {
     )
 }
 
-// Ouvert depuis la roue dentée de Thérapie, panneau interne à MondeActivity — plus une Activity séparée.
+// Ouvert depuis la roue dentée de Thérapie — un panneau à étapes, comme une carte : un sommaire, puis une
+// page à la fois. 🔴 Il n'est pas publié : ce qu'il règle appartient au téléphone, pas au programme.
 @Composable
 fun PanneauReglages(
     autorisations: EtatAutorisations,
@@ -102,6 +104,40 @@ fun PanneauReglages(
     onFermer: () -> Unit,
 ) {
     val context = LocalContext.current
+
+    Feuilleton(
+        titre = stringResource(R.string.controle_titre),
+        feuillets = listOf(
+            Feuillet(stringResource(R.string.controle_section_contact)) {
+                ChampsContact(reglages = reglages, onEnregistrer = onEnregistrer)
+            },
+            Feuillet(stringResource(R.string.controle_section_autorisations)) {
+                VoletAutorisations(autorisations = autorisations, onRelire = onRelire)
+            },
+            Feuillet(stringResource(R.string.controle_section_dossier)) {
+                VoletDossier(dossier = dossier, onChoisirDossier = onChoisirDossier)
+            },
+            Feuillet(stringResource(R.string.controle_section_nuit)) {
+                ChampsNuit(nuit = reglages.nuit, onEnregistrer = { onEnregistrer(reglages.copy(nuit = it)) })
+            },
+            Feuillet(stringResource(R.string.controle_section_parallaxe)) {
+                ChampsParallaxe(
+                    parallaxe = reglages.parallaxe,
+                    capteurPresent = remember(context) { capteurInclinaisonPresent(context) },
+                    onEnregistrer = { onEnregistrer(reglages.copy(parallaxe = it)) },
+                )
+            },
+            Feuillet(stringResource(R.string.controle_section_test)) {
+                VoletTest(actif = autorisations.notificationsAutorisees)
+            },
+        ),
+        onFermer = onFermer,
+    )
+}
+
+@Composable
+private fun VoletAutorisations(autorisations: EtatAutorisations, onRelire: () -> Unit) {
+    val context = LocalContext.current
     val demandeNotifications = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { onRelire() },
@@ -111,89 +147,68 @@ fun PanneauReglages(
         onResult = { onRelire() },
     )
 
-    PanneauDialogue(
-        titre = stringResource(R.string.controle_titre),
-        ecart = 14.dp,
-        onFermer = onFermer,
-    ) {
-        Section(stringResource(R.string.controle_section_contact))
-        ChampsContact(reglages = reglages, onEnregistrer = onEnregistrer)
-
-        Section(stringResource(R.string.controle_section_autorisations))
-        Groupe {
-            LigneEtat(
-                libelle = stringResource(R.string.controle_etat_notifications),
-                accorde = autorisations.notificationsAutorisees,
-            )
-            Separateur()
-            LigneEtat(
-                libelle = stringResource(R.string.controle_etat_plein_ecran),
-                accorde = autorisations.pleinEcranAutorise,
-            )
-            Separateur()
-            LigneEtat(
-                libelle = stringResource(R.string.controle_etat_sms),
-                accorde = autorisations.smsAutorise,
-            )
-        }
-
-        if (!autorisations.notificationsAutorisees) {
-            Action(stringResource(R.string.controle_action_notifications)) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    demandeNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)
-                } else {
-                    ouvrirReglageNotifications(context)
-                }
-            }
-        }
-
-        if (!autorisations.pleinEcranAutorise) {
-            Explication(stringResource(R.string.controle_guidage_plein_ecran))
-            Action(stringResource(R.string.controle_action_plein_ecran)) {
-                ouvrirReglagePleinEcran(context)
-            }
-        }
-
-        if (!autorisations.smsAutorise) {
-            Explication(stringResource(R.string.controle_guidage_sms))
-            Action(stringResource(R.string.controle_action_sms)) {
-                demandeSms.launch(Manifest.permission.SEND_SMS)
-            }
-        }
-
-        Section(stringResource(R.string.controle_section_acces))
-        Action(stringResource(R.string.controle_action_acces)) { publierAccesCrise(context) }
-
-        Section(stringResource(R.string.controle_section_journal))
-        Groupe {
-            Valeur(
-                when (dossier) {
-                    null -> stringResource(R.string.controle_dossier_absent)
-                    else -> stringResource(R.string.controle_dossier_choisi, dossier)
-                },
-            )
-        }
-        Explication(stringResource(R.string.controle_dossier_explication))
-        Action(stringResource(R.string.controle_action_dossier), onClick = onChoisirDossier)
-
-        Section(stringResource(R.string.controle_section_nuit))
-        ChampsNuit(nuit = reglages.nuit, onEnregistrer = { onEnregistrer(reglages.copy(nuit = it)) })
-
-        Section(stringResource(R.string.controle_section_parallaxe))
-        ChampsParallaxe(
-            parallaxe = reglages.parallaxe,
-            capteurPresent = remember(context) { capteurInclinaisonPresent(context) },
-            onEnregistrer = { onEnregistrer(reglages.copy(parallaxe = it)) },
+    Groupe {
+        LigneEtat(
+            libelle = stringResource(R.string.controle_etat_notifications),
+            accorde = autorisations.notificationsAutorisees,
         )
+        Separateur()
+        LigneEtat(
+            libelle = stringResource(R.string.controle_etat_plein_ecran),
+            accorde = autorisations.pleinEcranAutorise,
+        )
+        Separateur()
+        LigneEtat(
+            libelle = stringResource(R.string.controle_etat_sms),
+            accorde = autorisations.smsAutorise,
+        )
+    }
 
-        Section(stringResource(R.string.controle_section_test))
-        Explication(stringResource(R.string.controle_consigne_test))
-        Action(
-            libelle = stringResource(R.string.controle_action_test),
-            actif = autorisations.notificationsAutorisees,
-        ) {
-            programmerAlerteTest(context, DELAI_TEST_MILLIS)
+    if (!autorisations.notificationsAutorisees) {
+        Action(stringResource(R.string.controle_action_notifications)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                demandeNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)
+            } else {
+                ouvrirReglageNotifications(context)
+            }
         }
+    }
+
+    if (!autorisations.pleinEcranAutorise) {
+        Explication(stringResource(R.string.controle_guidage_plein_ecran))
+        Action(stringResource(R.string.controle_action_plein_ecran)) { ouvrirReglagePleinEcran(context) }
+    }
+
+    if (!autorisations.smsAutorise) {
+        Explication(stringResource(R.string.controle_guidage_sms))
+        Action(stringResource(R.string.controle_action_sms)) { demandeSms.launch(Manifest.permission.SEND_SMS) }
+    }
+
+    Section(stringResource(R.string.controle_section_acces))
+    Action(stringResource(R.string.controle_action_acces)) { publierAccesCrise(context) }
+}
+
+@Composable
+private fun VoletDossier(dossier: String?, onChoisirDossier: () -> Unit) {
+    Groupe {
+        Valeur(
+            when (dossier) {
+                null -> stringResource(R.string.controle_dossier_absent)
+                else -> stringResource(R.string.controle_dossier_choisi, dossier)
+            },
+        )
+    }
+    Explication(stringResource(R.string.controle_dossier_explication))
+    Action(stringResource(R.string.controle_action_dossier), onClick = onChoisirDossier)
+}
+
+@Composable
+private fun VoletTest(actif: Boolean) {
+    val context = LocalContext.current
+
+    Explication(stringResource(R.string.controle_consigne_test))
+    Action(libelle = stringResource(R.string.controle_action_test), actif = actif) {
+        programmerAlerteTest(context, DELAI_TEST_MILLIS)
     }
 }
 
