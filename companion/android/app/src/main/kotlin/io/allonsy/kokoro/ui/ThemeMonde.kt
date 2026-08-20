@@ -7,7 +7,6 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 
-// ThemeKokoro reste utilisé par l'alerte K1 et l'atelier du corps (outils de mise au point) : ne pas le supprimer.
 @Composable
 fun ThemeMonde(nuit: Boolean, content: @Composable () -> Unit) {
     val palette = if (nuit) KOKORO_NUIT else KOKORO_JOUR

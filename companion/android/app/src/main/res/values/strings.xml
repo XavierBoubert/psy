@@ -5,14 +5,6 @@
     <string name="canal_alerte_nom">Alerte plein écran</string>
     <string name="canal_alerte_description">Affichage d\'un écran de Kokoro sur téléphone verrouillé. Sans son, sans vibration.</string>
 
-    <string name="alerte_titre">Kokoro</string>
-    <string name="alerte_texte">Écran de test K1</string>
-
-    <string name="alerte_ecran_titre">Kokoro</string>
-    <string name="alerte_ecran_heure">Déclenché à %1$s</string>
-    <string name="alerte_ecran_explication">Test K1 : cet écran s\'est ouvert par-dessus le verrouillage, sans son et sans vibration. Rien d\'autre n\'est demandé.</string>
-    <string name="alerte_ecran_fermer">Fermer</string>
-
     <!--
       🔴 La notification d'accès est muette — companion/README.md §2. Il ne reste que l'icône
       et le mot « Kokoro » : pas de corps de texte, pas de boutons d'action. Ce qu'elle écrirait,
@@ -233,7 +225,4 @@
     <string name="reponse_dossier_absent">Le dossier synchronisé n\'est pas choisi : rien n\'a été enregistré.</string>
     <string name="reponse_echec">L\'enregistrement dans le dossier n\'a pas abouti.</string>
 
-    <string name="controle_section_test">Test K1</string>
-    <string name="controle_consigne_test">Test : appuie sur le bouton, puis éteins l\'écran avec le bouton latéral. Au bout de 20 secondes, l\'écran doit se rallumer sur Kokoro, sans aucun son ni vibration.</string>
-    <string name="controle_action_test">Déclencher le test dans 20 secondes</string>
 </resources>

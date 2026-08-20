@@ -7,13 +7,20 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
+import android.view.ViewTreeObserver
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import io.allonsy.kokoro.R
 import io.allonsy.kokoro.alerte.creerCanalAlerte
 import io.allonsy.kokoro.crise.ACTION_MOT_CODE_ENVOYE
@@ -62,9 +69,16 @@ import io.allonsy.kokoro.reglages.lireReglages
 import io.allonsy.kokoro.reglages.minuteCourante
 import io.allonsy.kokoro.ui.ThemeMonde
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalTime
+
+// Le contenu vient de Drive : il change sans que Kokoro en soit prévenu, d'où une relecture au rythme fixe.
+private const val INTERVALLE_RELECTURE_MS = 5_000L
+
+// Plafond de l'écran de démarrage : passé ce délai, le monde s'ouvre même si Drive n'a pas répondu.
+private const val ATTENTE_MAX_DEMARRAGE_MS = 6_000L
 
 // Ne s'affiche jamais par-dessus le verrouillage : c'est CriseActivity qui porte cette déclaration dans le manifeste.
 class MondeActivity : ComponentActivity() {
@@ -76,6 +90,7 @@ class MondeActivity : ComponentActivity() {
     private val sejour = mutableStateOf(Sejour(heure = 0))
     private val programme = mutableStateOf(PROGRAMME_ABSENT)
     private val faites = mutableStateOf(AUCUNE_FAITE)
+    private val pret = mutableStateOf(false)
 
     // Ex-MainActivity : la roue dentée ouvre un panneau interne, plus une Activity.
     private val autorisations = mutableStateOf(EtatAutorisations(false, false, false))
@@ -113,38 +128,73 @@ class MondeActivity : ComponentActivity() {
         creerCanalAcces(this)
         creerCanalAlerte(this)
         relire()
+        veillerSurLeContenu()
         setContent {
             ThemeMonde(nuit = nuit.value) {
-                MondeKokoro(
-                    palette = paletteDuMoment(nuit.value),
-                    contactNom = reglages.value.contactNom,
-                    sejour = sejour.value,
-                    onPorteDeCrise = { ouvrir(it) },
-                    donneesReglages = DonneesReglages(
-                        autorisations = autorisations.value,
-                        reglages = reglages.value,
-                        dossier = dossier.value,
-                        onRelire = { relire() },
-                        onEnregistrer = {
-                            ecrireReglages(this, it)
-                            relire()
+                Box(modifier = Modifier.fillMaxSize()) {
+                    MondeKokoro(
+                        palette = paletteDuMoment(nuit.value),
+                        contactNom = reglages.value.contactNom,
+                        sejour = sejour.value,
+                        onPorteDeCrise = { ouvrir(it) },
+                        donneesReglages = DonneesReglages(
+                            autorisations = autorisations.value,
+                            reglages = reglages.value,
+                            dossier = dossier.value,
+                            onRelire = { relire() },
+                            onEnregistrer = {
+                                ecrireReglages(this@MondeActivity, it)
+                                relire()
+                            },
+                            onChoisirDossier = { choixDossier.launch(intentChoisirDossier()) },
+                        ),
+                        programme = programme.value,
+                        faites = faites.value,
+                        onRendu = { carte, issue, items -> enregistrerReponse(carte, issue, items) },
+                        onEntrainement = { carte -> retenirLEntrainement(carte) },
+                        onPdf = { carte -> ouvrirLeDocument(carte) },
+                        parallaxe = reglages.value.parallaxe,
+                        envoiEnCours = envoiEnCours.value,
+                        accesPerdu = accesPerdu.value,
+                        accuse = accuse.value,
+                        onAccuseFini = {
+                            accuse.value = null
+                            envoiEnCours.value = false
                         },
-                        onChoisirDossier = { choixDossier.launch(intentChoisirDossier()) },
-                    ),
-                    programme = programme.value,
-                    faites = faites.value,
-                    onRendu = { carte, issue, items -> enregistrerReponse(carte, issue, items) },
-                    onEntrainement = { carte -> retenirLEntrainement(carte) },
-                    onPdf = { carte -> ouvrirLeDocument(carte) },
-                    parallaxe = reglages.value.parallaxe,
-                    envoiEnCours = envoiEnCours.value,
-                    accesPerdu = accesPerdu.value,
-                    accuse = accuse.value,
-                    onAccuseFini = {
-                        accuse.value = null
-                        envoiEnCours.value = false
-                    },
-                )
+                    )
+                    VoileDeDemarrage(visible = !pret.value)
+                }
+            }
+        }
+        retenirLEcranDeDemarrage()
+    }
+
+    // Rien n'est dessiné tant que le contenu n'est pas là : l'écran de démarrage d'Android reste, au lieu d'un monde vide.
+    private fun retenirLEcranDeDemarrage() {
+        val contenu = findViewById<View>(android.R.id.content)
+        contenu.viewTreeObserver.addOnPreDrawListener(
+            object : ViewTreeObserver.OnPreDrawListener {
+                override fun onPreDraw(): Boolean {
+                    if (!pret.value) return false
+                    contenu.viewTreeObserver.removeOnPreDrawListener(this)
+                    return true
+                }
+            },
+        )
+    }
+
+    private fun veillerSurLeContenu() {
+        lifecycleScope.launch {
+            delay(ATTENTE_MAX_DEMARRAGE_MS)
+            pret.value = true
+        }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                while (true) {
+                    relireLeContenu()
+                    pret.value = true
+                    delay(INTERVALLE_RELECTURE_MS)
+                }
             }
         }
     }
@@ -166,24 +216,21 @@ class MondeActivity : ComponentActivity() {
         autorisations.value = lireAutorisations(this)
         dossier.value = cheminAffichable(this, lireDossier(this))
         sejour.value = sejour.value.copy(heure = LocalTime.now().hour)
-        relireLeProgramme()
     }
 
-    // Le programme est lu hors fil principal : c'est un fichier de Drive, sa lecture peut prendre le temps qu'elle veut.
-    private fun relireLeProgramme() {
-        lifecycleScope.launch {
-            val lu = withContext(Dispatchers.IO) { programmeDuDossier() }
-            val rendues = withContext(Dispatchers.IO) { listerReponses(this@MondeActivity) }
-            val reprises = withContext(Dispatchers.IO) { reprisesDuProgramme(lu) }
-            programme.value = lu
-            faites.value = Faites(
-                jour = jourCourant(),
-                reponses = rendues,
-                entrainements = entrainementsMenes(this@MondeActivity),
-                reprises = reprises,
-            )
-            sejour.value = sejour.value.copy(vides = videsDe(lu))
-        }
+    // Le contenu est lu hors fil principal : ce sont des fichiers de Drive, leur lecture peut prendre le temps qu'elle veut.
+    private suspend fun relireLeContenu() {
+        val lu = withContext(Dispatchers.IO) { programmeDuDossier() }
+        val rendues = withContext(Dispatchers.IO) { listerReponses(this@MondeActivity) }
+        val reprises = withContext(Dispatchers.IO) { reprisesDuProgramme(lu) }
+        programme.value = lu
+        faites.value = Faites(
+            jour = jourCourant(),
+            reponses = rendues,
+            entrainements = entrainementsMenes(this@MondeActivity),
+            reprises = reprises,
+        )
+        sejour.value = sejour.value.copy(vides = videsDe(lu))
     }
 
     private fun programmeDuDossier(): Programme =

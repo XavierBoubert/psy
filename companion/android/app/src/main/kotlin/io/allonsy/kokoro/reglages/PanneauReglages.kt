@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import io.allonsy.kokoro.R
-import io.allonsy.kokoro.alerte.programmerAlerteTest
 import io.allonsy.kokoro.crise.publierAccesCrise
 import io.allonsy.kokoro.decor.capteurInclinaisonPresent
 import io.allonsy.kokoro.ui.BoutonEpais
@@ -47,7 +46,6 @@ import io.allonsy.kokoro.ui.PanneauExtrude
 import io.allonsy.kokoro.ui.Separateur
 import io.allonsy.kokoro.ui.TypoKokoro
 
-private const val DELAI_TEST_MILLIS = 20_000L
 private const val CHIFFRES_BORNE = 2
 
 data class EtatAutorisations(
@@ -127,9 +125,6 @@ fun PanneauReglages(
                     onEnregistrer = { onEnregistrer(reglages.copy(parallaxe = it)) },
                 )
             },
-            Feuillet(stringResource(R.string.controle_section_test)) {
-                VoletTest(actif = autorisations.notificationsAutorisees)
-            },
         ),
         onFermer = onFermer,
     )
@@ -200,16 +195,6 @@ private fun VoletDossier(dossier: String?, onChoisirDossier: () -> Unit) {
     }
     Explication(stringResource(R.string.controle_dossier_explication))
     Action(stringResource(R.string.controle_action_dossier), onClick = onChoisirDossier)
-}
-
-@Composable
-private fun VoletTest(actif: Boolean) {
-    val context = LocalContext.current
-
-    Explication(stringResource(R.string.controle_consigne_test))
-    Action(libelle = stringResource(R.string.controle_action_test), actif = actif) {
-        programmerAlerteTest(context, DELAI_TEST_MILLIS)
-    }
 }
 
 @Composable

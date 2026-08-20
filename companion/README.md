@@ -65,6 +65,8 @@
 | Kokoro **lit** | `programme.json` · `bibliotheque/*.pdf` · `bilans/*.pdf` | [`PROGRAMME.md`](PROGRAMME.md) | `npm run psy:publish` |
 | Kokoro **écrit** | `reponses/AAAA-MM-JJ-HHMM-<id>.json` — 🔴 **et rien d'autre** ; `journal/` est reconstruit au dépôt | [`../psy/DOSSIER.md`](../psy/DOSSIER.md) | `npm run psy:sync` |
 
+⭐ **Le contenu se relit tout seul toutes les 5 secondes, tant que Kokoro est à l'écran** — `programme.json`, les PDF et les réponses déjà rendues. **Drive ne prévient de rien** : sans cette veille, une publication faite pendant que l'app est ouverte n'arriverait qu'à la prochaine ouverture. ⚠️ **Rien ne bouge sous les doigts** — un panneau ouvert reste sur la carte qu'il montre.
+
 ⭐ **Ni profil, ni état, ni séances, ni crises, ni mesures, ni briefs, ni supervisions ne quittent le PC.** **Le contenu publié est *dérivé*, jamais *extrait*** : il porte ce qu'il y a à faire, jamais ce qui a été constaté, mesuré ou diagnostiqué.
 
 ⚠️ **Le bilan est la seule exception, et elle est écrite** : ce n'est ni un dérivé ni un extrait du dossier, **c'est un compte rendu que Xavier possède déjà**, mis en forme et versé tel quel. Canal distinct `bilans/`, contrôles propres *([`PROGRAMME.md` §6](PROGRAMME.md))*.
@@ -205,16 +207,17 @@ Ils viennent des contraintes de Xavier *(détail : [`../patient/README.md`](../p
 | Point | Ce qui est fait |
 |---|---|
 | **S'afficher par-dessus le verrouillage** | ✅ `CriseActivity` déclare `showWhenLocked` + `turnScreenOn` **au manifeste**, dans sa propre tâche *(`taskAffinity=""`, `singleTask`, `excludeFromRecents`)*. 🔴 **Posé à l'exécution, c'est trop tard** — le keyguard a déjà décidé de demander le code. **Le monde ne s'affiche donc jamais par-dessus le verrouillage**, et il n'essaie plus |
-| **Réveiller l'écran** | ✅ Full-screen intent sur canal `IMPORTANCE_HIGH` **muet** *(`setSound(null, null)`, vibration désactivée)* **+ `WAKE_LOCK`**, sans lequel l'Always On Display s'intercale |
+| **Réveiller l'écran** | ✅ Voie acquise et vérifiée sur le téléphone : full-screen intent sur canal `IMPORTANCE_HIGH` **muet** *(`setSound(null, null)`, vibration désactivée)* **+ `WAKE_LOCK`**, sans lequel l'Always On Display s'intercale. ⚠️ **Aucune surface de release ne la déclenche aujourd'hui** — seul le harnais de crise du build debug l'emprunte |
 | **Ne jamais saisir l'écran en cours d'usage** | ✅ Garanti par Android : un full-screen intent est rétrogradé en bannière dès que l'écran est allumé |
 | **Canaux de notification** | ⚠️ **Un canal est immuable une fois créé.** Identifiants versionnés — `kokoro_acces_v1`, `kokoro_alerte_v1`. **Nom et description se mettent à jour ; l'importance et le silence sont figés** : changer l'identifiant rendrait à Android le droit de resonner |
 | **Publication de la notification** | ✅ **Le monde la republie à chaque venue.** ⚠️ Une app fraîchement installée est *arrêtée* pour Android — **rien ne s'exécute avant le premier lancement manuel**, qui est donc le plus tôt possible |
 | **Quand la porte est fermée** | ✅ Un **avis en toutes lettres** en tête de l'écran d'entrée quand la notification n'a pas pu s'afficher. 🔴 **Jamais une pastille sur la roue dentée** — un défaut se dit, il ne se signale pas par un point |
 | **Autorisations** | ✅ Demandées **depuis les réglages, jamais à l'ouverture** — une app qui réclame une permission dès qu'on l'ouvre vient vers Xavier. Sans l'autorisation, la publication renonce en silence |
+| **Écran de démarrage** | ✅ **Retenu tant que le contenu n'est pas lu** — rien n'est dessiné, Android garde donc le sien, et un voile identique *(même fond, même icône)* prend le relais jusqu'au monde. 🔴 **Plafonné à 6 s** : Drive muet n'immobilise pas l'app. Sans cette retenue, Kokoro s'ouvrait sur « Rien à faire pour l'instant » **avant** de se remplir |
 | **Accès aux fichiers** | ✅ **SAF, URI d'arbre persistant.** `MANAGE_EXTERNAL_STORAGE` écarté — il ouvre tout le stockage pour un seul dossier |
 | **Écran verrouillé permanent** | ⏸️ Pas d'overlay ni de service de premier plan : `TYPE_APPLICATION_OVERLAY` passe **sous** le keyguard, et One UI tue les services. Piste ouverte : un fond d'écran vivant *(`WallpaperService`, aucune permission)* |
 
-**Les réglages** *(panneau interne, roue dentée sur la bande de titre de l'écran d'entrée)* : contact et message du mot-code · état des trois autorisations avec le guidage pour chacune · republier l'accès crise · choisir le dossier de transit · la plage de nuit · les deux interrupteurs du décor · un test d'alerte.
+**Les réglages** *(panneau interne, roue dentée sur la bande de titre de l'écran d'entrée)* : contact et message du mot-code · état des trois autorisations avec le guidage pour chacune · republier l'accès crise · choisir le dossier de transit · la plage de nuit · les deux interrupteurs du décor.
 
 ---
 

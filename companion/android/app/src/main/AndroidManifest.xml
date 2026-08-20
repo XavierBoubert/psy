@@ -30,17 +30,6 @@
             android:theme="@style/Theme.Kokoro"
             android:turnScreenOn="true" />
 
-        <activity
-            android:name=".alerte.AlerteActivity"
-            android:excludeFromRecents="true"
-            android:exported="false"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:showWhenLocked="true"
-            android:taskAffinity=""
-            android:theme="@style/Theme.Kokoro"
-            android:turnScreenOn="true" />
-
         <!--
             🔴 D10 — l'icône du lanceur ouvre le monde. C'est lui l'interface principale de l'app
             depuis companion/README.md §2 ; réglages et check-in sont des panneaux internes, pas des Activity.
@@ -56,10 +45,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <receiver
-            android:name=".alerte.DeclencheurAlerte"
-            android:exported="false" />
 
         <receiver
             android:name=".crise.ReceveurDemarrage"
