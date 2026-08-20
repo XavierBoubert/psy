@@ -115,6 +115,10 @@ fun MondeKokoro(
     val bras = rememberPasseDesBras()
     val entier = rememberEntierAnime()
 
+    val sejourDuJour = remember(sejour, programme, faites) {
+        sejour.copy(toutFait = toutFaitAujourdhui(programme, faites, sejour.checkinFait))
+    }
+
     BackHandler(enabled = ouverte != null) { ouverte = null }
 
     val ouvrirPanneau: (Contexte) -> Unit = { contexte ->
@@ -199,14 +203,17 @@ fun MondeKokoro(
         Habitant(
             perchoirs = perchoirs,
             ecran = ecranEn(position),
-            sejour = sejour,
+            sejour = sejourDuJour,
             sortie = sortie,
             largeur = taille.width,
             bras = bras,
             entier = entier,
         )
 
-        positionsAutour(ancre).forEach { rang ->
+        // Dalle pas encore mesurée : les quatre écrans se poseraient tous en x = 0, et le dernier peint (Bilan) couvrirait Thérapie.
+        val voisins = if (taille.width == 0) emptyList() else positionsAutour(ancre)
+
+        voisins.forEach { rang ->
             key(ecranEn(rang)) {
                 Box(
                     modifier = Modifier
@@ -222,6 +229,7 @@ fun MondeKokoro(
                         ecran = ecranEn(rang),
                         perchoirs = perchoirs,
                         contactNom = contactNom,
+                        checkinFait = sejour.checkinFait,
                         envoiEnCours = envoiEnCours,
                         accesPerdu = accesPerdu,
                         programme = programme,
@@ -303,6 +311,7 @@ private fun ContenuEcran(
     ecran: Ecran,
     perchoirs: Perchoirs,
     contactNom: String,
+    checkinFait: Boolean,
     envoiEnCours: Boolean,
     accesPerdu: Boolean,
     programme: Programme,
@@ -319,6 +328,7 @@ private fun ContenuEcran(
             perchoirs = perchoirs,
             programme = programme,
             faites = faites,
+            checkinFait = checkinFait,
             accesPerdu = accesPerdu,
             fige = fige,
             onReglages = onReglages,

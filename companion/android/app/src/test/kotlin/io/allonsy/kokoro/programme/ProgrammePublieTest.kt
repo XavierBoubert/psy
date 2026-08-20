@@ -20,9 +20,10 @@ class ProgrammePublieTest {
         assertTrue("Le programme n'est pas du JSON complet", lireProgramme(source) != PROGRAMME_ABSENT)
     }
 
+    // Les ids lus au JSON brut, jamais au mapper : c'est lui qu'on surveille, et une question porte aussi un id.
     @Test
     fun `aucune etape publiee n'est ecartee par Kokoro`() {
-        val declares = Regex(""""id"\s*:\s*"([a-z0-9-]+)"""").findAll(source).map { it.groupValues[1] }.toList()
+        val declares = lireJson(source)?.elements("etapes").orEmpty().mapNotNull { it.texte("id") }
         val lues = lireProgramme(source).etapes.map { it.id }
 
         assertEquals("Étapes publiées que Kokoro n'affiche pas : ${declares - lues.toSet()}", declares, lues)

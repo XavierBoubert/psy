@@ -44,7 +44,8 @@ class HabitantTest {
         heure: Int = 9,
         checkinFait: Boolean = false,
         vides: Set<Ecran> = emptySet(),
-    ) = Sejour(heure = heure, checkinFait = checkinFait, vides = vides)
+        toutFait: Boolean = false,
+    ) = Sejour(heure = heure, checkinFait = checkinFait, vides = vides, toutFait = toutFait)
 
     // E13, Xavier 16/08/2026 (après refus superviseur du 15/08) : écran de crise = veille fixe, indépendante de tout état.
     @Test
@@ -78,7 +79,7 @@ class HabitantTest {
         val toutVide = place(Ecran.CRISE, sejour(vides = Ecran.entries.toSet()))
         assertEquals(Posture.Accoude, toutVide?.posture)
         assertEquals("La crise n'est pas une liste", place(Ecran.CRISE, sejour()), toutVide)
-        assertTrue("La crise n'est jamais comptée vide", Ecran.CRISE !in ECRANS_VIDES)
+        assertTrue("La crise n'est jamais comptée vide", Ecran.CRISE !in videsDe(PROGRAMME_ABSENT))
     }
 
     @Test
@@ -93,6 +94,30 @@ class HabitantTest {
             assertEquals("À ${heure}h il montre", Posture.Montre(Cote.GAUCHE), place?.posture)
             assertEquals("À ${heure}h il se tient devant Aujourd'hui", Perchoir.AUJOURDHUI, place?.perchoir)
         }
+    }
+
+    // Xavier, 20/08/2026 : plus rien à faire aujourd'hui, plus de bras levé — désigner une liste finie ne désigne rien.
+    @Test
+    fun `tout fait, il repose le bras`() {
+        (HEURE_DU_CHECKIN..23).forEach { heure ->
+            val place = place(Ecran.THERAPIE, sejour(heure = heure, checkinFait = true, toutFait = true))
+            assertEquals("À ${heure}h il n'a plus rien à montrer", Posture.Repos, place?.posture)
+            assertEquals("Chaleureux dit le fait accompli", Expression.CHALEUREUX, place?.expression)
+            assertEquals(Perchoir.AUJOURDHUI, place?.perchoir)
+        }
+        (0 until HEURE_DU_CHECKIN).forEach { heure ->
+            assertEquals(
+                "Avant ${HEURE_DU_CHECKIN}h il n'a jamais eu le bras levé",
+                Posture.Pensif,
+                place(Ecran.THERAPIE, sejour(heure = heure, toutFait = true))?.posture,
+            )
+        }
+    }
+
+    @Test
+    fun `le check in seul fait ne suffit pas a reposer le bras`() {
+        val place = place(Ecran.THERAPIE, sejour(heure = 20, checkinFait = true, toutFait = false))
+        assertEquals(Posture.Montre(Cote.GAUCHE), place?.posture)
     }
 
     // §4.4 : chaleureux n'a pas de contraire — rien ne doit signaler qu'une étape n'est pas faite.
@@ -137,19 +162,30 @@ class HabitantTest {
     // Les trois écrans à liste dorment tant que le programme n'a rien à y mettre ; la crise n'en fait jamais partie.
     @Test
     fun `chaque ecran a liste dort tant que le programme ne le remplit pas`() {
-        assertEquals(setOf(Ecran.THERAPIE, Ecran.DOCUMENTATION, Ecran.BILAN), ECRANS_VIDES)
-        assertEquals(ECRANS_VIDES, videsDe(PROGRAMME_ABSENT))
-        ECRANS_VIDES.forEach { ecran ->
+        val vides = videsDe(PROGRAMME_ABSENT)
+        assertEquals(setOf(Ecran.THERAPIE, Ecran.DOCUMENTATION, Ecran.BILAN), vides)
+        vides.forEach { ecran ->
             assertEquals(
                 "$ecran devrait dormir",
                 Posture.Sommeil,
-                place(ecran, Sejour(heure = 9, checkinFait = false))?.posture,
+                place(ecran, sejour(vides = vides))?.posture,
             )
         }
         assertTrue(
             "La crise ne dort jamais : ses trois portes sont là même sans programme",
-            Ecran.CRISE !in ECRANS_VIDES,
+            Ecran.CRISE !in vides,
         )
+    }
+
+    // Avant que le programme ne soit lu, rien ne dit qu'une liste est vide : l'endormir au lancement serait un mensonge.
+    @Test
+    fun `il est eveille tant qu'aucune liste n'est declaree vide`() {
+        Ecran.entries.forEach { ecran ->
+            assertTrue(
+                "$ecran l'endort sans qu'on sache encore ce qu'il y a dedans",
+                place(ecran, Sejour(heure = 9, checkinFait = false))?.posture != Posture.Sommeil,
+            )
+        }
     }
 
     @Test
@@ -188,9 +224,6 @@ class HabitantTest {
         assertEquals("Il touche le bord droit du contenu", bande.right, droite.x + TAILLE.width, PRECISION)
         assertEquals("Il est centré dans la hauteur de la bande", bande.center.y, droite.y + TAILLE.height / 2f, PRECISION)
 
-        val centre = pointDeLaPlace(bande, Cadrage.AU_CENTRE, TAILLE)!!
-        assertEquals(bande.center.x, centre.x + TAILLE.width / 2f, PRECISION)
-        assertEquals(bande.center.y, centre.y + TAILLE.height / 2f, PRECISION)
     }
 
     @Test
@@ -199,13 +232,13 @@ class HabitantTest {
         val dedans = Rect(left = 40f, top = 200f, right = 1000f, bottom = 300f)
         val remontee = dedans.translate(0f, -2_000f)
 
-        val bas = pointDeLaPlace(dedans, Cadrage.AU_CENTRE, taille)!!
-        val haut = pointDeLaPlace(remontee, Cadrage.AU_CENTRE, taille)!!
+        val bas = pointDeLaPlace(dedans, Cadrage.A_DROITE, taille)!!
+        val haut = pointDeLaPlace(remontee, Cadrage.A_DROITE, taille)!!
         assertEquals("Il monte exactement de ce que la bande monte", bas.y - 2_000f, haut.y, PRECISION)
         assertEquals("Il ne dérive pas latéralement en défilant", bas.x, haut.x, PRECISION)
         assertTrue("Il est bien sorti du champ", haut.y < 0f)
 
-        assertNull("Sans bande posée, aucun point", pointDeLaPlace(null, Cadrage.AU_CENTRE, taille))
+        assertNull("Sans bande posée, aucun point", pointDeLaPlace(null, Cadrage.A_DROITE, taille))
     }
 
     @Test
@@ -233,7 +266,7 @@ class HabitantTest {
         assertEquals("Panneau fermé, il ne bouge pas", 0f, ecartDeSortie(largeur, 0f), PRECISION)
 
         val bande = Rect(left = 0f, top = 200f, right = largeur, bottom = 300f)
-        listOf(Cadrage.A_DROITE, Cadrage.AU_CENTRE).forEach { cadrage ->
+        Cadrage.entries.forEach { cadrage ->
             val point = pointDeLaPlace(bande, cadrage, TAILLE)!!
             assertTrue(
                 "$cadrage — il traîne encore dans le champ",

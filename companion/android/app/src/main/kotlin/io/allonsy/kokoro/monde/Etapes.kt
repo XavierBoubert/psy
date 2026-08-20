@@ -8,25 +8,36 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.allonsy.kokoro.R
 import io.allonsy.kokoro.programme.Etape
+import io.allonsy.kokoro.programme.Faites
+import io.allonsy.kokoro.programme.Fonction
 import io.allonsy.kokoro.programme.Programme
 import io.allonsy.kokoro.programme.Quand
 import io.allonsy.kokoro.programme.Rubrique
 import io.allonsy.kokoro.programme.bilans
 import io.allonsy.kokoro.programme.etapesDe
+import io.allonsy.kokoro.programme.faite
 import io.allonsy.kokoro.programme.fiches
+import io.allonsy.kokoro.programme.quand
 import io.allonsy.kokoro.ui.BoutonEpais
 import io.allonsy.kokoro.ui.LocalPaletteKokoro
 import io.allonsy.kokoro.ui.PanneauDialogue
 import io.allonsy.kokoro.ui.Teinte
 import io.allonsy.kokoro.ui.TypoKokoro
 
-val ECRANS_VIDES = setOf(Ecran.THERAPIE, Ecran.DOCUMENTATION, Ecran.BILAN)
-
 fun videsDe(programme: Programme): Set<Ecran> = buildSet {
     if (programme.etapesDe(Rubrique.THERAPIE).isEmpty()) add(Ecran.THERAPIE)
     if (programme.bilans().isEmpty()) add(Ecran.BILAN)
     if (programme.fiches().isEmpty()) add(Ecran.DOCUMENTATION)
 }
+
+// Le check-in n'écrit pas de réponse mais un fichier de journal : son état vient du séjour, jamais des faites.
+fun rendue(etape: Etape, faites: Faites, checkinFait: Boolean): Boolean =
+    if (etape is Etape.Ecran && etape.fonction == Fonction.CHECK_IN) checkinFait else faites.faite(etape)
+
+fun toutFaitAujourdhui(programme: Programme, faites: Faites, checkinFait: Boolean): Boolean =
+    programme.etapesDe(Rubrique.THERAPIE)
+        .filter { it.quand == Quand.AUJOURDHUI }
+        .all { etape -> rendue(etape, faites, checkinFait) }
 
 // Tout ce qu'un bouton du monde peut ouvrir dans le panneau de dialogue — une seule forme, plusieurs contenus.
 sealed interface Contexte {

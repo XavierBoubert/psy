@@ -30,7 +30,6 @@ import io.allonsy.kokoro.programme.Rubrique
 import io.allonsy.kokoro.programme.Support
 import io.allonsy.kokoro.programme.bilans
 import io.allonsy.kokoro.programme.etapesDe
-import io.allonsy.kokoro.programme.faite
 import io.allonsy.kokoro.programme.fiches
 import io.allonsy.kokoro.programme.moisDe
 import io.allonsy.kokoro.programme.quand
@@ -100,6 +99,7 @@ fun ContenuTherapie(
     perchoirs: Perchoirs,
     programme: Programme,
     faites: Faites,
+    checkinFait: Boolean,
     accesPerdu: Boolean,
     onReglages: () -> Unit,
     onOuvrir: (Etape) -> Unit,
@@ -142,7 +142,7 @@ fun ContenuTherapie(
             aFaire.filter { it.quand == section.quand }.forEach { etape ->
                 CarteDEtape(
                     etape = etape,
-                    faite = faites.faite(etape),
+                    faite = rendue(etape, faites, checkinFait),
                     onClic = { onOuvrir(etape) },
                 )
             }
@@ -209,25 +209,26 @@ fun ContenuDocumentation(
         defilant = fiches.isNotEmpty(),
         fige = fige,
     ) {
-        BandeDeTete(perchoirs = perchoirs, poses = listOf(Perchoir.DOCUMENTATION))
-
         if (fiches.isEmpty()) {
+            BandeDeTete(perchoirs = perchoirs, poses = listOf(Perchoir.DOCUMENTATION))
             CadreVide(texte = stringResource(R.string.monde_documentation_vide))
             return@EcranDeBord
         }
 
-        RUBRIQUES_LUES.forEach { rubrique ->
-            val deLaRubrique = fiches.filter { it.reperes.rubrique == rubrique }
-            if (deLaRubrique.isEmpty()) return@forEach
+        val rendues = RUBRIQUES_LUES.filter { rubrique -> fiches.any { it.reperes.rubrique == rubrique } }
 
-            BandeDeSection(perchoirs = perchoirs, poses = emptyList()) {
+        rendues.forEachIndexed { rang, rubrique ->
+            BandeDeSection(
+                perchoirs = perchoirs,
+                poses = if (rang == 0) listOf(Perchoir.DOCUMENTATION) else emptyList(),
+            ) {
                 Pancarte(
                     texte = stringResource(libelleDe(rubrique)),
                     couleur = palette.lavande,
                     modifier = Modifier.padding(start = 2.dp),
                 )
             }
-            deLaRubrique.forEach { fiche ->
+            fiches.filter { it.reperes.rubrique == rubrique }.forEach { fiche ->
                 CarteDeFiche(fiche = fiche, onClic = { onFiche(fiche) })
             }
         }
@@ -273,15 +274,17 @@ fun ContenuBilan(
         defilant = bilans.isNotEmpty(),
         fige = fige,
     ) {
-        BandeDeTete(perchoirs = perchoirs, poses = listOf(Perchoir.BILAN))
-
         if (bilans.isEmpty()) {
+            BandeDeTete(perchoirs = perchoirs, poses = listOf(Perchoir.BILAN))
             CadreVide(texte = stringResource(R.string.monde_bilan_vide))
             return@EcranDeBord
         }
 
-        bilans.groupBy { moisDe(it.date) }.forEach { (mois, duMois) ->
-            BandeDeSection(perchoirs = perchoirs, poses = emptyList()) {
+        bilans.groupBy { moisDe(it.date) }.toList().forEachIndexed { rang, (mois, duMois) ->
+            BandeDeSection(
+                perchoirs = perchoirs,
+                poses = if (rang == 0) listOf(Perchoir.BILAN) else emptyList(),
+            ) {
                 Pancarte(
                     texte = libelleDuMois(mois),
                     couleur = palette.beurre,

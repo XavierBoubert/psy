@@ -105,7 +105,6 @@ enum class Perchoir { AUJOURDHUI, SANS_DATE, DOCUMENTATION, BILAN, CRISE, PLAFON
 
 enum class Cadrage {
     A_DROITE,
-    AU_CENTRE,
 
     // Le cadre est ici le bouton lui-même : les épaules tombent sur son arête, tout ce qui est dessous passe derrière.
     EPAULES_AU_BORD,
@@ -142,7 +141,8 @@ data class Place(
 data class Sejour(
     val heure: Int,
     val checkinFait: Boolean,
-    val vides: Set<Ecran> = ECRANS_VIDES,
+    val vides: Set<Ecran> = emptySet(),
+    val toutFait: Boolean = false,
 )
 
 fun place(ecran: Ecran, sejour: Sejour): Place? {
@@ -152,8 +152,9 @@ fun place(ecran: Ecran, sejour: Sejour): Place? {
 
 private fun placeOrdinaire(ecran: Ecran, sejour: Sejour): Place? = when (ecran) {
     Ecran.THERAPIE -> when {
-        sejour.heure >= HEURE_DU_CHECKIN -> montreLeCheckin(sejour.checkinFait)
-        else -> pensifDevantLaListe()
+        sejour.heure < HEURE_DU_CHECKIN -> pensifDevantLaListe()
+        sejour.toutFait -> plusRienAMontrer()
+        else -> montreLeCheckin(sejour.checkinFait)
     }
 
     Ecran.DOCUMENTATION -> Place(
@@ -165,7 +166,7 @@ private fun placeOrdinaire(ecran: Ecran, sejour: Sejour): Place? = when (ecran) 
 
     Ecran.BILAN -> Place(
         perchoir = Perchoir.BILAN,
-        cadrage = Cadrage.AU_CENTRE,
+        cadrage = Cadrage.A_DROITE,
         posture = Posture.Floss,
     )
 
@@ -187,6 +188,14 @@ private fun pensifDevantLaListe() = Place(
     perchoir = Perchoir.SANS_DATE,
     cadrage = Cadrage.A_DROITE,
     posture = Posture.Pensif,
+)
+
+// Plus rien à désigner : le bras redescend, et chaleureux ne dit ici qu'un fait accompli (README §6).
+private fun plusRienAMontrer() = Place(
+    perchoir = Perchoir.AUJOURDHUI,
+    cadrage = Cadrage.A_DROITE,
+    posture = Posture.Repos,
+    expression = Expression.CHALEUREUX,
 )
 
 private fun montreLeCheckin(checkinFait: Boolean) = Place(
@@ -576,10 +585,10 @@ fun pointDeLaPlace(cadre: Rect?, cadrage: Cadrage, taille: Size): Offset? {
     return Offset(
         x = when (cadrage) {
             Cadrage.A_DROITE -> cadre.right - taille.width
-            Cadrage.AU_CENTRE, Cadrage.EPAULES_AU_BORD -> cadre.center.x - taille.width / 2f
+            Cadrage.EPAULES_AU_BORD -> cadre.center.x - taille.width / 2f
         },
         y = when (cadrage) {
-            Cadrage.A_DROITE, Cadrage.AU_CENTRE -> cadre.center.y - taille.height / 2f
+            Cadrage.A_DROITE -> cadre.center.y - taille.height / 2f
             Cadrage.EPAULES_AU_BORD -> cadre.top - taille.height * HAUTEUR_EPAULES
         },
     )
