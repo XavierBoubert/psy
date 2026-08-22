@@ -7,14 +7,3 @@
 - L'état grisé est mal appliqué ?
 
 # Projet Générique
-
-# Thérapie
-
-- Ateliers de Emeline
-- bouffe
-- sport
-- angoisses
-- emdr
-- ppc
-- relationnel
--

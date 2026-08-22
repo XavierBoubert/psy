@@ -104,6 +104,8 @@ Un fichier par jour. **Cible : moins de 2 minutes, zéro saisie de texte obligat
 |---|---|---|
 | `ppc_minutes` | entier ≥ 0 | ⭐ Donnée **objective, issue du télésuivi de l'appareil**, jamais d'une auto-évaluation — exactement l'instrument qu'appelle un déficit intéroceptif |
 | `repas_servis_une_fois` | entier 0-4 | On compte les repas **conformes à la structure**, jamais les calories |
+| `ppc_iah_residuel` | nombre ≥ 0 | ⭐ Télésuivi. **Seule mesure d'efficacité réelle du traitement** — la durée dit qu'il est porté, pas qu'il agit |
+| `ppc_etancheite` | entier 0-20 | Télésuivi. Documente les fuites au masque, question ouverte du protocole PPC. 🔴 **Le score de retraits du même relevé est refusé** (22/08/2026) : une note quotidienne attribuée au comportement est un compteur d'assiduité (§9) |
 | `activite_minutes` | entier ≥ 0 | Prescription médicale. Sans impact, domicile |
 | `poids_kg` | nombre \| null | Hebdomadaire. `null` les autres jours |
 
@@ -183,7 +185,7 @@ matiere_ouverte: false
 
 | Champ | Notes |
 |---|---|
-| `cible` | **Une seule cible par séance.** Identifiants : `ppc-desensibilisation`, `alimentation-structure`, `agoraphobie-exposition`, `tension-appliquee`, `shutdown-protocole`, `alexithymie-nommage`, `camouflage-pacing`, `tag-ruminations`, `deuil-ainee` |
+| `cible` | **Une seule cible par séance.** Identifiants : `ppc-desensibilisation`, `alimentation-structure`, `agoraphobie-exposition`, `tension-appliquee`, `shutdown-protocole`, `alexithymie-nommage`, `camouflage-pacing`, `tag-ruminations`, `deuil-ainee`, `relationnel-regles-externes` |
 | `palier_atteint` | Pour les cibles à paliers. `null` sinon |
 | `programme_publie` | Version du programme publiée en clôture, ou `null` si rien n'a été publié |
 | `supervision` | Fichier de supervision qui a visé cette publication. **Obligatoire si `programme_publie` n'est pas `null`** |

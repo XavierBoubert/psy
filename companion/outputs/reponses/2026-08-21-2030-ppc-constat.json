@@ -1,0 +1,10 @@
+{
+  "carte": "ppc-constat",
+  "horodatage": "2026-08-21T20:30:37+02:00",
+  "issue": "termine",
+  "reponses": [
+    { "question": "duree", "valeur": 3 },
+    { "question": "cause", "valeur": 0 }
+  ],
+  "source": "android"
+}

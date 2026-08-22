@@ -1,7 +1,7 @@
 {
-  "version": 12,
-  "publie_le": "2026-08-20",
-  "supervision": "2026-08-20-programme-v12",
+  "version": 16,
+  "publie_le": "2026-08-22",
+  "supervision": "2026-08-22-programme-v16",
   "cartes": [
     {
       "id": "check-in",
@@ -134,6 +134,32 @@
         },
         {
           "type": "question",
+          "id": "ppc-iah-residuel",
+          "enonce": "Combien d'événements respiratoires par heure cette nuit ?",
+          "precision": "Le chiffre du télésuivi. S'il n'est pas consultable : passer.",
+          "compteur": {
+            "depart": 0,
+            "pas": 0.1,
+            "grand_pas": 1,
+            "minimum": 0,
+            "unite": "brute"
+          }
+        },
+        {
+          "type": "question",
+          "id": "ppc-etancheite",
+          "enonce": "Étanchéité du masque cette nuit, sur 20 ?",
+          "precision": "Le chiffre du télésuivi. S'il n'est pas consultable : passer.",
+          "compteur": {
+            "depart": 20,
+            "pas": 1,
+            "grand_pas": 5,
+            "minimum": 0,
+            "unite": "brute"
+          }
+        },
+        {
+          "type": "question",
           "id": "repas-servis-une-fois",
           "enonce": "Sur les repas d'aujourd'hui, combien ont été servis une seule fois, quantité décidée avant ?",
           "choix": [
@@ -194,6 +220,1072 @@
       ]
     },
     {
+      "id": "catq",
+      "titre": "CAT-Q — s'adapter en situation sociale",
+      "type": "panneau",
+      "rubrique": "therapie",
+      "quand": "sans_date",
+      "duree_minutes": 15,
+      "sortie_libre": true,
+      "etapes": [
+        {
+          "type": "info",
+          "texte": "Vingt-cinq affirmations sur la manière dont tu te comportes en situation sociale. Pour chacune, tu dis à quel point tu es d'accord, de 1 à 7. Ce n'est pas un jugement : le questionnaire mesure un effort fourni, pas un défaut."
+        },
+        {
+          "type": "question",
+          "id": "catq-1",
+          "enonce": "Quand j'interagis avec quelqu'un, je copie délibérément son langage corporel ou ses expressions du visage",
+          "choix": [
+            {
+              "valeur": 1,
+              "libelle": "Fortement en désaccord"
+            },
+            {
+              "valeur": 2,
+              "libelle": "En désaccord"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Plutôt en désaccord"
+            },
+            {
+              "valeur": 4,
+              "libelle": "Ni d'accord ni en désaccord"
+            },
+            {
+              "valeur": 5,
+              "libelle": "Plutôt d'accord"
+            },
+            {
+              "valeur": 6,
+              "libelle": "D'accord"
+            },
+            {
+              "valeur": 7,
+              "libelle": "Fortement d'accord"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "catq-2",
+          "enonce": "Je surveille mon langage corporel et mes expressions du visage pour avoir l'air détendu",
+          "choix": [
+            {
+              "valeur": 1,
+              "libelle": "Fortement en désaccord"
+            },
+            {
+              "valeur": 2,
+              "libelle": "En désaccord"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Plutôt en désaccord"
+            },
+            {
+              "valeur": 4,
+              "libelle": "Ni d'accord ni en désaccord"
+            },
+            {
+              "valeur": 5,
+              "libelle": "Plutôt d'accord"
+            },
+            {
+              "valeur": 6,
+              "libelle": "D'accord"
+            },
+            {
+              "valeur": 7,
+              "libelle": "Fortement d'accord"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "catq-3",
+          "enonce": "J'ai rarement besoin de jouer un rôle pour traverser une situation sociale",
+          "choix": [
+            {
+              "valeur": 1,
+              "libelle": "Fortement en désaccord"
+            },
+            {
+              "valeur": 2,
+              "libelle": "En désaccord"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Plutôt en désaccord"
+            },
+            {
+              "valeur": 4,
+              "libelle": "Ni d'accord ni en désaccord"
+            },
+            {
+              "valeur": 5,
+              "libelle": "Plutôt d'accord"
+            },
+            {
+              "valeur": 6,
+              "libelle": "D'accord"
+            },
+            {
+              "valeur": 7,
+              "libelle": "Fortement d'accord"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "catq-4",
+          "enonce": "J'ai mis au point un script à suivre dans les situations sociales",
+          "choix": [
+            {
+              "valeur": 1,
+              "libelle": "Fortement en désaccord"
+            },
+            {
+              "valeur": 2,
+              "libelle": "En désaccord"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Plutôt en désaccord"
+            },
+            {
+              "valeur": 4,
+              "libelle": "Ni d'accord ni en désaccord"
+            },
+            {
+              "valeur": 5,
+              "libelle": "Plutôt d'accord"
+            },
+            {
+              "valeur": 6,
+              "libelle": "D'accord"
+            },
+            {
+              "valeur": 7,
+              "libelle": "Fortement d'accord"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "catq-5",
+          "enonce": "Je répète des phrases que j'ai entendues, exactement de la manière dont je les ai entendues la première fois",
+          "choix": [
+            {
+              "valeur": 1,
+              "libelle": "Fortement en désaccord"
+            },
+            {
+              "valeur": 2,
+              "libelle": "En désaccord"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Plutôt en désaccord"
+            },
+            {
+              "valeur": 4,
+              "libelle": "Ni d'accord ni en désaccord"
+            },
+            {
+              "valeur": 5,
+              "libelle": "Plutôt d'accord"
+            },
+            {
+              "valeur": 6,
+              "libelle": "D'accord"
+            },
+            {
+              "valeur": 7,
+              "libelle": "Fortement d'accord"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "catq-6",
+          "enonce": "J'ajuste mon langage corporel et mes expressions du visage pour avoir l'air intéressé par la personne avec qui j'interagis",
+          "choix": [
+            {
+              "valeur": 1,
+              "libelle": "Fortement en désaccord"
+            },
+            {
+              "valeur": 2,
+              "libelle": "En désaccord"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Plutôt en désaccord"
+            },
+            {
+              "valeur": 4,
+              "libelle": "Ni d'accord ni en désaccord"
+            },
+            {
+              "valeur": 5,
+              "libelle": "Plutôt d'accord"
+            },
+            {
+              "valeur": 6,
+              "libelle": "D'accord"
+            },
+            {
+              "valeur": 7,
+              "libelle": "Fortement d'accord"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "catq-7",
+          "enonce": "En situation sociale, j'ai l'impression de « jouer un rôle » plutôt que d'être moi-même",
+          "choix": [
+            {
+              "valeur": 1,
+              "libelle": "Fortement en désaccord"
+            },
+            {
+              "valeur": 2,
+              "libelle": "En désaccord"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Plutôt en désaccord"
+            },
+            {
+              "valeur": 4,
+              "libelle": "Ni d'accord ni en désaccord"
+            },
+            {
+              "valeur": 5,
+              "libelle": "Plutôt d'accord"
+            },
+            {
+              "valeur": 6,
+              "libelle": "D'accord"
+            },
+            {
+              "valeur": 7,
+              "libelle": "Fortement d'accord"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "catq-8",
+          "enonce": "Dans mes propres interactions sociales, j'utilise des comportements que j'ai appris en observant d'autres personnes interagir",
+          "choix": [
+            {
+              "valeur": 1,
+              "libelle": "Fortement en désaccord"
+            },
+            {
+              "valeur": 2,
+              "libelle": "En désaccord"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Plutôt en désaccord"
+            },
+            {
+              "valeur": 4,
+              "libelle": "Ni d'accord ni en désaccord"
+            },
+            {
+              "valeur": 5,
+              "libelle": "Plutôt d'accord"
+            },
+            {
+              "valeur": 6,
+              "libelle": "D'accord"
+            },
+            {
+              "valeur": 7,
+              "libelle": "Fortement d'accord"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "catq-9",
+          "enonce": "Je pense toujours à l'impression que je fais aux autres",
+          "choix": [
+            {
+              "valeur": 1,
+              "libelle": "Fortement en désaccord"
+            },
+            {
+              "valeur": 2,
+              "libelle": "En désaccord"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Plutôt en désaccord"
+            },
+            {
+              "valeur": 4,
+              "libelle": "Ni d'accord ni en désaccord"
+            },
+            {
+              "valeur": 5,
+              "libelle": "Plutôt d'accord"
+            },
+            {
+              "valeur": 6,
+              "libelle": "D'accord"
+            },
+            {
+              "valeur": 7,
+              "libelle": "Fortement d'accord"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "catq-10",
+          "enonce": "J'ai besoin du soutien d'autres personnes pour tenir une situation sociale",
+          "choix": [
+            {
+              "valeur": 1,
+              "libelle": "Fortement en désaccord"
+            },
+            {
+              "valeur": 2,
+              "libelle": "En désaccord"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Plutôt en désaccord"
+            },
+            {
+              "valeur": 4,
+              "libelle": "Ni d'accord ni en désaccord"
+            },
+            {
+              "valeur": 5,
+              "libelle": "Plutôt d'accord"
+            },
+            {
+              "valeur": 6,
+              "libelle": "D'accord"
+            },
+            {
+              "valeur": 7,
+              "libelle": "Fortement d'accord"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "catq-11",
+          "enonce": "Je m'entraîne à mes expressions du visage et à mon langage corporel pour être sûr qu'ils aient l'air naturels",
+          "choix": [
+            {
+              "valeur": 1,
+              "libelle": "Fortement en désaccord"
+            },
+            {
+              "valeur": 2,
+              "libelle": "En désaccord"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Plutôt en désaccord"
+            },
+            {
+              "valeur": 4,
+              "libelle": "Ni d'accord ni en désaccord"
+            },
+            {
+              "valeur": 5,
+              "libelle": "Plutôt d'accord"
+            },
+            {
+              "valeur": 6,
+              "libelle": "D'accord"
+            },
+            {
+              "valeur": 7,
+              "libelle": "Fortement d'accord"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "catq-12",
+          "enonce": "Je n'éprouve pas le besoin de regarder les autres dans les yeux si je n'en ai pas envie",
+          "choix": [
+            {
+              "valeur": 1,
+              "libelle": "Fortement en désaccord"
+            },
+            {
+              "valeur": 2,
+              "libelle": "En désaccord"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Plutôt en désaccord"
+            },
+            {
+              "valeur": 4,
+              "libelle": "Ni d'accord ni en désaccord"
+            },
+            {
+              "valeur": 5,
+              "libelle": "Plutôt d'accord"
+            },
+            {
+              "valeur": 6,
+              "libelle": "D'accord"
+            },
+            {
+              "valeur": 7,
+              "libelle": "Fortement d'accord"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "catq-13",
+          "enonce": "Je dois me forcer à interagir avec les gens quand je suis en situation sociale",
+          "choix": [
+            {
+              "valeur": 1,
+              "libelle": "Fortement en désaccord"
+            },
+            {
+              "valeur": 2,
+              "libelle": "En désaccord"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Plutôt en désaccord"
+            },
+            {
+              "valeur": 4,
+              "libelle": "Ni d'accord ni en désaccord"
+            },
+            {
+              "valeur": 5,
+              "libelle": "Plutôt d'accord"
+            },
+            {
+              "valeur": 6,
+              "libelle": "D'accord"
+            },
+            {
+              "valeur": 7,
+              "libelle": "Fortement d'accord"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "catq-14",
+          "enonce": "J'ai essayé d'améliorer ma compréhension des codes sociaux en observant les autres",
+          "choix": [
+            {
+              "valeur": 1,
+              "libelle": "Fortement en désaccord"
+            },
+            {
+              "valeur": 2,
+              "libelle": "En désaccord"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Plutôt en désaccord"
+            },
+            {
+              "valeur": 4,
+              "libelle": "Ni d'accord ni en désaccord"
+            },
+            {
+              "valeur": 5,
+              "libelle": "Plutôt d'accord"
+            },
+            {
+              "valeur": 6,
+              "libelle": "D'accord"
+            },
+            {
+              "valeur": 7,
+              "libelle": "Fortement d'accord"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "catq-15",
+          "enonce": "Je surveille mon langage corporel et mes expressions du visage pour avoir l'air intéressé par la personne avec qui j'interagis",
+          "choix": [
+            {
+              "valeur": 1,
+              "libelle": "Fortement en désaccord"
+            },
+            {
+              "valeur": 2,
+              "libelle": "En désaccord"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Plutôt en désaccord"
+            },
+            {
+              "valeur": 4,
+              "libelle": "Ni d'accord ni en désaccord"
+            },
+            {
+              "valeur": 5,
+              "libelle": "Plutôt d'accord"
+            },
+            {
+              "valeur": 6,
+              "libelle": "D'accord"
+            },
+            {
+              "valeur": 7,
+              "libelle": "Fortement d'accord"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "catq-16",
+          "enonce": "En situation sociale, je cherche des moyens d'éviter d'interagir avec les autres",
+          "choix": [
+            {
+              "valeur": 1,
+              "libelle": "Fortement en désaccord"
+            },
+            {
+              "valeur": 2,
+              "libelle": "En désaccord"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Plutôt en désaccord"
+            },
+            {
+              "valeur": 4,
+              "libelle": "Ni d'accord ni en désaccord"
+            },
+            {
+              "valeur": 5,
+              "libelle": "Plutôt d'accord"
+            },
+            {
+              "valeur": 6,
+              "libelle": "D'accord"
+            },
+            {
+              "valeur": 7,
+              "libelle": "Fortement d'accord"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "catq-17",
+          "enonce": "Je me suis renseigné sur les règles des interactions sociales pour améliorer mes propres compétences sociales",
+          "choix": [
+            {
+              "valeur": 1,
+              "libelle": "Fortement en désaccord"
+            },
+            {
+              "valeur": 2,
+              "libelle": "En désaccord"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Plutôt en désaccord"
+            },
+            {
+              "valeur": 4,
+              "libelle": "Ni d'accord ni en désaccord"
+            },
+            {
+              "valeur": 5,
+              "libelle": "Plutôt d'accord"
+            },
+            {
+              "valeur": 6,
+              "libelle": "D'accord"
+            },
+            {
+              "valeur": 7,
+              "libelle": "Fortement d'accord"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "catq-18",
+          "enonce": "Je suis toujours conscient de l'impression que je fais aux autres",
+          "choix": [
+            {
+              "valeur": 1,
+              "libelle": "Fortement en désaccord"
+            },
+            {
+              "valeur": 2,
+              "libelle": "En désaccord"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Plutôt en désaccord"
+            },
+            {
+              "valeur": 4,
+              "libelle": "Ni d'accord ni en désaccord"
+            },
+            {
+              "valeur": 5,
+              "libelle": "Plutôt d'accord"
+            },
+            {
+              "valeur": 6,
+              "libelle": "D'accord"
+            },
+            {
+              "valeur": 7,
+              "libelle": "Fortement d'accord"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "catq-19",
+          "enonce": "Je me sens libre d'être moi-même quand je suis avec d'autres personnes",
+          "choix": [
+            {
+              "valeur": 1,
+              "libelle": "Fortement en désaccord"
+            },
+            {
+              "valeur": 2,
+              "libelle": "En désaccord"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Plutôt en désaccord"
+            },
+            {
+              "valeur": 4,
+              "libelle": "Ni d'accord ni en désaccord"
+            },
+            {
+              "valeur": 5,
+              "libelle": "Plutôt d'accord"
+            },
+            {
+              "valeur": 6,
+              "libelle": "D'accord"
+            },
+            {
+              "valeur": 7,
+              "libelle": "Fortement d'accord"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "catq-20",
+          "enonce": "J'apprends comment les gens utilisent leur corps et leur visage pour interagir en regardant la télévision ou des films, ou en lisant de la fiction",
+          "choix": [
+            {
+              "valeur": 1,
+              "libelle": "Fortement en désaccord"
+            },
+            {
+              "valeur": 2,
+              "libelle": "En désaccord"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Plutôt en désaccord"
+            },
+            {
+              "valeur": 4,
+              "libelle": "Ni d'accord ni en désaccord"
+            },
+            {
+              "valeur": 5,
+              "libelle": "Plutôt d'accord"
+            },
+            {
+              "valeur": 6,
+              "libelle": "D'accord"
+            },
+            {
+              "valeur": 7,
+              "libelle": "Fortement d'accord"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "catq-21",
+          "enonce": "J'ajuste mon langage corporel et mes expressions du visage pour avoir l'air détendu",
+          "choix": [
+            {
+              "valeur": 1,
+              "libelle": "Fortement en désaccord"
+            },
+            {
+              "valeur": 2,
+              "libelle": "En désaccord"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Plutôt en désaccord"
+            },
+            {
+              "valeur": 4,
+              "libelle": "Ni d'accord ni en désaccord"
+            },
+            {
+              "valeur": 5,
+              "libelle": "Plutôt d'accord"
+            },
+            {
+              "valeur": 6,
+              "libelle": "D'accord"
+            },
+            {
+              "valeur": 7,
+              "libelle": "Fortement d'accord"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "catq-22",
+          "enonce": "Quand je parle avec d'autres personnes, j'ai le sentiment que la conversation coule naturellement",
+          "choix": [
+            {
+              "valeur": 1,
+              "libelle": "Fortement en désaccord"
+            },
+            {
+              "valeur": 2,
+              "libelle": "En désaccord"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Plutôt en désaccord"
+            },
+            {
+              "valeur": 4,
+              "libelle": "Ni d'accord ni en désaccord"
+            },
+            {
+              "valeur": 5,
+              "libelle": "Plutôt d'accord"
+            },
+            {
+              "valeur": 6,
+              "libelle": "D'accord"
+            },
+            {
+              "valeur": 7,
+              "libelle": "Fortement d'accord"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "catq-23",
+          "enonce": "J'ai passé du temps à apprendre les codes sociaux à partir de séries télévisées et de films, et j'essaie de les utiliser dans mes interactions",
+          "choix": [
+            {
+              "valeur": 1,
+              "libelle": "Fortement en désaccord"
+            },
+            {
+              "valeur": 2,
+              "libelle": "En désaccord"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Plutôt en désaccord"
+            },
+            {
+              "valeur": 4,
+              "libelle": "Ni d'accord ni en désaccord"
+            },
+            {
+              "valeur": 5,
+              "libelle": "Plutôt d'accord"
+            },
+            {
+              "valeur": 6,
+              "libelle": "D'accord"
+            },
+            {
+              "valeur": 7,
+              "libelle": "Fortement d'accord"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "catq-24",
+          "enonce": "Dans les interactions sociales, je ne fais pas attention à ce que font mon visage et mon corps",
+          "choix": [
+            {
+              "valeur": 1,
+              "libelle": "Fortement en désaccord"
+            },
+            {
+              "valeur": 2,
+              "libelle": "En désaccord"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Plutôt en désaccord"
+            },
+            {
+              "valeur": 4,
+              "libelle": "Ni d'accord ni en désaccord"
+            },
+            {
+              "valeur": 5,
+              "libelle": "Plutôt d'accord"
+            },
+            {
+              "valeur": 6,
+              "libelle": "D'accord"
+            },
+            {
+              "valeur": 7,
+              "libelle": "Fortement d'accord"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "catq-25",
+          "enonce": "En situation sociale, j'ai l'impression de faire semblant d'être « normal »",
+          "choix": [
+            {
+              "valeur": 1,
+              "libelle": "Fortement en désaccord"
+            },
+            {
+              "valeur": 2,
+              "libelle": "En désaccord"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Plutôt en désaccord"
+            },
+            {
+              "valeur": 4,
+              "libelle": "Ni d'accord ni en désaccord"
+            },
+            {
+              "valeur": 5,
+              "libelle": "Plutôt d'accord"
+            },
+            {
+              "valeur": 6,
+              "libelle": "D'accord"
+            },
+            {
+              "valeur": 7,
+              "libelle": "Fortement d'accord"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gad7",
+      "titre": "GAD-7 — les deux dernières semaines",
+      "type": "panneau",
+      "rubrique": "therapie",
+      "quand": "sans_date",
+      "duree_minutes": 5,
+      "sortie_libre": true,
+      "etapes": [
+        {
+          "type": "info",
+          "texte": "Au cours des deux dernières semaines, à quelle fréquence as-tu été gêné par les problèmes suivants ? La fenêtre est bien de quatorze jours, pas « en général »."
+        },
+        {
+          "type": "question",
+          "id": "gad7-1",
+          "enonce": "Te sentir nerveux, anxieux ou tendu",
+          "choix": [
+            {
+              "valeur": 0,
+              "libelle": "Jamais"
+            },
+            {
+              "valeur": 1,
+              "libelle": "Plusieurs jours"
+            },
+            {
+              "valeur": 2,
+              "libelle": "Plus de la moitié des jours"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Presque tous les jours"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "gad7-2",
+          "enonce": "Ne pas être capable d'arrêter de t'inquiéter ou de contrôler tes inquiétudes",
+          "choix": [
+            {
+              "valeur": 0,
+              "libelle": "Jamais"
+            },
+            {
+              "valeur": 1,
+              "libelle": "Plusieurs jours"
+            },
+            {
+              "valeur": 2,
+              "libelle": "Plus de la moitié des jours"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Presque tous les jours"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "gad7-3",
+          "enonce": "T'inquiéter trop à propos de différentes choses",
+          "choix": [
+            {
+              "valeur": 0,
+              "libelle": "Jamais"
+            },
+            {
+              "valeur": 1,
+              "libelle": "Plusieurs jours"
+            },
+            {
+              "valeur": 2,
+              "libelle": "Plus de la moitié des jours"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Presque tous les jours"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "gad7-4",
+          "enonce": "Avoir de la difficulté à te détendre",
+          "choix": [
+            {
+              "valeur": 0,
+              "libelle": "Jamais"
+            },
+            {
+              "valeur": 1,
+              "libelle": "Plusieurs jours"
+            },
+            {
+              "valeur": 2,
+              "libelle": "Plus de la moitié des jours"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Presque tous les jours"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "gad7-5",
+          "enonce": "Être si agité qu'il est difficile de rester tranquille",
+          "choix": [
+            {
+              "valeur": 0,
+              "libelle": "Jamais"
+            },
+            {
+              "valeur": 1,
+              "libelle": "Plusieurs jours"
+            },
+            {
+              "valeur": 2,
+              "libelle": "Plus de la moitié des jours"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Presque tous les jours"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "gad7-6",
+          "enonce": "Devenir facilement contrarié ou irritable",
+          "choix": [
+            {
+              "valeur": 0,
+              "libelle": "Jamais"
+            },
+            {
+              "valeur": 1,
+              "libelle": "Plusieurs jours"
+            },
+            {
+              "valeur": 2,
+              "libelle": "Plus de la moitié des jours"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Presque tous les jours"
+            }
+          ]
+        },
+        {
+          "type": "question",
+          "id": "gad7-7",
+          "enonce": "Avoir peur que quelque chose d'épouvantable puisse arriver",
+          "choix": [
+            {
+              "valeur": 0,
+              "libelle": "Jamais"
+            },
+            {
+              "valeur": 1,
+              "libelle": "Plusieurs jours"
+            },
+            {
+              "valeur": 2,
+              "libelle": "Plus de la moitié des jours"
+            },
+            {
+              "valeur": 3,
+              "libelle": "Presque tous les jours"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "fiche-chourouk",
       "titre": "Pour Chourouk — quand je ne peux plus parler",
       "type": "pdf",
@@ -234,147 +1326,6 @@
       "document": "shutdown-ce-qui-reste-ouvert"
     },
     {
-      "id": "ppc-prediction",
-      "titre": "Avant le masque — ce que je prédis",
-      "type": "panneau",
-      "rubrique": "therapie",
-      "quand": "aujourdhui",
-      "duree_minutes": 1,
-      "sortie_libre": true,
-      "etapes": [
-        {
-          "type": "question",
-          "id": "duree",
-          "enonce": "Avant de poser le masque : jusqu'où prédis-tu que le minuteur ira aujourd'hui ?",
-          "choix": [
-            {
-              "valeur": 0,
-              "libelle": "Je vais le retirer dans la première minute"
-            },
-            {
-              "valeur": 1,
-              "libelle": "Entre une et deux minutes"
-            },
-            {
-              "valeur": 2,
-              "libelle": "Entre deux et quatre minutes"
-            },
-            {
-              "valeur": 3,
-              "libelle": "Il ira jusqu'au bout des cinq minutes"
-            }
-          ]
-        },
-        {
-          "type": "question",
-          "id": "cause",
-          "enonce": "Qu'est-ce qui, selon toi, va te faire retirer le masque ?",
-          "choix": [
-            {
-              "valeur": 0,
-              "libelle": "Rien — je vais le garder jusqu'au bout"
-            },
-            {
-              "valeur": 1,
-              "libelle": "L'air passe mal"
-            },
-            {
-              "valeur": 2,
-              "libelle": "Le contact du masque sur le visage"
-            },
-            {
-              "valeur": 3,
-              "libelle": "Une toux"
-            },
-            {
-              "valeur": 4,
-              "libelle": "Autre chose"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "ppc-palier-1",
-      "titre": "Masque tenu à la main",
-      "type": "panneau",
-      "rubrique": "therapie",
-      "quand": "aujourdhui",
-      "duree_minutes": 5,
-      "sortie_libre": true,
-      "etapes": [
-        {
-          "type": "info",
-          "texte": "Masque contre le visage, tenu à la main. Sans sangles, sans machine, en journée, pendant que tu fais autre chose. Le minuteur part avant que tu le poses."
-        },
-        {
-          "type": "minuteur",
-          "secondes": 300
-        }
-      ]
-    },
-    {
-      "id": "ppc-constat",
-      "titre": "Après le masque — ce qui s'est passé",
-      "type": "panneau",
-      "rubrique": "therapie",
-      "quand": "aujourdhui",
-      "duree_minutes": 1,
-      "sortie_libre": true,
-      "etapes": [
-        {
-          "type": "question",
-          "id": "duree",
-          "enonce": "Jusqu'où le minuteur est-il allé ?",
-          "choix": [
-            {
-              "valeur": 0,
-              "libelle": "Je l'ai retiré dans la première minute"
-            },
-            {
-              "valeur": 1,
-              "libelle": "Entre une et deux minutes"
-            },
-            {
-              "valeur": 2,
-              "libelle": "Entre deux et quatre minutes"
-            },
-            {
-              "valeur": 3,
-              "libelle": "Il est allé jusqu'au bout des cinq minutes"
-            }
-          ]
-        },
-        {
-          "type": "question",
-          "id": "cause",
-          "enonce": "Qu'est-ce qui t'a fait retirer le masque ?",
-          "choix": [
-            {
-              "valeur": 0,
-              "libelle": "Rien — je l'ai gardé jusqu'au bout"
-            },
-            {
-              "valeur": 1,
-              "libelle": "L'air passait mal"
-            },
-            {
-              "valeur": 2,
-              "libelle": "Le contact du masque sur le visage"
-            },
-            {
-              "valeur": 3,
-              "libelle": "Une toux"
-            },
-            {
-              "valeur": 4,
-              "libelle": "Autre chose"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "ppc-les-paliers",
       "titre": "Les paliers du masque",
       "type": "pdf",
@@ -389,6 +1340,14 @@
       "rubrique": "therapie",
       "quand": "sans_date",
       "document": "ppc-pourquoi-maintenant"
+    },
+    {
+      "id": "decider-a-froid-agir-a-chaud",
+      "titre": "Décider à froid, agir à chaud",
+      "type": "pdf",
+      "rubrique": "therapie",
+      "quand": "sans_date",
+      "document": "decider-a-froid-agir-a-chaud"
     },
     {
       "id": "alimentation-les-quatre-regles",

@@ -1,0 +1,20 @@
+{
+  "carte": "check-in",
+  "horodatage": "2026-08-21T20:24:50+02:00",
+  "issue": "termine",
+  "reponses": [
+    { "question": "shutdowns", "valeur": 0 },
+    { "question": "exposition-sociale", "valeur": 1 },
+    { "question": "retrait-sensoriel", "valeur": 0 },
+    { "question": "renoncements", "valeur": 2 },
+    { "question": "activites-investies", "valeur": 3 },
+    { "question": "sommeil-heures", "valeur": 6 },
+    { "question": "missions-actives", "valeur": 3 },
+    { "question": "ppc-minutes", "valeur": 330 },
+    { "question": "repas-servis-une-fois", "valeur": 1 },
+    { "question": "activite-minutes", "valeur": 5 },
+    { "question": "poids-kg", "valeur": null },
+    { "question": "notes", "texte": null }
+  ],
+  "source": "android"
+}

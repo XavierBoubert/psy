@@ -1,0 +1,10 @@
+{
+  "etape": "ppc-prediction",
+  "horodatage": "2026-08-20T17:54:47+02:00",
+  "issue": "termine",
+  "reponses": [
+    { "question": "duree", "valeur": 3 },
+    { "question": "cause", "valeur": 0 }
+  ],
+  "source": "android"
+}

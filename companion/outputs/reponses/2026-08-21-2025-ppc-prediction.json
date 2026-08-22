@@ -1,0 +1,10 @@
+{
+  "carte": "ppc-prediction",
+  "horodatage": "2026-08-21T20:25:07+02:00",
+  "issue": "termine",
+  "reponses": [
+    { "question": "duree", "valeur": 3 },
+    { "question": "cause", "valeur": 0 }
+  ],
+  "source": "android"
+}

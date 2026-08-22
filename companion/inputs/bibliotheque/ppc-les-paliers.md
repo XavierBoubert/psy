@@ -6,11 +6,17 @@ Reprendre le masque par étapes, dans un ordre écrit à l'avance. Chaque étape
 
 Tu n'as rien à décider sur le moment. La durée est fixée avant, et un minuteur la porte.
 
-## Par où on commence, et pourquoi
+## Pourquoi l'échelle commence si bas
 
-L'échelle démarre à son premier cran : **le masque tenu à la main contre le visage, sans sangles, sans machine, cinq minutes, pendant que tu fais autre chose** — écran, lecture, peu importe.
+Le premier cran, c'est **le masque tenu à la main contre le visage, sans sangles, sans machine, cinq minutes, pendant que tu fais autre chose** — écran, lecture, peu importe.
 
-C'est bas exprès, et voici pourquoi : **le masque bouche + nez n'est pas celui que tu as déjà porté.** Ce que tu as tenu, tu l'as tenu avec un autre objet sur la figure. Celui-ci en touche davantage. On ne repart pas d'en bas parce que quelque chose aurait raté — on repart d'en bas parce que ce n'est pas le même objet.
+C'est bas exprès. Le but n'a jamais été la performance d'un soir : c'est que ça tienne. **On commence donc par ce qui est facile**, et on monte ensuite.
+
+## Redescendre n'est pas revenir à zéro
+
+Un cran peut cesser de tenir. Ça arrive, c'est prévu, et **la redescente est écrite avant, jamais décidée sur le moment.**
+
+Elle n'est jamais une chute jusqu'en bas. On redescend d'un cran ou deux, on reprend, on remonte. Une interruption connue d'avance — un voyage, une maladie, une semaine chargée — se termine de la même façon : on reprend un cran plus bas. **Ce n'est pas une sanction. C'est comme ça que ça se reprend, pour tout le monde.**
 
 ## L'échelle entière, pour que tu la voies d'un coup
 
@@ -21,9 +27,15 @@ C'est bas exprès, et voici pourquoi : **le masque bouche + nez n'est pas celui 
 5. Masque et machine pendant une sieste
 6. La nuit, retrait libre à tout moment
 
-**Tu ne montes jamais d'un cran de ta propre initiative, et tu n'as pas à te demander si tu es prêt.** Le passage se décide en séance, sur ce que ton journal contient. Je te le dis quand il est acquis.
+## Quand il n'y a plus d'exercice
 
-> ⚠️ **Cette fiche ne dit pas où tu en es rendu, et c'est voulu : elle ne bouge pas, et toi si.** L'étape en cours est **celle qui s'affiche dans ta liste du jour** — c'est elle qui fait foi, jamais ce texte.
+Le dernier cran, la nuit, n'est pas un exercice : il n'a ni durée à tenir, ni minuteur, ni rien à faire de plus. **À partir de là, il n'y a plus d'étape de masque dans ta liste du jour** — et c'est normal, pas un oubli.
+
+Ce qui reste alors, ce sont **les chiffres que ta machine relève toute seule** : le temps porté, l'étanchéité, les événements par heure. Tu les recopies au check-in, et c'est tout. **Rien à réussir, rien à tenir.**
+
+> ⚠️ **Cette fiche ne dit pas où tu en es rendu, et c'est voulu : elle ne bouge pas, et toi si.** Ce que tu as à faire aujourd'hui, c'est **ce qui s'affiche dans ta liste du jour** — et si rien ne s'y affiche pour le masque, c'est la situation décrite juste au-dessus.
+>
+> **Tu ne changes jamais de cran de ta propre initiative, et tu n'as pas à te demander si tu es prêt.** Ça se décide en séance, sur ce que ton journal contient. **Je te le dis quand on monte, et je te le dis quand on redescend.**
 
 ## Ce que tu n'as pas à faire
 
