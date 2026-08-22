@@ -4,7 +4,7 @@
 
 > ⭐ **Ce corpus ne sert pas à soigner. Il sert à argumenter** — auprès du Dr Isorni, d'un futur prescripteur, ou dans un dossier MDPH. C'est le **standard de soin français opposable**, et sa valeur tient à ce qu'il est officiel, pas à ce qu'il est précis.
 >
-> ✅ **Statut d'acquisition : les trois documents sont publics, gratuits et téléchargeables chez la HAS.** Références et URL vérifiées le 19/08/2026 ; les PDF se versent dans [`../../references/originales/`](../../references/originales/) et se convertissent avec `npm run psy:pdf2md`.
+> ✅ **Statut d'acquisition : versés le 22/08/2026.** Les six PDF (recommandations et argumentaires 2011 et 2018, guide médecin ALD 23 de 2007, actes et prestations de janvier 2025) sont dans [`../../references/originales/`](../../references/originales/), convertis en Markdown à côté.
 
 ---
 

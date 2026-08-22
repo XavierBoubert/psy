@@ -2,7 +2,7 @@
 
 **Priorité n° 3 du corpus** (`psy/README.md` §7). Indexé le 19/08/2026.
 
-> ⚠️ **Statut d'acquisition : indexé, textes intégraux non versés au dépôt.** Sources identifiées, mécanisme, adaptations obligatoires. Ce qu'il reste à obtenir est au §6.
+> ✅ **Statut d'acquisition : la source qui commande le corpus est versée au dépôt** — Craske et al. (2014), postprint UCLA. Ce qui reste sous droits est au §6.
 >
 > ⭐ **Ce corpus sert deux fois.** La désensibilisation à la PPC **est** une exposition graduée *(rapport §10.8)* : tout ce qui suit s'applique déjà au chantier n° 1, en cours depuis le 18/08/2026.
 
@@ -12,12 +12,12 @@
 
 | Référence | Apport | Statut |
 |---|---|---|
-| **Craske, M. G., Treanor, M., Conway, C. C., Zbozinek, T., & Vervliet, B. (2014).** *Maximizing exposure therapy: An inhibitory learning approach.* Behaviour Research and Therapy, 58, 10-23. | 🔴 **La source qui commande tout ce corpus.** L'exposition n'agit pas par **habituation** mais par **apprentissage inhibiteur** : ce qui soigne, c'est la **violation d'une attente**, pas la baisse de l'anxiété pendant la séance | Référence établie ; texte à obtenir |
-| **Barlow, D. H., & Craske, M. G.** — *Mastery of Your Anxiety and Panic* (4ᵉ éd.), Oxford University Press, et son guide du thérapeute | Le protocole de référence du trouble panique avec agoraphobie : exposition in vivo, hiérarchie, exposition intéroceptive | Ouvrage sous droits ; à obtenir |
+| **Craske, M. G., Treanor, M., Conway, C. C., Zbozinek, T., & Vervliet, B. (2014).** *Maximizing exposure therapy: An inhibitory learning approach.* Behaviour Research and Therapy, 58, 10-23. | 🔴 **La source qui commande tout ce corpus.** L'exposition n'agit pas par **habituation** mais par **apprentissage inhibiteur** : ce qui soigne, c'est la **violation d'une attente**, pas la baisse de l'anxiété pendant la séance | ✅ **versé le 22/08/2026** — [`references/Craske-2014_Maximizing-exposure-therapy_Inhibitory-learning.md`](../../references/Craske-2014_Maximizing-exposure-therapy_Inhibitory-learning.md) |
+| **Craske, M. G., & Barlow, D. H.** — *Mastery of Your Anxiety and Panic*, **5ᵉ éd. (2022)**, guide du thérapeute, Oxford University Press (ISBN 9780197584057) | Le protocole de référence du trouble panique avec agoraphobie : exposition in vivo, hiérarchie, exposition intéroceptive | Ouvrage sous droits ; à obtenir |
 | **Foa, E. B., & Kozak, M. J. (1986).** *Emotional processing of fear: Exposure to corrective information.* Psychological Bulletin, 99(1), 20-35. | Le modèle **historique** — celui par habituation. Indexé **pour être écarté en connaissance de cause**, pas par ignorance | Référence établie |
 | **DSM-5** — agoraphobie (F40.00) : cinq situations, **critère D = évitement actif** | ⭐ Le critère central est **comportemental et observable** — il n'exige aucune cotation de ressenti | ✅ `psy/docs/references/` |
 | **HAS, juin 2007** — Guide ALD n° 23, *Troubles anxieux graves* | Le standard de soin français : TCC en première intention | ✅ [`has-recommandations/`](../has-recommandations/README.md) |
-| **Spain, D., & Happé, F.** — travaux sur l'adaptation de la TCC aux adultes autistes | Les aménagements documentés : littéralité, supports écrits, séances structurées, métaphores évitées | ⚠️ **Références à vérifier au texte intégral avant citation en brief** |
+| **Spain, D., Milner, V., Mason, D., … Happé, F., & Marshall-Tate, K. (2023).** *Improving cognitive behaviour therapy for autistic individuals: a Delphi survey with practitioners.* Journal of Rational-Emotive & Cognitive-Behavior Therapy, 41, 45-71. | Les aménagements documentés : littéralité, supports écrits, séances structurées, métaphores évitées | ✅ **référence vérifiée et versée le 22/08/2026** (CC BY) — [`references/Spain-Happe-2023_Improving-CBT-for-Autistic-Individuals_Delphi.md`](../../references/Spain-Happe-2023_Improving-CBT-for-Autistic-Individuals_Delphi.md) |
 
 ---
 
@@ -126,6 +126,4 @@ Avion, aéroport, foule, trois semaines hors routine. **Une exposition thérapeu
 
 | Document | Où | Pourquoi |
 |---|---|---|
-| **Craske et al. (2014)** au texte intégral | Accès institutionnel ; largement cité, souvent déposé en archive ouverte | 🔴 **La pièce la plus utile du corpus** — elle porte le format de recueil avant/après |
-| **Barlow & Craske**, guide du thérapeute | Ouvrage sous droits | Pour les hiérarchies types, à réécrire de toute façon |
-| **Spain & Happé**, adaptations TSA | À vérifier | ⚠️ Rien ne s'appuie dessus tant que la référence n'est pas vérifiée |
+| **Craske & Barlow**, guide du thérapeute, **5ᵉ éd. (2022)** | Ouvrage sous droits, Oxford University Press | Pour les hiérarchies types, à réécrire de toute façon. ⭐ **La 5ᵉ édition est refondue sur l'apprentissage inhibiteur** — elle a cessé d'être en tension avec le corpus |

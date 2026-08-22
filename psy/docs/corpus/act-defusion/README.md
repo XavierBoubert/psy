@@ -13,7 +13,7 @@
 | Référence | Apport |
 |---|---|
 | **Hayes, S. C., Strosahl, K. D., & Wilson, K. G.** — *Acceptance and Commitment Therapy* (2ᵉ éd., 2012), Guilford | Le manuel de référence, et la **théorie des cadres relationnels (RFT)** dont l'ACT découle |
-| **Dance, C. J., et al. (2024).** *Aphantasia and autism: An investigation of mental imagery vividness.* Consciousness and Cognition. PMID 39243493 | ⭐ **La donnée qui rend la question générale, pas personnelle** : environ **20 %** des participants autistes atteignent le seuil d'aphantasie, contre **6 %** des non-autistes. L'imagerie **visuelle** est abaissée ; les autres modalités *(son, odeur, goût, toucher)* **ne le sont pas** |
+| **King, R., Buxton, H., & Tyndall, I. (2024).** *Aphantasia and autism: An investigation of mental imagery vividness.* Consciousness and Cognition, 124, 103749. PMID 39243493 — ✅ **versé le 22/08/2026**, [`references/King-2024_Aphantasia-and-autism_Mental-imagery-vividness.md`](../../references/King-2024_Aphantasia-and-autism_Mental-imagery-vividness.md) | ⭐ **La donnée qui rend la question générale, pas personnelle** : **20 %** des participants autistes atteignent le seuil d'aphantasie au VVIQ ≤ 32, contre **6,4 %** des non-autistes — et **5 %** au seuil strict de 16, contre **6 %** des non-autistes. L'imagerie **visuelle** est abaissée ; les autres modalités *(son, odeur, goût, toucher)* **ne le sont pas** |
 | **VVIQ** — passation du 09/08/2026, **18/80** | La mesure locale. Ce n'est pas une hypothèse : c'est un score |
 
 ---

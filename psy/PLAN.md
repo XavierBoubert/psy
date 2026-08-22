@@ -87,7 +87,6 @@
 
 ## 9. Transverse
 
-- [ ] **Sourcer ou retirer le « 63 à 84 % » de [`docs/protocoles/ppc-desensibilisation.md`](docs/protocoles/ppc-desensibilisation.md) §0** — chiffre sans référence vérifiable au dossier, **retiré de la fiche de bibliothèque avant publication** *(C6, supervision v9)*. Le protocole le porte toujours
-- [ ] **Obtenir les textes intégraux des corpus 2 et 3** — Fairburn (2008), Craske et al. (2014), Barlow & Craske. ⚠️ **Deux références restent à vérifier avant toute citation en brief** ; chaque README dit lesquelles
-- [ ] **Verser les trois PDF HAS** dans [`docs/references/originales/`](docs/references/originales/) — publics et gratuits, URL dans [`has-recommandations/`](docs/corpus/has-recommandations/README.md)
+- [ ] **Citer la source du « 63 à 84 % » dans [`docs/protocoles/ppc-desensibilisation.md`](docs/protocoles/ppc-desensibilisation.md) §0** — ⭐ **la source existe et est versée** : Chernyak (2020), *MedEdPORTAL*, [`references/Chernyak-2020_CPAP-Desensitization_MedEdPORTAL.md`](docs/references/Chernyak-2020_CPAP-Desensitization_MedEdPORTAL.md), « 63%-84% ». Le protocole le porte encore sans référence *(C6, supervision v9)*
+- [ ] **Quatre sources sous accès fermé, toutes achetables, aucune bloquante** — Herbert & Pollatos (2014) *(⚠️ rien ne s'appuie dessus en brief avant lecture)* · Öst & Sterner (1987) et Öst et al. (1991), les princeps de la tension appliquée · Craske & Barlow, guide du thérapeute 5ᵉ éd. · **DIVA-5 en français, 10 €** *(à acheter d'avance, la passation reste bloquée jusqu'au traitement effectif du SAOS)*
 - [ ] **Purger les renvois à une « Étape N du PLAN ».** La feuille de route n'est plus numérotée : les en-têtes des protocoles et deux comptes rendus de séance citent une numérotation qui n'existe plus. ✅ **`etat.md` §1 est corrigé le 20/08.** **Restent les en-têtes des protocoles, au prochain passage sur chacun** — ⚠️ **un compte rendu daté ne se réécrit pas**

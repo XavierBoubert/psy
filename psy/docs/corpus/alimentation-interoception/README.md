@@ -16,7 +16,7 @@
 | **Gormally, J., Black, S., Daston, S., Rardin, D. (1982).** *The assessment of binge eating severity among obese persons.* Addictive Behaviors, 7(1), 47-55. | L'instrument de dépistage de la perte de contrôle — **BES** | ✅ versé, avec la version française |
 | **Brunault, P., et al. (2016).** *Validation de la version française de la Binge Eating Scale.* L'Encéphale, 42(5), 426-433. | La version française validée, seuil ≥ 18, 16 items, score 0-46 | ✅ versé — [`echelles/bes.md`](../echelles/bes.md) |
 | **Garfinkel, S. N., et al. (2015).** *Knowing your own heart: distinguishing interoceptive accuracy from interoceptive awareness.* Biological Psychology, 104, 65-74. | ⭐ **Le modèle à trois dimensions de l'intéroception** — *précision* (mesurée), *sensibilité* (auto-rapportée), *conscience* (l'accord entre les deux). C'est lui qui permet de dire que « je ne perçois pas » et « je perçois mal » ne sont pas la même chose | Référence établie ; à obtenir |
-| **Herbert, B. M., & Pollatos, O.** — travaux sur la sensibilité intéroceptive et la régulation alimentaire dans l'obésité | Documente le lien entre intéroception atténuée et dérégulation de la prise alimentaire — **le mécanisme présumé chez Xavier** | ⚠️ **Référence à vérifier au texte intégral avant toute citation en brief** |
+| **Herbert, B. M., & Pollatos, O. (2014).** *Attenuated interoceptive sensitivity in overweight and obese individuals.* Eating Behaviors, 15(3), 445-448. | Documente le lien entre intéroception atténuée et dérégulation de la prise alimentaire — **le mécanisme présumé chez Xavier** | ✅ **référence identifiée le 22/08/2026** ; ⚠️ **texte intégral sous droits, non versé — pas de citation en brief avant lecture** |
 | **MAIA-2** — échelle de conscience intéroceptive | Déjà indexée, avec ses trois items ambigus signalés | ✅ [`echelles/maia.md`](../echelles/maia.md) |
 | **DSM-5** — hyperphagie boulimique (307.51 / F50.8), ARFID (307.59) | Les deux diagnostics différentiels de ce chantier | ✅ `psy/docs/references/` |
 
@@ -98,6 +98,6 @@ Plusieurs protocoles alimentaires utilisent l'imagerie — se représenter la po
 
 | Document | Où | Pourquoi il manque encore |
 |---|---|---|
-| **Fairburn (2008)**, module *regular eating* au texte | Ouvrage sous droits — achat, ou bibliothèque universitaire | Pour recopier les règles d'origine au lieu de les paraphraser |
+| **Fairburn (2008)**, l'ouvrage complet | Guilford, sous droits | Le manuel entier. ⭐ **Le module *regular eating* n'est plus un manque** : sa Table 6.1 est versée |
 | **Garfinkel et al. (2015)** | Accès institutionnel ou archive ouverte | Pour fonder la distinction précision / sensibilité / conscience dans le brief |
-| **Herbert & Pollatos**, référence exacte | À vérifier avant citation | ⚠️ **Rien ne s'appuie dessus tant qu'elle n'est pas vérifiée** |
+| **Herbert & Pollatos (2014)** au texte | *Eating Behaviors* — accès fermé, aucun dépôt ouvert | ⚠️ **Référence désormais exacte, texte non lu : rien ne s'appuie dessus en brief** |
